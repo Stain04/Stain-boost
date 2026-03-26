@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ELO Boosting – Stain</title>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="https://www.paypal.com/sdk/js?client-id=ARbdbfECiTwnsbVq9RbKJBW06M1rk3Anw0p7baUUc7cirtp17nB_I6qTiu7YaqFRl_Z-DTA5q4uyKSAw&currency=USD"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
@@ -238,6 +237,82 @@ tr.highlight{background:rgba(139,92,246,0.06);}
 .form-msg.success{background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.25);color:#34d399;}
 .form-msg.error{background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.25);color:#f87171;}
 
+.pay-toggle-wrap{
+  display:flex;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
+  border-radius:10px;padding:4px;gap:4px;margin-bottom:0.85rem;
+}
+.pay-toggle-btn{
+  flex:1;padding:0.5rem;border-radius:7px;border:none;cursor:pointer;
+  font-family:'Rajdhani',sans-serif;font-size:0.8rem;font-weight:700;
+  letter-spacing:0.08em;text-transform:uppercase;
+  display:flex;align-items:center;justify-content:center;gap:0.4rem;
+  background:transparent;color:rgba(255,255,255,0.35);
+  transition:all 0.2s;
+}
+.pay-toggle-btn.active{
+  background:rgba(139,92,246,0.15);color:#c4b5fd;
+  box-shadow:0 0 12px rgba(139,92,246,0.15);
+}
+.pay-toggle-btn#toggleBinance.active{background:rgba(251,191,36,0.12);color:#fbbf24;box-shadow:0 0 12px rgba(251,191,36,0.1);}
+.pay-toggle-btn#togglePaypal.active{background:rgba(0,156,222,0.12);color:#009cde;box-shadow:0 0 12px rgba(0,156,222,0.1);}
+.pay-panel{display:none;}
+.pay-panel.active{display:block;}
+
+.paypalme-card{
+  background:rgba(0,156,222,0.04);
+  border:1px solid rgba(0,156,222,0.2);
+  border-radius:12px;padding:1.2rem;
+  display:flex;flex-direction:column;gap:0.85rem;
+}
+.binance-card{
+  background:rgba(251,191,36,0.04);
+  border:1px solid rgba(251,191,36,0.2);
+  border-radius:12px;padding:1.2rem;
+  display:flex;flex-direction:column;gap:1rem;
+}
+.binance-top{display:flex;align-items:center;gap:0.75rem;}
+.binance-logo{
+  width:36px;height:36px;border-radius:8px;
+  background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.3);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.binance-title{font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;color:#fbbf24;}
+.binance-sub{font-size:0.7rem;color:rgba(255,255,255,0.35);margin-top:0.1rem;}
+.binance-body{display:flex;gap:1rem;align-items:flex-start;}
+.binance-info{flex:1;display:flex;flex-direction:column;gap:0.6rem;}
+.binance-id-row{
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px;padding:0.6rem 0.8rem;
+}
+.binance-id-label{font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:0.2rem;}
+.binance-id-val{font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;color:#e2e8f0;display:flex;align-items:center;justify-content:space-between;}
+.copy-btn{
+  background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.25);
+  border-radius:5px;padding:0.15rem 0.5rem;
+  font-family:'Rajdhani',sans-serif;font-size:0.65rem;font-weight:700;
+  letter-spacing:0.08em;text-transform:uppercase;color:#fbbf24;cursor:pointer;
+  transition:all 0.15s;
+}
+.copy-btn:hover{background:rgba(251,191,36,0.18);}
+.binance-steps{font-size:0.7rem;color:rgba(255,255,255,0.35);line-height:1.7;}
+.binance-steps span{color:rgba(255,255,255,0.55);}
+.binance-amount-note{
+  background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.15);
+  border-radius:8px;padding:0.5rem 0.75rem;
+  font-family:'Rajdhani',sans-serif;font-size:0.8rem;font-weight:600;
+  color:#fbbf24;display:flex;align-items:center;gap:0.4rem;
+}
+.binance-submit{
+  width:100%;padding:0.75rem;
+  background:linear-gradient(135deg,#b7791f,#92400e);
+  color:#fff;font-family:'Rajdhani',sans-serif;font-size:0.82rem;font-weight:700;
+  letter-spacing:0.12em;text-transform:uppercase;
+  border:none;border-radius:10px;cursor:pointer;
+  box-shadow:0 0 16px rgba(251,191,36,0.2);transition:all 0.2s;
+}
+.binance-submit:hover{box-shadow:0 0 24px rgba(251,191,36,0.35);transform:translateY(-1px);}
+.binance-submit:disabled{opacity:0.5;cursor:not-allowed;}
+
 @media(max-width:700px){
   .layout{grid-template-columns:1fr;}
   .form-row{grid-template-columns:1fr;}
@@ -278,7 +353,7 @@ tr.highlight{background:rgba(139,92,246,0.06);}
           </div>
           <div>
             <div class="contact-label">PayPal</div>
-            <div class="contact-val">stain.hs04@gmail.com</div>
+            <div class="contact-val">paypal.me/stainboost</div>
           </div>
         </div>
       </div>
@@ -353,11 +428,11 @@ tr.highlight{background:rgba(139,92,246,0.06);}
           <div class="form-row">
             <div class="field">
               <label>Your Discord Tag *</label>
-              <input type="text" id="fDiscord" placeholder="username#0000 or username">
+              <input type="text" id="fDiscord" placeholder="Discord ID">
             </div>
             <div class="field">
               <label>LoL IGN *</label>
-              <input type="text" id="fIGN" placeholder="PlayerName#NA1">
+              <input type="text" id="fIGN" placeholder="PlayerName#ME1">
             </div>
           </div>
           <div class="form-row">
@@ -403,8 +478,84 @@ tr.highlight{background:rgba(139,92,246,0.06);}
             <div class="price-preview-val" id="pricePreview">$0.00</div>
           </div>
 
-          <div id="paypal-button-container" style="margin-top: 0.85rem;"></div>
-          
+          <!-- PAYMENT OPTIONS -->
+          <div style="margin-top:0.5rem;">
+            <div style="font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.35);font-weight:600;margin-bottom:0.6rem;">Payment Method</div>
+
+            <!-- TOGGLE -->
+            <div class="pay-toggle-wrap">
+              <button class="pay-toggle-btn active" id="toggleBinance" onclick="switchPayment('binance')">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><polygon points="12,2 15.5,5.5 12,9 8.5,5.5" fill="currentColor"/><polygon points="2,12 5.5,8.5 9,12 5.5,15.5" fill="currentColor"/><polygon points="22,12 18.5,8.5 15,12 18.5,15.5" fill="currentColor"/><polygon points="12,22 15.5,18.5 12,15 8.5,18.5" fill="currentColor"/><polygon points="12,9 15.5,12 12,15 8.5,12" fill="currentColor"/></svg>
+                Binance Pay
+              </button>
+              <button class="pay-toggle-btn" id="togglePaypal" onclick="switchPayment('paypal')">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M7.5 21L6 14H4.5C3.12 14 2 12.88 2 11.5V5.5C2 4.12 3.12 3 4.5 3H15C16.38 3 17.5 4.12 17.5 5.5V8H18.5C19.88 8 21 9.12 21 10.5V14.5C21 15.88 19.88 17 18.5 17H17L15.5 21H7.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                PayPal.me
+              </button>
+            </div>
+
+            <!-- BINANCE PANEL -->
+            <div class="pay-panel active" id="panelBinance">
+              <div class="binance-card">
+                <div class="binance-top">
+                  <div class="binance-logo">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><polygon points="12,2 15.5,5.5 12,9 8.5,5.5" fill="#fbbf24"/><polygon points="2,12 5.5,8.5 9,12 5.5,15.5" fill="#fbbf24"/><polygon points="22,12 18.5,8.5 15,12 18.5,15.5" fill="#fbbf24"/><polygon points="12,22 15.5,18.5 12,15 8.5,18.5" fill="#fbbf24"/><polygon points="12,9 15.5,12 12,15 8.5,12" fill="#fbbf24"/></svg>
+                  </div>
+                  <div>
+                    <div class="binance-title">Binance Pay</div>
+                    <div class="binance-sub">Zero fees · Instant · USDT</div>
+                  </div>
+                </div>
+                <div class="binance-id-row">
+                  <div class="binance-id-label">Binance Pay ID</div>
+                  <div class="binance-id-val">
+                    <span id="binancePayID">987280057</span>
+                    <button class="copy-btn" onclick="copyPayID()">Copy</button>
+                  </div>
+                </div>
+                <div class="binance-steps">
+                  1. Open <span>Binance App → Pay → Send</span><br>
+                  2. Enter Pay ID <span>987280057</span><br>
+                  3. Send exact amount in <span>USDT</span><br>
+                  4. Screenshot & DM on Discord
+                </div>
+                <div class="binance-amount-note" id="binanceAmountNote">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+                  Select rank & wins above to see the exact amount
+                </div>
+                <button class="binance-submit" id="binanceSubmitBtn" onclick="submitBinanceOrder('binance')">
+                  ✅ I've Sent via Binance — Submit Order
+                </button>
+              </div>
+            </div>
+
+            <!-- PAYPAL PANEL -->
+            <div class="pay-panel" id="panelPaypal">
+              <div class="paypalme-card">
+                <div class="binance-top">
+                  <div class="binance-logo" style="background:rgba(0,156,222,0.1);border:1px solid rgba(0,156,222,0.3);">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M7.5 21L6 14H4.5C3.12 14 2 12.88 2 11.5V5.5C2 4.12 3.12 3 4.5 3H15C16.38 3 17.5 4.12 17.5 5.5V8H18.5C19.88 8 21 9.12 21 10.5V14.5C21 15.88 19.88 17 18.5 17H17L15.5 21H7.5Z" stroke="#009cde" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 7.5H14M8 10.5H12" stroke="#009cde" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  </div>
+                  <div>
+                    <div class="binance-title" style="color:#009cde;">PayPal.me</div>
+                    <div class="binance-sub">Credit / Debit card or PayPal balance</div>
+                  </div>
+                </div>
+                <div class="binance-amount-note" id="paypalAmountNote" style="border-color:rgba(0,156,222,0.2);background:rgba(0,156,222,0.05);">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#009cde" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+                  <span id="paypalAmountText">Select rank & wins above to see the exact amount</span>
+                </div>
+                <a id="paypalMeBtn" href="https://paypal.me/stainboost" target="_blank" class="binance-submit" style="display:block;text-align:center;text-decoration:none;background:linear-gradient(135deg,#003087,#009cde);">
+                  💳 Pay with PayPal.me
+                </a>
+                <button class="binance-submit" id="paypalSubmitBtn" onclick="submitBinanceOrder('paypal')" style="margin-top:0.5rem;background:linear-gradient(135deg,#1a2a4a,#1a3a5c);">
+                  ✅ I've Sent via PayPal — Submit Order
+                </button>
+              </div>
+            </div>
+
+          </div>
+
           <div class="form-msg" id="formMsg"></div>
         </div>
       </div>
@@ -416,7 +567,7 @@ tr.highlight{background:rgba(139,92,246,0.06);}
   </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const ranks = [
   { name:'Iron',           color:'#94a3b8', bg:'rgba(148,163,184,0.12)', solo:1.50,  duo:2.50  },
   { name:'Bronze',         color:'#cd7f32', bg:'rgba(205,127,50,0.12)',  solo:2.00,  duo:3.00  },
@@ -481,94 +632,89 @@ function updatePrice(){
   document.getElementById('pricePreview').textContent = '$' + total.toFixed(2);
 }
 
-// Render the PayPal button
-paypal.Buttons({
-  style: {
-    color:  'gold',
-    shape:  'rect',
-    label:  'checkout',
-    height: 40
-  },
-  
-  // 1. Check if the form is filled out BEFORE opening PayPal
-  onClick: function(data, actions) {
-    const discord = document.getElementById('fDiscord').value.trim();
-    const ign     = document.getElementById('fIGN').value.trim();
-    const rank    = document.getElementById('fRank').value;
-    const wins    = parseInt(document.getElementById('fWins').value) || 0;
+// ── BINANCE PAY ──
+const BINANCE_PAY_ID = '987280057';
 
-    document.getElementById('formMsg').style.display = 'none';
+function switchTab(tab) {}
 
-    if (!discord || !ign || !rank || wins < 1) {
-      showMsg('error', 'Please fill out your Discord, IGN, Rank, and Wins before paying.');
-      return actions.reject(); // Stops PayPal from opening
-    }
-    return actions.resolve(); // Opens PayPal
-  },
+function switchPayment(method) {
+  document.getElementById('toggleBinance').classList.toggle('active', method === 'binance');
+  document.getElementById('togglePaypal').classList.toggle('active', method === 'paypal');
+  document.getElementById('panelBinance').classList.toggle('active', method === 'binance');
+  document.getElementById('panelPaypal').classList.toggle('active', method === 'paypal');
+}
 
-  // 2. Tell PayPal how much to charge
-  createOrder: function(data, actions) {
-    const totalAmount = getFormTotal().toFixed(2);
-    return actions.order.create({
-      purchase_units: [{
-        amount: { value: totalAmount }
-      }]
-    });
-  },
+function copyPayID() {
+  navigator.clipboard.writeText(BINANCE_PAY_ID).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 1500);
+  });
+}
 
-  // 3. What happens when the payment is successful
-  onApprove: function(data, actions) {
-    return actions.order.capture().then(function(details) {
-      // Payment worked! Now send the data to your Discord/Email backend
-      sendOrderToBackend();
-    });
-  },
-
-  // 4. What happens if they close the window or it fails
-  onError: function(err) {
-    showMsg('error', 'Payment was cancelled or failed. Please try again.');
+// Update the Binance amount note when rank/wins/type changes
+const origUpdatePrice = updatePrice;
+updatePrice = function() {
+  origUpdatePrice();
+  const total = getFormTotal();
+  const binanceNote = document.getElementById('binanceAmountNote');
+  const paypalText  = document.getElementById('paypalAmountText');
+  const paypalBtn   = document.getElementById('paypalMeBtn');
+  if (total > 0) {
+    binanceNote.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg> Send exactly <strong style="color:#fff;font-size:1rem;">$${total.toFixed(2)} USDT</strong> to Pay ID <strong style="color:#fff">${BINANCE_PAY_ID}</strong>`;
+    paypalText.textContent = `Send exactly $${total.toFixed(2)} USD via PayPal.me`;
+    paypalBtn.href = `https://paypal.me/stainboost/${total.toFixed(2)}USD`;
+  } else {
+    binanceNote.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg> Select rank & wins above to see the exact amount`;
+    paypalText.textContent = 'Select rank & wins above to see the exact amount';
+    paypalBtn.href = 'https://paypal.me/stainboost';
   }
-}).render('#paypal-button-container');
+};
 
-async function sendOrderToBackend() {
+async function submitBinanceOrder(method = 'binance') {
   const discord = document.getElementById('fDiscord').value.trim();
   const ign     = document.getElementById('fIGN').value.trim();
   const rank    = document.getElementById('fRank').value;
-  const type    = document.getElementById('fType').value;
   const wins    = parseInt(document.getElementById('fWins').value) || 0;
-  const flash   = document.getElementById('fFlash').value;
-  const total   = getFormTotal().toFixed(2);
 
-  showMsg('success', '✅ Payment received! Processing your order...');
+  if (!discord || !ign || !rank || wins < 1) {
+    showMsg('error', 'Please fill out Discord, IGN, Rank, and Wins first.');
+    return;
+  }
+
+  const type  = document.getElementById('fType').value;
+  const flash = document.getElementById('fFlash').value;
+  const total = getFormTotal().toFixed(2);
+  const btnId = method === 'paypal' ? 'paypalSubmitBtn' : 'binanceSubmitBtn';
+  const btn   = document.getElementById(btnId);
+  const paymentMethod = method === 'paypal' ? 'PayPal.me' : 'Binance Pay';
+
+  btn.disabled = true;
+  btn.textContent = 'Submitting…';
 
   try {
     const res = await fetch('/api/order', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ discord, ign, rank, type, wins, flash, total })
+      body: JSON.stringify({ discord, ign, rank, type, wins, flash, total, paymentMethod })
     });
     const data = await res.json();
-    
     if (res.ok && data.ok) {
-      showMsg('success', '✅ Payment successful & Order submitted! I\'ll contact you on Discord shortly.');
+      showMsg('success', '✅ Order submitted! I\'ll verify your payment and contact you on Discord shortly.');
       document.getElementById('fDiscord').value = '';
       document.getElementById('fIGN').value = '';
       document.getElementById('fWins').value = '';
       document.getElementById('fRank').value = '';
       document.getElementById('pricePreview').textContent = '$0.00';
     } else {
-      showMsg('error', 'Payment succeeded, but Discord notification failed. DM me on Discord!');
+      showMsg('error', 'Submission failed. Please DM me on Discord directly.');
     }
   } catch(e) {
-    showMsg('error', 'Payment succeeded, but network error occurred. DM me on Discord!');
+    showMsg('error', 'Network error. Please DM me on Discord directly.');
   }
-}
 
-function showMsg(type, text){
-  const msg = document.getElementById('formMsg');
-  msg.className = 'form-msg ' + type;
-  msg.textContent = text;
-  msg.style.display = 'block';
+  btn.disabled = false;
+  btn.textContent = method === 'paypal' ? '✅ I\'ve Sent via PayPal — Submit Order' : '✅ I\'ve Sent via Binance — Submit Order';
 }
 </script>
 </body>
