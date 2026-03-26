@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ELO Boosting – Stain</title>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://www.paypal.com/sdk/js?client-id=AdJ7jV6mrx0wB1g1zXxpUvEAcE24l_0RHA0JFzuDFXjiBbcNEufbKT28XP7O0ooOqpDNncuvY7tOUOq3&currency=USD"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
@@ -209,17 +210,16 @@ tr.highlight{background:rgba(139,92,246,0.06);}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;}
 .field{display:flex;flex-direction:column;gap:0.3rem;}
 .field label{font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.35);font-weight:600;}
-.field input,.field select,.field textarea{
+.field input,.field select{
   font-family:'Rajdhani',sans-serif;font-size:0.92rem;font-weight:600;
   background:rgba(255,255,255,0.04);border:1px solid rgba(139,92,246,0.2);
   border-radius:9px;color:#e2e8f0;padding:0.55rem 0.8rem;
   outline:none;transition:border-color 0.2s,box-shadow 0.2s;width:100%;
 }
-.field input:focus,.field select:focus,.field textarea:focus{
+.field input:focus,.field select:focus{
   border-color:#8b5cf6;box-shadow:0 0 0 3px rgba(139,92,246,0.15);
 }
 .field select option{background:#0e0b1a;}
-.field textarea{resize:vertical;min-height:60px;}
 
 .price-preview{
   background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.15);
@@ -229,17 +229,6 @@ tr.highlight{background:rgba(139,92,246,0.06);}
 }
 .price-preview-label{font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.35);}
 .price-preview-val{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:700;color:#fbbf24;}
-
-.submit-btn{
-  width:100%;margin-top:0.5rem;padding:0.85rem;
-  background:linear-gradient(135deg,#7c3aed,#6d28d9);
-  color:#fff;font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:700;
-  letter-spacing:0.15em;text-transform:uppercase;
-  border:none;border-radius:12px;cursor:pointer;
-  box-shadow:0 0 20px rgba(139,92,246,0.3);transition:all 0.2s;
-}
-.submit-btn:hover:not(:disabled){box-shadow:0 0 32px rgba(139,92,246,0.5);transform:translateY(-1px);}
-.submit-btn:disabled{opacity:0.6;cursor:not-allowed;}
 
 .form-msg{
   margin-top:0.75rem;padding:0.7rem 1rem;border-radius:9px;
@@ -364,11 +353,11 @@ tr.highlight{background:rgba(139,92,246,0.06);}
           <div class="form-row">
             <div class="field">
               <label>Your Discord Tag *</label>
-              <input type="text" id="fDiscord" placeholder="Discord id">
+              <input type="text" id="fDiscord" placeholder="username#0000 or username">
             </div>
             <div class="field">
               <label>LoL IGN *</label>
-              <input type="text" id="fIGN" placeholder="PlayerName#ME1">
+              <input type="text" id="fIGN" placeholder="PlayerName#NA1">
             </div>
           </div>
           <div class="form-row">
@@ -414,11 +403,8 @@ tr.highlight{background:rgba(139,92,246,0.06);}
             <div class="price-preview-val" id="pricePreview">$0.00</div>
           </div>
 
-          <div style="font-size:0.7rem;color:rgba(255,255,255,0.3);line-height:1.5;">
-            💳 Payment via PayPal to <strong style="color:rgba(255,255,255,0.5)">stain.hs04@gmail.com</strong> after confirmation. I'll contact you on Discord within a few hours.
-          </div>
-
-          <button class="submit-btn" id="submitBtn" onclick="submitOrder()">Submit Order</button>
+          <div id="paypal-button-container" style="margin-top: 0.85rem;"></div>
+          
           <div class="form-msg" id="formMsg"></div>
         </div>
       </div>
@@ -481,38 +467,79 @@ function toggleOrder(){
   btn.classList.toggle('open');
 }
 
-function updatePrice(){
+// Function to calculate the exact total
+function getFormTotal() {
   const rankName = document.getElementById('fRank').value;
   const type     = document.getElementById('fType').value;
   const wins     = parseInt(document.getElementById('fWins').value) || 0;
   const rank     = ranks.find(r => r.name === rankName);
-  const total    = rank ? (type === 'solo' ? rank.solo : rank.duo) * wins : 0;
+  return rank ? (type === 'solo' ? rank.solo : rank.duo) * wins : 0;
+}
+
+function updatePrice(){
+  const total = getFormTotal();
   document.getElementById('pricePreview').textContent = '$' + total.toFixed(2);
 }
 
-async function submitOrder(){
+// Render the PayPal button
+paypal.Buttons({
+  style: {
+    color:  'gold',
+    shape:  'rect',
+    label:  'checkout',
+    height: 40
+  },
+  
+  // 1. Check if the form is filled out BEFORE opening PayPal
+  onClick: function(data, actions) {
+    const discord = document.getElementById('fDiscord').value.trim();
+    const ign     = document.getElementById('fIGN').value.trim();
+    const rank    = document.getElementById('fRank').value;
+    const wins    = parseInt(document.getElementById('fWins').value) || 0;
+
+    document.getElementById('formMsg').style.display = 'none';
+
+    if (!discord || !ign || !rank || wins < 1) {
+      showMsg('error', 'Please fill out your Discord, IGN, Rank, and Wins before paying.');
+      return actions.reject(); // Stops PayPal from opening
+    }
+    return actions.resolve(); // Opens PayPal
+  },
+
+  // 2. Tell PayPal how much to charge
+  createOrder: function(data, actions) {
+    const totalAmount = getFormTotal().toFixed(2);
+    return actions.order.create({
+      purchase_units: [{
+        amount: { value: totalAmount }
+      }]
+    });
+  },
+
+  // 3. What happens when the payment is successful
+  onApprove: function(data, actions) {
+    return actions.order.capture().then(function(details) {
+      // Payment worked! Now send the data to your Discord/Email backend
+      sendOrderToBackend();
+    });
+  },
+
+  // 4. What happens if they close the window or it fails
+  onError: function(err) {
+    showMsg('error', 'Payment was cancelled or failed. Please try again.');
+  }
+}).render('#paypal-button-container');
+
+async function sendOrderToBackend() {
   const discord = document.getElementById('fDiscord').value.trim();
   const ign     = document.getElementById('fIGN').value.trim();
   const rank    = document.getElementById('fRank').value;
   const type    = document.getElementById('fType').value;
   const wins    = parseInt(document.getElementById('fWins').value) || 0;
   const flash   = document.getElementById('fFlash').value;
-  const msg     = document.getElementById('formMsg');
-  const btn     = document.getElementById('submitBtn');
+  const total   = getFormTotal().toFixed(2);
 
-  msg.style.display = 'none';
-
-  if (!discord) return showMsg('error', 'Please enter your Discord tag.');
-  if (!ign)     return showMsg('error', 'Please enter your LoL IGN.');
-  if (!rank)    return showMsg('error', 'Please select your current rank.');
-  if (wins < 1) return showMsg('error', 'Please enter at least 1 win.');
-
-  const rankData  = ranks.find(r => r.name === rank);
-  const priceEach = type === 'solo' ? rankData.solo : rankData.duo;
-  const total     = (priceEach * wins).toFixed(2);
-
-  btn.disabled = true;
-  btn.textContent = 'Sending…';
+  showMsg('success', '✅ Payment received! Processing your order...');
 
   try {
     const res = await fetch('/api/order', {
@@ -521,21 +548,19 @@ async function submitOrder(){
       body: JSON.stringify({ discord, ign, rank, type, wins, flash, total })
     });
     const data = await res.json();
+    
     if (res.ok && data.ok) {
-      showMsg('success', '✅ Order submitted! I\'ll contact you on Discord soon.');
+      showMsg('success', '✅ Payment successful & Order submitted! I\'ll contact you on Discord shortly.');
       document.getElementById('fDiscord').value = '';
       document.getElementById('fIGN').value = '';
-      document.getElementById('fRank').value = '';
       document.getElementById('fWins').value = '';
+      document.getElementById('fRank').value = '';
       document.getElementById('pricePreview').textContent = '$0.00';
     } else {
-      showMsg('error', data.error || 'Something went wrong. DM me on Discord instead.');
+      showMsg('error', 'Payment succeeded, but Discord notification failed. DM me on Discord!');
     }
   } catch(e) {
-    showMsg('error', 'Network error. Please DM me on Discord instead.');
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Submit Order';
+    showMsg('error', 'Payment succeeded, but network error occurred. DM me on Discord!');
   }
 }
 
