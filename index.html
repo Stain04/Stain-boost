@@ -166,14 +166,14 @@ tr.highlight{background:rgba(139,92,246,0.06);}
 
 /* ORDER FORM */
 .order-section{
-  margin:0 1.5rem 1.5rem;
+  margin:1.5rem 1.5rem 1.5rem;
   background:rgba(139,92,246,0.04);
   border:1px solid rgba(139,92,246,0.2);
   border-radius:16px;
   overflow:hidden;
 }
 .order-toggle{
-  width:100%;padding:1rem 1.3rem;
+  width:100%;padding:1.2rem 1.6rem;
   background:transparent;border:none;cursor:pointer;
   display:flex;align-items:center;justify-content:space-between;
   font-family:'Rajdhani',sans-serif;font-size:0.9rem;font-weight:700;
@@ -181,11 +181,11 @@ tr.highlight{background:rgba(139,92,246,0.06);}
 }
 .order-toggle svg{transition:transform 0.3s;}
 .order-toggle.open svg{transform:rotate(180deg);}
-.order-form-wrap{display:none;padding:0 1.3rem 1.3rem;}
+.order-form-wrap{display:none;padding:0 1.6rem 1.6rem;}
 .order-form-wrap.open{display:block;}
 
-.form-grid{display:grid;gap:0.85rem;}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:0.85rem;}
+.form-grid{display:grid;gap:1.1rem;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;}
 .field{display:flex;flex-direction:column;gap:0.3rem;}
 .field label{font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.35);font-weight:600;}
 .field input,.field select,.field textarea{
@@ -265,7 +265,7 @@ tr.highlight{background:rgba(139,92,246,0.06);}
           </div>
           <div>
             <div class="contact-label">PayPal</div>
-            <div class="contact-val">stain.hs04@gmail.com</div>
+            <div class="contact-val"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="93e0e7f2fafdbdfbe0a3a7d3f4fef2faffbdf0fcfe">[email&#160;protected]</a></div>
           </div>
         </div>
       </div>
@@ -337,7 +337,7 @@ tr.highlight{background:rgba(139,92,246,0.06);}
           <div class="form-row">
             <div class="field">
               <label>Your Discord Tag *</label>
-              <input type="text" id="fDiscord" placeholder="username#0000 or username">
+              <input type="text" id="fDiscord" placeholder="username#0000">
             </div>
             <div class="field">
               <label>Current Rank *</label>
@@ -386,7 +386,7 @@ tr.highlight{background:rgba(139,92,246,0.06);}
           </div>
 
           <div style="font-size:0.7rem;color:rgba(255,255,255,0.3);line-height:1.5;">
-            💳 Payment via PayPal to <strong style="color:rgba(255,255,255,0.5)">stain.hs04@gmail.com</strong> after confirmation. I'll contact you on Discord within a few hours.
+            💳 Payment via PayPal to <strong style="color:rgba(255,255,255,0.5)"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b0c3c4d1d9de9ed8c38084f0d7ddd1d9dc9ed3dfdd">[email&#160;protected]</a></strong> after confirmation. I'll contact you on Discord within a few hours.
           </div>
 
           <button class="submit-btn" id="submitBtn" onclick="submitOrder()">Submit Order</button>
@@ -401,7 +401,7 @@ tr.highlight{background:rgba(139,92,246,0.06);}
   </div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 const ranks = [
   { name:'Iron',           color:'#94a3b8', bg:'rgba(148,163,184,0.12)', solo:1.50,  duo:2.50  },
   { name:'Bronze',         color:'#cd7f32', bg:'rgba(205,127,50,0.12)',  solo:2.00,  duo:3.00  },
@@ -502,18 +502,18 @@ async function submitOrder(){
       showMsg('error', data.error || 'Something went wrong. DM me on Discord instead.');
     }
   } catch(e) {
-    showMsg('error', 'Network error. Please DM me on Discord directly.');
+    showMsg('error', 'Network error. Please DM me on Discord instead.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Submit Order';
   }
-
-  btn.disabled = false;
-  btn.textContent = 'Submit Order';
 }
 
 function showMsg(type, text){
-  const el = document.getElementById('formMsg');
-  el.className = 'form-msg ' + type;
-  el.textContent = text;
-  el.style.display = 'block';
+  const msg = document.getElementById('formMsg');
+  msg.className = 'form-msg ' + type;
+  msg.textContent = text;
+  msg.style.display = 'block';
 }
 </script>
 </body>
