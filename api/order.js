@@ -3,9 +3,9 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { discord, rank, type, wins, flash, notes, total } = req.body;
+  const { discord, ign, rank, type, wins, flash, total } = req.body;
 
-  if (!discord || !rank || !type || !wins) {
+  if (!discord || !ign || !rank || !type || !wins) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
@@ -23,15 +23,14 @@ export default async function handler(req, res) {
       color: 0x8b5cf6,
       fields: [
         { name: '👤 Discord',    value: discord,                         inline: true  },
+        { name: '🎮 LoL IGN',    value: ign,                             inline: true  },
         { name: '🏆 Rank',       value: rank,                            inline: true  },
         { name: '⚔️ Type',       value: type.charAt(0).toUpperCase() + type.slice(1), inline: true  },
         { name: '🎯 Wins',       value: String(wins),                    inline: true  },
         { name: '💰 Total',      value: `$${total}`,                     inline: true  },
-        { name: '⚡ Flash Key',  value: flash || 'D',                    inline: true  },
-        { name: '📝 Notes',      value: notes || 'None',                 inline: false },
+        { name: '⚡ Flash Key',  value: flash || 'D',                    inline: true  }
       ],
-      footer: { text: `Submitted at ${timestamp}` },
-      thumbnail: { url: 'https://cdn.discordapp.com/emojis/1234567890.png' }
+      footer: { text: `Submitted at ${timestamp}` }
     }]
   };
 
@@ -67,11 +66,11 @@ export default async function handler(req, res) {
             <div style="padding:24px;">
               <table style="width:100%;border-collapse:collapse;">
                 <tr><td style="padding:8px 0;color:rgba(255,255,255,0.45);font-size:13px;">Discord</td><td style="padding:8px 0;font-weight:600;">${discord}</td></tr>
+                <tr><td style="padding:8px 0;color:rgba(255,255,255,0.45);font-size:13px;">LoL IGN</td><td style="padding:8px 0;font-weight:600;">${ign}</td></tr>
                 <tr><td style="padding:8px 0;color:rgba(255,255,255,0.45);font-size:13px;">Rank</td><td style="padding:8px 0;font-weight:600;">${rank}</td></tr>
                 <tr><td style="padding:8px 0;color:rgba(255,255,255,0.45);font-size:13px;">Type</td><td style="padding:8px 0;font-weight:600;">${type}</td></tr>
                 <tr><td style="padding:8px 0;color:rgba(255,255,255,0.45);font-size:13px;">Wins</td><td style="padding:8px 0;font-weight:600;">${wins}</td></tr>
                 <tr><td style="padding:8px 0;color:rgba(255,255,255,0.45);font-size:13px;">Flash Key</td><td style="padding:8px 0;font-weight:600;">${flash || 'D'}</td></tr>
-                <tr><td style="padding:8px 0;color:rgba(255,255,255,0.45);font-size:13px;">Notes</td><td style="padding:8px 0;font-weight:600;">${notes || 'None'}</td></tr>
                 <tr style="border-top:1px solid rgba(255,255,255,0.1);">
                   <td style="padding:12px 0 0;color:rgba(255,255,255,0.45);font-size:13px;">Total</td>
                   <td style="padding:12px 0 0;font-weight:700;font-size:20px;color:#fbbf24;">$${total}</td>
