@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ELO Boosting – Stain</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:2rem 1.5rem;
+  font-family:'Inter',sans-serif;
+  background:#0e0b1a;
+  position:relative;
+  overflow-x:hidden;
+}
+
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 15% 50%, rgba(80,30,120,0.45) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 60% at 85% 60%, rgba(120,20,50,0.35) 0%, transparent 65%),
+    #0b0916;
+  z-index:0;
+}
+
+body::after{
+  content:'';
+  position:fixed;inset:0;
+  background-image:radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size:28px 28px;
+  z-index:0;
+}
+
+.layout{
+  display:grid;
+  grid-template-columns:300px 1fr;
+  gap:1.5rem;
+  width:100%;
+  max-width:960px;
+  position:relative;
+  z-index:1;
+}
+
+.left{display:flex;flex-direction:column;gap:1.2rem;}
+
+.profile-card{
+  background:rgba(18,14,38,0.9);
+  border:1px solid rgba(139,92,246,0.45);
+  border-radius:20px;
+  padding:2rem 1.5rem 1.6rem;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.profile-card::before{
+  content:'';
+  position:absolute;inset:0;border-radius:20px;
+  background:linear-gradient(160deg,rgba(139,92,246,0.06) 0%,transparent 60%);
+  pointer-events:none;
+}
+
+.avatar-wrap{position:relative;width:100px;height:100px;margin:0 auto 1rem;}
+.avatar-ring{
+  position:absolute;inset:-3px;border-radius:50%;
+  background:conic-gradient(from 0deg,#8b5cf6,#c084fc,#22d3ee,#8b5cf6);
+  animation:spin 4s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+.avatar-inner{
+  position:absolute;inset:3px;border-radius:50%;
+  background:#1a1535;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.avatar-inner img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.avatar-placeholder{
+  width:100%;height:100%;
+  background:linear-gradient(135deg,#2d1f5e,#1a1040);
+  display:flex;align-items:center;justify-content:center;font-size:2.2rem;
+}
+.online-dot{
+  position:absolute;bottom:4px;right:4px;
+  width:14px;height:14px;border-radius:50%;
+  background:#22c55e;border:2px solid #0e0b1a;z-index:2;
+  box-shadow:0 0 8px rgba(34,197,94,0.6);
+}
+.profile-name{font-family:'Rajdhani',sans-serif;font-size:1.5rem;font-weight:700;color:#f1f5f9;margin-bottom:0.25rem;}
+.profile-role{font-family:'Rajdhani',sans-serif;font-size:0.7rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:#8b5cf6;margin-bottom:0.75rem;}
+
+.rank1-badge{
+  display:inline-flex;align-items:center;gap:0.4rem;
+  background:linear-gradient(135deg,rgba(251,191,36,0.12),rgba(251,191,36,0.06));
+  border:1px solid rgba(251,191,36,0.35);
+  border-radius:8px;padding:0.35rem 0.75rem;
+  font-family:'Rajdhani',sans-serif;font-size:0.72rem;font-weight:700;
+  letter-spacing:0.12em;text-transform:uppercase;color:#fbbf24;
+  margin-bottom:1.2rem;
+}
+
+.contact-list{display:flex;flex-direction:column;gap:0.5rem;}
+.contact-item{
+  display:flex;align-items:center;gap:0.65rem;
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);
+  border-radius:10px;padding:0.55rem 0.85rem;text-align:left;
+}
+.contact-icon{width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;opacity:0.6;}
+.contact-label{font-size:0.7rem;color:rgba(255,255,255,0.35);margin-bottom:0.05rem;font-weight:500;letter-spacing:0.05em;}
+.contact-val{font-family:'Rajdhani',sans-serif;font-size:0.88rem;font-weight:600;color:#e2e8f0;}
+
+.guarantees-card{
+  background:rgba(18,14,38,0.85);border:1px solid rgba(255,255,255,0.08);
+  border-radius:20px;padding:1.4rem 1.5rem;
+}
+.guarantees-title{display:flex;align-items:center;gap:0.5rem;font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;color:#e2e8f0;margin-bottom:1.1rem;}
+.g-list{display:flex;flex-direction:column;gap:0.9rem;}
+.g-item{display:flex;align-items:flex-start;gap:0.75rem;}
+.g-icon{width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:rgba(139,92,246,0.1);border-radius:7px;}
+.g-text{}
+.g-name{font-family:'Rajdhani',sans-serif;font-size:0.88rem;font-weight:700;color:#e2e8f0;margin-bottom:0.1rem;}
+.g-desc{font-size:0.72rem;color:rgba(255,255,255,0.4);line-height:1.4;}
+
+/* RIGHT CARD */
+.pricing-card{
+  background:rgba(18,14,38,0.85);
+  border:1px solid rgba(139,92,246,0.2);
+  border-radius:24px;overflow:hidden;
+}
+.pricing-head{
+  background:linear-gradient(135deg,rgba(139,92,246,0.15),rgba(34,211,238,0.05));
+  padding:1.8rem 2rem 1.4rem;
+  border-bottom:1px solid rgba(139,92,246,0.15);
+}
+.pricing-title{font-family:'Orbitron',sans-serif;font-size:1.6rem;font-weight:900;letter-spacing:0.08em;background:linear-gradient(135deg,#c4b5fd,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.pricing-sub{font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-top:0.3rem;}
+
+.bulk-banner{
+  margin:1.2rem 1.5rem 0;
+  background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.2);
+  border-radius:10px;padding:0.6rem 1rem;
+  display:flex;align-items:center;justify-content:center;gap:0.5rem;
+  font-family:'Rajdhani',sans-serif;font-size:0.82rem;font-weight:600;color:#fbbf24;
+}
+
+.champ-banner{
+  margin:0.85rem 1.5rem 0;
+  background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(34,211,238,0.04));
+  border:1px solid rgba(139,92,246,0.25);
+  border-radius:10px;padding:0.65rem 1rem;
+  display:flex;align-items:center;gap:0.75rem;
+}
+.champ-banner-icon{font-size:1.3rem;line-height:1;}
+.champ-banner-text{font-family:'Rajdhani',sans-serif;font-size:0.8rem;font-weight:600;color:rgba(255,255,255,0.55);line-height:1.4;}
+.champ-banner-text strong{color:#c4b5fd;}
+.price-table{width:100%;border-collapse:collapse;margin:1rem 0 0;table-layout:fixed;}
+.price-table thead tr{border-bottom:1px solid rgba(255,255,255,0.06);}
+.price-table th{padding:0.6rem 1.5rem;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.3);font-weight:600;text-align:left;}
+.price-table th:nth-child(1){width:40%;}
+.price-table th:nth-child(2),.price-table th:nth-child(3){width:30%;text-align:center;}
+.price-table tbody tr{border-bottom:1px solid rgba(255,255,255,0.04);transition:background 0.15s;}
+.price-table tbody tr:hover{background:rgba(139,92,246,0.05);}
+.price-table tbody tr:last-child{border-bottom:none;}
+.price-table td{padding:0.75rem 1.5rem;vertical-align:middle;}
+.rank-cell{display:flex;align-items:center;gap:0.75rem;}
+.rank-ico{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.rank-label{font-family:'Rajdhani',sans-serif;font-size:0.95rem;font-weight:700;}
+.price-solo{text-align:center;font-family:'Rajdhani',sans-serif;font-size:0.95rem;font-weight:700;color:#a78bfa;}
+.price-duo{text-align:center;font-family:'Rajdhani',sans-serif;font-size:0.95rem;font-weight:700;color:#22d3ee;}
+tr.highlight{background:rgba(139,92,246,0.06);}
+
+.cta-wrap{padding:1.5rem;padding-top:1rem;}
+.cta-btn{
+  display:block;width:100%;padding:0.9rem;text-align:center;
+  background:linear-gradient(135deg,#7c3aed,#6d28d9);
+  color:#fff;font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:700;
+  letter-spacing:0.15em;text-transform:uppercase;text-decoration:none;
+  border-radius:12px;border:none;cursor:pointer;
+  box-shadow:0 0 24px rgba(139,92,246,0.35);
+  transition:all 0.2s;
+}
+.cta-btn:hover{box-shadow:0 0 36px rgba(139,92,246,0.55);transform:translateY(-1px);}
+
+/* ORDER FORM */
+.order-section{
+  margin:1.5rem 1.5rem 1.5rem;
+  background:rgba(139,92,246,0.04);
+  border:1px solid rgba(139,92,246,0.2);
+  border-radius:16px;
+  overflow:hidden;
+}
+.order-toggle{
+  width:100%;padding:1.2rem 1.6rem;
+  background:transparent;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:space-between;
+  font-family:'Rajdhani',sans-serif;font-size:0.9rem;font-weight:700;
+  letter-spacing:0.1em;text-transform:uppercase;color:#a78bfa;
+}
+.order-toggle svg{transition:transform 0.3s;}
+.order-toggle.open svg{transform:rotate(180deg);}
+.order-form-wrap{display:none;padding:0 1.6rem 1.6rem;}
+.order-form-wrap.open{display:block;}
+
+.form-grid{display:grid;gap:1.1rem;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;}
+.field{display:flex;flex-direction:column;gap:0.3rem;}
+.field label{font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.35);font-weight:600;}
+.field input,.field select,.field textarea{
+  font-family:'Rajdhani',sans-serif;font-size:0.92rem;font-weight:600;
+  background:rgba(255,255,255,0.04);border:1px solid rgba(139,92,246,0.2);
+  border-radius:9px;color:#e2e8f0;padding:0.55rem 0.8rem;
+  outline:none;transition:border-color 0.2s,box-shadow 0.2s;width:100%;
+}
+.field input:focus,.field select:focus,.field textarea:focus{
+  border-color:#8b5cf6;box-shadow:0 0 0 3px rgba(139,92,246,0.15);
+}
+.field select option{background:#0e0b1a;}
+.field textarea{resize:vertical;min-height:60px;}
+
+.price-preview{
+  background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.15);
+  border-radius:10px;padding:0.7rem 1rem;
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:0.3rem;
+}
+.price-preview-label{font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.35);}
+.price-preview-val{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:700;color:#fbbf24;}
+
+.submit-btn{
+  width:100%;margin-top:0.5rem;padding:0.85rem;
+  background:linear-gradient(135deg,#7c3aed,#6d28d9);
+  color:#fff;font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:700;
+  letter-spacing:0.15em;text-transform:uppercase;
+  border:none;border-radius:12px;cursor:pointer;
+  box-shadow:0 0 20px rgba(139,92,246,0.3);transition:all 0.2s;
+}
+.submit-btn:hover:not(:disabled){box-shadow:0 0 32px rgba(139,92,246,0.5);transform:translateY(-1px);}
+.submit-btn:disabled{opacity:0.6;cursor:not-allowed;}
+
+.form-msg{
+  margin-top:0.75rem;padding:0.7rem 1rem;border-radius:9px;
+  font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:600;
+  display:none;
+}
+.form-msg.success{background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.25);color:#34d399;}
+.form-msg.error{background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.25);color:#f87171;}
+
+@media(max-width:700px){
+  .layout{grid-template-columns:1fr;}
+  .form-row{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <!-- LEFT -->
+  <div class="left">
+    <div class="profile-card">
+      <div class="avatar-wrap">
+        <div class="avatar-ring"></div>
+        <div class="avatar-inner">
+          <img src="avatar.jpeg" alt="Stain">
+        </div>
+        <div class="online-dot"></div>
+      </div>
+      <div class="profile-name">Stain</div>
+      <div class="profile-role">Professional Booster</div>
+      <div class="rank1-badge">
+        <svg width="11" height="11" viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,9.5 12.5,15 8,12 3.5,15 5,9.5 1,6 6,6" fill="#fbbf24"/></svg>
+        #1 Master Yi · Middle East
+      </div>
+      <div class="contact-list">
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg width="18" height="14" viewBox="0 0 24 18" fill="none"><path d="M20.317 1.492A19.84 19.84 0 0 0 15.971.4a.074.074 0 0 0-.079.037c-.19.338-.399.778-.546 1.127a18.344 18.344 0 0 0-5.487 0 11.33 11.33 0 0 0-.554-1.127.077.077 0 0 0-.079-.037A19.796 19.796 0 0 0 3.677 1.492a.07.07 0 0 0-.032.027C.533 6.093-.32 10.555.099 14.961a.082.082 0 0 0 .031.055 19.96 19.96 0 0 0 5.993 3.029.078.078 0 0 0 .084-.026c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.15 13.15 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.009c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.3 12.3 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.9 19.9 0 0 0 6.002-3.029.077.077 0 0 0 .032-.054c.5-5.177-.838-9.574-3.549-13.442a.061.061 0 0 0-.031-.027zM8.02 12.278c-1.183 0-2.157-1.086-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.419 0 1.333-.956 2.419-2.157 2.419zm7.975 0c-1.183 0-2.157-1.086-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.419 0 1.333-.946 2.419-2.157 2.419z" fill="#7289da"/></svg>
+          </div>
+          <div>
+            <div class="contact-label">Discord</div>
+            <div class="contact-val">Stain.hs</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M7.5 21L6 14H4.5C3.12 14 2 12.88 2 11.5V5.5C2 4.12 3.12 3 4.5 3H15C16.38 3 17.5 4.12 17.5 5.5V8H18.5C19.88 8 21 9.12 21 10.5V14.5C21 15.88 19.88 17 18.5 17H17L15.5 21H7.5Z" stroke="#009cde" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 7.5H14M8 10.5H12" stroke="#009cde" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <div class="contact-label">PayPal</div>
+            <div class="contact-val">stain.hs04@gmail.com</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="guarantees-card">
+      <div class="guarantees-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Service Guarantees
+      </div>
+      <div class="g-list">
+        <div class="g-item">
+          <div class="g-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><circle cx="12" cy="10" r="3" fill="#8b5cf6" opacity="0.3" stroke="none"/></svg></div>
+          <div class="g-text">
+            <div class="g-name">Offline Mode</div>
+            <div class="g-desc">We appear offline to your friends while boosting.</div>
+          </div>
+        </div>
+        <div class="g-item">
+          <div class="g-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg></div>
+          <div class="g-text">
+            <div class="g-name">VPN Protection</div>
+            <div class="g-desc">Matching your country for maximum security.</div>
+          </div>
+        </div>
+        <div class="g-item">
+          <div class="g-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+          <div class="g-text">
+            <div class="g-name">Flash Position</div>
+            <div class="g-desc">We stick to your preferred Flash key (D or F).</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="pricing-card">
+    <div class="pricing-head">
+      <div class="pricing-title">ELO BOOSTING</div>
+      <div class="pricing-sub">Jungle Specialist · Master Yi · Middle East Server</div>
+    </div>
+
+    <div class="bulk-banner">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      <span>Buy <strong>5 wins</strong> get <strong>1 FREE</strong></span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+    </div>
+
+    <div class="champ-banner">
+      <div class="champ-banner-icon">⚔️</div>
+      <div class="champ-banner-text">Boosted exclusively with <strong>Jungle Master Yi</strong> — ranked <strong>#1 Master Yi</strong> on the Middle East server.</div>
+    </div>
+
+    <table class="price-table">
+      <thead>
+        <tr>
+          <th>Current Rank</th>
+          <th>Solo (per win)</th>
+          <th>Duo (per win)</th>
+        </tr>
+      </thead>
+      <tbody id="priceBody"></tbody>
+    </table>
+
+    <!-- ORDER FORM -->
+    <div class="order-section">
+      <button class="order-toggle" id="orderToggle" onclick="toggleOrder()">
+        <span>⚡ Place an Order</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="order-form-wrap" id="orderFormWrap">
+        <div class="form-grid">
+          <div class="form-row">
+            <div class="field">
+              <label>Your Discord Tag *</label>
+              <input type="text" id="fDiscord" placeholder="username#0000 or username">
+            </div>
+            <div class="field">
+              <label>Current Rank *</label>
+              <select id="fRank" onchange="updatePrice()">
+                <option value="">Select rank…</option>
+                <option value="Iron">Iron</option>
+                <option value="Bronze">Bronze</option>
+                <option value="Silver">Silver</option>
+                <option value="Gold">Gold</option>
+                <option value="Platinum">Platinum</option>
+                <option value="Emerald">Emerald</option>
+                <option value="Diamond IV→III">Diamond IV→III</option>
+                <option value="Diamond II→I">Diamond II→I</option>
+                <option value="Masters">Masters</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field">
+              <label>Boost Type *</label>
+              <select id="fType" onchange="updatePrice()">
+                <option value="solo">Solo</option>
+                <option value="duo">Duo</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Number of Wins *</label>
+              <input type="number" id="fWins" min="1" max="50" placeholder="e.g. 5" oninput="updatePrice()">
+            </div>
+          </div>
+          <div class="field">
+            <label>Flash Key</label>
+            <select id="fFlash">
+              <option value="D">D (default)</option>
+              <option value="F">F</option>
+            </select>
+          </div>
+
+          <div class="price-preview">
+            <div class="price-preview-label">Total Price</div>
+            <div class="price-preview-val" id="pricePreview">$0.00</div>
+          </div>
+
+          <div style="font-size:0.7rem;color:rgba(255,255,255,0.3);line-height:1.5;">
+            💳 Payment via PayPal to <strong style="color:rgba(255,255,255,0.5)">stain.hs04@gmail.com</strong> after confirmation. I'll contact you on Discord within a few hours.
+          </div>
+
+          <button class="submit-btn" id="submitBtn" onclick="submitOrder()">Submit Order</button>
+          <div class="form-msg" id="formMsg"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-wrap">
+      <a href="https://discord.com/invite/zjpQaVHv" class="cta-btn">Message Stain on Discord</a>
+    </div>
+  </div>
+</div>
+
+<script>
+const ranks = [
+  { name:'Iron',           color:'#94a3b8', bg:'rgba(148,163,184,0.12)', solo:1.50,  duo:2.50  },
+  { name:'Bronze',         color:'#cd7f32', bg:'rgba(205,127,50,0.12)',  solo:2.00,  duo:3.00  },
+  { name:'Silver',         color:'#cbd5e1', bg:'rgba(203,213,225,0.12)', solo:2.50,  duo:3.50  },
+  { name:'Gold',           color:'#fbbf24', bg:'rgba(251,191,36,0.12)',  solo:3.50,  duo:5.00  },
+  { name:'Platinum',       color:'#22d3ee', bg:'rgba(34,211,238,0.12)',  solo:5.00,  duo:6.50  },
+  { name:'Emerald',        color:'#34d399', bg:'rgba(52,211,153,0.12)',  solo:5.50,  duo:8.00  },
+  { name:'Diamond IV→III', color:'#67e8f9', bg:'rgba(103,232,249,0.12)', solo:8.00,  duo:12.00 },
+  { name:'Diamond II→I',   color:'#67e8f9', bg:'rgba(103,232,249,0.08)', solo:10.00, duo:16.00 },
+  { name:'Masters',        color:'#e879f9', bg:'rgba(232,121,249,0.12)', solo:15.00, duo:20.00 },
+];
+
+const icons = {
+  Iron:     c=>`<svg width="18" height="18" viewBox="0 0 16 16"><polygon points="8,2 14,6 14,10 8,14 2,10 2,6" fill="none" stroke="${c}" stroke-width="1.5"/></svg>`,
+  Bronze:   c=>`<svg width="18" height="18" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5" fill="none" stroke="${c}" stroke-width="1.5"/><circle cx="8" cy="8" r="2" fill="${c}"/></svg>`,
+  Silver:   c=>`<svg width="18" height="18" viewBox="0 0 16 16"><polygon points="8,2 14,14 2,14" fill="none" stroke="${c}" stroke-width="1.5"/></svg>`,
+  Gold:     c=>`<svg width="18" height="18" viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,9.5 12.5,15 8,12 3.5,15 5,9.5 1,6 6,6" fill="${c}" opacity="0.9"/></svg>`,
+  Platinum: c=>`<svg width="18" height="18" viewBox="0 0 16 16"><rect x="3" y="3" width="10" height="10" rx="2" fill="none" stroke="${c}" stroke-width="1.5"/><rect x="6" y="6" width="4" height="4" rx="1" fill="${c}"/></svg>`,
+  Emerald:  c=>`<svg width="18" height="18" viewBox="0 0 16 16"><polygon points="8,1 15,8 8,15 1,8" fill="none" stroke="${c}" stroke-width="1.5"/><polygon points="8,4 12,8 8,12 4,8" fill="${c}" opacity="0.75"/></svg>`,
+  Diamond:  c=>`<svg width="18" height="18" viewBox="0 0 16 16"><polygon points="8,1 15,6 12,14 4,14 1,6" fill="none" stroke="${c}" stroke-width="1.5"/><polygon points="8,4 12,6.5 10,12 6,12 4,6.5" fill="${c}" opacity="0.6"/></svg>`,
+  Masters:  c=>`<svg width="18" height="18" viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,9.5 12.5,15 8,12 3.5,15 5,9.5 1,6 6,6" fill="${c}" opacity="0.9"/><polygon points="8,4 9.2,7 12,7 9.9,8.6 10.7,11.5 8,9.8 5.3,11.5 6.1,8.6 4,7 6.8,7" fill="${c}"/></svg>`,
+};
+
+function baseRank(name){ return name.startsWith('Diamond') ? 'Diamond' : name; }
+
+const tbody = document.getElementById('priceBody');
+ranks.forEach((r, i) => {
+  const isLast = i === ranks.length - 1;
+  const tr = document.createElement('tr');
+  if (isLast) tr.className = 'highlight';
+  tr.innerHTML = `
+    <td>
+      <div class="rank-cell">
+        <div class="rank-ico" style="background:${r.bg};border:1px solid ${r.color}40;">${icons[baseRank(r.name)](r.color)}</div>
+        <span class="rank-label" style="color:${isLast ? '#34d399' : r.color}">${r.name}</span>
+      </div>
+    </td>
+    <td class="price-solo">$${r.solo.toFixed(2)}</td>
+    <td class="price-duo">$${r.duo.toFixed(2)}</td>
+  `;
+  tbody.appendChild(tr);
+});
+
+function toggleOrder(){
+  const wrap = document.getElementById('orderFormWrap');
+  const btn  = document.getElementById('orderToggle');
+  wrap.classList.toggle('open');
+  btn.classList.toggle('open');
+}
+
+function updatePrice(){
+  const rankName = document.getElementById('fRank').value;
+  const type     = document.getElementById('fType').value;
+  const wins     = parseInt(document.getElementById('fWins').value) || 0;
+  const rank     = ranks.find(r => r.name === rankName);
+  const total    = rank ? (type === 'solo' ? rank.solo : rank.duo) * wins : 0;
+  document.getElementById('pricePreview').textContent = '$' + total.toFixed(2);
+}
+
+async function submitOrder(){
+  const discord = document.getElementById('fDiscord').value.trim();
+  const rank    = document.getElementById('fRank').value;
+  const type    = document.getElementById('fType').value;
+  const wins    = parseInt(document.getElementById('fWins').value) || 0;
+  const flash   = document.getElementById('fFlash').value;
+  const notes   = document.getElementById('fNotes').value.trim();
+  const msg     = document.getElementById('formMsg');
+  const btn     = document.getElementById('submitBtn');
+
+  msg.style.display = 'none';
+
+  if (!discord) return showMsg('error', 'Please enter your Discord tag.');
+  if (!rank)    return showMsg('error', 'Please select your current rank.');
+  if (wins < 1) return showMsg('error', 'Please enter at least 1 win.');
+
+  const rankData  = ranks.find(r => r.name === rank);
+  const priceEach = type === 'solo' ? rankData.solo : rankData.duo;
+  const total     = (priceEach * wins).toFixed(2);
+
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+
+  try {
+    const res = await fetch('/api/order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ discord, rank, type, wins, flash, notes, total })
+    });
+    const data = await res.json();
+    if (res.ok && data.ok) {
+      showMsg('success', '✅ Order submitted! I\'ll contact you on Discord soon.');
+      document.getElementById('fDiscord').value = '';
+      document.getElementById('fRank').value = '';
+      document.getElementById('fWins').value = '';
+      document.getElementById('fNotes').value = '';
+      document.getElementById('pricePreview').textContent = '$0.00';
+    } else {
+      showMsg('error', data.error || 'Something went wrong. DM me on Discord instead.');
+    }
+  } catch(e) {
+    showMsg('error', 'Network error. Please DM me on Discord instead.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Submit Order';
+  }
+}
+
+function showMsg(type, text){
+  const msg = document.getElementById('formMsg');
+  msg.className = 'form-msg ' + type;
+  msg.textContent = text;
+  msg.style.display = 'block';
+}
+</script>
+</body>
+</html>
