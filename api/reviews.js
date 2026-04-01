@@ -1,50 +1,52 @@
 import { createClient } from '@vercel/kv';
 
-// Manually connect using the "STORAGE" prefix you created
-const kv = createClient({
-  url: process.env.STORAGE_REST_API_URL,
-  token: process.env.STORAGE_REST_API_TOKEN,
-});
-
 export default async function handler(req, res) {
+  const url = process.env.STORAGE_REST_API_URL;
+  const token = process.env.STORAGE_REST_API_TOKEN;
+
+  // 1. Diagnostic Check: Tell us exactly what is missing if it fails
+  if (!url || !token) {
+    return res.status(500).json({ 
+      error: `Missing Vercel Env Variables! URL exists: ${!!url}, Token exists: ${!!token}. You must REDEPLOY in Vercel.` 
+    });
+  }
+
+  // 2. Connect to the DB
+  const kv = createClient({ url, token });
+
   // GET requests
   if (req.method === 'GET') {
-    // 1. Verify a token
     if (req.query.token) {
-      const token = req.query.token.trim().toUpperCase();
-      
+      const qToken = req.query.token.trim().toUpperCase();
       try {
-        const isValid = await kv.sismember('valid_tokens', token);
+        const isValid = await kv.sismember('valid_tokens', qToken);
         if (!isValid) {
           return res.status(400).json({ error: 'Invalid token. Check the code Stain sent you.' });
         }
 
-        const isUsed = await kv.sismember('used_tokens', token);
+        const isUsed = await kv.sismember('used_tokens', qToken);
         if (isUsed) {
           return res.status(400).json({ error: 'This token has already been used to post a review.' });
         }
 
         return res.status(200).json({ ok: true });
       } catch (error) {
-        console.error("DB Error:", error);
-        return res.status(500).json({ error: 'Database connection error' });
+        return res.status(500).json({ error: 'DB Read Error: ' + error.message });
       }
     }
 
-    // 2. Fetch all reviews
     try {
       const reviews = await kv.lrange('stain_reviews', 0, -1) || [];
       return res.status(200).json(reviews);
     } catch (error) {
-      console.error("DB Error:", error);
-      return res.status(500).json({ error: 'Failed to fetch reviews' });
+      return res.status(500).json({ error: 'Failed to fetch reviews: ' + error.message });
     }
   }
 
-  // POST: Submit a new review
+  // POST requests
   if (req.method === 'POST') {
-    const { token, name, rank, stars, text, date } = req.body;
-    const formattedToken = token.trim().toUpperCase();
+    const { token: pToken, name, rank, stars, text, date } = req.body;
+    const formattedToken = pToken.trim().toUpperCase();
 
     try {
       const isValid = await kv.sismember('valid_tokens', formattedToken);
@@ -59,7 +61,7 @@ export default async function handler(req, res) {
 
       return res.status(200).json({ ok: true });
     } catch (error) {
-      return res.status(500).json({ error: 'Database error while saving review' });
+      return res.status(500).json({ error: 'DB Write Error: ' + error.message });
     }
   }
 
