@@ -1,5 +1,3 @@
-import { kv } from '@vercel/kv';
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -12,29 +10,13 @@ export default async function handler(req, res) {
   }
 
   const DISCORD_WEBHOOK = process.env.DISCORD_WEBHOOK_URL;
-  const EMAIL_TO        = process.env.EMAIL_TO;       
-  const EMAIL_FROM      = process.env.EMAIL_FROM;     
-  const EMAIL_PASS      = process.env.EMAIL_PASS;     
+  const EMAIL_TO        = process.env.EMAIL_TO;       // your gmail
+  const EMAIL_FROM      = process.env.EMAIL_FROM;     // sending gmail
+  const EMAIL_PASS      = process.env.EMAIL_PASS;     // app password
 
   const timestamp = new Date().toLocaleString('en-US', { timeZone: 'Africa/Cairo' });
 
-  // ── 1. GENERATE SECURE TOKEN ──
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  let t1 = '', t2 = '';
-  for(let i=0; i<4; i++) t1 += chars.charAt(Math.floor(Math.random() * chars.length));
-  for(let i=0; i<4; i++) t2 += chars.charAt(Math.floor(Math.random() * chars.length));
-  const reviewToken = `SB-${t1}-${t2}`;
-
-  // Save the valid token to the Vercel KV database
-  try {
-    if (process.env.KV_REST_API_URL) {
-      await kv.sadd('valid_tokens', reviewToken);
-    }
-  } catch(e) {
-    console.error('KV Database error:', e);
-  }
-
-  // ── 2. DISCORD NOTIFICATION ──
+  // ── DISCORD NOTIFICATION ──
   const discordPayload = {
     embeds: [{
       title: '⚡ New Boost Order',
@@ -46,8 +28,7 @@ export default async function handler(req, res) {
         { name: '⚔️ Type',       value: type.charAt(0).toUpperCase() + type.slice(1), inline: true  },
         { name: '🎯 Wins',       value: String(wins),                    inline: true  },
         { name: '💰 Total',      value: `$${total}`,                     inline: true  },
-        { name: '⚡ Flash Key',  value: flash || 'D',                    inline: true  },
-        { name: '🔑 Review Token', value: `\`${reviewToken}\``,          inline: false }
+        { name: '⚡ Flash Key',  value: flash || 'D',                    inline: true  }
       ],
       footer: { text: `Submitted at ${timestamp}` }
     }]
@@ -63,7 +44,7 @@ export default async function handler(req, res) {
     console.error('Discord webhook failed:', e);
   }
 
-  // ── 3. EMAIL NOTIFICATION ──
+  // ── EMAIL NOTIFICATION ──
   if (EMAIL_FROM && EMAIL_PASS && EMAIL_TO) {
     try {
       const nodemailer = await import('nodemailer');
@@ -89,7 +70,7 @@ export default async function handler(req, res) {
                 <tr><td style="padding:8px 0;color:rgba(255,255,255,0.45);font-size:13px;">Rank</td><td style="padding:8px 0;font-weight:600;">${rank}</td></tr>
                 <tr><td style="padding:8px 0;color:rgba(255,255,255,0.45);font-size:13px;">Type</td><td style="padding:8px 0;font-weight:600;">${type}</td></tr>
                 <tr><td style="padding:8px 0;color:rgba(255,255,255,0.45);font-size:13px;">Wins</td><td style="padding:8px 0;font-weight:600;">${wins}</td></tr>
-                <tr><td style="padding:8px 0;color:rgba(255,255,255,0.45);font-size:13px;">Review Token</td><td style="padding:8px 0;font-weight:600;color:#fbbf24;">${reviewToken}</td></tr>
+                <tr><td style="padding:8px 0;color:rgba(255,255,255,0.45);font-size:13px;">Flash Key</td><td style="padding:8px 0;font-weight:600;">${flash || 'D'}</td></tr>
                 <tr style="border-top:1px solid rgba(255,255,255,0.1);">
                   <td style="padding:12px 0 0;color:rgba(255,255,255,0.45);font-size:13px;">Total</td>
                   <td style="padding:12px 0 0;font-weight:700;font-size:20px;color:#fbbf24;">$${total}</td>

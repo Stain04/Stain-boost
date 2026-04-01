@@ -93,7 +93,30 @@ body::after{
 .pricing-head{background:linear-gradient(135deg,rgba(139,92,246,0.15),rgba(34,211,238,0.05));padding:1.8rem 2rem 1.4rem;border-bottom:1px solid rgba(139,92,246,0.15);}
 .pricing-title{font-family:'Orbitron',sans-serif;font-size:1.6rem;font-weight:900;letter-spacing:0.08em;background:linear-gradient(135deg,#c4b5fd,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .pricing-sub{font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-top:0.3rem;}
-.bulk-banner{margin:1.2rem 1.5rem 0;background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.2);border-radius:10px;padding:0.6rem 1rem;display:flex;align-items:center;justify-content:center;gap:0.5rem;font-family:'Rajdhani',sans-serif;font-size:0.82rem;font-weight:600;color:#fbbf24;}
+
+/* STATIC PROMO BANNER — always shown */
+.promo-hint{margin:1.2rem 1.5rem 0;background:rgba(251,191,36,0.05);border:1px solid rgba(251,191,36,0.15);border-radius:10px;padding:0.55rem 1rem;display:flex;align-items:center;justify-content:center;gap:0.5rem;font-family:'Rajdhani',sans-serif;font-size:0.78rem;font-weight:600;color:rgba(251,191,36,0.65);}
+
+/* DYNAMIC FREE WIN BANNER — only shows at 5+ wins */
+.free-win-banner{
+  margin:0.75rem 1.5rem 0;
+  background:linear-gradient(135deg,rgba(251,191,36,0.14),rgba(251,191,36,0.06));
+  border:1px solid rgba(251,191,36,0.45);
+  border-radius:12px;
+  padding:0.9rem 1.2rem;
+  display:none; /* hidden by default */
+  align-items:center;
+  gap:0.85rem;
+  animation:bannerPop .35s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes bannerPop{from{opacity:0;transform:scale(0.95) translateY(-4px);}to{opacity:1;transform:scale(1) translateY(0);}}
+.free-win-banner.visible{display:flex;}
+.fwb-icon{font-size:1.5rem;flex-shrink:0;line-height:1;}
+.fwb-text{}
+.fwb-title{font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;color:#fbbf24;margin-bottom:0.15rem;}
+.fwb-desc{font-size:0.72rem;color:rgba(255,255,255,0.45);line-height:1.4;}
+.fwb-badge{margin-left:auto;flex-shrink:0;background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.4);border-radius:8px;padding:0.3rem 0.65rem;font-family:'Orbitron',sans-serif;font-size:0.75rem;font-weight:700;color:#fbbf24;white-space:nowrap;}
+
 .champ-banner{margin:0.85rem 1.5rem 0;background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(34,211,238,0.04));border:1px solid rgba(139,92,246,0.25);border-radius:10px;padding:0.65rem 1rem;display:flex;align-items:center;gap:0.75rem;}
 .champ-banner-icon{font-size:1.3rem;line-height:1;}
 .champ-banner-text{font-family:'Rajdhani',sans-serif;font-size:0.8rem;font-weight:600;color:rgba(255,255,255,0.55);line-height:1.4;}
@@ -131,9 +154,29 @@ tr.highlight{background:rgba(139,92,246,0.06);}
 .field input,.field select{font-family:'Rajdhani',sans-serif;font-size:0.92rem;font-weight:600;background:rgba(255,255,255,0.04);border:1px solid rgba(139,92,246,0.2);border-radius:9px;color:#e2e8f0;padding:0.55rem 0.8rem;outline:none;transition:border-color 0.2s,box-shadow 0.2s;width:100%;}
 .field input:focus,.field select:focus{border-color:#8b5cf6;box-shadow:0 0 0 3px rgba(139,92,246,0.15);}
 .field select option{background:#0e0b1a;}
+
+/* PRICE PREVIEW */
 .price-preview{background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.15);border-radius:10px;padding:0.7rem 1rem;display:flex;align-items:center;justify-content:space-between;margin-top:0.3rem;}
 .price-preview-label{font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.35);}
 .price-preview-val{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:700;color:#fbbf24;}
+
+/* INLINE FREE WIN CALLOUT in the price preview area */
+.free-win-inline{
+  display:none;
+  margin-top:0.4rem;
+  background:rgba(251,191,36,0.06);
+  border:1px solid rgba(251,191,36,0.22);
+  border-radius:8px;
+  padding:0.5rem 0.8rem;
+  font-family:'Rajdhani',sans-serif;
+  font-size:0.8rem;
+  font-weight:700;
+  color:#fbbf24;
+  text-align:center;
+  letter-spacing:0.04em;
+}
+.free-win-inline.visible{display:block;}
+
 .form-msg{margin-top:0.75rem;padding:0.7rem 1rem;border-radius:9px;font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:600;display:none;}
 .form-msg.success{background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.25);color:#34d399;}
 .form-msg.error{background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.25);color:#f87171;}
@@ -275,11 +318,22 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.8rem 2rem;text-alig
       <div class="pricing-title">ELO BOOSTING</div>
       <div class="pricing-sub">Jungle Specialist · Master Yi · Middle East Server</div>
     </div>
-    <div class="bulk-banner">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-      <span>Buy <strong>5 wins</strong> get <strong>1 FREE</strong></span>
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+
+    <!-- Static subtle hint -->
+    <div class="promo-hint">
+      🎁 &nbsp;Order <strong style="color:rgba(251,191,36,0.85);margin:0 0.2em;">5+ wins</strong> to unlock a <strong style="color:rgba(251,191,36,0.85);margin:0 0.2em;">free bonus win</strong>
     </div>
+
+    <!-- Dynamic banner — appears when wins ≥ 5 -->
+    <div class="free-win-banner" id="freeWinBanner">
+      <div class="fwb-icon">🎁</div>
+      <div class="fwb-text">
+        <div class="fwb-title">Free Win Unlocked!</div>
+        <div class="fwb-desc">You get <strong id="fwbWinCount">1</strong> extra free win added on top of your order — no extra charge.</div>
+      </div>
+      <div class="fwb-badge" id="fwbBadge">+1 FREE</div>
+    </div>
+
     <div class="champ-banner">
       <div class="champ-banner-icon">⚔️</div>
       <div class="champ-banner-text">Boosted exclusively with <strong>Jungle Master Yi</strong> — ranked <strong>#1 Master Yi</strong> on the Middle East server.</div>
@@ -297,11 +351,11 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.8rem 2rem;text-alig
     </table>
 
     <div class="order-section">
-      <button class="order-toggle" id="orderToggle" onclick="toggleOrder()">
+      <button class="order-toggle open" id="orderToggle" onclick="toggleOrder()">
         <span>⚡ Place an Order</span>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
       </button>
-      <div class="order-form-wrap" id="orderFormWrap">
+      <div class="order-form-wrap open" id="orderFormWrap">
         <div class="form-grid">
           <div class="form-row">
             <div class="field">
@@ -350,9 +404,14 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.8rem 2rem;text-alig
               </select>
             </div>
           </div>
-          <div class="price-preview">
-            <div class="price-preview-label">Total Price</div>
-            <div class="price-preview-val" id="pricePreview">$0.00</div>
+
+          <!-- Price preview + free win inline note -->
+          <div>
+            <div class="price-preview">
+              <div class="price-preview-label">Total Price</div>
+              <div class="price-preview-val" id="pricePreview">$0.00</div>
+            </div>
+            <div class="free-win-inline" id="freeWinInline">🎁 You get <span id="fwiWins">1</span> free bonus win — you're paying for <span id="fwiPaid">5</span>, getting <span id="fwiTotal">6</span>!</div>
           </div>
 
           <!-- PAYMENT OPTIONS -->
@@ -453,7 +512,7 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.8rem 2rem;text-alig
       <a href="faq.html">FAQ</a>
       <a href="https://discord.com/invite/zjpQaVHv" target="_blank">Discord</a>
     </div>
-    <div class="footer-copy">© 2025 StainBoost · Middle East Server · #1 Master Yi</div>
+    <div class="footer-copy">© 2026 StainBoost · Middle East Server · #1 Master Yi</div>
   </div>
 </footer>
 
@@ -508,15 +567,42 @@ function getFormTotal(){
 }
 
 function updatePrice(){
+  const wins=parseInt(document.getElementById('fWins').value)||0;
   const total=getFormTotal();
+  const hasBonus=wins>=5;
+  const freeWins=hasBonus?Math.floor(wins/5):0; // 1 free per 5 ordered
+
   document.getElementById('pricePreview').textContent='$'+total.toFixed(2);
+
+  // Show/hide big top banner
+  const banner=document.getElementById('freeWinBanner');
+  if(hasBonus){
+    banner.classList.add('visible');
+    document.getElementById('fwbWinCount').textContent=freeWins;
+    document.getElementById('fwbBadge').textContent='+'+freeWins+' FREE';
+  } else {
+    banner.classList.remove('visible');
+  }
+
+  // Show/hide inline callout in price section
+  const inlineEl=document.getElementById('freeWinInline');
+  if(hasBonus){
+    inlineEl.classList.add('visible');
+    document.getElementById('fwiWins').textContent=freeWins;
+    document.getElementById('fwiPaid').textContent=wins;
+    document.getElementById('fwiTotal').textContent=wins+freeWins;
+  } else {
+    inlineEl.classList.remove('visible');
+  }
+
+  const BINANCE_PAY_ID='987280057';
   const binanceNote=document.getElementById('binanceAmountNote');
   const paypalText=document.getElementById('paypalAmountText');
   const paypalBtn=document.getElementById('paypalMeBtn');
-  const BINANCE_PAY_ID='987280057';
   if(total>0){
-    binanceNote.innerHTML=`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg> Send exactly <strong style="color:#fff;font-size:1rem;">$${total.toFixed(2)} USDT</strong> to Pay ID <strong style="color:#fff">${BINANCE_PAY_ID}</strong>`;
-    paypalText.textContent=`Send exactly $${total.toFixed(2)} USD via PayPal.me`;
+    let noteExtra=hasBonus?` · +${freeWins} free win${freeWins>1?'s':''} included 🎁`:'';
+    binanceNote.innerHTML=`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg> Send exactly <strong style="color:#fff;font-size:1rem;">$${total.toFixed(2)} USDT</strong> to Pay ID <strong style="color:#fff">${BINANCE_PAY_ID}</strong>${noteExtra}`;
+    paypalText.textContent=`Send exactly $${total.toFixed(2)} USD via PayPal.me${hasBonus?' (+'+freeWins+' free win'+( freeWins>1?'s':'')+' included!)':''}`;
     paypalBtn.href=`https://paypal.me/stainboost/${total.toFixed(2)}USD`;
   } else {
     binanceNote.innerHTML=`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg> Select rank &amp; wins above to see the exact amount`;
@@ -541,7 +627,6 @@ function copyPayID(){
   });
 }
 
-// FIX: showMsg was missing — this caused all form submissions to crash
 function showMsg(type,text){
   const el=document.getElementById('formMsg');
   el.className='form-msg '+type;
@@ -562,6 +647,7 @@ async function submitOrder(method='binance'){
   const type=document.getElementById('fType').value;
   const flash=document.getElementById('fFlash').value;
   const total=getFormTotal().toFixed(2);
+  const freeWins=wins>=5?Math.floor(wins/5):0;
   const btnId=method==='paypal'?'paypalSubmitBtn':'binanceSubmitBtn';
   const btn=document.getElementById(btnId);
   const paymentMethod=method==='paypal'?'PayPal.me':'Binance Pay';
@@ -570,7 +656,7 @@ async function submitOrder(method='binance'){
     const res=await fetch('/api/order',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({discord,ign,rank,type,wins,flash,total,paymentMethod})
+      body:JSON.stringify({discord,ign,rank,type,wins,flash,total,paymentMethod,freeWins})
     });
     const data=await res.json();
     if(res.ok&&data.ok){
@@ -579,7 +665,7 @@ async function submitOrder(method='binance'){
       document.getElementById('fIGN').value='';
       document.getElementById('fWins').value='';
       document.getElementById('fRank').value='';
-      document.getElementById('pricePreview').textContent='$0.00';
+      updatePrice();
     } else {
       showMsg('error','Submission failed. Please DM me on Discord directly.');
     }
