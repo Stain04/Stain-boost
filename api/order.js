@@ -26,8 +26,8 @@ export default async function handler(req, res) {
   const reviewToken = `SB-${t1}-${t2}`;
 
   // ── 2. SAVE TOKEN TO DATABASE ──
-  const dbUrl = process.env.KV_REST_API_URL || process.env.STORAGE_REST_API_URL;
-  const dbToken = process.env.KV_REST_API_TOKEN || process.env.STORAGE_REST_API_TOKEN;
+  const dbUrl = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL || process.env.STORAGE_REST_API_URL;
+  const dbToken = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN || process.env.STORAGE_REST_API_TOKEN;
   
   if (dbUrl && dbToken) {
     try {
