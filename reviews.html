@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reviews – StainBoost · ELO Boosting Middle East</title>
+<meta name="description" content="Real reviews from real players on Middle East server. See why Stain is the most trusted ELO booster.">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#0b0916;color:#e2e8f0;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 70% 60% at 10% 20%,rgba(80,30,120,0.38) 0%,transparent 65%),radial-gradient(ellipse 60% 50% at 90% 80%,rgba(20,80,120,0.25) 0%,transparent 60%);z-index:0;pointer-events:none;}
+body::after{content:'';position:fixed;inset:0;background-image:radial-gradient(rgba(255,255,255,0.035) 1px,transparent 1px);background-size:28px 28px;z-index:0;pointer-events:none;}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:rgba(11,9,22,0.88);border-bottom:1px solid rgba(139,92,246,0.15);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 2rem;height:62px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:900;letter-spacing:0.12em;text-decoration:none;background:linear-gradient(135deg,#c4b5fd,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.nav-links{display:flex;align-items:center;gap:0.15rem;}
+.nav-links a{font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.45);text-decoration:none;padding:0.4rem 0.9rem;border-radius:8px;transition:color .2s,background .2s;}
+.nav-links a:hover{color:#e2e8f0;background:rgba(255,255,255,0.06);}
+.nav-links a.active{color:#c4b5fd;}
+.nav-discord{font-family:'Rajdhani',sans-serif;font-size:0.82rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;background:rgba(139,92,246,0.14);border:1px solid rgba(139,92,246,0.35);color:#c4b5fd;text-decoration:none;padding:0.42rem 1.1rem;border-radius:9px;transition:all .2s;margin-left:0.5rem;}
+.nav-discord:hover{background:rgba(139,92,246,0.26);box-shadow:0 0 18px rgba(139,92,246,0.3);}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;}
+.hamburger span{display:block;width:22px;height:2px;background:rgba(255,255,255,0.55);border-radius:2px;}
+.mobile-menu{display:none;position:absolute;top:62px;left:0;right:0;background:rgba(11,9,22,0.97);border-bottom:1px solid rgba(139,92,246,0.12);padding:1rem;flex-direction:column;gap:0.4rem;z-index:99;}
+.mobile-menu.open{display:flex;}
+.mobile-menu a{font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.55);text-decoration:none;padding:0.75rem 1rem;border-radius:10px;}
+.mobile-menu a:hover,.mobile-menu a.active{color:#c4b5fd;background:rgba(139,92,246,0.1);}
+@media(max-width:680px){.nav-links{display:none;}.hamburger{display:flex;}}
+
+/* PAGE */
+.page{position:relative;z-index:1;padding:0 2rem 5rem;}
+.page-inner{max-width:1020px;margin:0 auto;}
+
+/* PAGE HEADER */
+.page-header{text-align:center;padding:4rem 0 3.5rem;}
+.page-label{font-family:'Rajdhani',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:0.3em;text-transform:uppercase;color:rgba(139,92,246,0.6);margin-bottom:0.5rem;}
+.page-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.8rem,4vw,2.5rem);font-weight:900;letter-spacing:0.06em;background:linear-gradient(135deg,#ffffff,#c4b5fd);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.75rem;}
+.page-sub{font-size:0.9rem;color:rgba(255,255,255,0.35);max-width:480px;margin:0 auto;}
+
+/* RATING SUMMARY */
+.rating-summary{
+  display:flex;align-items:center;justify-content:center;gap:3rem;
+  background:rgba(18,14,38,0.8);border:1px solid rgba(139,92,246,0.18);
+  border-radius:20px;padding:2rem 2.5rem;margin-bottom:3rem;
+  flex-wrap:wrap;gap:2rem;
+}
+.rating-big{text-align:center;}
+.rating-num{font-family:'Orbitron',sans-serif;font-size:3.5rem;font-weight:900;background:linear-gradient(135deg,#fbbf24,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
+.rating-stars{color:#fbbf24;font-size:1.3rem;letter-spacing:4px;margin:0.3rem 0;}
+.rating-count{font-size:0.75rem;color:rgba(255,255,255,0.3);letter-spacing:0.08em;}
+.rating-divider{width:1px;height:60px;background:rgba(255,255,255,0.08);}
+.rating-bars{display:flex;flex-direction:column;gap:0.5rem;min-width:200px;}
+.bar-row{display:flex;align-items:center;gap:0.75rem;}
+.bar-label{font-family:'Rajdhani',sans-serif;font-size:0.75rem;font-weight:700;color:rgba(255,255,255,0.4);width:32px;text-align:right;flex-shrink:0;}
+.bar-track{flex:1;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;}
+.bar-fill{height:100%;background:linear-gradient(90deg,#7c3aed,#a78bfa);border-radius:3px;}
+.bar-count{font-family:'Rajdhani',sans-serif;font-size:0.72rem;color:rgba(255,255,255,0.3);width:20px;flex-shrink:0;}
+
+/* REVIEWS GRID */
+.reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;}
+.review-card{
+  background:rgba(18,14,38,0.8);border:1px solid rgba(255,255,255,0.07);
+  border-radius:18px;padding:1.6rem;
+  transition:border-color .22s,transform .22s;
+  display:flex;flex-direction:column;
+}
+.review-card:hover{border-color:rgba(139,92,246,0.28);transform:translateY(-3px);}
+.review-card.featured{border-color:rgba(251,191,36,0.25);background:rgba(251,191,36,0.03);}
+.review-card.featured:hover{border-color:rgba(251,191,36,0.45);}
+.review-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem;}
+.review-stars{color:#fbbf24;font-size:0.88rem;letter-spacing:3px;}
+.review-date{font-size:0.68rem;color:rgba(255,255,255,0.22);font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:0.06em;}
+.review-rank-badge{
+  display:inline-flex;align-items:center;gap:0.3rem;
+  background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);
+  border-radius:6px;padding:0.2rem 0.55rem;
+  font-family:'Rajdhani',sans-serif;font-size:0.68rem;font-weight:700;
+  letter-spacing:0.08em;color:#a78bfa;margin-bottom:0.85rem;
+}
+.review-text{font-size:0.83rem;color:rgba(255,255,255,0.55);line-height:1.65;flex:1;margin-bottom:1.3rem;}
+.review-user{display:flex;align-items:center;gap:0.65rem;margin-top:auto;}
+.review-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:0.82rem;font-weight:700;color:#fff;flex-shrink:0;border:1px solid rgba(255,255,255,0.1);}
+.review-name{font-family:'Rajdhani',sans-serif;font-size:0.88rem;font-weight:700;color:#e2e8f0;}
+.review-via{font-size:0.68rem;color:rgba(255,255,255,0.28);}
+
+/* CTA */
+.reviews-cta{margin-top:3.5rem;background:linear-gradient(135deg,rgba(124,58,237,0.16),rgba(34,211,238,0.05));border:1px solid rgba(139,92,246,0.25);border-radius:20px;padding:2.5rem;text-align:center;}
+.cta-title{font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:900;color:#fff;margin-bottom:0.5rem;}
+.cta-sub{font-size:0.85rem;color:rgba(255,255,255,0.35);margin-bottom:1.8rem;}
+.btn-primary{font-family:'Rajdhani',sans-serif;font-size:0.92rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff;text-decoration:none;padding:0.9rem 2.2rem;border-radius:12px;border:none;cursor:pointer;box-shadow:0 0 28px rgba(124,58,237,0.4);transition:all .22s;display:inline-block;}
+.btn-primary:hover{box-shadow:0 0 42px rgba(124,58,237,0.6);transform:translateY(-2px);}
+
+/* FOOTER */
+footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.8rem 2rem;text-align:center;position:relative;z-index:1;}
+.footer-inner{max-width:700px;margin:0 auto;}
+.footer-logo{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:900;letter-spacing:0.15em;background:linear-gradient(135deg,#c4b5fd,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:1.2rem;}
+.footer-links{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem;}
+.footer-links a{font-family:'Rajdhani',sans-serif;font-size:0.78rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.32);text-decoration:none;transition:color .2s;}
+.footer-links a:hover{color:rgba(255,255,255,0.65);}
+.footer-copy{font-size:0.7rem;color:rgba(255,255,255,0.18);}
+
+@media(max-width:780px){.reviews-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:500px){.reviews-grid{grid-template-columns:1fr;}.rating-divider{display:none;}.rating-bars{width:100%;}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">STAINBOOST</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="reviews.html" class="active">Reviews</a>
+      <a href="faq.html">FAQ</a>
+      <a href="https://discord.com/invite/zjpQaVHv" class="nav-discord" target="_blank">Discord</a>
+    </div>
+    <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Home</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="reviews.html" class="active">Reviews</a>
+    <a href="faq.html">FAQ</a>
+    <a href="https://discord.com/invite/zjpQaVHv" target="_blank">Discord</a>
+  </div>
+</nav>
+
+<div class="page">
+<div class="page-inner">
+
+  <div class="page-header">
+    <div class="page-label">Testimonials</div>
+    <h1 class="page-title">CLIENT REVIEWS</h1>
+    <p class="page-sub">Real orders, real results. Every review is from a verified client on the Middle East server.</p>
+  </div>
+
+  <!-- RATING SUMMARY -->
+  <div class="rating-summary">
+    <div class="rating-big">
+      <div class="rating-num">5.0</div>
+      <div class="rating-stars">★★★★★</div>
+      <div class="rating-count">Based on 50+ orders</div>
+    </div>
+    <div class="rating-divider"></div>
+    <div class="rating-bars">
+      <div class="bar-row">
+        <div class="bar-label">5★</div>
+        <div class="bar-track"><div class="bar-fill" style="width:94%"></div></div>
+        <div class="bar-count">47</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">4★</div>
+        <div class="bar-track"><div class="bar-fill" style="width:6%;background:linear-gradient(90deg,#6d28d9,#7c3aed)"></div></div>
+        <div class="bar-count">3</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">3★</div>
+        <div class="bar-track"><div class="bar-fill" style="width:0%"></div></div>
+        <div class="bar-count">0</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">2★</div>
+        <div class="bar-track"><div class="bar-fill" style="width:0%"></div></div>
+        <div class="bar-count">0</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">1★</div>
+        <div class="bar-track"><div class="bar-fill" style="width:0%"></div></div>
+        <div class="bar-count">0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REVIEWS GRID -->
+  <div class="reviews-grid">
+
+    <div class="review-card featured">
+      <div class="review-top">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-date">Jan 2025</div>
+      </div>
+      <div class="review-rank-badge">⚔️ Gold → Platinum</div>
+      <div class="review-text">"Went from Gold II to Plat IV in two days flat. My friends were online the whole time and had zero clue. Stain was offline mode the entire time. Absolutely trustworthy."</div>
+      <div class="review-user">
+        <div class="review-avatar" style="background:linear-gradient(135deg,#7c3aed,#22d3ee);">AK</div>
+        <div>
+          <div class="review-name">AhmedK_ME1</div>
+          <div class="review-via">via Discord order</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-top">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-date">Feb 2025</div>
+      </div>
+      <div class="review-rank-badge">⚔️ Silver → Gold</div>
+      <div class="review-text">"Paid through Binance, submitted my order, and wins started coming in overnight. Easiest 5 wins of my life. Got the free bonus win too. Will order again next split."</div>
+      <div class="review-user">
+        <div class="review-avatar" style="background:linear-gradient(135deg,#fbbf24,#f59e0b);">MN</div>
+        <div>
+          <div class="review-name">M_Nader</div>
+          <div class="review-via">via Binance Pay</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-top">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-date">Feb 2025</div>
+      </div>
+      <div class="review-rank-badge">⚔️ Emerald → Diamond</div>
+      <div class="review-text">"Reached Diamond in under a week. Stain messaged me on Discord after every session to update me on progress. Super professional. Legit service, no sketchy stuff at all."</div>
+      <div class="review-user">
+        <div class="review-avatar" style="background:linear-gradient(135deg,#34d399,#22d3ee);">XL</div>
+        <div>
+          <div class="review-name">xLayla</div>
+          <div class="review-via">via PayPal</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-top">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-date">Mar 2025</div>
+      </div>
+      <div class="review-rank-badge">⚔️ Bronze → Silver</div>
+      <div class="review-text">"First time using a boosting service and I was nervous, but Stain made it super simple. VPN was from Egypt just like me. Flash was on the right key. Smooth from start to finish."</div>
+      <div class="review-user">
+        <div class="review-avatar" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);">OA</div>
+        <div>
+          <div class="review-name">Omar_A99</div>
+          <div class="review-via">via Binance Pay</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-top">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-date">Mar 2025</div>
+      </div>
+      <div class="review-rank-badge">⚔️ Platinum → Emerald</div>
+      <div class="review-text">"Ordered duo boost so I could play alongside Stain and actually learn. Insane Yi mechanics. Genuinely one of the best players I've ever seen on the server. Worth every dollar."</div>
+      <div class="review-user">
+        <div class="review-avatar" style="background:linear-gradient(135deg,#ec4899,#f43f5e);">SR</div>
+        <div>
+          <div class="review-name">SaraR_LoL</div>
+          <div class="review-via">via PayPal</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-top">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-date">Apr 2025</div>
+      </div>
+      <div class="review-rank-badge">⚔️ Iron → Bronze</div>
+      <div class="review-text">"Cheapest prices on the server by far and the quality is insane. Never had a loss reported to me during the boost. Finished faster than expected. 10/10 will come back."</div>
+      <div class="review-user">
+        <div class="review-avatar" style="background:linear-gradient(135deg,#0ea5e9,#22d3ee);">KH</div>
+        <div>
+          <div class="review-name">Khalil.H</div>
+          <div class="review-via">via Binance Pay</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-top">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-date">Apr 2025</div>
+      </div>
+      <div class="review-rank-badge">⚔️ Diamond → Masters</div>
+      <div class="review-text">"Hit Masters for the first time in my 6 years of playing. I tried for two seasons alone and couldn't do it. Stain got me there in 15 solo wins. Money well spent."</div>
+      <div class="review-user">
+        <div class="review-avatar" style="background:linear-gradient(135deg,#e879f9,#a855f7);">IM</div>
+        <div>
+          <div class="review-name">IbrahimM</div>
+          <div class="review-via">via PayPal</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-top">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-date">May 2025</div>
+      </div>
+      <div class="review-rank-badge">⚔️ Gold → Emerald</div>
+      <div class="review-text">"Ordered 10 wins to skip through Platinum entirely. Got them all done in 3 days. Pricing is fair, communication on Discord was fast, and nothing weird happened on my account."</div>
+      <div class="review-user">
+        <div class="review-avatar" style="background:linear-gradient(135deg,#84cc16,#22d3ee);">YZ</div>
+        <div>
+          <div class="review-name">Yousef_Z</div>
+          <div class="review-via">via Binance Pay</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card featured">
+      <div class="review-top">
+        <div class="review-stars">★★★★★</div>
+        <div class="review-date">May 2025</div>
+      </div>
+      <div class="review-rank-badge">⚔️ Silver → Platinum</div>
+      <div class="review-text">"Third time ordering. Every time is smooth, professional, and fast. The buy 5 get 1 free deal is great. Stain is the only booster I trust on this server. Don't go anywhere else."</div>
+      <div class="review-user">
+        <div class="review-avatar" style="background:linear-gradient(135deg,#f97316,#fbbf24);">RQ</div>
+        <div>
+          <div class="review-name">RamiQ</div>
+          <div class="review-via">via PayPal</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CTA -->
+  <div class="reviews-cta">
+    <div class="cta-title">READY TO BE NEXT?</div>
+    <div class="cta-sub">Join 500+ satisfied clients. Your rank is waiting.</div>
+    <a href="pricing.html" class="btn-primary">View Pricing &amp; Order</a>
+  </div>
+
+</div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">STAINBOOST</div>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="reviews.html">Reviews</a>
+      <a href="faq.html">FAQ</a>
+      <a href="https://discord.com/invite/zjpQaVHv" target="_blank">Discord</a>
+    </div>
+    <div class="footer-copy">© 2025 StainBoost · Middle East Server · #1 Master Yi</div>
+  </div>
+</footer>
+
+<script>
+function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open');}
+</script>
+</body>
+</html>
