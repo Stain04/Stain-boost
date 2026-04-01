@@ -1,9 +1,15 @@
-import { kv } from '@vercel/kv';
+import { createClient } from '@vercel/kv';
+
+// Manually connect using the "STORAGE" prefix you created
+const kv = createClient({
+  url: process.env.STORAGE_REST_API_URL,
+  token: process.env.STORAGE_REST_API_TOKEN,
+});
 
 export default async function handler(req, res) {
   // GET requests
   if (req.method === 'GET') {
-    // 1. If the request includes a token query (?token=...), verify it
+    // 1. Verify a token
     if (req.query.token) {
       const token = req.query.token.trim().toUpperCase();
       
@@ -20,15 +26,17 @@ export default async function handler(req, res) {
 
         return res.status(200).json({ ok: true });
       } catch (error) {
+        console.error("DB Error:", error);
         return res.status(500).json({ error: 'Database connection error' });
       }
     }
 
-    // 2. Otherwise, just fetch all reviews
+    // 2. Fetch all reviews
     try {
       const reviews = await kv.lrange('stain_reviews', 0, -1) || [];
       return res.status(200).json(reviews);
     } catch (error) {
+      console.error("DB Error:", error);
       return res.status(500).json({ error: 'Failed to fetch reviews' });
     }
   }
