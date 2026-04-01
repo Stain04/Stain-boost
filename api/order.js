@@ -1,11 +1,5 @@
 import { createClient } from '@vercel/kv';
 
-// Manually connect using the "STORAGE" prefix you created
-const kv = createClient({
-  url: process.env.STORAGE_REST_API_URL,
-  token: process.env.STORAGE_REST_API_TOKEN,
-});
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -31,16 +25,20 @@ export default async function handler(req, res) {
   for(let i=0; i<4; i++) t2 += chars.charAt(Math.floor(Math.random() * chars.length));
   const reviewToken = `SB-${t1}-${t2}`;
 
-  // Save the valid token to the Vercel KV database
-  try {
-    if (process.env.STORAGE_REST_API_URL) {
+  // ── 2. SAVE TOKEN TO DATABASE ──
+  const dbUrl = process.env.KV_REST_API_URL || process.env.STORAGE_REST_API_URL;
+  const dbToken = process.env.KV_REST_API_TOKEN || process.env.STORAGE_REST_API_TOKEN;
+  
+  if (dbUrl && dbToken) {
+    try {
+      const kv = createClient({ url: dbUrl, token: dbToken });
       await kv.sadd('valid_tokens', reviewToken);
+    } catch(e) {
+      console.error('KV Database error:', e);
     }
-  } catch(e) {
-    console.error('KV Database error:', e);
   }
 
-  // ── 2. DISCORD NOTIFICATION ──
+  // ── 3. DISCORD NOTIFICATION ──
   const discordPayload = {
     embeds: [{
       title: '⚡ New Boost Order',
@@ -69,7 +67,7 @@ export default async function handler(req, res) {
     console.error('Discord webhook failed:', e);
   }
 
-  // ── 3. EMAIL NOTIFICATION ──
+  // ── 4. EMAIL NOTIFICATION ──
   if (EMAIL_FROM && EMAIL_PASS && EMAIL_TO) {
     try {
       const nodemailer = await import('nodemailer');
