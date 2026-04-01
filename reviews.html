@@ -359,21 +359,47 @@ function isValidTokenFormat(t){
   return /^SB-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(t.trim().toUpperCase());
 }
 
-function verifyToken(){
+async function verifyToken(){
   const raw=document.getElementById('tokenInput').value.trim().toUpperCase();
   const errEl=document.getElementById('tokenErr');
+  const btn=document.querySelector('.token-btn');
 
+  // 1. Check basic format first
   if(!isValidTokenFormat(raw)){
-    errEl.textContent='Invalid token format. It should look like SB-4821-ZXKQ — check what Stain sent you on Discord.';
+    errEl.textContent='Invalid token format. It should look like SB-4821-ZXKQ';
     errEl.classList.add('show');
     return;
   }
 
+  // Hide errors and show loading state
   errEl.classList.remove('show');
-  document.getElementById('stepToken').classList.add('hidden');
-  document.getElementById('stepForm').classList.remove('hidden');
-  document.getElementById('verifiedBanner').classList.add('show');
-  window._verifiedToken=raw;
+  btn.disabled = true;
+  btn.textContent = 'Checking...';
+
+  try {
+    // 2. Ask the database if the token is real and unused
+    const res = await fetch(`/api/reviews?token=${raw}`);
+    const data = await res.json();
+
+    if (res.ok && data.ok) {
+      // Token is valid! Show the form.
+      document.getElementById('stepToken').classList.add('hidden');
+      document.getElementById('stepForm').classList.remove('hidden');
+      document.getElementById('verifiedBanner').classList.add('show');
+      window._verifiedToken = raw;
+    } else {
+      // Token doesn't exist or is used
+      errEl.textContent = data.error || 'Invalid token.';
+      errEl.classList.add('show');
+    }
+  } catch(e) {
+    errEl.textContent = 'Network error. Please try again.';
+    errEl.classList.add('show');
+  }
+
+  // Reset button state
+  btn.disabled = false;
+  btn.textContent = 'Verify →';
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
