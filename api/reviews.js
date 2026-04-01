@@ -1,20 +1,21 @@
 import { createClient } from '@vercel/kv';
 
 export default async function handler(req, res) {
-  const url = process.env.STORAGE_REST_API_URL;
-  const token = process.env.STORAGE_REST_API_TOKEN;
+  // Automatically grab whichever name Vercel decided to use
+  const url = process.env.KV_REST_API_URL || process.env.STORAGE_REST_API_URL;
+  const token = process.env.KV_REST_API_TOKEN || process.env.STORAGE_REST_API_TOKEN;
 
-  // 1. Diagnostic Check: Tell us exactly what is missing if it fails
+  // Diagnostic Check
   if (!url || !token) {
     return res.status(500).json({ 
       error: `Missing Vercel Env Variables! URL exists: ${!!url}, Token exists: ${!!token}. You must REDEPLOY in Vercel.` 
     });
   }
 
-  // 2. Connect to the DB
+  // Connect to the DB
   const kv = createClient({ url, token });
 
-  // GET requests
+  // GET requests (Verify tokens or fetch reviews)
   if (req.method === 'GET') {
     if (req.query.token) {
       const qToken = req.query.token.trim().toUpperCase();
@@ -43,7 +44,7 @@ export default async function handler(req, res) {
     }
   }
 
-  // POST requests
+  // POST: Submit a new review
   if (req.method === 'POST') {
     const { token: pToken, name, rank, stars, text, date } = req.body;
     const formattedToken = pToken.trim().toUpperCase();
