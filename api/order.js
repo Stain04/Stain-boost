@@ -1,4 +1,10 @@
-import { kv } from '@vercel/kv';
+import { createClient } from '@vercel/kv';
+
+// Manually connect using the "STORAGE" prefix you created
+const kv = createClient({
+  url: process.env.STORAGE_REST_API_URL,
+  token: process.env.STORAGE_REST_API_TOKEN,
+});
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -27,7 +33,7 @@ export default async function handler(req, res) {
 
   // Save the valid token to the Vercel KV database
   try {
-    if (process.env.KV_REST_API_URL) {
+    if (process.env.STORAGE_REST_API_URL) {
       await kv.sadd('valid_tokens', reviewToken);
     }
   } catch(e) {
