@@ -1,9 +1,9 @@
 import { createClient } from '@vercel/kv';
 
 export default async function handler(req, res) {
-  // Automatically grab whichever name Vercel decided to use
-  const url = process.env.KV_REST_API_URL || process.env.STORAGE_REST_API_URL;
-  const token = process.env.KV_REST_API_TOKEN || process.env.STORAGE_REST_API_TOKEN;
+  // Grab the database credentials (checks for the new Upstash names)
+  const url = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL || process.env.STORAGE_REST_API_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN || process.env.STORAGE_REST_API_TOKEN;
 
   // Diagnostic Check
   if (!url || !token) {
