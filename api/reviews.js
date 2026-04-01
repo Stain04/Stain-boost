@@ -1,8 +1,30 @@
 import { kv } from '@vercel/kv';
 
 export default async function handler(req, res) {
-  // GET: Fetch all reviews to display on the page
+  // GET requests
   if (req.method === 'GET') {
+    // 1. If the request includes a token query (?token=...), verify it
+    if (req.query.token) {
+      const token = req.query.token.trim().toUpperCase();
+      
+      try {
+        const isValid = await kv.sismember('valid_tokens', token);
+        if (!isValid) {
+          return res.status(400).json({ error: 'Invalid token. Check the code Stain sent you.' });
+        }
+
+        const isUsed = await kv.sismember('used_tokens', token);
+        if (isUsed) {
+          return res.status(400).json({ error: 'This token has already been used to post a review.' });
+        }
+
+        return res.status(200).json({ ok: true });
+      } catch (error) {
+        return res.status(500).json({ error: 'Database connection error' });
+      }
+    }
+
+    // 2. Otherwise, just fetch all reviews
     try {
       const reviews = await kv.lrange('stain_reviews', 0, -1) || [];
       return res.status(200).json(reviews);
@@ -17,23 +39,14 @@ export default async function handler(req, res) {
     const formattedToken = token.trim().toUpperCase();
 
     try {
-      // 1. Check if token exists in the database
       const isValid = await kv.sismember('valid_tokens', formattedToken);
-      if (!isValid) {
-        return res.status(400).json({ error: 'Invalid token. This token does not exist.' });
-      }
+      if (!isValid) return res.status(400).json({ error: 'Invalid token.' });
 
-      // 2. Check if token was already used
       const isUsed = await kv.sismember('used_tokens', formattedToken);
-      if (isUsed) {
-        return res.status(400).json({ error: 'Token has already been used to post a review.' });
-      }
+      if (isUsed) return res.status(400).json({ error: 'Token already used.' });
 
-      // 3. Save the review to the list
       const newReview = { name, rank, stars, text, date };
       await kv.lpush('stain_reviews', newReview);
-
-      // 4. Mark the token as used
       await kv.sadd('used_tokens', formattedToken);
 
       return res.status(200).json({ ok: true });
