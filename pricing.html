@@ -20,15 +20,6 @@ body{min-height:100vh;font-family:'Inter',sans-serif;background:var(--bg);color:
 @keyframes drift{0%{transform:translate(0,0) scale(1);}100%{transform:translate(28px,18px) scale(1.06);}}
 .bg-grid{position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(139,92,246,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(139,92,246,0.035) 1px,transparent 1px);background-size:40px 40px;}
 
-/* TICKER */
-.ticker-bar{position:relative;z-index:1;background:rgba(139,92,246,0.07);border-bottom:1px solid rgba(139,92,246,0.15);padding:0.48rem 0;overflow:hidden;}
-.ticker-inner{display:flex;gap:3rem;align-items:center;white-space:nowrap;animation:ticker 30s linear infinite;}
-@keyframes ticker{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
-.ticker-item{display:flex;align-items:center;gap:0.5rem;font-family:'Rajdhani',sans-serif;font-size:0.78rem;font-weight:700;letter-spacing:0.06em;color:rgba(255,255,255,0.42);flex-shrink:0;}
-.ticker-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
-.t-green{color:rgba(34,197,94,0.72);}.t-green .ticker-dot{background:#22c55e;box-shadow:0 0 5px #22c55e;}
-.t-gold{color:rgba(251,191,36,0.72);}.t-gold .ticker-dot{background:var(--gold);box-shadow:0 0 5px var(--gold);}
-.t-purple{color:rgba(196,181,253,0.72);}.t-purple .ticker-dot{background:var(--purple-light);box-shadow:0 0 5px var(--purple);}
 
 /* NAV */
 .nav{position:sticky;top:0;z-index:100;background:rgba(11,9,22,0.85);border-bottom:1px solid var(--border);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
@@ -310,15 +301,42 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
 
 @media(max-width:920px){.main-grid{grid-template-columns:1fr;}.sidebar{order:-1;}.price-table-card{display:none;}}
 @media(max-width:600px){.form-row{grid-template-columns:1fr;}.hero{padding:2.5rem 1rem 1.5rem;}.configurator{padding:1.5rem;}.payment-section{padding:0 1.5rem 1.5rem;}.stat-item{padding:0.5rem 1rem;}}
+
+/* FLOATING PARTICLES */
+#particles-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+/* EXTRA ORBS */
+.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;}
+.orb-1{width:280px;height:280px;top:8%;right:4%;background:radial-gradient(circle,rgba(34,211,238,0.07),transparent 70%);animation:orbFloat 9s ease-in-out infinite;}
+.orb-2{width:200px;height:200px;bottom:12%;left:5%;background:radial-gradient(circle,rgba(139,92,246,0.09),transparent 70%);animation:orbFloat 7s ease-in-out infinite 3s;}
+.orb-3{width:120px;height:120px;top:55%;right:18%;background:radial-gradient(circle,rgba(251,191,36,0.06),transparent 70%);animation:orbFloat 11s ease-in-out infinite 1s;}
+@keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1);}33%{transform:translate(12px,-18px) scale(1.04);}66%{transform:translate(-8px,8px) scale(0.97);}}
+
+/* SCAN LINE */
+.scan-line{position:fixed;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(139,92,246,0.35),rgba(34,211,238,0.25),transparent);z-index:0;pointer-events:none;animation:scanDown 10s linear infinite;opacity:0.4;}
+@keyframes scanDown{0%{top:-2px;opacity:0;}5%{opacity:0.4;}95%{opacity:0.4;}100%{top:100vh;opacity:0;}}
+
+/* HERO TITLE glow */
+.hero-title .line2{animation:line2Glow 3s ease-in-out infinite alternate;}
+@keyframes line2Glow{from{filter:drop-shadow(0 0 6px rgba(34,211,238,0.2));}to{filter:drop-shadow(0 0 18px rgba(34,211,238,0.5));}}
+
+/* PRICING CARD shimmer */
+.pricing-card::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,0.025) 50%,transparent 62%);background-size:250% 100%;animation:shimmer 6s infinite;border-radius:24px;pointer-events:none;}
+@keyframes shimmer{0%{background-position:250% 0}100%{background-position:-250% 0}}
+
+/* RANK TAB glow */
+.rank-tab.active{animation:tabGlow 2s ease-in-out infinite alternate;}
+@keyframes tabGlow{from{box-shadow:0 0 10px rgba(139,92,246,0.12);}to{box-shadow:0 0 24px rgba(139,92,246,0.3);}}
 </style>
 </head>
 <body>
-
+<canvas id="particles-canvas"></canvas>
+<div class="scan-line"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
 <div class="bg-layers"><div class="bg-blob"></div><div class="bg-blob"></div><div class="bg-blob"></div></div>
 <div class="bg-grid"></div>
-
-<!-- TICKER -->
-<div class="ticker-bar" aria-hidden="true"><div class="ticker-inner" id="tickerInner"></div></div>
 
 <nav class="nav">
   <div class="nav-inner">
@@ -328,14 +346,14 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
       <a href="pricing.html" class="active">Pricing</a>
       <a href="reviews.html">Reviews</a>
       <a href="faq.html">FAQ</a>
-      <a href="https://discord.com/invite/zjpQaVHv" class="nav-discord" target="_blank">Discord</a>
+      <a href="https://discord.gg/pxsTfTJF" class="nav-discord" target="_blank">Discord</a>
     </div>
     <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
   </div>
   <div class="mobile-menu" id="mobileMenu">
     <a href="index.html">Home</a><a href="pricing.html" class="active">Pricing</a>
     <a href="reviews.html">Reviews</a><a href="faq.html">FAQ</a>
-    <a href="https://discord.com/invite/zjpQaVHv" target="_blank">Discord</a>
+    <a href="https://discord.gg/pxsTfTJF" target="_blank">Discord</a>
   </div>
 </nav>
 
@@ -564,7 +582,7 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
 
       <div class="discord-cta">
         <div class="discord-cta-text"><div class="title">Questions? DM Stain</div><div class="sub">Custom orders &amp; bulk deals available</div></div>
-        <a href="https://discord.com/invite/zjpQaVHv" target="_blank" class="discord-cta-btn">Open Discord</a>
+        <a href="https://discord.gg/pxsTfTJF" target="_blank" class="discord-cta-btn">Open Discord</a>
       </div>
     </div>
   </div>
@@ -574,7 +592,7 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
   <div class="footer-inner">
     <div class="footer-logo">STAINBOOST</div>
     <div class="footer-links">
-      <a href="index.html">Home</a><a href="pricing.html">Pricing</a><a href="reviews.html">Reviews</a><a href="faq.html">FAQ</a><a href="https://discord.com/invite/zjpQaVHv" target="_blank">Discord</a>
+      <a href="index.html">Home</a><a href="pricing.html">Pricing</a><a href="reviews.html">Reviews</a><a href="faq.html">FAQ</a><a href="https://discord.gg/pxsTfTJF" target="_blank">Discord</a>
     </div>
     <div class="footer-copy">© 2026 StainBoost · Middle East Server · #1 Master Yi</div>
   </div>
@@ -612,31 +630,9 @@ const reviews=[
   {text:"Got 5 wins ordered and received 6. The free win promo is legit. Will be back.",author:"Rakan_LoL",rank:"Iron → Bronze",stars:5},
   {text:"Was skeptical at first but account was 100% safe and climbed fast. Trust this guy.",author:"ShadowStrike",rank:"Gold → Emerald",stars:5},
 ];
-const tickerData=[
-  {t:"Order completed · Gold → Platinum",cls:"t-green"},
-  {t:"New 5-star review from Ahmed_ME",cls:"t-gold"},
-  {t:"Stain is currently online",cls:"t-purple"},
-  {t:"Order completed · Silver → Gold",cls:"t-green"},
-  {t:"500+ total orders delivered",cls:"t-gold"},
-  {t:"Order completed · Iron → Bronze",cls:"t-green"},
-  {t:"Average reply under 5 minutes",cls:"t-purple"},
-  {t:"Order completed · Platinum → Emerald",cls:"t-green"},
-  {t:"Zero banned accounts — ever",cls:"t-gold"},
-];
 
 let selIdx=-1,selType='solo',selWins=5,selFlash='D';
 const BINANCE_ID='987280057',MIN=1,MAX=30;
-
-// Ticker
-(function(){
-  const el=document.getElementById('tickerInner');
-  [...tickerData,...tickerData].forEach(d=>{
-    const div=document.createElement('div');
-    div.className=`ticker-item ${d.cls}`;
-    div.innerHTML=`<span class="ticker-dot"></span>${d.t}`;
-    el.appendChild(div);
-  });
-})();
 
 // Reviews
 (function(){
@@ -790,6 +786,42 @@ function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('op
 
 // Init
 fillSlider(5);showWins(5);
+
+// Floating particles
+(function(){
+  const canvas=document.getElementById('particles-canvas');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  let W,H,particles=[];
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+  resize();
+  window.addEventListener('resize',resize);
+  const COLORS=['rgba(139,92,246,','rgba(34,211,238,','rgba(196,181,253,','rgba(251,191,36,'];
+  for(let i=0;i<50;i++){
+    particles.push({
+      x:Math.random()*W,y:Math.random()*H,
+      r:Math.random()*1.6+0.3,
+      dx:(Math.random()-0.5)*0.28,dy:(Math.random()-0.5)*0.28,
+      o:Math.random()*0.4+0.07,
+      c:COLORS[Math.floor(Math.random()*COLORS.length)],
+      pulse:Math.random()*Math.PI*2,pulseSpeed:Math.random()*0.018+0.005
+    });
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p=>{
+      p.pulse+=p.pulseSpeed;
+      const alpha=p.o*(0.7+0.3*Math.sin(p.pulse));
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=p.c+alpha+')';ctx.fill();
+      p.x+=p.dx;p.y+=p.dy;
+      if(p.x<-5)p.x=W+5;if(p.x>W+5)p.x=-5;
+      if(p.y<-5)p.y=H+5;if(p.y>H+5)p.y=-5;
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
 </script>
 </body>
 </html>

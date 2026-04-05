@@ -137,9 +137,48 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.8rem 2rem;text-alig
 
 @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+
+/* FLOATING PARTICLES */
+#particles-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+/* SHIMMER on cards */
+.stat-item::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,0.04) 50%,transparent 60%);background-size:200% 100%;animation:shimmer 4s infinite;border-radius:18px;}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* FLOATING ORBS extra layer */
+.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;}
+.orb-1{width:300px;height:300px;top:5%;right:5%;background:radial-gradient(circle,rgba(34,211,238,0.07),transparent 70%);animation:orbFloat 8s ease-in-out infinite;}
+.orb-2{width:200px;height:200px;bottom:10%;left:8%;background:radial-gradient(circle,rgba(139,92,246,0.09),transparent 70%);animation:orbFloat 6s ease-in-out infinite 2s;}
+.orb-3{width:150px;height:150px;top:45%;right:20%;background:radial-gradient(circle,rgba(251,191,36,0.06),transparent 70%);animation:orbFloat 10s ease-in-out infinite 4s;}
+@keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1);}33%{transform:translate(15px,-20px) scale(1.05);}66%{transform:translate(-10px,10px) scale(0.97);}}
+
+/* GLOW PULSE on hero title */
+.hero-title span{animation:titleGlow 3s ease-in-out infinite alternate;}
+@keyframes titleGlow{from{filter:drop-shadow(0 0 8px rgba(196,181,253,0.3));}to{filter:drop-shadow(0 0 22px rgba(34,211,238,0.5));}}
+
+/* SCAN LINE */
+.scan-line{position:fixed;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(139,92,246,0.4),rgba(34,211,238,0.3),transparent);z-index:0;pointer-events:none;animation:scanDown 8s linear infinite;opacity:0.5;}
+@keyframes scanDown{0%{top:-2px;opacity:0;}5%{opacity:0.5;}95%{opacity:0.5;}100%{top:100vh;opacity:0;}}
+
+/* REVIEW CARD glow on hover */
+.review-card{position:relative;overflow:hidden;}
+.review-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(139,92,246,0.1),transparent 60%);opacity:0;transition:opacity 0.3s;border-radius:18px;}
+.review-card:hover::before{opacity:1;}
+
+/* STEP icon pulse */
+.step-icon{animation:iconPulse 3s ease-in-out infinite;}
+@keyframes iconPulse{0%,100%{box-shadow:0 0 0 0 rgba(139,92,246,0.0);}50%{box-shadow:0 0 0 8px rgba(139,92,246,0.08);}}
+
+/* CTA banner shimmer */
+.cta-banner::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,0.03) 50%,transparent 65%);background-size:300% 100%;animation:shimmer 5s infinite;border-radius:24px;}
 </style>
 </head>
 <body>
+<canvas id="particles-canvas"></canvas>
+<div class="scan-line"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
 <nav class="nav">
   <div class="nav-inner">
     <a href="index.html" class="nav-logo">STAINBOOST</a>
@@ -148,7 +187,7 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.8rem 2rem;text-alig
       <a href="pricing.html">Pricing</a>
       <a href="reviews.html">Reviews</a>
       <a href="faq.html">FAQ</a>
-      <a href="https://discord.com/invite/zjpQaVHv" class="nav-discord" target="_blank">Discord</a>
+      <a href="https://discord.gg/pxsTfTJF" class="nav-discord" target="_blank">Discord</a>
     </div>
     <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
   </div>
@@ -157,7 +196,7 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.8rem 2rem;text-alig
     <a href="pricing.html">Pricing</a>
     <a href="reviews.html">Reviews</a>
     <a href="faq.html">FAQ</a>
-    <a href="https://discord.com/invite/zjpQaVHv" target="_blank">Discord</a>
+    <a href="https://discord.gg/pxsTfTJF" target="_blank">Discord</a>
   </div>
 </nav>
 
@@ -179,7 +218,7 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.8rem 2rem;text-alig
       </p>
       <div class="hero-btns">
         <a href="pricing.html" class="btn-primary">View Pricing</a>
-        <a href="https://discord.com/invite/zjpQaVHv" class="btn-secondary" target="_blank">Chat on Discord</a>
+        <a href="https://discord.gg/pxsTfTJF" class="btn-secondary" target="_blank">Chat on Discord</a>
       </div>
     </div>
     <div class="hero-scroll">
@@ -356,7 +395,7 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.8rem 2rem;text-alig
     <div class="cta-banner-sub">Start your boost today. Fast, secure, and guaranteed results.</div>
     <div class="cta-btns">
       <a href="pricing.html" class="btn-primary">View Pricing &amp; Order</a>
-      <a href="https://discord.com/invite/zjpQaVHv" class="btn-secondary" target="_blank">Message on Discord</a>
+      <a href="https://discord.gg/pxsTfTJF" class="btn-secondary" target="_blank">Message on Discord</a>
     </div>
   </div>
 
@@ -368,7 +407,7 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.8rem 2rem;text-alig
         <a href="pricing.html">Pricing</a>
         <a href="reviews.html">Reviews</a>
         <a href="faq.html">FAQ</a>
-        <a href="https://discord.com/invite/zjpQaVHv" target="_blank">Discord</a>
+        <a href="https://discord.gg/pxsTfTJF" target="_blank">Discord</a>
       </div>
       <div class="footer-copy">© 2026 StainBoost · Middle East Server · #1 Master Yi</div>
     </div>
@@ -377,6 +416,55 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.8rem 2rem;text-alig
 
 <script>
 function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open');}
+
+// Mouse glow on review cards
+document.querySelectorAll('.review-card').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    card.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');
+    card.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');
+  });
+});
+
+// Floating particles
+(function(){
+  const canvas=document.getElementById('particles-canvas');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  let W,H,particles=[];
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+  resize();
+  window.addEventListener('resize',resize);
+  const COLORS=['rgba(139,92,246,', 'rgba(34,211,238,', 'rgba(196,181,253,', 'rgba(251,191,36,'];
+  for(let i=0;i<55;i++){
+    particles.push({
+      x:Math.random()*W, y:Math.random()*H,
+      r:Math.random()*1.8+0.4,
+      dx:(Math.random()-0.5)*0.3,
+      dy:(Math.random()-0.5)*0.3,
+      o:Math.random()*0.45+0.08,
+      c:COLORS[Math.floor(Math.random()*COLORS.length)],
+      pulse:Math.random()*Math.PI*2,
+      pulseSpeed:Math.random()*0.02+0.005
+    });
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p=>{
+      p.pulse+=p.pulseSpeed;
+      const alpha=p.o*(0.7+0.3*Math.sin(p.pulse));
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=p.c+alpha+')';
+      ctx.fill();
+      p.x+=p.dx; p.y+=p.dy;
+      if(p.x<-5)p.x=W+5; if(p.x>W+5)p.x=-5;
+      if(p.y<-5)p.y=H+5; if(p.y>H+5)p.y=-5;
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
 </script>
 </body>
 </html>

@@ -141,9 +141,28 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.8rem 2rem;text-alig
 .footer-copy{font-size:0.7rem;color:rgba(255,255,255,0.18);}
 @media(max-width:780px){.reviews-grid{grid-template-columns:1fr 1fr;}.srow{grid-template-columns:1fr;}}
 @media(max-width:500px){.reviews-grid{grid-template-columns:1fr;}.rating-divider{display:none;}.rating-bars{width:100%;}}
+
+/* PARTICLES */
+#particles-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
+/* ORBS */
+.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;}
+.orb-1{width:260px;height:260px;top:6%;right:6%;background:radial-gradient(circle,rgba(34,211,238,0.07),transparent 70%);animation:orbFloat 9s ease-in-out infinite;}
+.orb-2{width:180px;height:180px;bottom:10%;left:6%;background:radial-gradient(circle,rgba(139,92,246,0.09),transparent 70%);animation:orbFloat 7s ease-in-out infinite 2.5s;}
+@keyframes orbFloat{0%,100%{transform:translate(0,0);}50%{transform:translate(14px,-16px);}}
+/* SCAN */
+.scan-line{position:fixed;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(139,92,246,0.35),rgba(34,211,238,0.25),transparent);z-index:0;pointer-events:none;animation:scanDown 9s linear infinite;opacity:0.4;}
+@keyframes scanDown{0%{top:-2px;opacity:0;}5%{opacity:0.4;}95%{opacity:0.4;}100%{top:100vh;opacity:0;}}
+/* REVIEW CARD hover glow */
+.review-card-item{position:relative;}
+.review-card-item::after{content:'';position:absolute;inset:-1px;border-radius:inherit;background:linear-gradient(135deg,rgba(139,92,246,0),rgba(34,211,238,0));transition:background 0.3s;pointer-events:none;}
+.review-card-item:hover::after{background:linear-gradient(135deg,rgba(139,92,246,0.1),rgba(34,211,238,0.06));}
 </style>
 </head>
 <body>
+<canvas id="particles-canvas"></canvas>
+<div class="scan-line"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
 <nav class="nav">
   <div class="nav-inner">
     <a href="index.html" class="nav-logo">STAINBOOST</a>
@@ -152,7 +171,7 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.8rem 2rem;text-alig
       <a href="pricing.html">Pricing</a>
       <a href="reviews.html" class="active">Reviews</a>
       <a href="faq.html">FAQ</a>
-      <a href="https://discord.com/invite/zjpQaVHv" class="nav-discord" target="_blank">Discord</a>
+      <a href="https://discord.gg/pxsTfTJF" class="nav-discord" target="_blank">Discord</a>
     </div>
     <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
   </div>
@@ -161,7 +180,7 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.8rem 2rem;text-alig
     <a href="pricing.html">Pricing</a>
     <a href="reviews.html" class="active">Reviews</a>
     <a href="faq.html">FAQ</a>
-    <a href="https://discord.com/invite/zjpQaVHv" target="_blank">Discord</a>
+    <a href="https://discord.gg/pxsTfTJF" target="_blank">Discord</a>
   </div>
 </nav>
 
@@ -406,7 +425,7 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.8rem 2rem;text-alig
       <a href="pricing.html">Pricing</a>
       <a href="reviews.html" class="active">Reviews</a>
       <a href="faq.html">FAQ</a>
-      <a href="https://discord.com/invite/zjpQaVHv" target="_blank">Discord</a>
+      <a href="https://discord.gg/pxsTfTJF" target="_blank">Discord</a>
     </div>
     <div class="footer-copy">© 2026 StainBoost · Middle East Server · #1 Master Yi</div>
   </div>
@@ -555,6 +574,26 @@ async function submitReview(){
   } catch(e) { showMsg('err', 'Network error.'); }
   btn.disabled=false; btn.textContent='Post My Review';
 }
+
+// Floating particles
+(function(){
+  const canvas=document.getElementById('particles-canvas');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  let W,H,particles=[];
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+  resize();window.addEventListener('resize',resize);
+  const COLORS=['rgba(139,92,246,','rgba(34,211,238,','rgba(196,181,253,','rgba(251,191,36,'];
+  for(let i=0;i<45;i++){
+    particles.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.6+0.3,dx:(Math.random()-0.5)*0.28,dy:(Math.random()-0.5)*0.28,o:Math.random()*0.38+0.07,c:COLORS[Math.floor(Math.random()*COLORS.length)],pulse:Math.random()*Math.PI*2,pulseSpeed:Math.random()*0.018+0.005});
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p=>{p.pulse+=p.pulseSpeed;const a=p.o*(0.7+0.3*Math.sin(p.pulse));ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=p.c+a+')';ctx.fill();p.x+=p.dx;p.y+=p.dy;if(p.x<-5)p.x=W+5;if(p.x>W+5)p.x=-5;if(p.y<-5)p.y=H+5;if(p.y>H+5)p.y=-5;});
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
 </script>
 </body>
 </html>
