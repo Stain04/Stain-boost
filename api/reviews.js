@@ -1,34 +1,43 @@
 import { createClient } from '@vercel/kv';
 
+// Simple sanitizer — strip HTML tags, limit length
+function sanitize(str, maxLen = 200) {
+  if (typeof str !== 'string') return '';
+  return str.replace(/[<>"'&]/g, '').trim().slice(0, maxLen);
+}
+
+const VALID_RANKS = [
+  'Iron', 'Bronze', 'Silver', 'Gold', 'Platinum',
+  'Emerald', 'Diamond IV-III', 'Diamond II-I', 'Masters'
+];
+
 export default async function handler(req, res) {
-  // Grab the database credentials (checks for the new Upstash names)
-  const url = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL || process.env.STORAGE_REST_API_URL;
+  const url   = process.env.UPSTASH_REDIS_REST_URL   || process.env.KV_REST_API_URL   || process.env.STORAGE_REST_API_URL;
   const token = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN || process.env.STORAGE_REST_API_TOKEN;
 
-  // Diagnostic Check
   if (!url || !token) {
-    return res.status(500).json({ 
-      error: `Missing Vercel Env Variables! URL exists: ${!!url}, Token exists: ${!!token}. You must REDEPLOY in Vercel.` 
+    return res.status(500).json({
+      error: `Missing Vercel Env Variables! URL exists: ${!!url}, Token exists: ${!!token}. You must REDEPLOY in Vercel.`
     });
   }
 
-  // Connect to the DB
   const kv = createClient({ url, token });
 
-  // GET requests (Verify tokens or fetch reviews)
+  // ── GET ──
   if (req.method === 'GET') {
+    // Token verification
     if (req.query.token) {
-      const qToken = req.query.token.trim().toUpperCase();
+      const qToken = req.query.token.trim().toUpperCase().slice(0, 20);
+      // Basic token format check
+      if (!/^SB-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(qToken)) {
+        return res.status(400).json({ error: 'Invalid token format.' });
+      }
       try {
         const isValid = await kv.sismember('valid_tokens', qToken);
-        if (!isValid) {
-          return res.status(400).json({ error: 'Invalid token. Check the code Stain sent you.' });
-        }
+        if (!isValid) return res.status(400).json({ error: 'Invalid token. Check the code Stain sent you.' });
 
         const isUsed = await kv.sismember('used_tokens', qToken);
-        if (isUsed) {
-          return res.status(400).json({ error: 'This token has already been used to post a review.' });
-        }
+        if (isUsed) return res.status(400).json({ error: 'This token has already been used to post a review.' });
 
         return res.status(200).json({ ok: true });
       } catch (error) {
@@ -36,6 +45,7 @@ export default async function handler(req, res) {
       }
     }
 
+    // Fetch all reviews
     try {
       const reviews = await kv.lrange('stain_reviews', 0, -1) || [];
       return res.status(200).json(reviews);
@@ -44,10 +54,35 @@ export default async function handler(req, res) {
     }
   }
 
-  // POST: Submit a new review
+  // ── POST ──
   if (req.method === 'POST') {
     const { token: pToken, name, rank, stars, text, date } = req.body;
-    const formattedToken = pToken.trim().toUpperCase();
+
+    if (!pToken || typeof pToken !== 'string') {
+      return res.status(400).json({ error: 'Missing token.' });
+    }
+
+    const formattedToken = pToken.trim().toUpperCase().slice(0, 20);
+
+    // Validate token format before hitting DB
+    if (!/^SB-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(formattedToken)) {
+      return res.status(400).json({ error: 'Invalid token format.' });
+    }
+
+    // Sanitize & validate all fields
+    const cleanName  = sanitize(name, 60);
+    const cleanRank  = sanitize(rank, 40);
+    const cleanText  = sanitize(text, 500);
+    const cleanStars = Math.max(1, Math.min(5, parseInt(stars, 10) || 5));
+    const cleanDate  = sanitize(date, 30);
+
+    if (!cleanName || !cleanText) {
+      return res.status(400).json({ error: 'Name and review text are required.' });
+    }
+
+    if (cleanRank && !VALID_RANKS.some(r => cleanRank.includes(r.split(' ')[0]))) {
+      return res.status(400).json({ error: 'Invalid rank value.' });
+    }
 
     try {
       const isValid = await kv.sismember('valid_tokens', formattedToken);
@@ -56,7 +91,14 @@ export default async function handler(req, res) {
       const isUsed = await kv.sismember('used_tokens', formattedToken);
       if (isUsed) return res.status(400).json({ error: 'Token already used.' });
 
-      const newReview = { name, rank, stars, text, date };
+      const newReview = {
+        name:  cleanName,
+        rank:  cleanRank,
+        stars: cleanStars,
+        text:  cleanText,
+        date:  cleanDate || new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+      };
+
       await kv.lpush('stain_reviews', newReview);
       await kv.sadd('used_tokens', formattedToken);
 
