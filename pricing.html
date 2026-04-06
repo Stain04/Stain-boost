@@ -5,6 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pricing – StainBoost · ELO Boosting Middle East</title>
 <meta name="description" content="ELO boosting prices for Middle East server. Iron to Masters. Solo and duo options available.">
+<link rel="canonical" href="https://stainboost.com/pricing">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stainboost.com/pricing">
+<meta property="og:title" content="Pricing – StainBoost · ELO Boosting Middle East">
+<meta property="og:description" content="ELO boosting prices for Middle East server. Iron to Masters. Solo and duo options available.">
+<meta property="og:image" content="https://stainboost.com/avatar.jpeg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Pricing – StainBoost · ELO Boosting Middle East">
+<meta name="twitter:description" content="ELO boosting prices for Middle East server. Iron to Masters. Solo and duo options available.">
+<meta name="twitter:image" content="https://stainboost.com/avatar.jpeg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "StainBoost Pricing",
+  "url": "https://stainboost.com/pricing",
+  "description": "ELO boosting prices for League of Legends Middle East server. Iron to Masters, solo and duo options."
+}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -302,6 +325,39 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
 @media(max-width:920px){.main-grid{grid-template-columns:1fr;}.sidebar{order:-1;}.price-table-card{display:none;}}
 @media(max-width:600px){.form-row{grid-template-columns:1fr;}.hero{padding:2.5rem 1rem 1.5rem;}.configurator{padding:1.5rem;}.payment-section{padding:0 1.5rem 1.5rem;}.stat-item{padding:0.5rem 1rem;}}
 
+/* Step labels */
+.cfg-step-label{font-family:'Rajdhani',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:rgba(139,92,246,0.55);margin-bottom:0.65rem;margin-top:0.1rem;}
+.cfg-divider{border:none;border-top:1px solid rgba(255,255,255,0.07);margin:1.5rem 0;}
+
+/* Rank tabs compact (inside card) */
+.rank-tabs{display:flex;flex-wrap:wrap;gap:0.4rem;}
+
+/* MODE TOGGLE */
+.mode-toggle-top{display:grid;grid-template-columns:1fr 1fr;gap:0;background:rgba(0,0,0,0.45);border-radius:16px;padding:4px;margin-bottom:1.75rem;border:1px solid rgba(255,255,255,0.08);}
+.mode-btn{padding:0.78rem 0.5rem;border:none;border-radius:12px;cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;background:transparent;color:rgba(255,255,255,0.3);transition:all 0.25s;display:flex;align-items:center;justify-content:center;gap:0.5rem;}
+.mode-btn.active{background:rgba(139,92,246,0.22);color:var(--purple-light);box-shadow:0 0 20px rgba(139,92,246,0.2);}
+.mode-btn.active.gold-mode{background:rgba(251,191,36,0.13);color:var(--gold);box-shadow:0 0 20px rgba(251,191,36,0.18);}
+
+/* RANK BOOST SECTION */
+.rank-boost-section{display:none;margin-bottom:1.75rem;animation:fadeInRB .3s ease;}
+.rank-boost-section.visible{display:block;}
+@keyframes fadeInRB{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+.rb-grid{display:grid;grid-template-columns:1fr 36px 1fr;gap:0.75rem;align-items:end;margin-bottom:0.9rem;}
+.rb-field{display:flex;flex-direction:column;gap:0.4rem;}
+.rb-label{font-family:'Rajdhani',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);}
+.rb-selects{display:flex;gap:0.45rem;}
+.rb-select{flex:1;font-family:'Rajdhani',sans-serif;font-size:0.88rem;font-weight:700;background:rgba(255,255,255,0.04);border:1px solid rgba(139,92,246,0.22);border-radius:10px;color:var(--text);padding:0.65rem 0.6rem;outline:none;transition:border-color .2s,box-shadow .2s;cursor:pointer;min-width:0;}
+.rb-select:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(139,92,246,0.15);}
+.rb-select option{background:#0e0b1a;}
+.rb-arrow-col{display:flex;align-items:flex-end;justify-content:center;padding-bottom:0.65rem;opacity:0.35;}
+.rb-path{background:rgba(0,0,0,0.28);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:0.85rem 1.1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;transition:border-color .25s;}
+.rb-path.valid{border-color:rgba(139,92,246,0.2);}
+.rb-path-from,.rb-path-to{font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;}
+.rb-path-mid{display:flex;flex-direction:column;align-items:center;gap:0.1rem;}
+.rb-path-arrow-icon{font-size:1.1rem;opacity:0.45;}
+.rb-path-divs{font-family:'Rajdhani',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:0.12em;color:var(--purple-light);text-transform:uppercase;}
+.rb-error{font-size:0.75rem;color:#f87171;font-family:'Rajdhani',sans-serif;font-weight:600;padding:0.4rem 0.2rem;}
+
 /* FLOATING PARTICLES */
 #particles-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
 
@@ -317,21 +373,18 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
 @keyframes scanDown{0%{top:-2px;opacity:0;}5%{opacity:0.4;}95%{opacity:0.4;}100%{top:100vh;opacity:0;}}
 
 /* HERO TITLE glow */
-.hero-title .line2{animation:line2Glow 3s ease-in-out infinite alternate;}
-@keyframes line2Glow{from{filter:drop-shadow(0 0 6px rgba(34,211,238,0.2));}to{filter:drop-shadow(0 0 18px rgba(34,211,238,0.5));}}
+
 
 /* PRICING CARD shimmer */
-.pricing-card::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,0.025) 50%,transparent 62%);background-size:250% 100%;animation:shimmer 6s infinite;border-radius:24px;pointer-events:none;}
+.pricing-card::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,0.025) 50%,transparent 62%);background-size:250% 100%;border-radius:24px;pointer-events:none;}
 @keyframes shimmer{0%{background-position:250% 0}100%{background-position:-250% 0}}
 
 /* RANK TAB glow */
-.rank-tab.active{animation:tabGlow 2s ease-in-out infinite alternate;}
-@keyframes tabGlow{from{box-shadow:0 0 10px rgba(139,92,246,0.12);}to{box-shadow:0 0 24px rgba(139,92,246,0.3);}}
+
 </style>
 </head>
 <body>
 <canvas id="particles-canvas"></canvas>
-<div class="scan-line"></div>
 <div class="orb orb-1"></div>
 <div class="orb orb-2"></div>
 <div class="orb orb-3"></div>
@@ -370,7 +423,7 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
   </div>
   <div class="hero-badges">
     <div class="hero-badge gold">⚔️ Jungle Specialist</div>
-    <div class="hero-badge green">✓ Zero Banned Accounts</div>
+    <div class="hero-badge green">✓ 500+ Orders Completed</div>
     <div class="hero-badge blue">⚡ Starts Within Hours</div>
     <div class="hero-badge">🎁 Free Win at 5+</div>
   </div>
@@ -380,12 +433,6 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
 <div class="reviews-strip"><div class="reviews-scroll" id="reviewsScroll"></div></div>
 
 <div class="page-wrap">
-  <!-- RANK TABS -->
-  <div class="rank-section">
-    <div class="section-label">① Select your current rank</div>
-    <div class="rank-tabs" id="rankTabs"></div>
-  </div>
-
   <div class="main-grid">
     <!-- CONFIGURATOR -->
     <div class="pricing-card">
@@ -398,7 +445,18 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
           <div class="online-status"><div class="online-dot-live"></div><div class="online-label">Online</div></div>
         </div>
 
-        <!-- Solo/Duo -->
+        <!-- Mode toggle -->
+        <div class="mode-toggle-top">
+          <button class="mode-btn" id="btnModeWins" onclick="setMode('wins')">
+            ⚔️&nbsp;Win Boost
+          </button>
+          <button class="mode-btn active gold-mode" id="btnModeRank" onclick="setMode('rank')">
+            🏆&nbsp;Rank Boost
+          </button>
+        </div>
+
+        <!-- ①  Solo / Duo — always visible -->
+        <div class="cfg-step-label">① Solo or Duo?</div>
         <div class="type-toggle">
           <button class="type-btn active" id="btnSolo" onclick="setType('solo')">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
@@ -410,42 +468,82 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
           </button>
         </div>
 
-        <!-- Wins -->
-        <div class="wins-section">
-          <div class="wins-header">
-            <div class="wins-label">② Number of wins</div>
-            <div class="wins-display" id="winsDisplay">5<sup>wins</sup></div>
-          </div>
-          <div class="wins-quick">
-            <div class="wins-chip" data-val="1" onclick="setWins(1)">1</div>
-            <div class="wins-chip" data-val="3" onclick="setWins(3)">3</div>
-            <div class="wins-chip active" data-val="5" onclick="setWins(5)">5 🎁</div>
-            <div class="wins-chip" data-val="10" onclick="setWins(10)">10 🎁🎁</div>
-            <div class="wins-chip" data-val="20" onclick="setWins(20)">20 🎁🎁🎁🎁</div>
-          </div>
-          <div class="slider-wrap">
-            <input type="range" id="winsSlider" min="1" max="30" value="5">
-          </div>
-          <div class="slider-ticks">
-            <span class="stk">1</span>
-            <span class="stk ms">5 🎁</span>
-            <span class="stk ms">10 🎁🎁</span>
-            <span class="stk">20</span>
-            <span class="stk">30</span>
-          </div>
-        </div>
+        <!-- ══════════════════════════════════════
+             WIN BOOST CONTENT — hidden in rank mode
+             ══════════════════════════════════════ -->
+        <div id="winsModeContent" style="display:none;">
+          <div class="cfg-step-label">② Pick your rank</div>
+          <div class="rank-tabs" id="rankTabs"></div>
 
-        <!-- Promo -->
-        <div class="promo-strip" id="promoStrip">
-          <div class="promo-icon">🎁</div>
-          <div>
-            <div class="promo-title">Free Win Unlocked!</div>
-            <div class="promo-desc">Pay for <span id="promoPaid">5</span>, get <span id="promoTotal">6</span> — <strong id="promoFreeCount">1</strong> extra win on us.</div>
+          <div class="wins-section" style="margin-top:1.25rem;">
+            <div class="wins-header">
+              <div class="wins-label">③ Number of wins</div>
+              <div class="wins-display" id="winsDisplay">5<sup>wins</sup></div>
+            </div>
+            <div class="wins-quick">
+              <div class="wins-chip" data-val="1" onclick="setWins(1)">1</div>
+              <div class="wins-chip" data-val="3" onclick="setWins(3)">3</div>
+              <div class="wins-chip active" data-val="5" onclick="setWins(5)">5 🎁</div>
+              <div class="wins-chip" data-val="10" onclick="setWins(10)">10 🎁🎁</div>
+              <div class="wins-chip" data-val="20" onclick="setWins(20)">20 🎁🎁🎁🎁</div>
+            </div>
+            <div class="slider-wrap">
+              <input type="range" id="winsSlider" min="1" max="30" value="5">
+            </div>
+            <div class="slider-ticks">
+              <span class="stk">1</span>
+              <span class="stk ms">5 🎁</span>
+              <span class="stk ms">10 🎁🎁</span>
+              <span class="stk">20</span>
+              <span class="stk">30</span>
+            </div>
           </div>
-          <div class="promo-badge" id="promoBadge">+1 FREE</div>
-        </div>
 
-        <!-- Form fields -->
+          <!-- Promo -->
+          <div class="promo-strip" id="promoStrip">
+            <div class="promo-icon">🎁</div>
+            <div>
+              <div class="promo-title">Free Win Unlocked!</div>
+              <div class="promo-desc">Pay for <span id="promoPaid">5</span>, get <span id="promoTotal">6</span> — <strong id="promoFreeCount">1</strong> extra win on us.</div>
+            </div>
+            <div class="promo-badge" id="promoBadge">+1 FREE</div>
+          </div>
+        </div><!-- /winsModeContent -->
+
+        <!-- ══════════════════════════════════════
+             RANK BOOST CONTENT — hidden in win mode
+             ══════════════════════════════════════ -->
+        <div id="rankModeContent">>
+          <div class="cfg-step-label">② Select your ranks</div>
+          <div class="rb-grid">
+            <div class="rb-field">
+              <div class="rb-label">📍 Current Rank</div>
+              <div class="rb-selects">
+                <select class="rb-select" id="rbFromTier"></select>
+                <select class="rb-select" id="rbFromDiv"></select>
+              </div>
+            </div>
+            <div class="rb-arrow-col">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+            <div class="rb-field">
+              <div class="rb-label">🎯 Desired Rank</div>
+              <div class="rb-selects">
+                <select class="rb-select" id="rbToTier"></select>
+                <select class="rb-select" id="rbToDiv"></select>
+              </div>
+            </div>
+          </div>
+          <div class="rb-path" id="rbPath">
+            <span style="font-size:0.8rem;color:var(--muted);font-family:'Rajdhani',sans-serif;">Select ranks above to calculate price</span>
+          </div>
+          <div class="rb-error" id="rbError" style="display:none;"></div>
+        </div><!-- /rankModeContent -->
+
+        <div class="cfg-divider"></div>
+
+        <!-- COMMON FIELDS — always visible -->
+        <div class="cfg-step-label" id="stepLabelDetails">③ Your details</div>
         <div class="form-grid">
           <div class="form-row">
             <div class="field">
@@ -489,7 +587,7 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
       <!-- PAYMENT -->
       <div class="payment-section">
         <hr class="pay-divider">
-        <div class="pay-title">③ Choose payment method</div>
+        <div class="pay-title">④ Choose payment method</div>
         <div class="pay-tabs">
           <button class="pay-tab active" id="ptBinance" onclick="switchPayment('binance')">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><polygon points="12,2 15.5,5.5 12,9 8.5,5.5" fill="currentColor"/><polygon points="2,12 5.5,8.5 9,12 5.5,15.5" fill="currentColor"/><polygon points="22,12 18.5,8.5 15,12 18.5,15.5" fill="currentColor"/><polygon points="12,22 15.5,18.5 12,15 8.5,18.5" fill="currentColor"/><polygon points="12,9 15.5,12 12,15 8.5,12" fill="currentColor"/></svg>
@@ -575,7 +673,7 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
           <div class="g-item"><div class="g-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><circle cx="12" cy="10" r="3" fill="#8b5cf6" opacity="0.3" stroke="none"/></svg></div><div><div class="g-name">Offline Mode</div><div class="g-desc">Friends see you offline during boost.</div></div></div>
           <div class="g-item"><div class="g-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20"/><path d="M2 12h20"/></svg></div><div><div class="g-name">VPN Protection</div><div class="g-desc">Country-matching VPN, no suspicious logins.</div></div></div>
           <div class="g-item"><div class="g-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div><div class="g-name">Your Flash Key</div><div class="g-desc">Always played on D or F — your preference.</div></div></div>
-          <div class="g-item"><div class="g-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div><div class="g-name">Zero Banned Accounts</div><div class="g-desc">500+ orders completed. Not one account flagged.</div></div></div>
+          <div class="g-item"><div class="g-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div><div class="g-name">Proven Track Record</div><div class="g-desc">500+ orders completed with consistent 5-star reviews.</div></div></div>
           <div class="g-item"><div class="g-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><div><div class="g-name">Fast Start</div><div class="g-desc">Boosting typically begins within a few hours.</div></div></div>
         </div>
       </div>
@@ -622,6 +720,47 @@ const ri={
 };
 function br(n){return n.startsWith('Diamond')?'Diamond':n;}
 
+// ── RANK BOOST DATA ──
+const RB_TIERS = ['Iron','Bronze','Silver','Gold','Platinum','Emerald','Diamond','Masters'];
+const RB_DIVS  = ['IV','III','II','I'];
+const RB_COLORS = {Iron:'#94a3b8',Bronze:'#cd7f32',Silver:'#cbd5e1',Gold:'#fbbf24',Platinum:'#22d3ee',Emerald:'#34d399',Diamond:'#67e8f9',Masters:'#e879f9'};
+// Price per division climbed (accounts for LP variance, promo games etc.)
+const RB_DIV_PRICE = {
+  Iron:     {solo:7.00,   duo:11.50},
+  Bronze:   {solo:9.00,   duo:14.00},
+  Silver:   {solo:12.00,  duo:17.00},
+  Gold:     {solo:16.50,  duo:23.50},
+  Platinum: {solo:23.50,  duo:31.00},
+  Emerald:  {solo:26.50,  duo:38.00},
+  DiamondL: {solo:37.00,  duo:57.00}, // IV & III
+  DiamondH: {solo:47.00,  duo:72.00}, // II & I
+};
+
+function rbDivIdx(tier, div) {
+  if (tier === 7) return 28; // Masters, no divisions
+  return tier * 4 + div;
+}
+function rbDivPrice(tier, div, type) {
+  const name = RB_TIERS[tier];
+  if (name === 'Masters') return 0;
+  let key = name;
+  if (name === 'Diamond') key = (div <= 1) ? 'DiamondL' : 'DiamondH';
+  const p = RB_DIV_PRICE[key];
+  return type === 'solo' ? p.solo : p.duo;
+}
+function calcRankBoostTotal(fromTier, fromDiv, toTier, toDiv, type) {
+  let total = 0;
+  const from = rbDivIdx(fromTier, fromDiv);
+  const to   = rbDivIdx(toTier, toDiv);
+  if (to <= from) return 0;
+  for (let d = from; d < to; d++) {
+    const t = Math.min(Math.floor(d / 4), 7);
+    const dv = d % 4;
+    total += rbDivPrice(t, dv, type);
+  }
+  return total;
+}
+
 const reviews=[
   {text:"Stain boosted me from Silver to Gold in one day. Absolutely insane. Highly recommend.",author:"Ahmed_ME",rank:"Silver → Gold",stars:5},
   {text:"Used the duo option, was so smooth. He knows exactly what to do in every game.",author:"xX_Warlord",rank:"Gold → Platinum",stars:5},
@@ -632,6 +771,7 @@ const reviews=[
 ];
 
 let selIdx=-1,selType='solo',selWins=5,selFlash='D';
+let rbMode='rank',rbFromTier=2,rbFromDiv=2,rbToTier=3,rbToDiv=0;
 const BINANCE_ID='987280057',MIN=1,MAX=30;
 
 // Reviews
@@ -646,7 +786,7 @@ const BINANCE_ID='987280057',MIN=1,MAX=30;
   });
 })();
 
-// Build rank UI
+// Build rank tabs + price table
 (function(){
   const tabs=document.getElementById('rankTabs');
   const tbody=document.getElementById('priceTableBody');
@@ -665,9 +805,85 @@ const BINANCE_ID='987280057',MIN=1,MAX=30;
   });
 })();
 
+// Build rank boost dropdowns
+function buildRBSelects(){
+  const fT=document.getElementById('rbFromTier');
+  const tT=document.getElementById('rbToTier');
+  const fD=document.getElementById('rbFromDiv');
+  const tD=document.getElementById('rbToDiv');
+  RB_TIERS.forEach((name,i)=>{
+    fT.add(new Option(name,i));
+    tT.add(new Option(name,i));
+  });
+  RB_DIVS.forEach((d,i)=>{
+    fD.add(new Option(d,i));
+    tD.add(new Option(d,i));
+  });
+  // Defaults: Silver II → Gold IV
+  fT.value=2; fD.value=2; tT.value=3; tD.value=0;
+  rbFromTier=2; rbFromDiv=2; rbToTier=3; rbToDiv=0;
+
+  function onChange(){
+    rbFromTier=parseInt(fT.value);
+    rbFromDiv =parseInt(fD.value);
+    rbToTier  =parseInt(tT.value);
+    rbToDiv   =parseInt(tD.value);
+    // Hide division for Masters
+    fD.style.display = rbFromTier===7?'none':'';
+    tD.style.display = rbToTier===7?'none':'';
+    updateRBPath();
+    updatePrice();
+  }
+  [fT,tT,fD,tD].forEach(s=>s.addEventListener('change',onChange));
+  updateRBPath();
+}
+
+function updateRBPath(){
+  const fromIdx = rbDivIdx(rbFromTier, rbFromDiv);
+  const toIdx   = rbDivIdx(rbToTier,   rbToDiv);
+  const valid   = toIdx > fromIdx;
+  const pathEl  = document.getElementById('rbPath');
+  const errEl   = document.getElementById('rbError');
+  const fromName = RB_TIERS[rbFromTier]+(rbFromTier<7?' '+RB_DIVS[rbFromDiv]:'');
+  const toName   = RB_TIERS[rbToTier]  +(rbToTier<7?' '+RB_DIVS[rbToDiv]:'');
+  const fromColor= RB_COLORS[RB_TIERS[rbFromTier]];
+  const toColor  = RB_COLORS[RB_TIERS[rbToTier]];
+  if(!valid){
+    pathEl.className='rb-path';
+    pathEl.innerHTML=`<span style="font-size:0.8rem;color:var(--muted);font-family:'Rajdhani',sans-serif;">Select ranks above to calculate price</span>`;
+    errEl.style.display='block';
+    errEl.textContent='⚠️ Desired rank must be higher than current rank.';
+    return;
+  }
+  errEl.style.display='none';
+  const divs=toIdx-fromIdx;
+  pathEl.className='rb-path valid';
+  pathEl.innerHTML=`
+    <span class="rb-path-from" style="color:${fromColor};">${fromName}</span>
+    <div class="rb-path-mid">
+      <span class="rb-path-arrow-icon">→</span>
+      <span class="rb-path-divs">${divs} div${divs!==1?'s':''}</span>
+    </div>
+    <span class="rb-path-to" style="color:${toColor};">${toName}</span>
+  `;
+}
+
+// Mode switching
+function setMode(mode){
+  rbMode=mode;
+  document.getElementById('btnModeWins').classList.toggle('active',mode==='wins');
+  document.getElementById('btnModeRank').classList.toggle('active',mode==='rank');
+  document.getElementById('btnModeRank').classList.toggle('gold-mode',mode==='rank');
+  // Single wrapper per mode — no bleed-through
+  document.getElementById('winsModeContent').style.display = mode==='rank' ? 'none' : '';
+  document.getElementById('rankModeContent').style.display = mode==='wins' ? 'none' : '';
+  // Update step numbering label
+  document.getElementById('stepLabelDetails').textContent = mode==='rank' ? '③ Your details' : '④ Your details';
+  if(mode==='rank') document.getElementById('promoStrip').classList.remove('visible');
+  updatePrice();
+}
+
 // ── SMOOTH SLIDER FILL ──
-// The trick: set background directly on the input element using a gradient.
-// No overlay div needed. Updates instantly on every pixel of movement.
 function fillSlider(v){
   const pct=((v-MIN)/(MAX-MIN))*100;
   document.getElementById('winsSlider').style.background=
@@ -680,7 +896,6 @@ function syncChips(v){
   document.querySelectorAll('.wins-chip').forEach(c=>c.classList.toggle('active',parseInt(c.dataset.val)===v));
 }
 
-// Slider event — runs on every frame while dragging
 document.getElementById('winsSlider').addEventListener('input',function(){
   selWins=parseInt(this.value);
   fillSlider(selWins);showWins(selWins);syncChips(selWins);updatePrice();
@@ -705,6 +920,7 @@ function setType(t){
   document.querySelectorAll('.rank-tab').forEach((tab,i)=>{
     tab.querySelector('.tab-price').textContent=`$${(selType==='solo'?ranks[i].solo:ranks[i].duo).toFixed(2)}`;
   });
+  if(rbMode==='rank') updateRBPath();
   updatePrice();
 }
 function setFlash(k){
@@ -717,7 +933,40 @@ function getTotal(){
   const r=ranks[selIdx];
   return(selType==='solo'?r.solo:r.duo)*selWins;
 }
+
 function updatePrice(){
+  // ── RANK BOOST MODE ──
+  if(rbMode==='rank'){
+    const fromIdx=rbDivIdx(rbFromTier,rbFromDiv);
+    const toIdx  =rbDivIdx(rbToTier,  rbToDiv);
+    const valid  =toIdx>fromIdx;
+    const fromName=RB_TIERS[rbFromTier]+(rbFromTier<7?' '+RB_DIVS[rbFromDiv]:'');
+    const toName  =RB_TIERS[rbToTier]  +(rbToTier<7?' '+RB_DIVS[rbToDiv]:'');
+    document.getElementById('freeWinLine').style.display='none';
+    document.getElementById('savingsNote').classList.remove('visible');
+    document.getElementById('promoStrip').classList.remove('visible');
+    if(!valid){
+      document.getElementById('summaryLine').textContent='Invalid rank range selected';
+      document.getElementById('summaryBaseVal').textContent='—';
+      document.getElementById('totalVal').textContent='$0.00';
+      document.getElementById('binanceAmountText').textContent='Select valid rank range above';
+      document.getElementById('paypalAmountText').textContent='Select valid rank range above';
+      document.getElementById('paypalMeBtn').href='https://paypal.me/stainboost';
+      return;
+    }
+    const total=calcRankBoostTotal(rbFromTier,rbFromDiv,rbToTier,rbToDiv,selType);
+    const divs=toIdx-fromIdx;
+    document.getElementById('summaryLine').textContent=`${fromName} → ${toName} · ${selType} · ${divs} division${divs!==1?'s':''}`;
+    document.getElementById('summaryBaseVal').textContent=`$${total.toFixed(2)}`;
+    document.getElementById('totalVal').textContent=`$${total.toFixed(2)}`;
+    document.getElementById('binanceAmountText').innerHTML=
+      `Send exactly <strong style="color:#fff;font-size:1rem;">$${total.toFixed(2)} USDT</strong> to ID <strong style="color:#fff">${BINANCE_ID}</strong>`;
+    document.getElementById('paypalAmountText').textContent=`Send $${total.toFixed(2)} USD · ${fromName} → ${toName}`;
+    document.getElementById('paypalMeBtn').href=`https://paypal.me/stainboost/${total.toFixed(2)}USD`;
+    return;
+  }
+
+  // ── WIN BOOST MODE ──
   const r=ranks[selIdx];const hasRank=selIdx>=0;
   const total=getTotal();
   const ppw=hasRank?(selType==='solo'?r.solo:r.duo):0;
@@ -741,7 +990,7 @@ function updatePrice(){
   const bt=hasBonus?` · +${fw} free win${fw>1?'s':''} 🎁`:'';
   if(hasRank&&total>0){
     document.getElementById('binanceAmountText').innerHTML=`Send exactly <strong style="color:#fff;font-size:1rem;">$${total.toFixed(2)} USDT</strong> to ID <strong style="color:#fff">${BINANCE_ID}</strong>${bt}`;
-    document.getElementById('paypalAmountText').textContent=`Send $${total.toFixed(2)} USD via PayPal.me${hasBonus?` (+${fw} free win${fw>1?'s':''}!)`:''}`;
+    document.getElementById('paypalAmountText').textContent=`Send $${total.toFixed(2)} USD via PayPal.me${hasBonus?` (+${fw} free win${fw>1?'s':''}!)`:''}`; 
     document.getElementById('paypalMeBtn').href=`https://paypal.me/stainboost/${total.toFixed(2)}USD`;
   }else{
     document.getElementById('binanceAmountText').textContent='Select rank & wins above to see amount';
@@ -749,6 +998,7 @@ function updatePrice(){
     document.getElementById('paypalMeBtn').href='https://paypal.me/stainboost';
   }
 }
+
 function switchPayment(m){
   document.getElementById('ptBinance').classList.toggle('active',m==='binance');
   document.getElementById('ptPaypal').classList.toggle('active',m==='paypal');
@@ -768,16 +1018,28 @@ function showMsg(type,text){
 async function submitOrder(method){
   const discord=document.getElementById('fDiscord').value.trim();
   const ign=document.getElementById('fIGN').value.trim();
-  if(!discord||!ign||selIdx<0||selWins<1){showMsg('error','Please fill in Discord tag, IGN, and select a rank first.');return;}
-  const r=ranks[selIdx];const total=getTotal().toFixed(2);
-  const fw=selWins>=5?Math.floor(selWins/5):0;
-  const pm=method==='paypal'?'PayPal.me':'Binance Pay';
+  if(!discord||!ign){showMsg('error','Please fill in your Discord tag and IGN.');return;}
+  let orderData;
+  if(rbMode==='rank'){
+    const fromIdx=rbDivIdx(rbFromTier,rbFromDiv);
+    const toIdx  =rbDivIdx(rbToTier,rbToDiv);
+    if(toIdx<=fromIdx){showMsg('error','Please select a valid rank range.');return;}
+    const total=calcRankBoostTotal(rbFromTier,rbFromDiv,rbToTier,rbToDiv,selType);
+    const fromName=RB_TIERS[rbFromTier]+(rbFromTier<7?' '+RB_DIVS[rbFromDiv]:'');
+    const toName  =RB_TIERS[rbToTier]  +(rbToTier<7?' '+RB_DIVS[rbToDiv]:'');
+    orderData={discord,ign,type:selType,flash:selFlash,total:total.toFixed(2),paymentMethod:method==='paypal'?'PayPal.me':'Binance Pay',orderType:'rank_boost',fromRank:fromName,toRank:toName,freeWins:0};
+  }else{
+    if(selIdx<0||selWins<1){showMsg('error','Please select a rank and number of wins.');return;}
+    const r=ranks[selIdx];const total=getTotal().toFixed(2);
+    const fw=selWins>=5?Math.floor(selWins/5):0;
+    orderData={discord,ign,rank:r.name,type:selType,wins:selWins,flash:selFlash,total,paymentMethod:method==='paypal'?'PayPal.me':'Binance Pay',orderType:'win_boost',freeWins:fw};
+  }
   const bid=method==='paypal'?'paypalSubmitBtn':'binanceSubmitBtn';
   const btn=document.getElementById(bid);btn.disabled=true;btn.textContent='Submitting…';
   try{
-    const res=await fetch('/api/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({discord,ign,rank:r.name,type:selType,wins:selWins,flash:selFlash,total,paymentMethod:pm,freeWins:fw})});
+    const res=await fetch('/api/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(orderData)});
     const data=await res.json();
-    if(res.ok&&data.ok){showMsg('success',"✅ Order submitted! Stain will verify your payment and message you on Discord shortly.");document.getElementById('fDiscord').value='';document.getElementById('fIGN').value='';}
+    if(res.ok&&data.ok){showMsg('success','✅ Order submitted! Stain will verify your payment and message you on Discord shortly.');document.getElementById('fDiscord').value='';document.getElementById('fIGN').value='';}
     else showMsg('error','Submission failed. Please DM Stain on Discord directly.');
   }catch(e){showMsg('error','Network error. Please DM Stain on Discord directly.');}
   btn.disabled=false;btn.textContent="✅ I've Sent — Submit Order";
@@ -786,6 +1048,7 @@ function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('op
 
 // Init
 fillSlider(5);showWins(5);
+buildRBSelects();
 
 // Floating particles
 (function(){
@@ -797,12 +1060,12 @@ fillSlider(5);showWins(5);
   resize();
   window.addEventListener('resize',resize);
   const COLORS=['rgba(139,92,246,','rgba(34,211,238,','rgba(196,181,253,','rgba(251,191,36,'];
-  for(let i=0;i<50;i++){
+  for(let i=0;i<20;i++){
     particles.push({
       x:Math.random()*W,y:Math.random()*H,
       r:Math.random()*1.6+0.3,
       dx:(Math.random()-0.5)*0.28,dy:(Math.random()-0.5)*0.28,
-      o:Math.random()*0.4+0.07,
+      o:Math.random()*0.2+0.04,
       c:COLORS[Math.floor(Math.random()*COLORS.length)],
       pulse:Math.random()*Math.PI*2,pulseSpeed:Math.random()*0.018+0.005
     });

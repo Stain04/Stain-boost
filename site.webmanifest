@@ -1,0 +1,12 @@
+{
+  "name": "StainBoost",
+  "short_name": "StainBoost",
+  "description": "Professional ELO Boosting by the #1 Master Yi on Middle East server.",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ],
+  "theme_color": "#060411",
+  "background_color": "#060411",
+  "display": "standalone"
+}
