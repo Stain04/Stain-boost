@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9VN312YVTZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-9VN312YVTZ');
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pricing – StainBoost · ELO Boosting Middle East</title>
@@ -410,7 +418,6 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
   </div>
 </nav>
 
-<!-- HERO -->
 <div class="hero">
   <div class="hero-eyebrow"><div class="pulse-dot"></div>Stain is Online · Ready to Boost</div>
   <h1 class="hero-title"><div class="line1">BUILD YOUR</div><div class="line2">BOOST ORDER</div></h1>
@@ -429,12 +436,10 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
   </div>
 </div>
 
-<!-- REVIEWS STRIP -->
 <div class="reviews-strip"><div class="reviews-scroll" id="reviewsScroll"></div></div>
 
 <div class="page-wrap">
   <div class="main-grid">
-    <!-- CONFIGURATOR -->
     <div class="pricing-card">
       <div class="configurator">
         <div class="cfg-header">
@@ -445,7 +450,6 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
           <div class="online-status"><div class="online-dot-live"></div><div class="online-label">Online</div></div>
         </div>
 
-        <!-- Mode toggle -->
         <div class="mode-toggle-top">
           <button class="mode-btn" id="btnModeWins" onclick="setMode('wins')">
             ⚔️&nbsp;Win Boost
@@ -455,7 +459,6 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
           </button>
         </div>
 
-        <!-- ①  Solo / Duo — always visible -->
         <div class="cfg-step-label">① Solo or Duo?</div>
         <div class="type-toggle">
           <button class="type-btn active" id="btnSolo" onclick="setType('solo')">
@@ -468,9 +471,6 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
           </button>
         </div>
 
-        <!-- ══════════════════════════════════════
-             WIN BOOST CONTENT — hidden in rank mode
-             ══════════════════════════════════════ -->
         <div id="winsModeContent" style="display:none;">
           <div class="cfg-step-label">② Pick your rank</div>
           <div class="rank-tabs" id="rankTabs"></div>
@@ -499,7 +499,6 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
             </div>
           </div>
 
-          <!-- Promo -->
           <div class="promo-strip" id="promoStrip">
             <div class="promo-icon">🎁</div>
             <div>
@@ -508,12 +507,7 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
             </div>
             <div class="promo-badge" id="promoBadge">+1 FREE</div>
           </div>
-        </div><!-- /winsModeContent -->
-
-        <!-- ══════════════════════════════════════
-             RANK BOOST CONTENT — hidden in win mode
-             ══════════════════════════════════════ -->
-        <div id="rankModeContent">>
+        </div><div id="rankModeContent">>
           <div class="cfg-step-label">② Select your ranks</div>
           <div class="rb-grid">
             <div class="rb-field">
@@ -538,11 +532,8 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
             <span style="font-size:0.8rem;color:var(--muted);font-family:'Rajdhani',sans-serif;">Select ranks above to calculate price</span>
           </div>
           <div class="rb-error" id="rbError" style="display:none;"></div>
-        </div><!-- /rankModeContent -->
+        </div><div class="cfg-divider"></div>
 
-        <div class="cfg-divider"></div>
-
-        <!-- COMMON FIELDS — always visible -->
         <div class="cfg-step-label" id="stepLabelDetails">③ Your details</div>
         <div class="form-grid">
           <div class="form-row">
@@ -565,7 +556,6 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
           </div>
         </div>
 
-        <!-- Price summary -->
         <div class="price-summary">
           <div class="price-line">
             <div class="price-line-label" id="summaryLine">Select a rank above to continue</div>
@@ -584,7 +574,6 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
         </div>
       </div>
 
-      <!-- PAYMENT -->
       <div class="payment-section">
         <hr class="pay-divider">
         <div class="pay-title">④ Choose payment method</div>
@@ -637,7 +626,6 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
       </div>
     </div>
 
-    <!-- SIDEBAR -->
     <div class="sidebar">
       <div class="profile-card">
         <div class="avatar-wrap">
