@@ -51,7 +51,6 @@ body{min-height:100vh;font-family:'Inter',sans-serif;background:var(--bg);color:
 @keyframes drift{0%{transform:translate(0,0) scale(1);}100%{transform:translate(28px,18px) scale(1.06);}}
 .bg-grid{position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(139,92,246,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(139,92,246,0.035) 1px,transparent 1px);background-size:40px 40px;}
 
-
 /* NAV */
 .nav{position:sticky;top:0;z-index:100;background:rgba(11,9,22,0.85);border-bottom:1px solid var(--border);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
 .nav-inner{max-width:1200px;margin:0 auto;padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;}
@@ -152,7 +151,6 @@ input[type=range]#winsSlider{
   -webkit-appearance:none;appearance:none;
   width:100%;height:6px;border-radius:6px;
   outline:none;cursor:pointer;
-  /* background set by JS — this gives instant fill with no overlay element */
   background:rgba(255,255,255,0.08);
 }
 input[type=range]#winsSlider::-webkit-slider-thumb{
@@ -227,37 +225,55 @@ input[type=range]#winsSlider::-moz-range-track{background:rgba(255,255,255,0.08)
 .pay-tab.active{background:rgba(255,255,255,0.07);color:var(--text);}
 .pay-tab#ptBinance.active{color:var(--gold);}
 .pay-tab#ptPaypal.active{color:#009cde;}
-.pay-panel{display:none;}.pay-panel.active{display:block;}
-.binance-card,.paypal-card{border-radius:14px;padding:1.2rem;display:flex;flex-direction:column;gap:0.85rem;}
+.pay-tab#ptInstapay.active{color:var(--purple-light);}
+.pay-panel{display:none;}
+.pay-panel.active{display:block;}
+
+.binance-card,.paypal-card,.instapay-card{border-radius:14px;padding:1.2rem;display:flex;flex-direction:column;gap:0.85rem;}
 .binance-card{background:rgba(251,191,36,0.04);border:1px solid rgba(251,191,36,0.16);}
 .paypal-card{background:rgba(0,156,222,0.04);border:1px solid rgba(0,156,222,0.16);}
+.instapay-card{background:rgba(139,92,246,0.04);border:1px solid rgba(139,92,246,0.16);}
+
 .pay-card-top{display:flex;align-items:center;gap:0.75rem;}
 .pay-card-logo{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .pay-card-logo.binance{background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.3);}
 .pay-card-logo.paypal{background:rgba(0,156,222,0.12);border:1px solid rgba(0,156,222,0.3);}
+.pay-card-logo.instapay{background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.3);}
+
 .pay-card-name{font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;}
 .pay-card-name.binance{color:var(--gold);}
 .pay-card-name.paypal{color:#009cde;}
+.pay-card-name.instapay{color:var(--purple-light);}
+
 .pay-card-sub{font-size:0.7rem;color:var(--muted);margin-top:0.1rem;}
 .binance-id-box{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:0.75rem 1rem;}
 .binance-id-label{font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.3rem;}
 .binance-id-val{font-family:'Rajdhani',sans-serif;font-size:1.05rem;font-weight:700;color:var(--text);display:flex;align-items:center;justify-content:space-between;}
+
 .copy-btn{background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.25);border-radius:6px;padding:0.2rem 0.6rem;font-family:'Rajdhani',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);cursor:pointer;transition:all 0.15s;}
-.copy-btn:hover{background:rgba(251,191,36,0.2);}
+.copy-btn:hover{filter:brightness(1.2);}
+
 .pay-steps{font-size:0.72rem;color:rgba(255,255,255,0.37);line-height:1.85;}
 .pay-steps strong{color:rgba(255,255,255,0.6);}
 .amount-note{border-radius:9px;padding:0.6rem 0.85rem;display:flex;align-items:center;gap:0.5rem;font-family:'Rajdhani',sans-serif;font-size:0.82rem;font-weight:600;}
 .amount-note.binance{background:rgba(251,191,36,0.07);border:1px solid rgba(251,191,36,0.18);color:var(--gold);}
 .amount-note.paypal{background:rgba(0,156,222,0.07);border:1px solid rgba(0,156,222,0.18);color:#009cde;}
+.amount-note.instapay{background:rgba(139,92,246,0.07);border:1px solid rgba(139,92,246,0.18);color:var(--purple-light);}
+
 .submit-btn{width:100%;padding:0.95rem;border:none;border-radius:12px;cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:0.9rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;transition:all 0.2s;position:relative;overflow:hidden;}
 .submit-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.08),transparent);pointer-events:none;}
 .submit-btn.binance{background:linear-gradient(135deg,#b7791f,#92400e);color:#fff;box-shadow:0 0 24px rgba(251,191,36,0.18);}
 .submit-btn.binance:hover:not(:disabled){box-shadow:0 0 36px rgba(251,191,36,0.38);transform:translateY(-2px);}
 .submit-btn.paypal{background:linear-gradient(135deg,#003087,#009cde);color:#fff;box-shadow:0 0 24px rgba(0,156,222,0.18);}
 .submit-btn.paypal:hover:not(:disabled){box-shadow:0 0 36px rgba(0,156,222,0.38);transform:translateY(-2px);}
+.submit-btn.instapay{background:linear-gradient(135deg,#5b21b6,#7c3aed);color:#fff;box-shadow:0 0 24px rgba(139,92,246,0.18);}
+.submit-btn.instapay:hover:not(:disabled){box-shadow:0 0 36px rgba(139,92,246,0.38);transform:translateY(-2px);}
 .submit-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;}
+
 .paypal-pay-link{display:block;width:100%;padding:0.95rem;text-align:center;text-decoration:none;background:linear-gradient(135deg,#003087,#009cde);color:#fff;font-family:'Rajdhani',sans-serif;font-size:0.9rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;border-radius:12px;box-shadow:0 0 24px rgba(0,156,222,0.18);transition:all 0.2s;}
 .paypal-pay-link:hover{box-shadow:0 0 36px rgba(0,156,222,0.38);transform:translateY(-2px);}
+.instapay-pay-link{display:block;width:100%;padding:0.95rem;text-align:center;text-decoration:none;background:linear-gradient(135deg,#5b21b6,#7c3aed);color:#fff;font-family:'Rajdhani',sans-serif;font-size:0.9rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;border-radius:12px;box-shadow:0 0 24px rgba(139,92,246,0.18);transition:all 0.2s;}
+.instapay-pay-link:hover{box-shadow:0 0 36px rgba(139,92,246,0.38);transform:translateY(-2px);}
 
 /* Security row */
 .security-row{display:flex;align-items:center;justify-content:center;gap:1.2rem;margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.05);}
@@ -380,15 +396,9 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
 .scan-line{position:fixed;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(139,92,246,0.35),rgba(34,211,238,0.25),transparent);z-index:0;pointer-events:none;animation:scanDown 10s linear infinite;opacity:0.4;}
 @keyframes scanDown{0%{top:-2px;opacity:0;}5%{opacity:0.4;}95%{opacity:0.4;}100%{top:100vh;opacity:0;}}
 
-/* HERO TITLE glow */
-
-
 /* PRICING CARD shimmer */
 .pricing-card::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,0.025) 50%,transparent 62%);background-size:250% 100%;border-radius:24px;pointer-events:none;}
 @keyframes shimmer{0%{background-position:250% 0}100%{background-position:-250% 0}}
-
-/* RANK TAB glow */
-
 </style>
 </head>
 <body>
@@ -507,7 +517,9 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
             </div>
             <div class="promo-badge" id="promoBadge">+1 FREE</div>
           </div>
-        </div><div id="rankModeContent">>
+        </div>
+
+        <div id="rankModeContent">
           <div class="cfg-step-label">② Select your ranks</div>
           <div class="rb-grid">
             <div class="rb-field">
@@ -532,7 +544,9 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
             <span style="font-size:0.8rem;color:var(--muted);font-family:'Rajdhani',sans-serif;">Select ranks above to calculate price</span>
           </div>
           <div class="rb-error" id="rbError" style="display:none;"></div>
-        </div><div class="cfg-divider"></div>
+        </div>
+
+        <div class="cfg-divider"></div>
 
         <div class="cfg-step-label" id="stepLabelDetails">③ Your details</div>
         <div class="form-grid">
@@ -584,7 +598,11 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
           </button>
           <button class="pay-tab" id="ptPaypal" onclick="switchPayment('paypal')">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M7.5 21L6 14H4.5C3.12 14 2 12.88 2 11.5V5.5C2 4.12 3.12 3 4.5 3H15C16.38 3 17.5 4.12 17.5 5.5V8H18.5C19.88 8 21 9.12 21 10.5V14.5C21 15.88 19.88 17 18.5 17H17L15.5 21H7.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-            PayPal.me
+            PayPal
+          </button>
+          <button class="pay-tab" id="ptInstapay" onclick="switchPayment('instapay')">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            InstaPay
           </button>
         </div>
 
@@ -596,7 +614,7 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
             </div>
             <div class="binance-id-box">
               <div class="binance-id-label">Binance Pay ID</div>
-              <div class="binance-id-val"><span>987280057</span><button class="copy-btn" onclick="copyID()">Copy</button></div>
+              <div class="binance-id-val"><span>987280057</span><button class="copy-btn" id="copyBinance" onclick="copyText('987280057', 'copyBinance')">Copy</button></div>
             </div>
             <div class="pay-steps">1. Open <strong>Binance App → Pay → Send</strong><br>2. Enter Pay ID <strong>987280057</strong><br>3. Send exact amount in <strong>USDT</strong><br>4. Screenshot &amp; DM Stain on Discord</div>
             <div class="amount-note binance"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><span id="binanceAmountText">Select rank &amp; wins above to see amount</span></div>
@@ -613,6 +631,23 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
             <div class="amount-note paypal"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><span id="paypalAmountText">Select rank &amp; wins above to see amount</span></div>
             <a id="paypalMeBtn" href="https://paypal.me/stainboost" target="_blank" class="paypal-pay-link">💳 Open PayPal.me</a>
             <button class="submit-btn paypal" id="paypalSubmitBtn" onclick="submitOrder('paypal')" style="margin-top:0.5rem;">✅ I've Sent — Submit Order</button>
+          </div>
+        </div>
+
+        <div class="pay-panel" id="panelInstapay">
+          <div class="instapay-card">
+            <div class="pay-card-top">
+              <div class="pay-card-logo instapay"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+              <div><div class="pay-card-name instapay">InstaPay</div><div class="pay-card-sub">Local Egyptian Transfer (EGP)</div></div>
+            </div>
+            <div class="binance-id-box">
+              <div class="binance-id-label">InstaPay Address (IPA)</div>
+              <div class="binance-id-val"><span>stain@instapay</span><button class="copy-btn" id="copyInstapay" style="color:var(--purple-light);border-color:rgba(139,92,246,0.3);background:rgba(139,92,246,0.1);" onclick="copyText('stain@instapay', 'copyInstapay')">Copy</button></div>
+            </div>
+            <div class="pay-steps">1. Click "Open InstaPay" or send to <strong>stain@instapay</strong><br>2. Send the exact equivalent amount in <strong>EGP</strong><br>3. Screenshot the receipt &amp; DM Stain on Discord</div>
+            <div class="amount-note instapay"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><span id="instapayAmountText">Select rank &amp; wins above to see amount</span></div>
+            <a id="instapayMeBtn" href="https://ipn.eg/S/stain/instapay/9zJCWi" target="_blank" class="instapay-pay-link">📲 Open InstaPay</a>
+            <button class="submit-btn instapay" id="instapaySubmitBtn" onclick="submitOrder('instapay')" style="margin-top:0.5rem;">✅ I've Sent — Submit Order</button>
           </div>
         </div>
 
@@ -712,7 +747,7 @@ function br(n){return n.startsWith('Diamond')?'Diamond':n;}
 const RB_TIERS = ['Iron','Bronze','Silver','Gold','Platinum','Emerald','Diamond','Masters'];
 const RB_DIVS  = ['IV','III','II','I'];
 const RB_COLORS = {Iron:'#94a3b8',Bronze:'#cd7f32',Silver:'#cbd5e1',Gold:'#fbbf24',Platinum:'#22d3ee',Emerald:'#34d399',Diamond:'#67e8f9',Masters:'#e879f9'};
-// Price per division climbed (accounts for LP variance, promo games etc.)
+// Price per division climbed
 const RB_DIV_PRICE = {
   Iron:     {solo:7.00,   duo:11.50},
   Bronze:   {solo:9.00,   duo:14.00},
@@ -720,12 +755,12 @@ const RB_DIV_PRICE = {
   Gold:     {solo:16.50,  duo:23.50},
   Platinum: {solo:23.50,  duo:31.00},
   Emerald:  {solo:26.50,  duo:38.00},
-  DiamondL: {solo:37.00,  duo:57.00}, // IV & III
-  DiamondH: {solo:47.00,  duo:72.00}, // II & I
+  DiamondL: {solo:37.00,  duo:57.00}, 
+  DiamondH: {solo:47.00,  duo:72.00}, 
 };
 
 function rbDivIdx(tier, div) {
-  if (tier === 7) return 28; // Masters, no divisions
+  if (tier === 7) return 28; 
   return tier * 4 + div;
 }
 function rbDivPrice(tier, div, type) {
@@ -761,6 +796,7 @@ const reviews=[
 let selIdx=-1,selType='solo',selWins=5,selFlash='D';
 let rbMode='rank',rbFromTier=2,rbFromDiv=2,rbToTier=3,rbToDiv=0;
 const BINANCE_ID='987280057',MIN=1,MAX=30;
+let EGP_RATE = 54.6; 
 
 // Reviews
 (function(){
@@ -807,7 +843,6 @@ function buildRBSelects(){
     fD.add(new Option(d,i));
     tD.add(new Option(d,i));
   });
-  // Defaults: Silver II → Gold IV
   fT.value=2; fD.value=2; tT.value=3; tD.value=0;
   rbFromTier=2; rbFromDiv=2; rbToTier=3; rbToDiv=0;
 
@@ -816,7 +851,6 @@ function buildRBSelects(){
     rbFromDiv =parseInt(fD.value);
     rbToTier  =parseInt(tT.value);
     rbToDiv   =parseInt(tD.value);
-    // Hide division for Masters
     fD.style.display = rbFromTier===7?'none':'';
     tD.style.display = rbToTier===7?'none':'';
     updateRBPath();
@@ -862,16 +896,13 @@ function setMode(mode){
   document.getElementById('btnModeWins').classList.toggle('active',mode==='wins');
   document.getElementById('btnModeRank').classList.toggle('active',mode==='rank');
   document.getElementById('btnModeRank').classList.toggle('gold-mode',mode==='rank');
-  // Single wrapper per mode — no bleed-through
   document.getElementById('winsModeContent').style.display = mode==='rank' ? 'none' : '';
   document.getElementById('rankModeContent').style.display = mode==='wins' ? 'none' : '';
-  // Update step numbering label
   document.getElementById('stepLabelDetails').textContent = mode==='rank' ? '③ Your details' : '④ Your details';
   if(mode==='rank') document.getElementById('promoStrip').classList.remove('visible');
   updatePrice();
 }
 
-// ── SMOOTH SLIDER FILL ──
 function fillSlider(v){
   const pct=((v-MIN)/(MAX-MIN))*100;
   document.getElementById('winsSlider').style.background=
@@ -923,7 +954,7 @@ function getTotal(){
 }
 
 function updatePrice(){
-  // ── RANK BOOST MODE ──
+  // RANK BOOST MODE
   if(rbMode==='rank'){
     const fromIdx=rbDivIdx(rbFromTier,rbFromDiv);
     const toIdx  =rbDivIdx(rbToTier,  rbToDiv);
@@ -933,6 +964,7 @@ function updatePrice(){
     document.getElementById('freeWinLine').style.display='none';
     document.getElementById('savingsNote').classList.remove('visible');
     document.getElementById('promoStrip').classList.remove('visible');
+    
     if(!valid){
       document.getElementById('summaryLine').textContent='Invalid rank range selected';
       document.getElementById('summaryBaseVal').textContent='—';
@@ -940,26 +972,31 @@ function updatePrice(){
       document.getElementById('binanceAmountText').textContent='Select valid rank range above';
       document.getElementById('paypalAmountText').textContent='Select valid rank range above';
       document.getElementById('paypalMeBtn').href='https://paypal.me/stainboost';
+      document.getElementById('instapayAmountText').textContent='Select valid rank range above';
       return;
     }
+    
     const total=calcRankBoostTotal(rbFromTier,rbFromDiv,rbToTier,rbToDiv,selType);
+    const totalEGP = (total * EGP_RATE).toFixed(0);
     const divs=toIdx-fromIdx;
+    
     document.getElementById('summaryLine').textContent=`${fromName} → ${toName} · ${selType} · ${divs} division${divs!==1?'s':''}`;
     document.getElementById('summaryBaseVal').textContent=`$${total.toFixed(2)}`;
     document.getElementById('totalVal').textContent=`$${total.toFixed(2)}`;
-    document.getElementById('binanceAmountText').innerHTML=
-      `Send exactly <strong style="color:#fff;font-size:1rem;">$${total.toFixed(2)} USDT</strong> to ID <strong style="color:#fff">${BINANCE_ID}</strong>`;
+    document.getElementById('binanceAmountText').innerHTML=`Send exactly <strong style="color:#fff;font-size:1rem;">$${total.toFixed(2)} USDT</strong> to ID <strong style="color:#fff">${BINANCE_ID}</strong>`;
     document.getElementById('paypalAmountText').textContent=`Send $${total.toFixed(2)} USD · ${fromName} → ${toName}`;
     document.getElementById('paypalMeBtn').href=`https://paypal.me/stainboost/${total.toFixed(2)}USD`;
+    document.getElementById('instapayAmountText').innerHTML=`Send exactly <strong style="color:#fff;font-size:1rem;">${totalEGP} EGP</strong> (approx $${total.toFixed(2)})`;
     return;
   }
 
-  // ── WIN BOOST MODE ──
+  // WIN BOOST MODE
   const r=ranks[selIdx];const hasRank=selIdx>=0;
   const total=getTotal();
   const ppw=hasRank?(selType==='solo'?r.solo:r.duo):0;
   const fw=selWins>=5?Math.floor(selWins/5):0;
   const hasBonus=fw>0;
+  
   if(hasRank){
     document.getElementById('summaryLine').textContent=`${r.name} · ${selWins} win${selWins!==1?'s':''} × $${ppw.toFixed(2)}`;
     document.getElementById('summaryBaseVal').textContent=`$${total.toFixed(2)}`;
@@ -967,47 +1004,65 @@ function updatePrice(){
     document.getElementById('summaryLine').textContent='Select a rank above to continue';
     document.getElementById('summaryBaseVal').textContent='—';
   }
+  
   document.getElementById('freeWinLine').style.display=hasBonus?'flex':'none';
   document.getElementById('totalVal').textContent=hasRank?`$${total.toFixed(2)}`:'$0.00';
+  
   const sn=document.getElementById('savingsNote');
   if(hasBonus&&hasRank){sn.textContent=`You're saving $${(ppw*fw).toFixed(2)} with the free win bonus!`;sn.classList.add('visible');}
   else sn.classList.remove('visible');
+  
   const strip=document.getElementById('promoStrip');
   if(hasBonus){strip.classList.add('visible');document.getElementById('promoFreeCount').textContent=fw;document.getElementById('promoBadge').textContent=`+${fw} FREE`;document.getElementById('promoPaid').textContent=selWins;document.getElementById('promoTotal').textContent=selWins+fw;}
   else strip.classList.remove('visible');
+  
   const bt=hasBonus?` · +${fw} free win${fw>1?'s':''} 🎁`:'';
   if(hasRank&&total>0){
+    const totalEGP = (total * EGP_RATE).toFixed(0);
     document.getElementById('binanceAmountText').innerHTML=`Send exactly <strong style="color:#fff;font-size:1rem;">$${total.toFixed(2)} USDT</strong> to ID <strong style="color:#fff">${BINANCE_ID}</strong>${bt}`;
     document.getElementById('paypalAmountText').textContent=`Send $${total.toFixed(2)} USD via PayPal.me${hasBonus?` (+${fw} free win${fw>1?'s':''}!)`:''}`; 
     document.getElementById('paypalMeBtn').href=`https://paypal.me/stainboost/${total.toFixed(2)}USD`;
+    document.getElementById('instapayAmountText').innerHTML=`Send exactly <strong style="color:#fff;font-size:1rem;">${totalEGP} EGP</strong> (approx $${total.toFixed(2)})${bt}`;
   }else{
     document.getElementById('binanceAmountText').textContent='Select rank & wins above to see amount';
     document.getElementById('paypalAmountText').textContent='Select rank & wins above to see amount';
     document.getElementById('paypalMeBtn').href='https://paypal.me/stainboost';
+    document.getElementById('instapayAmountText').textContent='Select rank & wins above to see amount';
   }
 }
 
 function switchPayment(m){
   document.getElementById('ptBinance').classList.toggle('active',m==='binance');
   document.getElementById('ptPaypal').classList.toggle('active',m==='paypal');
+  document.getElementById('ptInstapay').classList.toggle('active',m==='instapay');
   document.getElementById('panelBinance').classList.toggle('active',m==='binance');
   document.getElementById('panelPaypal').classList.toggle('active',m==='paypal');
+  document.getElementById('panelInstapay').classList.toggle('active',m==='instapay');
 }
-function copyID(){
-  navigator.clipboard.writeText(BINANCE_ID).then(()=>{
-    const b=document.querySelector('.copy-btn');b.textContent='Copied!';
-    setTimeout(()=>b.textContent='Copy',1500);
+
+function copyText(text, btnId){
+  navigator.clipboard.writeText(text).then(()=>{
+    const b = document.getElementById(btnId);
+    b.textContent = 'Copied!';
+    setTimeout(() => b.textContent = 'Copy', 1500);
   });
 }
+
 function showMsg(type,text){
   const el=document.getElementById('formMsg');el.className='form-msg '+type;el.textContent=text;el.style.display='block';
   el.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
+
 async function submitOrder(method){
   const discord=document.getElementById('fDiscord').value.trim();
   const ign=document.getElementById('fIGN').value.trim();
   if(!discord||!ign){showMsg('error','Please fill in your Discord tag and IGN.');return;}
+  
   let orderData;
+  let payMethodStr = 'Binance Pay';
+  if (method === 'paypal') payMethodStr = 'PayPal.me';
+  else if (method === 'instapay') payMethodStr = 'InstaPay';
+  
   if(rbMode==='rank'){
     const fromIdx=rbDivIdx(rbFromTier,rbFromDiv);
     const toIdx  =rbDivIdx(rbToTier,rbToDiv);
@@ -1015,14 +1070,15 @@ async function submitOrder(method){
     const total=calcRankBoostTotal(rbFromTier,rbFromDiv,rbToTier,rbToDiv,selType);
     const fromName=RB_TIERS[rbFromTier]+(rbFromTier<7?' '+RB_DIVS[rbFromDiv]:'');
     const toName  =RB_TIERS[rbToTier]  +(rbToTier<7?' '+RB_DIVS[rbToDiv]:'');
-    orderData={discord,ign,type:selType,flash:selFlash,total:total.toFixed(2),paymentMethod:method==='paypal'?'PayPal.me':'Binance Pay',orderType:'rank_boost',fromRank:fromName,toRank:toName,freeWins:0};
+    orderData={discord,ign,type:selType,flash:selFlash,total:total.toFixed(2),paymentMethod:payMethodStr,orderType:'rank_boost',fromRank:fromName,toRank:toName,freeWins:0};
   }else{
     if(selIdx<0||selWins<1){showMsg('error','Please select a rank and number of wins.');return;}
     const r=ranks[selIdx];const total=getTotal().toFixed(2);
     const fw=selWins>=5?Math.floor(selWins/5):0;
-    orderData={discord,ign,rank:r.name,type:selType,wins:selWins,flash:selFlash,total,paymentMethod:method==='paypal'?'PayPal.me':'Binance Pay',orderType:'win_boost',freeWins:fw};
+    orderData={discord,ign,rank:r.name,type:selType,wins:selWins,flash:selFlash,total,paymentMethod:payMethodStr,orderType:'win_boost',freeWins:fw};
   }
-  const bid=method==='paypal'?'paypalSubmitBtn':'binanceSubmitBtn';
+  
+  const bid=method==='paypal'?'paypalSubmitBtn':(method==='instapay'?'instapaySubmitBtn':'binanceSubmitBtn');
   const btn=document.getElementById(bid);btn.disabled=true;btn.textContent='Submitting…';
   try{
     const res=await fetch('/api/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(orderData)});
@@ -1032,6 +1088,7 @@ async function submitOrder(method){
   }catch(e){showMsg('error','Network error. Please DM Stain on Discord directly.');}
   btn.disabled=false;btn.textContent="✅ I've Sent — Submit Order";
 }
+
 function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open');}
 
 // Init
