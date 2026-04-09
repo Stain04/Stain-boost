@@ -96,7 +96,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .hero-scroll{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5rem;animation:fadeUp 1s ease 1s both;}
 .hero-scroll span{font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.15);}
 .scroll-line{width:1px;height:40px;position:relative;overflow:hidden;}
-.scroll-line::after{content:'absolute;top:-100%;left:0;width:1px;height:100%;background:linear-gradient(to bottom,transparent,var(--cyan),transparent);animation:scrollDrop 2s ease-in-out infinite;}
+.scroll-line::after{content:'';position:absolute;top:-100%;left:0;width:1px;height:100%;background:linear-gradient(to bottom,transparent,var(--cyan),transparent);animation:scrollDrop 2s ease-in-out infinite;}
 @keyframes scrollDrop{0%{top:-100%;}100%{top:100%;}}
 
 /* TICKER */
