@@ -1,23 +1,75 @@
 import { createClient } from '@vercel/kv';
 import { randomBytes } from 'crypto';
 
-// Server-side price table — client-submitted `total` is ignored
-const PRICES = {
-  'Iron':          { solo: 1.00, duo: 1.75 },
-  'Bronze':        { solo: 1.25, duo: 2.00 },
-  'Silver':        { solo: 1.50, duo: 2.50 },
-  'Gold':          { solo: 1.75, duo: 2.75 },
-  'Platinum':      { solo: 2.00, duo: 3.25 },
-  'Emerald':       { solo: 2.50, duo: 4.00 },
-  'Diamond IV-III':{ solo: 3.50, duo: 5.50 },
-  'Diamond II-I':  { solo: 5.00, duo: 8.00 },
-  'Masters':       { solo: 8.00, duo: 12.00 },
+// ── WIN BOOST — server-side price table (client-submitted `total` is ignored) ──
+const WIN_PRICES = {
+  'Iron':          { solo: 1.50, duo: 2.50  },
+  'Bronze':        { solo: 2.00, duo: 3.00  },
+  'Silver':        { solo: 2.50, duo: 3.50  },
+  'Gold':          { solo: 3.50, duo: 5.00  },
+  'Platinum':      { solo: 5.00, duo: 6.50  },
+  'Emerald':       { solo: 5.50, duo: 8.00  },
+  'Diamond IV-III':{ solo: 8.00, duo: 12.00 },
+  'Diamond II-I':  { solo:10.00, duo: 16.00 },
+  'Masters':       { solo:15.00, duo: 20.00 },
 };
 
-// Simple sanitizer — strip HTML tags, limit length
+// ── RANK BOOST — per-division price table (mirrors client RB_DIV_PRICE) ──
+const RB_TIERS = ['Iron','Bronze','Silver','Gold','Platinum','Emerald','Diamond','Masters'];
+const RB_DIV_PRICE = {
+  Iron:     { solo: 7.00,  duo: 11.50 },
+  Bronze:   { solo: 9.00,  duo: 14.00 },
+  Silver:   { solo: 12.00, duo: 17.00 },
+  Gold:     { solo: 16.50, duo: 23.50 },
+  Platinum: { solo: 23.50, duo: 31.00 },
+  Emerald:  { solo: 26.50, duo: 38.00 },
+  DiamondL: { solo: 37.00, duo: 57.00 }, // Diamond IV-III
+  DiamondH: { solo: 47.00, duo: 72.00 }, // Diamond II-I
+};
+
+function rbDivPrice(tierIdx, divIdx, type) {
+  const name = RB_TIERS[tierIdx];
+  if (name === 'Masters') return 0;
+  let key = name;
+  if (name === 'Diamond') key = divIdx <= 1 ? 'DiamondL' : 'DiamondH';
+  const p = RB_DIV_PRICE[key];
+  return type === 'solo' ? p.solo : p.duo;
+}
+
+function calcRankBoostTotal(fromTier, fromDiv, toTier, toDiv, type) {
+  const from = fromTier === 7 ? 28 : fromTier * 4 + fromDiv;
+  const to   = toTier   === 7 ? 28 : toTier   * 4 + toDiv;
+  if (to <= from) return 0;
+  let total = 0;
+  for (let d = from; d < to; d++) {
+    const t  = Math.min(Math.floor(d / 4), 7);
+    const dv = d % 4;
+    total += rbDivPrice(t, dv, type);
+  }
+  return total;
+}
+
+// ── SANITIZER ──
 function sanitize(str, maxLen = 100) {
   if (typeof str !== 'string') return '';
   return str.replace(/[<>"'&]/g, '').trim().slice(0, maxLen);
+}
+
+// ── IN-MEMORY RATE LIMITING — max 5 requests per IP per 60s ──
+const rateLimitMap = new Map();
+function isRateLimited(ip) {
+  const now = Date.now();
+  const WINDOW = 60_000;
+  const MAX = 5;
+  const entry = rateLimitMap.get(ip) || { count: 0, reset: now + WINDOW };
+  if (now > entry.reset) {
+    rateLimitMap.set(ip, { count: 1, reset: now + WINDOW });
+    return false;
+  }
+  if (entry.count >= MAX) return true;
+  entry.count++;
+  rateLimitMap.set(ip, entry);
+  return false;
 }
 
 export default async function handler(req, res) {
@@ -25,35 +77,68 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // ── RATE LIMITING (simple in-memory per deploy, good enough for low-traffic) ──
-  // For production at scale use Upstash rate-limit SDK instead.
+  const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || 'unknown';
+  if (isRateLimited(ip)) {
+    return res.status(429).json({ error: 'Too many requests. Please wait a minute and try again.' });
+  }
 
-  const { discord, ign, rank, type, wins, flash } = req.body;
+  const { discord, ign, type, flash, orderType } = req.body;
 
-  // ── INPUT VALIDATION ──
   const cleanDiscord = sanitize(discord, 80);
   const cleanIgn     = sanitize(ign, 60);
-  const cleanRank    = sanitize(rank, 40);
   const cleanType    = type === 'duo' ? 'duo' : 'solo';
   const cleanFlash   = flash === 'F' ? 'F' : 'D';
-  const cleanWins    = Math.max(1, Math.min(30, parseInt(wins, 10) || 0));
 
-  if (!cleanDiscord || !cleanIgn || !cleanRank || !cleanWins) {
-    return res.status(400).json({ error: 'Missing or invalid required fields.' });
+  if (!cleanDiscord || !cleanIgn) {
+    return res.status(400).json({ error: 'Missing Discord tag or IGN.' });
   }
 
-  if (!PRICES[cleanRank]) {
-    return res.status(400).json({ error: 'Invalid rank selected.' });
-  }
+  let computedTotal, orderSummary;
+  const RB_DIVS = ['IV', 'III', 'II', 'I'];
 
-  // ── SERVER-SIDE PRICE CALCULATION ──
-  const pricePerWin  = PRICES[cleanRank][cleanType];
-  const freeWins     = Math.floor(cleanWins / 5);
-  const chargedWins  = cleanWins - freeWins;
-  const computedTotal = (chargedWins * pricePerWin).toFixed(2);
+  if (orderType === 'rank_boost') {
+    const ft = parseInt(req.body.fromTier, 10);
+    const fd = parseInt(req.body.fromDiv,  10);
+    const tt = parseInt(req.body.toTier,   10);
+    const td = parseInt(req.body.toDiv,    10);
+
+    if ([ft, fd, tt, td].some(isNaN) ||
+        ft < 0 || ft > 7 || fd < 0 || fd > 3 ||
+        tt < 0 || tt > 7 || td < 0 || td > 3) {
+      return res.status(400).json({ error: 'Invalid rank range.' });
+    }
+
+    const total = calcRankBoostTotal(ft, fd, tt, td, cleanType);
+    if (total <= 0) {
+      return res.status(400).json({ error: 'Destination rank must be higher than current rank.' });
+    }
+
+    computedTotal = total.toFixed(2);
+    const fromName = RB_TIERS[ft] + (ft < 7 ? ' ' + RB_DIVS[fd] : '');
+    const toName   = RB_TIERS[tt] + (tt < 7 ? ' ' + RB_DIVS[td] : '');
+    orderSummary = `Rank Boost: ${fromName} → ${toName} · ${cleanType}`;
+
+  } else {
+    // win_boost (default)
+    const cleanRank = sanitize(req.body.rank, 40);
+    const cleanWins = Math.max(1, Math.min(30, parseInt(req.body.wins, 10) || 0));
+
+    if (!cleanRank || !cleanWins) {
+      return res.status(400).json({ error: 'Missing rank or wins.' });
+    }
+    if (!WIN_PRICES[cleanRank]) {
+      return res.status(400).json({ error: 'Invalid rank selected.' });
+    }
+
+    const pricePerWin  = WIN_PRICES[cleanRank][cleanType];
+    const freeWins     = Math.floor(cleanWins / 5);
+    const chargedWins  = cleanWins - freeWins;
+    computedTotal = (chargedWins * pricePerWin).toFixed(2);
+    orderSummary = `Win Boost: ${cleanRank} · ${cleanWins} wins (+${freeWins} free) · ${cleanType}`;
+  }
 
   // ── GENERATE SECURE REVIEW TOKEN ──
-  const buf = randomBytes(6); // 6 random bytes
+  const buf = randomBytes(6);
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let t1 = '', t2 = '';
   for (let i = 0; i < 4; i++) t1 += chars[buf[i] % chars.length];
@@ -77,30 +162,23 @@ export default async function handler(req, res) {
 
   // ── DISCORD NOTIFICATION ──
   const DISCORD_WEBHOOK = process.env.DISCORD_WEBHOOK_URL;
-  const discordPayload = {
-    embeds: [{
-      title: '⚡ New Boost Order',
-      color: 0x8b5cf6,
-      fields: [
-        { name: '👤 Discord',      value: cleanDiscord,                                           inline: true  },
-        { name: '🎮 LoL IGN',      value: cleanIgn,                                               inline: true  },
-        { name: '🏆 Rank',         value: cleanRank,                                              inline: true  },
-        { name: '⚔️ Type',         value: cleanType.charAt(0).toUpperCase() + cleanType.slice(1), inline: true  },
-        { name: '🎯 Wins',         value: String(cleanWins),                                      inline: true  },
-        { name: '💰 Total',        value: `$${computedTotal}`,                                    inline: true  },
-        { name: '⚡ Flash Key',    value: cleanFlash,                                             inline: true  },
-        { name: '🔑 Review Token', value: `\`${reviewToken}\``,                                   inline: false }
-      ],
-      footer: { text: `Submitted at ${timestamp}` }
-    }]
-  };
-
   if (DISCORD_WEBHOOK) {
+    const fields = [
+      { name: '👤 Discord',      value: cleanDiscord,                                           inline: true  },
+      { name: '🎮 LoL IGN',      value: cleanIgn,                                               inline: true  },
+      { name: '⚔️ Type',         value: cleanType.charAt(0).toUpperCase() + cleanType.slice(1), inline: true  },
+      { name: '💰 Total',        value: `$${computedTotal}`,                                    inline: true  },
+      { name: '⚡ Flash Key',    value: cleanFlash,                                             inline: true  },
+      { name: '📋 Order',        value: orderSummary,                                           inline: false },
+      { name: '🔑 Review Token', value: `\`${reviewToken}\``,                                   inline: false },
+    ];
     try {
       await fetch(DISCORD_WEBHOOK, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(discordPayload)
+        body: JSON.stringify({
+          embeds: [{ title: '⚡ New Boost Order', color: 0x8b5cf6, fields, footer: { text: `Submitted at ${timestamp}` } }]
+        })
       });
     } catch (e) {
       console.error('Discord webhook failed:', e);
@@ -119,11 +197,10 @@ export default async function handler(req, res) {
         service: 'gmail',
         auth: { user: EMAIL_FROM, pass: EMAIL_PASS }
       });
-
       await transporter.sendMail({
         from: `"Stain Boost Orders" <${EMAIL_FROM}>`,
         to: EMAIL_TO,
-        subject: `⚡ New Order — ${cleanRank} ${cleanType} x${cleanWins} wins ($${computedTotal})`,
+        subject: `⚡ New Order — ${orderSummary} ($${computedTotal})`,
         html: `
           <div style="font-family:sans-serif;max-width:480px;margin:0 auto;background:#0e0b1a;color:#e2e8f0;border-radius:16px;overflow:hidden;">
             <div style="background:linear-gradient(135deg,#7c3aed,#6d28d9);padding:20px 24px;">
@@ -134,9 +211,8 @@ export default async function handler(req, res) {
               <table style="width:100%;border-collapse:collapse;">
                 <tr><td style="padding:8px 0;color:rgba(255,255,255,0.45);font-size:13px;">Discord</td><td style="padding:8px 0;font-weight:600;">${cleanDiscord}</td></tr>
                 <tr><td style="padding:8px 0;color:rgba(255,255,255,0.45);font-size:13px;">LoL IGN</td><td style="padding:8px 0;font-weight:600;">${cleanIgn}</td></tr>
-                <tr><td style="padding:8px 0;color:rgba(255,255,255,0.45);font-size:13px;">Rank</td><td style="padding:8px 0;font-weight:600;">${cleanRank}</td></tr>
                 <tr><td style="padding:8px 0;color:rgba(255,255,255,0.45);font-size:13px;">Type</td><td style="padding:8px 0;font-weight:600;">${cleanType}</td></tr>
-                <tr><td style="padding:8px 0;color:rgba(255,255,255,0.45);font-size:13px;">Wins</td><td style="padding:8px 0;font-weight:600;">${cleanWins}</td></tr>
+                <tr><td style="padding:8px 0;color:rgba(255,255,255,0.45);font-size:13px;">Order</td><td style="padding:8px 0;font-weight:600;">${orderSummary}</td></tr>
                 <tr><td style="padding:8px 0;color:rgba(255,255,255,0.45);font-size:13px;">Flash Key</td><td style="padding:8px 0;font-weight:600;">${cleanFlash}</td></tr>
                 <tr><td style="padding:8px 0;color:rgba(255,255,255,0.45);font-size:13px;">Review Token</td><td style="padding:8px 0;font-weight:600;color:#fbbf24;">${reviewToken}</td></tr>
                 <tr style="border-top:1px solid rgba(255,255,255,0.1);">
@@ -153,5 +229,5 @@ export default async function handler(req, res) {
     }
   }
 
-  return res.status(200).json({ ok: true, total: computedTotal });
+  return res.status(200).json({ ok: true, total: computedTotal, token: reviewToken });
 }

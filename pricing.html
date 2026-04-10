@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<style>html,body{background:#0b0916;}</style>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-818RX6BRWB"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -36,7 +37,9 @@
   "description": "ELO boosting prices for League of Legends Middle East server. Iron to Masters, solo and duo options."
 }
 </script>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600&display=block" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--purple:#8b5cf6;--purple-light:#c4b5fd;--purple-dark:#6d28d9;--cyan:#22d3ee;--gold:#fbbf24;--bg:#0b0916;--bg-card:rgba(18,14,38,0.92);--border:rgba(139,92,246,0.18);--text:#e2e8f0;--muted:rgba(255,255,255,0.38);}
@@ -52,7 +55,7 @@ body{min-height:100vh;font-family:'Inter',sans-serif;background:var(--bg);color:
 .bg-grid{position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(139,92,246,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(139,92,246,0.035) 1px,transparent 1px);background-size:40px 40px;}
 
 /* NAV */
-.nav{position:sticky;top:0;z-index:100;background:rgba(11,9,22,0.85);border-bottom:1px solid var(--border);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
+.nav{position:sticky;top:0;z-index:100;height:64px;overflow:hidden;background:rgba(11,9,22,0.88);border-bottom:1px solid rgba(139,92,246,0.15);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
 .nav-inner{max-width:1200px;margin:0 auto;padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;}
 .nav-logo{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:900;letter-spacing:0.12em;text-decoration:none;background:linear-gradient(135deg,var(--purple-light),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .nav-links{display:flex;align-items:center;gap:0.15rem;}
@@ -487,8 +490,8 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
 
           <div class="wins-section" style="margin-top:1.25rem;">
             <div class="wins-header">
-              <div class="wins-label">③ Number of wins</div>
-              <div class="wins-display" id="winsDisplay">5<sup>wins</sup></div>
+              <div class="wins-label">③ Number of net wins</div>
+              <div class="wins-display" id="winsDisplay">5<sup>net wins</sup></div>
             </div>
             <div class="wins-quick">
               <div class="wins-chip" data-val="1" onclick="setWins(1)">1</div>
@@ -507,6 +510,7 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
               <span class="stk">20</span>
               <span class="stk">30</span>
             </div>
+            <div class="field-hint" style="margin-top:0.5rem;">Net wins = wins minus losses. e.g. order 5, Stain wins 2 &amp; loses 1 → 1 net win done, 4 still to go.</div>
           </div>
 
           <div class="promo-strip" id="promoStrip">
@@ -564,7 +568,7 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
           <div class="field">
             <label>Flash Key</label>
             <div class="flash-row">
-              <button class="flash-btn active" id="flashD" onclick="setFlash('D')">⚡ D — Default</button>
+              <button class="flash-btn active" id="flashD" onclick="setFlash('D')">⚡ D</button>
               <button class="flash-btn" id="flashF" onclick="setFlash('F')">⚡ F</button>
             </div>
           </div>
@@ -727,8 +731,8 @@ const ranks=[
   {name:'Gold',short:'Gold',color:'#fbbf24',bg:'rgba(251,191,36,0.12)',solo:3.50,duo:5.00},
   {name:'Platinum',short:'Plat',color:'#22d3ee',bg:'rgba(34,211,238,0.12)',solo:5.00,duo:6.50},
   {name:'Emerald',short:'Emerald',color:'#34d399',bg:'rgba(52,211,153,0.12)',solo:5.50,duo:8.00},
-  {name:'Diamond IV→III',short:'Dia IV',color:'#67e8f9',bg:'rgba(103,232,249,0.12)',solo:8.00,duo:12.00},
-  {name:'Diamond II→I',short:'Dia II',color:'#a5f3fc',bg:'rgba(165,243,252,0.08)',solo:10.00,duo:16.00},
+  {name:'Diamond IV-III',short:'Dia IV',color:'#67e8f9',bg:'rgba(103,232,249,0.12)',solo:8.00,duo:12.00},
+  {name:'Diamond II-I',short:'Dia II',color:'#a5f3fc',bg:'rgba(165,243,252,0.08)',solo:10.00,duo:16.00},
   {name:'Masters',short:'Masters',color:'#e879f9',bg:'rgba(232,121,249,0.12)',solo:15.00,duo:20.00},
 ];
 const ri={
@@ -909,7 +913,7 @@ function fillSlider(v){
     `linear-gradient(to right,#8b5cf6 0%,#22d3ee ${pct}%,rgba(255,255,255,0.08) ${pct}%)`;
 }
 function showWins(v){
-  document.getElementById('winsDisplay').innerHTML=`${v}<sup>win${v!==1?'s':''}</sup>`;
+  document.getElementById('winsDisplay').innerHTML=`${v}<sup>net win${v!==1?'s':''}</sup>`;
 }
 function syncChips(v){
   document.querySelectorAll('.wins-chip').forEach(c=>c.classList.toggle('active',parseInt(c.dataset.val)===v));
@@ -950,7 +954,9 @@ function setFlash(k){
 function getTotal(){
   if(selIdx<0)return 0;
   const r=ranks[selIdx];
-  return(selType==='solo'?r.solo:r.duo)*selWins;
+  const ppw=selType==='solo'?r.solo:r.duo;
+  const freeWins=Math.floor(selWins/5);
+  return ppw*(selWins-freeWins);
 }
 
 function updatePrice(){
@@ -998,8 +1004,8 @@ function updatePrice(){
   const hasBonus=fw>0;
   
   if(hasRank){
-    document.getElementById('summaryLine').textContent=`${r.name} · ${selWins} win${selWins!==1?'s':''} × $${ppw.toFixed(2)}`;
-    document.getElementById('summaryBaseVal').textContent=`$${total.toFixed(2)}`;
+    document.getElementById('summaryLine').textContent=`${r.name} · ${selWins} net win${selWins!==1?'s':''} × $${ppw.toFixed(2)}`;
+    document.getElementById('summaryBaseVal').textContent=`$${(ppw*selWins).toFixed(2)}`;
   }else{
     document.getElementById('summaryLine').textContent='Select a rank above to continue';
     document.getElementById('summaryBaseVal').textContent='—';
@@ -1067,10 +1073,7 @@ async function submitOrder(method){
     const fromIdx=rbDivIdx(rbFromTier,rbFromDiv);
     const toIdx  =rbDivIdx(rbToTier,rbToDiv);
     if(toIdx<=fromIdx){showMsg('error','Please select a valid rank range.');return;}
-    const total=calcRankBoostTotal(rbFromTier,rbFromDiv,rbToTier,rbToDiv,selType);
-    const fromName=RB_TIERS[rbFromTier]+(rbFromTier<7?' '+RB_DIVS[rbFromDiv]:'');
-    const toName  =RB_TIERS[rbToTier]  +(rbToTier<7?' '+RB_DIVS[rbToDiv]:'');
-    orderData={discord,ign,type:selType,flash:selFlash,total:total.toFixed(2),paymentMethod:payMethodStr,orderType:'rank_boost',fromRank:fromName,toRank:toName,freeWins:0};
+    orderData={discord,ign,type:selType,flash:selFlash,paymentMethod:payMethodStr,orderType:'rank_boost',fromTier:rbFromTier,fromDiv:rbFromDiv,toTier:rbToTier,toDiv:rbToDiv};
   }else{
     if(selIdx<0||selWins<1){showMsg('error','Please select a rank and number of wins.');return;}
     const r=ranks[selIdx];const total=getTotal().toFixed(2);
@@ -1083,7 +1086,11 @@ async function submitOrder(method){
   try{
     const res=await fetch('/api/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(orderData)});
     const data=await res.json();
-    if(res.ok&&data.ok){showMsg('success','✅ Order submitted! Stain will verify your payment and message you on Discord shortly.');document.getElementById('fDiscord').value='';document.getElementById('fIGN').value='';}
+    if(res.ok&&data.ok){
+      const tokenNote=data.token?` | Review token: ${data.token} (save this!)`:'';;
+      showMsg('success',`✅ Order confirmed! Total: $${data.total}${tokenNote} — Stain will verify your payment and DM you on Discord shortly.`);
+      document.getElementById('fDiscord').value='';document.getElementById('fIGN').value='';
+    }
     else showMsg('error','Submission failed. Please DM Stain on Discord directly.');
   }catch(e){showMsg('error','Network error. Please DM Stain on Discord directly.');}
   btn.disabled=false;btn.textContent="✅ I've Sent — Submit Order";

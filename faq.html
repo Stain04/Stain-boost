@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<style>html,body{background:#0b0916;}</style>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-818RX6BRWB"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -35,7 +36,9 @@
   "url": "https://stainboost.com/faq"
 }
 </script>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600&display=block" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',sans-serif;background:#0b0916;color:#e2e8f0;min-height:100vh;overflow-x:hidden;}
@@ -43,8 +46,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 body::after{content:'';position:fixed;inset:0;background-image:radial-gradient(rgba(255,255,255,0.035) 1px,transparent 1px);background-size:28px 28px;z-index:0;pointer-events:none;}
 
 /* NAV */
-.nav{position:sticky;top:0;z-index:100;background:rgba(11,9,22,0.88);border-bottom:1px solid rgba(139,92,246,0.15);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);}
-.nav-inner{max-width:1100px;margin:0 auto;padding:0 2rem;height:62px;display:flex;align-items:center;justify-content:space-between;}
+.nav{position:sticky;top:0;z-index:100;height:64px;overflow:hidden;background:rgba(11,9,22,0.88);border-bottom:1px solid rgba(139,92,246,0.15);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;}
 .nav-logo{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:900;letter-spacing:0.12em;text-decoration:none;background:linear-gradient(135deg,#c4b5fd,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .nav-links{display:flex;align-items:center;gap:0.15rem;}
 .nav-links a{font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.45);text-decoration:none;padding:0.4rem 0.9rem;border-radius:8px;transition:color .2s,background .2s;}
@@ -54,7 +57,7 @@ body::after{content:'';position:fixed;inset:0;background-image:radial-gradient(r
 .nav-discord:hover{background:rgba(139,92,246,0.26);box-shadow:0 0 18px rgba(139,92,246,0.3);}
 .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;}
 .hamburger span{display:block;width:22px;height:2px;background:rgba(255,255,255,0.55);border-radius:2px;}
-.mobile-menu{display:none;position:absolute;top:62px;left:0;right:0;background:rgba(11,9,22,0.97);border-bottom:1px solid rgba(139,92,246,0.12);padding:1rem;flex-direction:column;gap:0.4rem;z-index:99;}
+.mobile-menu{display:none;position:absolute;top:64px;left:0;right:0;background:rgba(11,9,22,0.97);border-bottom:1px solid rgba(139,92,246,0.12);padding:1rem;flex-direction:column;gap:0.4rem;z-index:99;}
 .mobile-menu.open{display:flex;}
 .mobile-menu a{font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.55);text-decoration:none;padding:0.75rem 1rem;border-radius:10px;}
 .mobile-menu a:hover,.mobile-menu a.active{color:#c4b5fd;background:rgba(139,92,246,0.1);}
@@ -211,3 +214,162 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.8rem 2rem;text-alig
   </div>
 
   <div class="faq-section">
+    <div class="faq-category">📦 Orders &amp; Process</div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span class="faq-q-text">How do I place an order?</span>
+          <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="#a78bfa" stroke-width="2.5"><path d="M7 1v12M1 7h12"/></svg></span>
+        </button>
+        <div class="faq-answer"><p>Head to the <a href="pricing.html">Pricing</a> page, choose your rank and number of wins (or select Rank Boost mode), pick Solo or Duo, select your payment method, fill in your Discord tag and IGN, then hit submit. Stain will reach out on Discord to confirm once payment is verified.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span class="faq-q-text">How long does a boost take to start?</span>
+          <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="#a78bfa" stroke-width="2.5"><path d="M7 1v12M1 7h12"/></svg></span>
+        </button>
+        <div class="faq-answer"><p>Most orders begin <strong>within a few hours</strong> of payment being confirmed. Stain typically replies on Discord in under 5 minutes and will give you an exact start time. Urgent orders can be discussed directly.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span class="faq-q-text">What is the difference between Solo and Duo boost?</span>
+          <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="#a78bfa" stroke-width="2.5"><path d="M7 1v12M1 7h12"/></svg></span>
+        </button>
+        <div class="faq-answer"><p><strong>Solo boost</strong> means Stain logs into your account and plays for you — you don't need to be online. <strong>Duo boost</strong> means you queue together with Stain: you play your own account while Stain plays on his, coaching and carrying from the same game. Duo is slightly more expensive but your account is never handed over.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span class="faq-q-text">Do I need to share my login credentials?</span>
+          <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="#a78bfa" stroke-width="2.5"><path d="M7 1v12M1 7h12"/></svg></span>
+        </button>
+        <div class="faq-answer"><p>Only for <strong>Solo boost</strong>. Your credentials are used solely to log in and play — they are never stored or shared. If you prefer to keep your account to yourself, choose <strong>Duo boost</strong> instead. You can also change your password after the boost is complete.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="faq-section">
+    <div class="faq-category">💳 Payment</div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span class="faq-q-text">What payment methods do you accept?</span>
+          <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="#a78bfa" stroke-width="2.5"><path d="M7 1v12M1 7h12"/></svg></span>
+        </button>
+        <div class="faq-answer"><p>Three options are available: <strong>Binance Pay</strong> (USDT, zero fees, instant), <strong>PayPal.me</strong> (credit/debit card or PayPal balance), and <strong>InstaPay</strong> (Egyptian EGP transfers). All methods are shown with exact amounts on the Pricing page after you configure your order.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span class="faq-q-text">What is the free win bonus?</span>
+          <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="#a78bfa" stroke-width="2.5"><path d="M7 1v12M1 7h12"/></svg></span>
+        </button>
+        <div class="faq-answer"><p>For every <strong>5 wins</strong> you order, you get <strong>1 extra win completely free</strong>. Order 5 wins, get 6. Order 10, get 12. The discount is applied automatically and shown on the Pricing page before you pay.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span class="faq-q-text">Do you offer refunds?</span>
+          <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="#a78bfa" stroke-width="2.5"><path d="M7 1v12M1 7h12"/></svg></span>
+        </button>
+        <div class="faq-answer"><p>If the boost hasn't started yet, a full refund can be arranged — just DM Stain on Discord. Once boosting has begun, partial refunds are handled case by case based on progress. Every situation is dealt with fairly. <a href="https://discord.gg/pxsTfTJF" target="_blank">Open a conversation on Discord</a> and it will be sorted out.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="faq-section">
+    <div class="faq-category">🏆 Results &amp; Gameplay</div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span class="faq-q-text">What champion does Stain play?</span>
+          <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="#a78bfa" stroke-width="2.5"><path d="M7 1v12M1 7h12"/></svg></span>
+        </button>
+        <div class="faq-answer"><p>Stain specialises in <strong>Master Yi Jungle</strong> — currently ranked <strong>#1 on the Middle East server</strong>. He may occasionally flex onto other picks depending on matchup, but Yi is his primary and most dominant champion.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span class="faq-q-text">What if Stain loses some games during the boost?</span>
+          <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="#a78bfa" stroke-width="2.5"><path d="M7 1v12M1 7h12"/></svg></span>
+        </button>
+        <div class="faq-answer"><p>You are paying for <strong>net wins</strong>. For example: you order 5 net wins, Stain wins 2 and loses 1 — that's 1 net win, so you still have <strong>4 more to go</strong>. Only the difference between wins and losses counts as progress. Stain keeps playing until the full number of net wins is delivered, no matter how many games it takes.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          <span class="faq-q-text">Can I check progress during the boost?</span>
+          <span class="faq-icon"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="#a78bfa" stroke-width="2.5"><path d="M7 1v12M1 7h12"/></svg></span>
+        </button>
+        <div class="faq-answer"><p>Yes. Stain sends updates on Discord as wins are completed. You can ask for a progress update at any time and he will respond quickly. You can also track your own match history on <a href="https://www.op.gg" target="_blank">OP.GG</a> while the boost is ongoing.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="faq-cta">
+    <div class="cta-title">Still have questions?</div>
+    <p class="cta-sub">DM Stain directly on Discord — replies in under 5 minutes.</p>
+    <a href="https://discord.gg/pxsTfTJF" target="_blank" class="btn-primary">💬 Open Discord</a>
+  </div>
+
+</div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">STAINBOOST</div>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="reviews.html">Reviews</a>
+      <a href="faq.html">FAQ</a>
+      <a href="https://discord.gg/pxsTfTJF" target="_blank">Discord</a>
+    </div>
+    <div class="footer-copy">© 2026 StainBoost · Middle East Server · #1 Master Yi</div>
+  </div>
+</footer>
+
+<script>
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+function toggleMenu() {
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+
+(function(){
+  const canvas = document.getElementById('particles-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  const COLORS = ['rgba(139,92,246,','rgba(34,211,238,','rgba(196,181,253,'];
+  for (let i = 0; i < 18; i++) {
+    particles.push({
+      x: Math.random()*W, y: Math.random()*H,
+      r: Math.random()*1.5+0.3,
+      dx: (Math.random()-0.5)*0.25, dy: (Math.random()-0.5)*0.25,
+      o: Math.random()*0.18+0.04,
+      c: COLORS[Math.floor(Math.random()*COLORS.length)],
+      pulse: Math.random()*Math.PI*2, pulseSpeed: Math.random()*0.016+0.005
+    });
+  }
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => {
+      p.pulse += p.pulseSpeed;
+      const alpha = p.o * (0.7 + 0.3 * Math.sin(p.pulse));
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fillStyle = p.c + alpha + ')'; ctx.fill();
+      p.x += p.dx; p.y += p.dy;
+      if (p.x < -5) p.x = W+5; if (p.x > W+5) p.x = -5;
+      if (p.y < -5) p.y = H+5; if (p.y > H+5) p.y = -5;
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>
