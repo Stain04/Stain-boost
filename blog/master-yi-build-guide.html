@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>html,body{background:#0b0916;}</style>
+<link rel="stylesheet" href="../shared.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Master Yi Build Guide 2026 – Best Runes, Items & Tips to Carry</title>
+<meta name="description" content="Master Yi build guide for 2026. Best runes, items, skill order, and tips to dominate solo queue from the #1 Master Yi on Middle East server.">
+<link rel="canonical" href="https://stainboost.com/blog/master-yi-build-guide.html">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://stainboost.com/blog/master-yi-build-guide.html">
+<meta property="og:title" content="Master Yi Build Guide 2026 – Best Runes, Items & Tips to Carry">
+<meta property="og:description" content="Master Yi build guide for 2026. Best runes, items, skill order, and tips to dominate solo queue from the #1 Master Yi on Middle East server.">
+<meta property="og:image" content="https://stainboost.com/avatar.jpeg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600&display=block" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Article","headline":"Master Yi Build Guide 2026 – Best Runes, Items & Tips to Carry","description":"The definitive Master Yi jungle guide for 2026. Runes, items, skill order, jungle path, and matchup tips from the #1 Master Yi on the Middle East server.","author":{"@type":"Person","name":"Stain","description":"#1 Master Yi on Middle East Server"},"publisher":{"@type":"Organization","name":"StainBoost","logo":{"@type":"ImageObject","url":"https://stainboost.com/avatar.jpeg"}},"url":"https://stainboost.com/blog/master-yi-build-guide.html","datePublished":"2026-04-12","dateModified":"2026-04-12"}
+</script>
+<style>
+:root{--bg:#060411;--bg-card:rgba(12,8,32,0.85);--purple:#7c3aed;--purple-light:#c4b5fd;--cyan:#06d6f2;--gold:#f5a623;--text:#e8e4f0;--muted:rgba(255,255,255,0.35);}
+
+#reading-progress{position:fixed;top:0;left:0;height:3px;width:0%;background:linear-gradient(90deg,var(--purple),var(--cyan));z-index:9999;transition:width .1s linear;}
+
+body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");opacity:0.5;z-index:0;pointer-events:none;}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(124,58,237,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,0.03) 1px,transparent 1px);background-size:48px 48px;z-index:0;pointer-events:none;}
+
+/* ── CHAMPION HERO ── */
+.champ-hero{position:relative;height:320px;overflow:hidden;margin-bottom:0;margin-top:64px;}
+.champ-hero-bg{position:absolute;inset:0;background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/MasterYi_0.jpg');background-size:cover;background-position:center 20%;filter:brightness(.55);}
+.champ-hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,#060411 100%);}
+.champ-hero-content{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;justify-content:flex-end;padding:2rem 2rem 1.8rem;max-width:760px;margin:0 auto;}
+.champ-hero-name{font-family:'Orbitron',sans-serif;font-size:clamp(2rem,6vw,3.2rem);font-weight:900;color:#fff;letter-spacing:.04em;line-height:1;margin-bottom:.4rem;text-shadow:0 2px 20px rgba(0,0,0,.8);}
+.champ-hero-sub{font-family:'Rajdhani',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);}
+
+/* ── STATS BAR ── */
+.stats-bar{display:flex;gap:0;background:rgba(12,8,32,.95);border-bottom:1px solid rgba(124,58,237,.2);position:relative;z-index:2;}
+.stats-bar-inner{display:flex;max-width:760px;margin:0 auto;width:100%;}
+.stat-pill{flex:1;text-align:center;padding:.8rem .5rem;border-right:1px solid rgba(255,255,255,.06);}
+.stat-pill:last-child{border-right:none;}
+.stat-pill-val{font-family:'Orbitron',sans-serif;font-size:.95rem;font-weight:700;color:#fff;display:block;}
+.stat-pill-lbl{font-family:'Rajdhani',sans-serif;font-size:.6rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.3);display:block;margin-top:.15rem;}
+.stat-pill-val.gold{color:var(--gold);}
+.stat-pill-val.green{color:#22c55e;}
+
+/* ── ARTICLE WRAPPER ── */
+.article-wrapper{max-width:760px;margin:0 auto;padding:2rem 1.5rem 5rem;position:relative;z-index:2;}
+
+.back-btn{display:inline-flex;align-items:center;gap:.5rem;font-family:'Rajdhani',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.35);text-decoration:none;padding:.5rem 0;margin-bottom:2rem;transition:color .2s;}
+.back-btn:hover{color:var(--cyan);}
+.back-btn svg{transition:transform .2s;}
+.back-btn:hover svg{transform:translateX(-3px);}
+
+.article-header{margin-bottom:2rem;}
+.article-cat{font-family:'Rajdhani',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:var(--cyan);margin-bottom:.8rem;}
+.article-header h1{font-family:'Orbitron',sans-serif;font-size:clamp(1.4rem,3.5vw,1.9rem);font-weight:900;color:#fff;line-height:1.2;margin-bottom:1rem;letter-spacing:.02em;}
+.article-meta{display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap;}
+.article-author{display:flex;align-items:center;gap:.6rem;}
+.article-author-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--cyan));display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:#fff;flex-shrink:0;}
+.article-author-name{font-family:'Rajdhani',sans-serif;font-size:.85rem;font-weight:700;color:rgba(255,255,255,.7);}
+.article-author-title{font-family:'Rajdhani',sans-serif;font-size:.68rem;color:var(--gold);letter-spacing:.05em;}
+.article-badge{font-family:'Rajdhani',sans-serif;font-size:.72rem;font-weight:600;background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.25);border-radius:100px;padding:.3rem .9rem;color:var(--purple-light);letter-spacing:.05em;}
+.article-divider{height:1px;background:linear-gradient(90deg,rgba(124,58,237,.3),rgba(6,214,242,.15),transparent);margin:1.5rem 0 2rem;}
+
+/* ── SECTION LABELS ── */
+.visual-section{margin:2.5rem 0;}
+.visual-section-title{font-family:'Rajdhani',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:1rem;display:flex;align-items:center;gap:.8rem;}
+.visual-section-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(124,58,237,.2),transparent);}
+
+/* ── RUNE PAGE ── */
+.rune-display{background:rgba(12,8,32,.9);border:1px solid rgba(124,58,237,.15);border-radius:20px;padding:1.4rem 1.4rem 1.2rem;display:grid;grid-template-columns:1fr 1fr 120px;gap:0;}
+@media(max-width:580px){.rune-display{grid-template-columns:1fr 1fr;} .rune-shards-col{grid-column:1/-1;border-left:none;border-top:1px solid rgba(255,255,255,.07);padding-top:1rem;margin-top:.4rem;flex-direction:row;gap:1.5rem;display:flex;}}
+@media(max-width:380px){.rune-display{grid-template-columns:1fr;}}
+.rune-col{padding:.1rem .5rem;}
+.rune-col:first-child{border-right:1px solid rgba(255,255,255,.07);padding-right:1.1rem;}
+.rune-col:nth-child(2){padding-left:1.1rem;padding-right:1.1rem;border-right:1px solid rgba(255,255,255,.07);}
+.rune-tree-header{display:flex;align-items:center;gap:.6rem;font-family:'Rajdhani',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.9rem;}
+.rune-tree-icon{width:20px;height:20px;border-radius:50%;object-fit:cover;}
+.rune-tree-icon.loading{background:rgba(255,255,255,.1);}
+/* row = bullet dot + centered choices */
+.rune-row{display:flex;align-items:center;gap:.5rem;margin-bottom:.7rem;}
+.rune-row::before{content:'';width:6px;height:6px;min-width:6px;border-radius:50%;background:rgba(255,255,255,.2);flex-shrink:0;}
+.rune-choices{display:flex;justify-content:center;gap:.35rem;flex:1;align-items:flex-start;}
+/* keystone row: slightly bigger icons */
+.rune-row-ks .rune-choices{gap:.28rem;}
+.rune-row-ks .rune-choice{width:54px;}
+.rune-row-ks .rune-icon{width:44px;height:44px;}
+/* separator between keystone and regular rows */
+.rune-section-sep{border:none;border-top:1px solid rgba(255,255,255,.08);margin:.1rem .5rem .8rem;}
+/* secondary tree: show 3 keystones dimmed (no bullet, no selection) */
+.rune-sec-ks-row{display:flex;justify-content:center;gap:.5rem;padding:.3rem 0 .15rem;}
+.rune-sec-ks-row img{width:30px;height:30px;border-radius:50%;object-fit:cover;opacity:.2;background:rgba(255,255,255,.04);}
+.rune-choice{display:flex;flex-direction:column;align-items:center;gap:.3rem;opacity:.18;transition:opacity .2s;width:54px;flex-shrink:0;}
+.rune-choice.active{opacity:1;}
+.rune-icon{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid transparent;background:rgba(255,255,255,.04);flex-shrink:0;cursor:pointer;transition:transform .15s,box-shadow .15s;}
+.rune-choice:hover .rune-icon{transform:scale(1.12);box-shadow:0 0 14px rgba(124,58,237,.55);}
+.rune-choice.active .rune-icon{border-color:#4a90e2;box-shadow:0 0 0 2px rgba(74,144,226,.3),0 0 14px rgba(74,144,226,.55);}
+.rune-choice.active:hover .rune-icon{transform:scale(1.12);box-shadow:0 0 0 2px rgba(74,144,226,.3),0 0 20px rgba(74,144,226,.7);}
+.rune-name{font-family:'Rajdhani',sans-serif;font-size:.54rem;font-weight:600;color:rgba(255,255,255,.45);text-align:center;width:100%;line-height:1.2;}
+.rune-choice.active .rune-name{color:rgba(255,255,255,.9);}
+/* stat shards — 3rd column */
+.rune-shards-col{padding:.1rem 0 .1rem 1.1rem;display:flex;flex-direction:column;align-self:start;}
+.rune-shards-header{font-family:'Rajdhani',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.9rem;}
+.shard-slot-row{display:flex;align-items:flex-start;gap:.35rem;margin-bottom:.55rem;}
+.rune-shard{display:flex;flex-direction:column;align-items:center;gap:.2rem;opacity:.18;transition:opacity .2s;width:36px;flex-shrink:0;}
+.rune-shard.active{opacity:1;}
+.rune-shard-icon{width:30px;height:30px;border-radius:50%;border:2px solid transparent;background:rgba(255,255,255,.05);object-fit:cover;flex-shrink:0;cursor:pointer;transition:transform .15s,box-shadow .15s;}
+.rune-shard:hover .rune-shard-icon{transform:scale(1.12);box-shadow:0 0 12px rgba(124,58,237,.55);}
+.rune-shard.active .rune-shard-icon{border-color:rgba(245,166,35,.7);box-shadow:0 0 8px rgba(245,166,35,.35);}
+.rune-shard.active:hover .rune-shard-icon{transform:scale(1.12);box-shadow:0 0 14px rgba(245,166,35,.6);}
+.rune-shard-name{font-family:'Rajdhani',sans-serif;font-size:.48rem;font-weight:600;color:rgba(255,255,255,.35);text-align:center;max-width:36px;line-height:1.1;}
+.rune-shard.active .rune-shard-name{color:rgba(255,255,255,.8);}
+.rune-shard.active .rune-shard-name{color:rgba(255,255,255,.85);}
+/* ── RUNE TOOLTIP ── */
+#rune-tooltip{position:fixed;z-index:9999;pointer-events:none;max-width:220px;background:rgba(8,4,22,.97);border:1px solid rgba(124,58,237,.4);border-radius:10px;padding:.65rem .85rem;box-shadow:0 8px 32px rgba(0,0,0,.6);opacity:0;transition:opacity .15s;transform:translateY(4px);}
+#rune-tooltip.visible{opacity:1;transform:translateY(0);}
+#rune-tooltip .tip-name{font-family:'Rajdhani',sans-serif;font-size:.78rem;font-weight:700;color:#fff;margin-bottom:.3rem;}
+#rune-tooltip .tip-desc{font-family:'Inter',sans-serif;font-size:.72rem;color:rgba(255,255,255,.55);line-height:1.5;}
+
+/* ── MATCHUP CARDS ── */
+.matchup-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.25rem 0 1.75rem;}
+@media(max-width:580px){.matchup-grid{grid-template-columns:1fr;}}
+.matchup-card{background:rgba(12,8,32,.85);border:1px solid rgba(239,68,68,.18);border-radius:18px;overflow:hidden;position:relative;transition:border-color .2s,transform .2s;}
+.matchup-card:hover{border-color:rgba(239,68,68,.45);transform:translateY(-3px);}
+.matchup-card-header{position:relative;height:130px;overflow:hidden;flex-shrink:0;}
+.matchup-card-splash{width:100%;height:100%;object-fit:cover;object-position:center 20%;filter:brightness(.5);display:block;}
+.matchup-card-champ-icon{position:absolute;bottom:10px;left:1rem;width:52px;height:52px;border-radius:50%;border:3px solid rgba(239,68,68,.7);box-shadow:0 0 16px rgba(239,68,68,.5);object-fit:cover;background:rgba(12,8,32,.6);}
+.matchup-card-body{padding:1rem 1.1rem 1.1rem;}
+.matchup-champ-name{font-family:'Orbitron',sans-serif;font-size:.78rem;font-weight:700;color:#fff;margin-bottom:.25rem;letter-spacing:.04em;}
+.matchup-threat{display:inline-block;font-family:'Rajdhani',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#f87171;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:100px;padding:.15rem .6rem;margin-bottom:.7rem;}
+.matchup-card-text{font-family:'Inter',sans-serif;font-size:.78rem;color:rgba(255,255,255,.52);line-height:1.65;}
+.matchup-tip{margin-top:.7rem;padding:.55rem .7rem;background:rgba(124,58,237,.08);border-left:2px solid var(--purple);border-radius:0 8px 8px 0;font-family:'Inter',sans-serif;font-size:.74rem;color:rgba(255,255,255,.6);line-height:1.5;}
+.matchup-tip strong{color:var(--purple-light);}
+
+/* ── GAMEPLAY TIPS ── */
+.gameplay-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.25rem 0 1.75rem;}
+@media(max-width:580px){.gameplay-grid{grid-template-columns:1fr;}}
+.gameplay-card{background:rgba(12,8,32,.8);border:1px solid rgba(139,92,246,.14);border-radius:16px;padding:1.15rem 1.2rem;position:relative;overflow:hidden;}
+.gameplay-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--card-accent,var(--purple));border-radius:3px 0 0 3px;}
+.gameplay-phase{font-family:'Rajdhani',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--card-accent,var(--purple-light));margin-bottom:.42rem;}
+.gameplay-card-icon{font-size:1.25rem;margin-bottom:.38rem;line-height:1;}
+.gameplay-card-title{font-family:'Rajdhani',sans-serif;font-size:.95rem;font-weight:700;color:#fff;margin-bottom:.42rem;}
+.gameplay-card-body{font-size:.8rem;color:rgba(255,255,255,.52);line-height:1.62;}
+
+/* ── ITEM BUILD ── */
+.item-build-visual{background:rgba(12,8,32,.9);border:1px solid rgba(124,58,237,.15);border-radius:20px;padding:1.6rem;}
+.item-build-label{font-family:'Rajdhani',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:.8rem;}
+.item-build-row{display:flex;align-items:flex-start;flex-wrap:wrap;gap:.4rem;margin-bottom:1.2rem;}
+.item-slot{display:flex;flex-direction:column;align-items:center;gap:.35rem;width:60px;flex-shrink:0;}
+.item-icon{width:52px;height:52px;border-radius:8px;object-fit:cover;border:1px solid rgba(124,58,237,.25);background:rgba(255,255,255,.05);box-shadow:0 2px 8px rgba(0,0,0,.4);cursor:pointer;transition:transform .15s,box-shadow .15s;}
+.item-icon:hover{transform:scale(1.08);box-shadow:0 0 16px rgba(124,58,237,.5);}
+.item-slot.core .item-icon{border-color:rgba(245,166,35,.4);box-shadow:0 0 10px rgba(245,166,35,.15);}
+.item-slot.core .item-icon:hover{box-shadow:0 0 18px rgba(245,166,35,.5);}
+.item-icon-name{font-family:'Rajdhani',sans-serif;font-size:.58rem;font-weight:600;color:rgba(255,255,255,.4);text-align:center;width:60px;line-height:1.2;}
+.item-arrow{font-size:1rem;color:rgba(255,255,255,.2);flex-shrink:0;align-self:center;margin-bottom:22px;}
+.item-build-divider{height:1px;background:rgba(255,255,255,.06);margin:.8rem 0;}
+.item-situational-row{display:flex;flex-wrap:wrap;gap:.6rem;align-items:flex-start;}
+
+/* ── ABILITY CARDS ── */
+.ability-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.8rem;}
+@media(max-width:500px){.ability-grid{grid-template-columns:repeat(3,1fr);}}
+.ability-card{background:rgba(12,8,32,.9);border:1px solid rgba(124,58,237,.12);border-radius:14px;padding:.9rem .6rem;display:flex;flex-direction:column;align-items:center;gap:.5rem;transition:border-color .2s;}
+.ability-card:hover{border-color:rgba(124,58,237,.35);}
+.ability-card.priority-1{border-color:rgba(245,166,35,.4);background:rgba(245,166,35,.04);}
+.ability-card.priority-2{border-color:rgba(124,58,237,.4);}
+.ability-key{font-family:'Orbitron',sans-serif;font-size:.6rem;font-weight:900;color:rgba(255,255,255,.3);letter-spacing:.1em;}
+.ability-icon{width:52px;height:52px;border-radius:8px;object-fit:cover;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);}
+.ability-card.priority-1 .ability-icon{border-color:var(--gold);box-shadow:0 0 12px rgba(245,166,35,.3);}
+.ability-name{font-family:'Rajdhani',sans-serif;font-size:.68rem;font-weight:700;color:rgba(255,255,255,.6);text-align:center;line-height:1.2;}
+.ability-priority{font-family:'Rajdhani',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.1em;color:var(--gold);}
+.ability-card.priority-2 .ability-priority{color:var(--purple-light);}
+
+/* ── SKILL ORDER TABLE ── */
+.skill-order-wrap{background:rgba(12,8,32,.9);border:1px solid rgba(124,58,237,.15);border-radius:20px;padding:1.4rem;overflow-x:auto;}
+.skill-order-table{display:grid;grid-template-columns:56px repeat(18,1fr);gap:3px;min-width:480px;}
+.so-header{font-family:'Rajdhani',sans-serif;font-size:.6rem;font-weight:700;color:rgba(255,255,255,.25);text-align:center;padding:.2rem 0;}
+.so-skill-label{display:flex;flex-direction:column;align-items:center;gap:.2rem;padding-right:.3rem;}
+.so-skill-icon{width:28px;height:28px;border-radius:6px;object-fit:cover;background:rgba(255,255,255,.05);}
+.so-key{font-family:'Orbitron',sans-serif;font-size:.55rem;font-weight:700;color:rgba(255,255,255,.35);}
+.so-cell{width:100%;aspect-ratio:1;border-radius:4px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.04);}
+.so-cell.q-pick{background:rgba(6,214,242,.25);border-color:rgba(6,214,242,.4);}
+.so-cell.w-pick{background:rgba(124,58,237,.25);border-color:rgba(124,58,237,.4);}
+.so-cell.e-pick{background:rgba(245,166,35,.3);border-color:rgba(245,166,35,.5);}
+.so-cell.r-pick{background:rgba(239,68,68,.35);border-color:rgba(239,68,68,.5);}
+.so-legend{display:flex;gap:1rem;margin-top:.8rem;flex-wrap:wrap;}
+.so-legend-item{display:flex;align-items:center;gap:.4rem;font-family:'Rajdhani',sans-serif;font-size:.65rem;font-weight:600;color:rgba(255,255,255,.4);}
+.so-legend-dot{width:10px;height:10px;border-radius:2px;}
+
+/* ── ARTICLE CONTENT ── */
+.article-content h2{font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:700;background:linear-gradient(135deg,var(--purple-light),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin:2.5rem 0 .9rem;letter-spacing:.03em;}
+.article-content h3{font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:700;color:#fff;margin:1.6rem 0 .5rem;letter-spacing:.05em;}
+.article-content p{font-family:'Inter',sans-serif;font-size:.95rem;color:rgba(255,255,255,.65);line-height:1.8;margin-bottom:1.1rem;}
+.article-content a{color:#a78bfa;text-decoration:none;border-bottom:1px solid rgba(167,139,250,.2);transition:color .2s,border-color .2s;}
+.article-content a:hover{color:var(--cyan);border-color:var(--cyan);}
+.article-content ul,.article-content ol{padding-left:1.4rem;margin-bottom:1.1rem;}
+.article-content li{font-family:'Inter',sans-serif;font-size:.95rem;color:rgba(255,255,255,.65);line-height:1.8;margin-bottom:.4rem;}
+.article-content strong{color:rgba(255,255,255,.9);font-weight:600;}
+
+.callout{background:rgba(124,58,237,.07);border:1px solid rgba(124,58,237,.2);border-left:3px solid var(--purple);border-radius:0 12px 12px 0;padding:1.2rem 1.4rem;margin:1.5rem 0;}
+.callout p{margin:0;color:rgba(255,255,255,.6);}
+.cta-box{background:linear-gradient(135deg,rgba(124,58,237,.15),rgba(6,214,242,.05));border:1px solid rgba(124,58,237,.3);border-radius:20px;padding:2.2rem;text-align:center;margin-top:3rem;}
+.cta-box h3{font-family:'Orbitron',sans-serif;font-size:1.2rem;font-weight:900;color:#fff;margin-bottom:.6rem;-webkit-text-fill-color:#fff;}
+.cta-box p{font-family:'Inter',sans-serif;font-size:.88rem;color:rgba(255,255,255,.45);margin-bottom:1.4rem;}
+.btn-primary{display:inline-flex;align-items:center;gap:.5rem;font-family:'Rajdhani',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;background:linear-gradient(135deg,var(--purple),#5b21b6);color:#fff;text-decoration:none;padding:.9rem 2.2rem;border-radius:12px;border:1px solid rgba(124,58,237,.5);transition:all .25s;box-shadow:0 0 16px rgba(124,58,237,.2);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 24px rgba(124,58,237,.4);border-color:transparent;}
+
+.toc{background:rgba(12,8,32,.9);border:1px solid rgba(124,58,237,.15);border-radius:16px;padding:1.4rem 1.6rem;margin-bottom:2rem;}
+.toc-title{font-family:'Rajdhani',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:.9rem;}
+.toc ol{padding-left:1.2rem;margin:0;}
+.toc li{margin-bottom:.4rem;}
+.toc a{font-family:'Inter',sans-serif;font-size:.85rem;color:rgba(167,139,250,.7);text-decoration:none;border:none;transition:color .2s;}
+.toc a:hover{color:var(--cyan);}
+</style>
+</head>
+<body>
+<div id="reading-progress"></div>
+<div id="rune-tooltip"><div class="tip-name"></div><div class="tip-desc"></div></div>
+<canvas id="particles-canvas"></canvas>
+
+<nav class="nav" id="mainNav">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">STAINBOOST</a>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../reviews.html">Reviews</a>
+      <a href="../faq.html">FAQ</a>
+      <a href="index.html" class="active">Blog</a>
+      <a href="https://discord.gg/pxsTfTJF" class="nav-discord" target="_blank">Discord</a>
+    </div>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="../index.html">Home</a>
+    <a href="../pricing.html">Pricing</a>
+    <a href="../reviews.html">Reviews</a>
+    <a href="../faq.html">FAQ</a>
+    <a href="index.html" class="active">Blog</a>
+    <a href="https://discord.gg/pxsTfTJF" target="_blank">Discord</a>
+  </div>
+</nav>
+
+<!-- Champion Hero Banner -->
+<div class="champ-hero">
+  <div class="champ-hero-bg"></div>
+  <div class="champ-hero-overlay"></div>
+  <div class="champ-hero-content">
+    <div class="champ-hero-name">MASTER YI</div>
+    <div class="champ-hero-sub">★ Jungle · Carry · #1 on Middle East Server</div>
+  </div>
+</div>
+
+<!-- Quick Stats Bar -->
+<div class="stats-bar">
+  <div class="stats-bar-inner">
+    <div class="stat-pill"><span class="stat-pill-val gold">S</span><span class="stat-pill-lbl">Tier</span></div>
+    <div class="stat-pill"><span class="stat-pill-val">Jungle</span><span class="stat-pill-lbl">Role</span></div>
+    <div class="stat-pill"><span class="stat-pill-val green">Easy</span><span class="stat-pill-lbl">Difficulty</span></div>
+    <div class="stat-pill"><span class="stat-pill-val">~52%</span><span class="stat-pill-lbl">Win Rate</span></div>
+    <div class="stat-pill"><span class="stat-pill-val">2026</span><span class="stat-pill-lbl">Patch</span></div>
+  </div>
+</div>
+
+<div class="article-wrapper">
+  <a href="index.html" class="back-btn">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+    Back to Blog
+  </a>
+
+  <div class="article-header">
+    <div class="article-cat">Champion Guides</div>
+    <h1>Master Yi Build Guide 2026 – Best Runes, Items &amp; Tips to Carry</h1>
+    <div class="article-meta">
+      <div class="article-author">
+        <div class="article-author-avatar">S</div>
+        <div>
+          <div class="article-author-name">Stain</div>
+          <div class="article-author-title">#1 Master Yi · Middle East Server</div>
+        </div>
+      </div>
+      <div class="article-badge">8 min read</div>
+      <div class="article-badge">April 2026</div>
+    </div>
+  </div>
+  <div class="article-divider"></div>
+
+  <nav class="toc">
+    <div class="toc-title">Table of Contents</div>
+    <ol>
+      <li><a href="#why-yi">Why Master Yi is Still a Carry Champion</a></li>
+      <li><a href="#runes">Best Runes (2026)</a></li>
+      <li><a href="#items">Best Items (2026)</a></li>
+      <li><a href="#abilities">Abilities &amp; Skill Order</a></li>
+      <li><a href="#how-to-play">How to Play Master Yi to Win Games</a></li>
+      <li><a href="#matchups">Hard Matchups &amp; How to Handle Them</a></li>
+    </ol>
+  </nav>
+
+  <div class="article-content">
+
+    <p>I've played over 5 million mastery points on Master Yi on the Middle East server and reached <strong>#1 Master Yi on ME</strong> using this champion almost exclusively. This guide is everything I know — no filler, no copy-paste from tier lists. Just what actually works at a high level.</p>
+
+    <!-- ── RUNES ── -->
+    <h2 id="runes">Best Runes for Master Yi (2026)</h2>
+
+    <div class="visual-section">
+      <div class="visual-section-title">Rune Page</div>
+      <div class="rune-display">
+
+        <!-- Primary: Precision -->
+        <div class="rune-col">
+          <div class="rune-tree-header">
+            <img class="rune-tree-icon loading" data-rune="perk-images/Styles/7201_Precision.png" alt="Precision">
+            Precision
+          </div>
+          <!-- All 4 keystones in one row, selected highlighted -->
+          <div class="rune-row rune-row-ks">
+            <div class="rune-choices">
+              <div class="rune-choice" data-tip-name="Press the Attack" data-tip-desc="Hitting an enemy 3 times makes them vulnerable, increasing damage they take for 6s."><img class="rune-icon" data-rune="perk-images/Styles/Precision/PressTheAttack/PressTheAttack.png" alt="Press the Attack"><div class="rune-name">Press the Attack</div></div>
+              <div class="rune-choice active" data-tip-name="Lethal Tempo" data-tip-desc="After attacking, gain stacking Attack Speed. At max stacks you exceed the Attack Speed cap."><img class="rune-icon" data-rune="perk-images/Styles/Precision/LethalTempo/LethalTempoTemp.png" alt="Lethal Tempo"><div class="rune-name">Lethal Tempo</div></div>
+              <div class="rune-choice" data-tip-name="Fleet Footwork" data-tip-desc="Attacking and moving builds Energy stacks. At 100 stacks, your next attack heals you and grants Movement Speed."><img class="rune-icon" data-rune="perk-images/Styles/Precision/FleetFootwork/FleetFootwork.png" alt="Fleet Footwork"><div class="rune-name">Fleet Footwork</div></div>
+              <div class="rune-choice" data-tip-name="Conqueror" data-tip-desc="Attacks or spells grant stacking AD/AP. At max stacks, heal for a portion of damage dealt."><img class="rune-icon" data-rune="perk-images/Styles/Precision/Conqueror/Conqueror.png" alt="Conqueror"><div class="rune-name">Conqueror</div></div>
+            </div>
+          </div>
+          <hr class="rune-section-sep">
+          <div class="rune-row">
+            <div class="rune-choices">
+              <div class="rune-choice" data-tip-name="Absorb Life" data-tip-desc="Killing minions or monsters heals you for a small amount."><img class="rune-icon" data-rune="perk-images/Styles/Precision/AbsorbLife/AbsorbLife.png" alt="Absorb Life"><div class="rune-name">Absorb Life</div></div>
+              <div class="rune-choice active" data-tip-name="Triumph" data-tip-desc="Takedowns restore 5% of missing HP and grant 20 bonus gold. Perfect for chained Yi kills."><img class="rune-icon" data-rune="perk-images/Styles/Precision/Triumph.png" alt="Triumph"><div class="rune-name">Triumph</div></div>
+              <div class="rune-choice" data-tip-name="Presence of Mind" data-tip-desc="Damaging enemy champions increases your mana/energy regen. Takedowns restore 15% of max mana."><img class="rune-icon" data-rune="perk-images/Styles/Precision/PresenceOfMind/PresenceOfMind.png" alt="Presence of Mind"><div class="rune-name">Presence of Mind</div></div>
+            </div>
+          </div>
+          <div class="rune-row">
+            <div class="rune-choices">
+              <div class="rune-choice active" data-tip-name="Legend: Alacrity" data-tip-desc="Gain permanent Attack Speed (up to 18%) for every 20 stacks earned from takedowns and objectives."><img class="rune-icon" data-rune="perk-images/Styles/Precision/LegendAlacrity/LegendAlacrity.png" alt="Legend: Alacrity"><div class="rune-name">Legend: Alacrity</div></div>
+              <div class="rune-choice" data-tip-name="Legend: Haste" data-tip-desc="Gain permanent Ability Haste (up to 20) for every 20 stacks earned from takedowns and objectives."><img class="rune-icon" data-rune="perk-images/Styles/Precision/LegendHaste/LegendHaste.png" alt="Legend: Haste"><div class="rune-name">Legend: Haste</div></div>
+              <div class="rune-choice" data-tip-name="Legend: Bloodline" data-tip-desc="Gain permanent Lifesteal (up to 8%) for every 20 stacks earned from takedowns and objectives."><img class="rune-icon" data-rune="perk-images/Styles/Precision/LegendBloodline/LegendBloodline.png" alt="Legend: Bloodline"><div class="rune-name">Legend: Bloodline</div></div>
+            </div>
+          </div>
+          <div class="rune-row">
+            <div class="rune-choices">
+              <div class="rune-choice active" data-tip-name="Coup de Grace" data-tip-desc="Deal 8% more damage to enemies below 40% HP. Great for finishing off targets in teamfights."><img class="rune-icon" data-rune="perk-images/Styles/Precision/CoupDeGrace/CoupDeGrace.png" alt="Coup de Grace"><div class="rune-name">Coup de Grace</div></div>
+              <div class="rune-choice" data-tip-name="Cut Down" data-tip-desc="Deal 4–12% more damage to enemies who have more max HP than you."><img class="rune-icon" data-rune="perk-images/Styles/Precision/CutDown/CutDown.png" alt="Cut Down"><div class="rune-name">Cut Down</div></div>
+              <div class="rune-choice" data-tip-name="Last Stand" data-tip-desc="Deal up to 12% more damage when you are low HP. Rewards aggressive, low-health fighting."><img class="rune-icon" data-rune="perk-images/Styles/Sorcery/LastStand/LastStand.png" alt="Last Stand"><div class="rune-name">Last Stand</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Secondary: Inspiration -->
+        <div class="rune-col">
+          <div class="rune-tree-header">
+            <img class="rune-tree-icon loading" data-rune="perk-images/Styles/7203_Whimsy.png" alt="Inspiration">
+            Inspiration
+          </div>
+          <hr class="rune-section-sep" style="margin-top:.9rem;">
+          <!-- Row 1 -->
+          <div class="rune-row">
+            <div class="rune-choices">
+              <div class="rune-choice" data-tip-name="Magical Footwear" data-tip-desc="You get free Slightly Magical Boots at 12 min, saving 300 gold. Each takedown reduces the time by 45s."><img class="rune-icon" data-rune="perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png" alt="Magical Footwear"><div class="rune-name">Magical Footwear</div></div>
+              <div class="rune-choice" data-tip-name="Cash Back" data-tip-desc="Get a 10% discount on your first completed item. The saved gold comes back to you as bonus gold on completion."><img class="rune-icon" data-rune="perk-images/Styles/Inspiration/CashBack/CashBack2.png" alt="Cash Back"><div class="rune-name">Cash Back</div></div>
+              <div class="rune-choice active" data-tip-name="Hextech Flashtraption" data-tip-desc="While Flash is on cooldown, you can channel Hextech Flashtraption to blink to a target location."><img class="rune-icon" data-rune="perk-images/Styles/Inspiration/HextechFlashtraption/HextechFlashtraption.png" alt="Hextech Flashtraption"><div class="rune-name">Hextech Flashtraption</div></div>
+            </div>
+          </div>
+          <!-- Row 2 -->
+          <div class="rune-row">
+            <div class="rune-choices">
+              <div class="rune-choice active" data-tip-name="Triple Tonic" data-tip-desc="Your first Smite and potions have triple effect. Keeps you healthy through jungle clears without spending extra gold."><img class="rune-icon" data-rune="perk-images/Styles/Inspiration/TripleTonic/TripleTonic.png" alt="Triple Tonic"><div class="rune-name">Triple Tonic</div></div>
+              <div class="rune-choice" data-tip-name="Time Warp Tonic" data-tip-desc="Consuming a potion immediately restores some HP and grants Movement Speed while the potion is active."><img class="rune-icon" data-rune="perk-images/Styles/Inspiration/TimeWarpTonic/TimeWarpTonic.png" alt="Time Warp Tonic"><div class="rune-name">Time Warp Tonic</div></div>
+              <div class="rune-choice" data-tip-name="Biscuit Delivery" data-tip-desc="Receive a free Biscuit at 2, 4, and 6 minutes that restores HP and mana and permanently increases max mana."><img class="rune-icon" data-rune="perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png" alt="Biscuit Delivery"><div class="rune-name">Biscuit Delivery</div></div>
+            </div>
+          </div>
+          <!-- Row 3 -->
+          <div class="rune-row">
+            <div class="rune-choices">
+              <div class="rune-choice" data-tip-name="Cosmic Insight" data-tip-desc="Gain 10 Summoner Spell Haste and 10 Item Haste — makes Smite and your active items more frequently available."><img class="rune-icon" data-rune="perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png" alt="Cosmic Insight"><div class="rune-name">Cosmic Insight</div></div>
+              <div class="rune-choice" data-tip-name="Approach Velocity" data-tip-desc="Gain bonus Movement Speed toward nearby ally champions or enemies that you impair."><img class="rune-icon" data-rune="perk-images/Styles/Resolve/ApproachVelocity/ApproachVelocity.png" alt="Approach Velocity"><div class="rune-name">Approach Velocity</div></div>
+              <div class="rune-choice" data-tip-name="Jack of All Trades" data-tip-desc="Gain stacking AP and AD for each different stat granted by your items. Rewards diverse item builds."><img class="rune-icon" data-rune="perk-images/Styles/Inspiration/JackOfAllTrades/JackofAllTrades2.png" alt="Jack of All Trades"><div class="rune-name">Jack of All Trades</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stat Shards — 3rd column -->
+        <div class="rune-shards-col">
+          <div class="rune-shards-header">Shards</div>
+          <!-- Row 1: Adaptive | Attack Speed* | Ability Haste -->
+          <div class="shard-slot-row">
+            <div class="rune-shard" data-tip-name="Adaptive Force" data-tip-desc="+5.4 bonus AD or +9 AP (adaptive)."><img class="rune-shard-icon" data-rune="perk-images/StatMods/StatModsAdaptiveForceIcon.png" alt="Adaptive Force"><div class="rune-shard-name">Adaptive</div></div>
+            <div class="rune-shard active" data-tip-name="Attack Speed" data-tip-desc="+10% bonus Attack Speed. Stacks with Lethal Tempo for maximum DPS on Master Yi."><img class="rune-shard-icon" data-rune="perk-images/StatMods/StatModsAttackSpeedIcon.png" alt="Atk Speed"><div class="rune-shard-name">Atk Spd</div></div>
+            <div class="rune-shard" data-tip-name="Ability Haste" data-tip-desc="+8 Ability Haste, reducing your ability cooldowns."><img class="rune-shard-icon" data-rune="perk-images/StatMods/StatModsCDRScalingIcon.png" alt="Ability Haste"><div class="rune-shard-name">Haste</div></div>
+          </div>
+          <!-- Row 2: Adaptive* | Move Speed | Health -->
+          <div class="shard-slot-row">
+            <div class="rune-shard active" data-tip-name="Adaptive Force" data-tip-desc="+5.4 bonus AD or +9 AP (adaptive). More damage on every ability and auto attack."><img class="rune-shard-icon" data-rune="perk-images/StatMods/StatModsAdaptiveForceIcon.png" alt="Adaptive Force"><div class="rune-shard-name">Adaptive</div></div>
+            <div class="rune-shard" data-tip-name="Movement Speed" data-tip-desc="+2.5% bonus Movement Speed. Helps with chasing and dodging in fights."><img class="rune-shard-icon" data-rune="perk-images/StatMods/StatModsMovementSpeedIcon.png" alt="Move Speed"><div class="rune-shard-name">Move Spd</div></div>
+            <div class="rune-shard" data-tip-name="Health (scaling)" data-tip-desc="+10–200 bonus Health based on level. Scales up as the game progresses."><img class="rune-shard-icon" data-rune="perk-images/StatMods/StatModsHealthScalingIcon.png" alt="Health"><div class="rune-shard-name">Health</div></div>
+          </div>
+          <!-- Row 3: Flat Health | Tenacity | Health Scaling* -->
+          <div class="shard-slot-row">
+            <div class="rune-shard" data-tip-name="Flat Health" data-tip-desc="+65 bonus Health. Gives immediate tankiness from the start of the game."><img class="rune-shard-icon" data-rune="perk-images/StatMods/StatModsHealthPlusIcon.png" alt="Flat Health"><div class="rune-shard-name">Health</div></div>
+            <div class="rune-shard" data-tip-name="Tenacity & Slow Resist" data-tip-desc="+15% Tenacity and Slow Resist. Reduces the duration of stuns, slows, and other CC."><img class="rune-shard-icon" data-rune="perk-images/StatMods/StatModsTenacityIcon.png" alt="Tenacity"><div class="rune-shard-name">Tenacity</div></div>
+            <div class="rune-shard active" data-tip-name="Health (scaling)" data-tip-desc="+10–200 bonus Health based on level. Best defensive shard for Yi — scales into late game where you need to survive burst."><img class="rune-shard-icon" data-rune="perk-images/StatMods/StatModsHealthScalingIcon.png" alt="Health Scaling"><div class="rune-shard-name">Health+</div></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <h3>Why These Runes?</h3>
+    <p><strong>Lethal Tempo</strong> stacks attack speed quickly and synergizes with Yi's E (true damage procs) and R. <strong>Triumph</strong> heals on kills keeping you alive through chained teamfight resets. <strong>Legend: Alacrity</strong> adds more attack speed that compounds with your items. <strong>Last Stand</strong> rewards the aggressive low-HP fights you'll often find yourself in. <strong>Magical Footwear</strong> gives you free boots at 12 minutes, saving 300 gold to rush your core items faster. <strong>Triple Tonic</strong> synergizes with your Smite and potions — you get three uses out of one, keeping you healthy through your clears without spending extra gold.</p>
+
+    <!-- ── ITEMS ── -->
+    <h2 id="items">Best Items for Master Yi (2026)</h2>
+
+    <div class="visual-section">
+      <div class="visual-section-title">Item Build</div>
+      <div class="item-build-visual">
+
+        <div class="item-build-label">Core Build (in order)</div>
+        <div class="item-build-row">
+          <div class="item-slot core" data-tip-name="Berserker's Greaves" data-tip-desc="Boots that give +35% Attack Speed. Rush these early — Yi's damage scales directly with how fast he attacks.">
+            <img class="item-icon" data-item="3006" alt="Berserker's Greaves">
+            <div class="item-icon-name">Berserker's Greaves</div>
+          </div>
+          <div class="item-arrow">→</div>
+          <div class="item-slot core" data-tip-name="Kraken Slayer" data-tip-desc="Every 3rd attack deals bonus true damage. Shreds through tanks and high-HP bruisers — your most important item.">
+            <img class="item-icon" data-item="6672" alt="Kraken Slayer">
+            <div class="item-icon-name">Kraken Slayer</div>
+          </div>
+          <div class="item-arrow">→</div>
+          <div class="item-slot core" data-tip-name="Guinsoo's Rageblade" data-tip-desc="Converts crit chance to on-hit damage and double-procs on-hit effects. Makes Kraken Slayer proc every 1.5 attacks instead of 3.">
+            <img class="item-icon" data-item="3124" alt="Guinsoo's Rageblade">
+            <div class="item-icon-name">Rageblade</div>
+          </div>
+          <div class="item-arrow">→</div>
+          <div class="item-slot core" data-tip-name="Wit's End" data-tip-desc="Adds magic damage on-hit and grants Magic Resist. Synergizes with Rageblade and keeps you durable against AP threats.">
+            <img class="item-icon" data-item="3091" alt="Wit's End">
+            <div class="item-icon-name">Wit's End</div>
+          </div>
+          <div class="item-arrow">→</div>
+          <div class="item-slot core" data-tip-name="Death's Dance" data-tip-desc="Converts a portion of burst damage into a bleed over time, giving you a window to heal back up through your attacks.">
+            <img class="item-icon" data-item="6333" alt="Death's Dance">
+            <div class="item-icon-name">Death's Dance</div>
+          </div>
+          <div class="item-arrow">→</div>
+          <div class="item-slot core" data-tip-name="Guardian Angel" data-tip-desc="Grants a revive passive. You can dive the backline knowing you get a second chance — massive in late-game teamfights.">
+            <img class="item-icon" data-item="3026" alt="Guardian Angel">
+            <div class="item-icon-name">Guardian Angel</div>
+          </div>
+        </div>
+
+        <div class="item-build-divider"></div>
+
+        <div class="item-build-label">Situational Picks</div>
+        <div class="item-situational-row">
+          <div class="item-slot" data-tip-name="Blade of the Ruined King" data-tip-desc="Deals % current HP on-hit. Best pick against high-HP tanks — shreds them faster than any other item.">
+            <img class="item-icon" data-item="3153" alt="Blade of the Ruined King">
+            <div class="item-icon-name">Blade of the Ruined King</div>
+          </div>
+          <div class="item-slot" data-tip-name="Mercurial Scimitar" data-tip-desc="Active removes all CC including suppressions. Essential if the enemy has Warwick, Malzahar, or Mordekaiser.">
+            <img class="item-icon" data-item="3139" alt="Mercurial Scimitar">
+            <div class="item-icon-name">Mercurial Scimitar</div>
+          </div>
+          <div class="item-slot" data-tip-name="Sterak's Gage" data-tip-desc="Grants a shield when you take heavy burst damage. Build this when enemies can kill you before you can fight back.">
+            <img class="item-icon" data-item="3053" alt="Sterak's Gage">
+            <div class="item-icon-name">Sterak's Gage</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <h3>Why This Build?</h3>
+    <p><strong>Kraken Slayer</strong> is your first major item — the true damage every third hit shreds tanks and bruisers. <strong>Rageblade</strong> second immediately doubles your on-hit effects and attack speed, letting Kraken Slayer proc constantly. <strong>Wit's End</strong> third adds magic damage on-hit and magic resist, making you durable against AP while compounding everything Rageblade already doubled. <strong>Death's Dance</strong> and <strong>Guardian Angel</strong> round out your survivability so you can actually survive long enough to deal your damage.</p>
+
+    <p><strong>Blade of the Ruined King</strong> is great against high-HP tanks. <strong>Mercurial Scimitar</strong> if the enemy has a suppression or hard CC that stops your R. <strong>Sterak's Gage</strong> when you're getting burst before you can fight back.</p>
+
+    <!-- ── ABILITIES ── -->
+    <h2 id="abilities">Abilities &amp; Skill Order</h2>
+
+    <div class="visual-section">
+      <div class="visual-section-title">Abilities</div>
+      <div class="ability-grid">
+        <div class="ability-card">
+          <div class="ability-key">P</div>
+          <img class="ability-icon" data-passive="MasterYi_Passive1.png" alt="Double Strike">
+          <div class="ability-name">Double Strike</div>
+        </div>
+        <div class="ability-card priority-1">
+          <div class="ability-key">Q</div>
+          <img class="ability-icon" data-spell="AlphaStrike" alt="Alpha Strike">
+          <div class="ability-name">Alpha Strike</div>
+          <div class="ability-priority">Max First</div>
+        </div>
+        <div class="ability-card">
+          <div class="ability-key">W</div>
+          <img class="ability-icon" data-spell="Meditate" alt="Meditate">
+          <div class="ability-name">Meditate</div>
+          <div class="ability-priority" style="color:rgba(255,255,255,.3);">Max Last</div>
+        </div>
+        <div class="ability-card">
+          <div class="ability-key">E</div>
+          <img class="ability-icon" data-spell="WujuStyle" alt="Wuju Style">
+          <div class="ability-name">Wuju Style</div>
+          <div class="ability-priority" style="color:var(--purple-light);">Max 2nd</div>
+        </div>
+        <div class="ability-card" style="border-color:rgba(239,68,68,.4);background:rgba(239,68,68,.04);">
+          <div class="ability-key">R</div>
+          <img class="ability-icon" data-spell="Highlander" alt="Highlander">
+          <div class="ability-name">Highlander</div>
+          <div class="ability-priority" style="color:#f87171;">Level 6/11/16</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="visual-section">
+      <div class="visual-section-title">Skill Order (Levels 1–18)</div>
+      <div class="skill-order-wrap">
+        <div class="skill-order-table">
+          <!-- Header row -->
+          <div class="so-header"></div>
+          <div class="so-header">1</div><div class="so-header">2</div><div class="so-header">3</div>
+          <div class="so-header">4</div><div class="so-header">5</div><div class="so-header">6</div>
+          <div class="so-header">7</div><div class="so-header">8</div><div class="so-header">9</div>
+          <div class="so-header">10</div><div class="so-header">11</div><div class="so-header">12</div>
+          <div class="so-header">13</div><div class="so-header">14</div><div class="so-header">15</div>
+          <div class="so-header">16</div><div class="so-header">17</div><div class="so-header">18</div>
+
+          <!-- Q row: levels 1, 4, 5, 7, 8 (max first) -->
+          <div class="so-skill-label"><img class="so-skill-icon" data-spell="AlphaStrike" alt="Q"><div class="so-key">Q</div></div>
+          <div class="so-cell q-pick"></div><div class="so-cell"></div><div class="so-cell"></div>
+          <div class="so-cell q-pick"></div><div class="so-cell q-pick"></div><div class="so-cell"></div>
+          <div class="so-cell q-pick"></div><div class="so-cell q-pick"></div><div class="so-cell"></div>
+          <div class="so-cell"></div><div class="so-cell"></div><div class="so-cell"></div>
+          <div class="so-cell"></div><div class="so-cell"></div><div class="so-cell"></div>
+          <div class="so-cell"></div><div class="so-cell"></div><div class="so-cell"></div>
+
+          <!-- W row: levels 3, 14, 15, 17, 18 -->
+          <div class="so-skill-label"><img class="so-skill-icon" data-spell="Meditate" alt="W"><div class="so-key">W</div></div>
+          <div class="so-cell"></div><div class="so-cell"></div><div class="so-cell w-pick"></div>
+          <div class="so-cell"></div><div class="so-cell"></div><div class="so-cell"></div>
+          <div class="so-cell"></div><div class="so-cell"></div><div class="so-cell"></div>
+          <div class="so-cell"></div><div class="so-cell"></div><div class="so-cell"></div>
+          <div class="so-cell"></div><div class="so-cell w-pick"></div><div class="so-cell w-pick"></div>
+          <div class="so-cell"></div><div class="so-cell w-pick"></div><div class="so-cell w-pick"></div>
+
+          <!-- E row: levels 2, 9, 10, 12, 13 (max second) -->
+          <div class="so-skill-label"><img class="so-skill-icon" data-spell="WujuStyle" alt="E"><div class="so-key">E</div></div>
+          <div class="so-cell"></div><div class="so-cell e-pick"></div><div class="so-cell"></div>
+          <div class="so-cell"></div><div class="so-cell"></div><div class="so-cell"></div>
+          <div class="so-cell"></div><div class="so-cell"></div><div class="so-cell e-pick"></div>
+          <div class="so-cell e-pick"></div><div class="so-cell"></div><div class="so-cell e-pick"></div>
+          <div class="so-cell e-pick"></div><div class="so-cell"></div><div class="so-cell"></div>
+          <div class="so-cell"></div><div class="so-cell"></div><div class="so-cell"></div>
+
+          <!-- R row: levels 6, 11, 16 -->
+          <div class="so-skill-label"><img class="so-skill-icon" data-spell="Highlander" alt="R"><div class="so-key">R</div></div>
+          <div class="so-cell"></div><div class="so-cell"></div><div class="so-cell"></div>
+          <div class="so-cell"></div><div class="so-cell"></div><div class="so-cell r-pick"></div>
+          <div class="so-cell"></div><div class="so-cell"></div><div class="so-cell"></div>
+          <div class="so-cell"></div><div class="so-cell r-pick"></div><div class="so-cell"></div>
+          <div class="so-cell"></div><div class="so-cell"></div><div class="so-cell"></div>
+          <div class="so-cell r-pick"></div><div class="so-cell"></div><div class="so-cell"></div>
+        </div>
+        <div class="so-legend">
+          <div class="so-legend-item"><div class="so-legend-dot" style="background:rgba(6,214,242,.5);"></div>Q – Alpha Strike</div>
+          <div class="so-legend-item"><div class="so-legend-dot" style="background:rgba(124,58,237,.5);"></div>W – Meditate</div>
+          <div class="so-legend-item"><div class="so-legend-dot" style="background:rgba(245,166,35,.5);"></div>E – Wuju Style (max 2nd)</div></div>
+          <div class="so-legend-item"><div class="so-legend-dot" style="background:rgba(239,68,68,.5);"></div>R – Highlander</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── HOW TO PLAY ── -->
+    <h2 id="how-to-play">How to Play Master Yi to Win Games</h2>
+    <p>Master Yi is a late-game hypercarry. His entire game plan is the same every match: farm efficiently, hit your item spikes, then clean up teamfights. Here's how to execute that perfectly.</p>
+
+    <div class="gameplay-grid">
+
+      <div class="gameplay-card" style="--card-accent:#22d3ee;">
+        <div class="gameplay-phase">Early Game · Levels 1–9</div>
+        <div class="gameplay-card-icon">🌱</div>
+        <div class="gameplay-card-title">Farm Fast, Gank Smart</div>
+        <div class="gameplay-card-body">Full clear your jungle every respawn. Skip risky early ganks — a full clear beats a failed gank in both XP and gold. Only gank when the enemy is overextended and your Q can guarantee a kill. Your goal is <strong>Kraken Slayer by ~15 minutes</strong>.</div>
+      </div>
+
+      <div class="gameplay-card" style="--card-accent:#fbbf24;">
+        <div class="gameplay-phase">Mid Game · First Item Spike</div>
+        <div class="gameplay-card-icon">⚔️</div>
+        <div class="gameplay-card-title">Take Every Dragon</div>
+        <div class="gameplay-card-body">Once you have Kraken Slayer, you solo Dragon faster than almost any other jungler. Make dragon your #1 priority after every clear. Magical Footwear saves you ~300 gold on boots — dump that into your second item faster. <strong>Two items = fight mode.</strong></div>
+      </div>
+
+      <div class="gameplay-card" style="--card-accent:#c4b5fd;">
+        <div class="gameplay-phase">Teamfighting</div>
+        <div class="gameplay-card-icon">🎯</div>
+        <div class="gameplay-card-title">Wait, Then Explode</div>
+        <div class="gameplay-card-body">The #1 Yi mistake is going in too early and eating all the CC. Let your frontline initiate first. When enemy CC is spent, flash or Q to the backline, activate R, and chain kills with the reset. <strong>Never use R before the enemy blows their CC.</strong></div>
+      </div>
+
+      <div class="gameplay-card" style="--card-accent:#34d399;">
+        <div class="gameplay-phase">Target Priority</div>
+        <div class="gameplay-card-icon">👁️</div>
+        <div class="gameplay-card-title">Kill the Carry, Not the Tank</div>
+        <div class="gameplay-card-body">Your E true damage cuts through anyone, but deleting the ADC or mid laner ends the fight in 2 seconds. Use Q to jump over the frontline and land directly on the backline. Once the carry is dead, R resets let you clean up the rest with no counterplay.</div>
+      </div>
+
+    </div>
+
+    <div class="callout" style="margin-top:0;">
+      <strong>Quick cheat sheet:</strong> Full clear → Dragon priority → Wait for CC to be spent → Q into backline → R for resets. That's every winning Master Yi game in one sentence.
+    </div>
+
+    <!-- ── MATCHUPS ── -->
+    <h2 id="matchups">Hard Matchups &amp; How to Handle Them</h2>
+
+    <div class="matchup-grid">
+
+      <!-- Elise -->
+      <div class="matchup-card">
+        <div class="matchup-card-header">
+          <img class="matchup-card-splash" id="splash-elise" alt="Elise">
+          <img class="matchup-card-champ-icon" id="icon-elise" alt="Elise">
+        </div>
+        <div class="matchup-card-body">
+          <div class="matchup-champ-name">Elise</div>
+          <div class="matchup-threat">High Threat</div>
+          <div class="matchup-card-text">Her E cocoon stuns you mid-fight, cancelling your R resets. She out-duels you early when you have no items, and her rappel makes her untargetable — your Q won't lock onto her.</div>
+          <div class="matchup-tip"><strong>Counter:</strong> Avoid early duels. Ward her camps and track her. Fight only post-Kraken when you can burst her before she cocoons you.</div>
+        </div>
+      </div>
+
+      <!-- Rammus -->
+      <div class="matchup-card">
+        <div class="matchup-card-header">
+          <img class="matchup-card-splash" id="splash-rammus" alt="Rammus">
+          <img class="matchup-card-champ-icon" id="icon-rammus" alt="Rammus">
+        </div>
+        <div class="matchup-card-body">
+          <div class="matchup-champ-name">Rammus</div>
+          <div class="matchup-threat">High Threat</div>
+          <div class="matchup-card-text">Thornmail + his passive reflects your own damage back at you the more you attack. His taunt forces you to keep hitting him while you destroy yourself. His Q engage is nearly impossible to outrun.</div>
+          <div class="matchup-tip"><strong>Counter:</strong> Build Blade of the Ruined King — % HP on-hit bypasses his armor. Never fight him alone in his jungle. Focus objectives over 1v1s.</div>
+        </div>
+      </div>
+
+      <!-- Shaco -->
+      <div class="matchup-card">
+        <div class="matchup-card-header">
+          <img class="matchup-card-splash" id="splash-shaco" alt="Shaco">
+          <img class="matchup-card-champ-icon" id="icon-shaco" alt="Shaco">
+        </div>
+        <div class="matchup-card-body">
+          <div class="matchup-champ-name">Shaco</div>
+          <div class="matchup-threat">High Threat</div>
+          <div class="matchup-card-text">His boxes fear you on approach, breaking your attack chain. He invades early when you're weak, stealing your camps and setting you behind before the game starts.</div>
+          <div class="matchup-tip"><strong>Counter:</strong> Start on the opposite side of the map from him. Buy Control Wards to clear boxes. Save R until after his clone splits — it's easy to hit the real one then.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="callout">
+      <p><strong>General tip:</strong> In low ELO, champion counters matter far less than macro mistakes. Even in losing matchups, you can win by outfarming, taking objectives, and fighting on your terms rather than the enemy's.</p>
+    </div>
+
+    <div class="cta-box">
+      <h3>Want to Skip the Grind?</h3>
+      <p>If you'd rather just reach your target rank without spending hundreds of hours, StainBoost offers professional boosting by the #1 Master Yi on the ME server.</p>
+      <a href="../pricing.html" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        View Pricing &amp; Order
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">STAINBOOST</div>
+    <div class="footer-links">
+      <a href="../index.html">Home</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../reviews.html">Reviews</a>
+      <a href="../faq.html">FAQ</a>
+      <a href="index.html">Blog</a>
+      <a href="https://discord.gg/pxsTfTJF" target="_blank">Discord</a>
+    </div>
+    <div class="footer-copy">&copy; 2026 StainBoost &middot; Middle East Server &middot; #1 Master Yi</div>
+  </div>
+</footer>
+
+<script>
+// Rune / shard tooltips
+(function(){
+  var tip=document.getElementById('rune-tooltip');
+  var tipName=tip.querySelector('.tip-name');
+  var tipDesc=tip.querySelector('.tip-desc');
+  var PAD=14;
+
+  function show(el,e){
+    tipName.textContent=el.dataset.tipName||'';
+    tipDesc.textContent=el.dataset.tipDesc||'';
+    tip.classList.add('visible');
+    move(e);
+  }
+  function move(e){
+    var x=e.clientX+PAD, y=e.clientY+PAD;
+    var tw=tip.offsetWidth, th=tip.offsetHeight;
+    if(x+tw>window.innerWidth) x=e.clientX-tw-PAD;
+    if(y+th>window.innerHeight) y=e.clientY-th-PAD;
+    tip.style.left=x+'px';
+    tip.style.top=y+'px';
+  }
+  function hide(){tip.classList.remove('visible');}
+
+  document.querySelectorAll('[data-tip-name]').forEach(function(el){
+    el.addEventListener('mouseenter',function(e){show(el,e);});
+    el.addEventListener('mousemove',move);
+    el.addEventListener('mouseleave',hide);
+  });
+})();
+
+// Reading progress
+window.addEventListener('scroll',function(){
+  var el=document.getElementById('reading-progress');
+  var doc=document.documentElement;
+  var pct=(window.scrollY||doc.scrollTop)/(doc.scrollHeight-doc.clientHeight)*100;
+  el.style.width=Math.min(pct,100)+'%';
+});
+
+// Load all icons from Riot Data Dragon CDN
+(function(){
+  var RUNE='https://ddragon.leagueoflegends.com/cdn/img/';
+
+  // Rune icons don't need a patch version
+  document.querySelectorAll('[data-rune]').forEach(function(el){
+    el.src=RUNE+el.dataset.rune;
+    el.classList.remove('loading');
+  });
+
+  // Item/spell/passive icons need the current patch version
+  fetch('https://ddragon.leagueoflegends.com/api/versions.json')
+    .then(function(r){return r.json();})
+    .then(function(versions){
+      var v=versions[0];
+      var BASE='https://ddragon.leagueoflegends.com/cdn/'+v+'/img/';
+      document.querySelectorAll('[data-item]').forEach(function(el){
+        el.src=BASE+'item/'+el.dataset.item+'.png';
+      });
+      document.querySelectorAll('[data-spell]').forEach(function(el){
+        el.src=BASE+'spell/'+el.dataset.spell+'.png';
+      });
+      document.querySelectorAll('[data-passive]').forEach(function(el){
+        el.src=BASE+'passive/'+el.dataset.passive;
+      });
+      // Matchup champion icons
+      var champs=['Elise','Rammus','Shaco'];
+      champs.forEach(function(c){
+        var icon=document.getElementById('icon-'+c.toLowerCase());
+        var splash=document.getElementById('splash-'+c.toLowerCase());
+        if(icon) icon.src=BASE+'champion/'+c+'.png';
+        if(splash) splash.src='https://ddragon.leagueoflegends.com/cdn/img/champion/splash/'+c+'_0.jpg';
+      });
+    })
+    .catch(function(){});
+})();
+</script>
+<script src="../main.js"></script>
+</body>
+</html>

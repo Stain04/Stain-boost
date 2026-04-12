@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>html,body{background:#0b0916;}</style>
+<link rel="stylesheet" href="../shared.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StainBoost Blog – League of Legends Tips &amp; ELO Boosting Guide | Middle East</title>
+<meta name="description" content="Expert League of Legends guides, ELO boosting tips, and climbing strategies for Middle East server players. Written by the #1 Master Yi on ME server.">
+<link rel="canonical" href="https://stainboost.com/blog/">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://stainboost.com/blog/">
+<meta property="og:title" content="StainBoost Blog – League of Legends Tips &amp; ELO Boosting Guide | Middle East">
+<meta property="og:description" content="Expert League of Legends guides, ELO boosting tips, and climbing strategies for Middle East server players. Written by the #1 Master Yi on ME server.">
+<meta property="og:image" content="https://stainboost.com/avatar.jpeg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600&display=block" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Blog","name":"StainBoost Blog","description":"Expert League of Legends guides, ELO boosting tips, and climbing strategies for Middle East server players.","url":"https://stainboost.com/blog/","publisher":{"@type":"Organization","name":"StainBoost","logo":{"@type":"ImageObject","url":"https://stainboost.com/avatar.jpeg"}}}
+</script>
+<style>
+:root{--bg:#060411;--bg-card:rgba(12,8,32,0.85);--purple:#7c3aed;--purple-light:#c4b5fd;--cyan:#06d6f2;--cyan-glow:rgba(6,214,242,0.4);--gold:#f5a623;--gold-glow:rgba(245,166,35,0.4);--text:#e8e4f0;--muted:rgba(255,255,255,0.35);--glass:rgba(255,255,255,0.03);}
+body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");opacity:0.5;z-index:0;pointer-events:none;}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(124,58,237,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,0.03) 1px,transparent 1px);background-size:48px 48px;z-index:0;pointer-events:none;}
+
+/* BLOG PAGE */
+.blog-hero{padding:5rem 2rem 3rem;text-align:center;position:relative;z-index:2;}
+.blog-hero-tag{font-family:'Rajdhani',sans-serif;font-size:.75rem;font-weight:600;letter-spacing:.35em;text-transform:uppercase;color:var(--cyan);opacity:.7;margin-bottom:.8rem;}
+.blog-hero-title{font-family:'Orbitron',sans-serif;font-size:clamp(2rem,5vw,3rem);font-weight:900;color:#fff;margin-bottom:.8rem;letter-spacing:.05em;}
+.blog-hero-title span{background:linear-gradient(135deg,var(--purple-light),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.blog-hero-sub{font-family:'Inter',sans-serif;font-size:1rem;color:rgba(255,255,255,.4);max-width:520px;margin:0 auto;}
+
+/* BLOG GRID */
+.blog-section{padding:2rem 2rem 6rem;position:relative;z-index:2;}
+.blog-inner{max-width:1060px;margin:0 auto;}
+.blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6rem;}
+@media(max-width:860px){.blog-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:540px){.blog-grid{grid-template-columns:1fr;}}
+
+/* ARTICLE CARD */
+.article-card{background:var(--bg-card);border:1px solid rgba(124,58,237,.12);border-radius:22px;overflow:hidden;transition:all .35s;display:flex;flex-direction:column;backdrop-filter:blur(8px);}
+.article-card:hover{border-color:rgba(124,58,237,.35);transform:translateY(-6px);box-shadow:0 8px 28px rgba(124,58,237,.1);}
+.article-card-thumb{height:180px;background:linear-gradient(135deg,rgba(124,58,237,.25),rgba(6,214,242,.08));display:flex;align-items:center;justify-content:center;font-size:3.5rem;position:relative;overflow:hidden;}
+.article-card-thumb::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 50%,rgba(6,4,17,.8));}
+.article-card-body{padding:1.6rem;flex:1;display:flex;flex-direction:column;}
+.article-card-cat{font-family:'Rajdhani',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:.7rem;}
+.article-card-title{font-family:'Orbitron',sans-serif;font-size:.95rem;font-weight:700;color:#fff;line-height:1.4;margin-bottom:.7rem;}
+.article-card-excerpt{font-family:'Inter',sans-serif;font-size:.82rem;color:rgba(255,255,255,.42);line-height:1.7;flex:1;margin-bottom:1.2rem;}
+.article-card-meta{display:flex;align-items:center;justify-content:space-between;gap:.5rem;}
+.article-card-read{font-family:'Rajdhani',sans-serif;font-size:.72rem;font-weight:600;color:rgba(255,255,255,.28);letter-spacing:.05em;}
+.article-card-link{font-family:'Rajdhani',sans-serif;font-size:.78rem;font-weight:700;color:var(--purple-light);text-decoration:none;letter-spacing:.05em;display:inline-flex;align-items:center;gap:.3rem;transition:color .2s;}
+.article-card-link:hover{color:var(--cyan);}
+.article-card-link svg{transition:transform .2s;}
+.article-card-link:hover svg{transform:translateX(3px);}
+.article-card a{text-decoration:none;color:inherit;}
+
+/* SECTION LABEL */
+.section-divider{display:flex;align-items:center;gap:1rem;margin-bottom:2rem;}
+.section-divider-line{flex:1;height:1px;background:linear-gradient(90deg,rgba(124,58,237,.2),transparent);}
+.section-divider-text{font-family:'Rajdhani',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.2);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-delay-1{transition-delay:.1s;}
+.reveal-delay-2{transition-delay:.2s;}
+</style>
+</head>
+<body>
+<canvas id="particles-canvas"></canvas>
+
+<nav class="nav" id="mainNav">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">STAINBOOST</a>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../reviews.html">Reviews</a>
+      <a href="../faq.html">FAQ</a>
+      <a href="index.html" class="active">Blog</a>
+      <a href="https://discord.gg/pxsTfTJF" class="nav-discord" target="_blank">Discord</a>
+    </div>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="../index.html">Home</a>
+    <a href="../pricing.html">Pricing</a>
+    <a href="../reviews.html">Reviews</a>
+    <a href="../faq.html">FAQ</a>
+    <a href="index.html" class="active">Blog</a>
+    <a href="https://discord.gg/pxsTfTJF" target="_blank">Discord</a>
+  </div>
+</nav>
+
+<div class="blog-hero">
+  <div class="blog-hero-tag">// Knowledge Base</div>
+  <h1 class="blog-hero-title">STAINBOOST <span>BLOG</span></h1>
+  <p class="blog-hero-sub">Expert League of Legends guides, climbing strategies, and ELO boosting insights — straight from the #1 Master Yi on Middle East server.</p>
+</div>
+
+<section class="blog-section">
+  <div class="blog-inner">
+    <div class="section-divider">
+      <div class="section-divider-line"></div>
+      <div class="section-divider-text">Latest Articles</div>
+      <div class="section-divider-line" style="background:linear-gradient(90deg,transparent,rgba(124,58,237,.2));"></div>
+    </div>
+
+    <div class="blog-grid">
+
+      <!-- Article 1 -->
+      <div class="article-card reveal">
+        <a href="elo-boosting-safe.html">
+          <div class="article-card-thumb">🛡️</div>
+        </a>
+        <div class="article-card-body">
+          <div class="article-card-cat">Safety &amp; Security</div>
+          <a href="elo-boosting-safe.html" style="text-decoration:none;">
+            <div class="article-card-title">Is ELO Boosting Safe in League of Legends? [2026 Guide]</div>
+          </a>
+          <div class="article-card-excerpt">Worried about getting banned for ELO boosting? Here's everything you need to know about what Riot detects, VPN usage, human boosters vs bots, and how StainBoost keeps your account safe.</div>
+          <div class="article-card-meta">
+            <div class="article-card-read">6 min read</div>
+            <a href="elo-boosting-safe.html" class="article-card-link">Read More <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Article 2 -->
+      <div class="article-card reveal reveal-delay-1">
+        <a href="how-to-climb-faster.html">
+          <div class="article-card-thumb">📈</div>
+        </a>
+        <div class="article-card-body">
+          <div class="article-card-cat">Climbing Tips</div>
+          <a href="how-to-climb-faster.html" style="text-decoration:none;">
+            <div class="article-card-title">How to Climb Faster in Low Elo – 10 Proven Tips (2026)</div>
+          </a>
+          <div class="article-card-excerpt">Stuck in Iron, Bronze, or Silver? These 10 proven strategies from the #1 Master Yi on Middle East server will help you escape low ELO and start climbing consistently.</div>
+          <div class="article-card-meta">
+            <div class="article-card-read">7 min read</div>
+            <a href="how-to-climb-faster.html" class="article-card-link">Read More <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Article 3 -->
+      <div class="article-card reveal reveal-delay-2">
+        <a href="best-champions-solo-queue.html">
+          <div class="article-card-thumb">⚔️</div>
+        </a>
+        <div class="article-card-body">
+          <div class="article-card-cat">Champion Guides</div>
+          <a href="best-champions-solo-queue.html" style="text-decoration:none;">
+            <div class="article-card-title">Best Champions to Carry in Solo Queue (League of Legends 2026)</div>
+          </a>
+          <div class="article-card-excerpt">Discover the best champions for carrying games in solo queue by role. Top picks for Jungle, Mid, Top, ADC, and Support that will help you climb the ranked ladder faster on ME server.</div>
+          <div class="article-card-meta">
+            <div class="article-card-read">8 min read</div>
+            <a href="best-champions-solo-queue.html" class="article-card-link">Read More <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Article 4 -->
+      <div class="article-card reveal">
+        <a href="what-is-elo-boosting.html">
+          <div class="article-card-thumb">💡</div>
+        </a>
+        <div class="article-card-body">
+          <div class="article-card-cat">ELO Boosting Explained</div>
+          <a href="what-is-elo-boosting.html" style="text-decoration:none;">
+            <div class="article-card-title">What is ELO Boosting in League of Legends? [2026 Guide]</div>
+          </a>
+          <div class="article-card-excerpt">New to ELO boosting? Learn exactly how it works, the difference between solo and duo boosting, how much it costs, and what separates a safe service from a risky one.</div>
+          <div class="article-card-meta">
+            <div class="article-card-read">5 min read</div>
+            <a href="what-is-elo-boosting.html" class="article-card-link">Read More <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Article 5 -->
+      <div class="article-card reveal reveal-delay-1">
+        <a href="master-yi-build-guide.html">
+          <div class="article-card-thumb">⚡</div>
+        </a>
+        <div class="article-card-body">
+          <div class="article-card-cat">Champion Guides</div>
+          <a href="master-yi-build-guide.html" style="text-decoration:none;">
+            <div class="article-card-title">Master Yi Build Guide 2026 – Best Runes, Items &amp; Tips to Carry</div>
+          </a>
+          <div class="article-card-excerpt">The definitive Master Yi jungle guide from the #1 Yi on Middle East server. Best runes, item build, skill order, jungle path, and tips to dominate solo queue.</div>
+          <div class="article-card-meta">
+            <div class="article-card-read">8 min read</div>
+            <a href="master-yi-build-guide.html" class="article-card-link">Read More <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Article 6 -->
+      <div class="article-card reveal reveal-delay-2">
+        <a href="how-to-escape-silver.html">
+          <div class="article-card-thumb">🥈</div>
+        </a>
+        <div class="article-card-body">
+          <div class="article-card-cat">Climbing Tips</div>
+          <a href="how-to-escape-silver.html" style="text-decoration:none;">
+            <div class="article-card-title">How to Escape Silver in League of Legends (2026 Guide)</div>
+          </a>
+          <div class="article-card-excerpt">Hardstuck Silver? Here's exactly why — and how to fix it. The most common Silver mistakes, macro fundamentals you're ignoring, and the fastest path to Gold.</div>
+          <div class="article-card-meta">
+            <div class="article-card-read">7 min read</div>
+            <a href="how-to-escape-silver.html" class="article-card-link">Read More <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">STAINBOOST</div>
+    <div class="footer-links">
+      <a href="../index.html">Home</a>
+      <a href="../pricing.html">Pricing</a>
+      <a href="../reviews.html">Reviews</a>
+      <a href="../faq.html">FAQ</a>
+      <a href="index.html">Blog</a>
+      <a href="https://discord.gg/pxsTfTJF" target="_blank">Discord</a>
+    </div>
+    <div class="footer-copy">&copy; 2026 StainBoost &middot; Middle East Server &middot; #1 Master Yi</div>
+  </div>
+</footer>
+
+<script>
+var reveals=document.querySelectorAll('.reveal');
+var ro=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');ro.unobserve(e.target);}});},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+reveals.forEach(function(el){ro.observe(el);});
+</script>
+<script src="../main.js"></script>
+</body>
+</html>
