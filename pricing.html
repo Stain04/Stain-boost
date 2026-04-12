@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <style>html,body{background:#0b0916;}</style>
+<link rel="stylesheet" href="shared.css">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-818RX6BRWB"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -12,8 +13,8 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pricing – StainBoost · ELO Boosting Middle East</title>
-<meta name="description" content="ELO boosting prices for Middle East server. Iron to Masters. Solo and duo options available.">
+<title>ELO Boost Prices – StainBoost · Middle East Server (Iron to Masters)</title>
+<meta name="description" content="Cheap ELO boosting prices for League of Legends Middle East server. Win boost from Iron to Masters. Solo & duo. Live price calculator. Start from $1.50/win.">
 <link rel="canonical" href="https://stainboost.com/pricing">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/favicon-48.png" sizes="48x48" type="image/png">
@@ -41,9 +42,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600&display=block" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--purple:#8b5cf6;--purple-light:#c4b5fd;--purple-dark:#6d28d9;--cyan:#22d3ee;--gold:#fbbf24;--bg:#0b0916;--bg-card:rgba(18,14,38,0.92);--border:rgba(139,92,246,0.18);--text:#e2e8f0;--muted:rgba(255,255,255,0.38);}
-body{min-height:100vh;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
 
 /* BG */
 .bg-layers{position:fixed;inset:0;z-index:0;pointer-events:none;}
@@ -51,32 +50,13 @@ body{min-height:100vh;font-family:'Inter',sans-serif;background:var(--bg);color:
 .bg-blob:nth-child(1){width:650px;height:550px;top:-15%;left:-12%;background:radial-gradient(circle,rgba(80,30,120,0.55),transparent 70%);animation-delay:0s;}
 .bg-blob:nth-child(2){width:550px;height:650px;bottom:-15%;right:-12%;background:radial-gradient(circle,rgba(120,20,60,0.4),transparent 70%);animation-delay:-5s;}
 .bg-blob:nth-child(3){width:450px;height:450px;top:45%;left:48%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(34,100,160,0.22),transparent 70%);animation-delay:-9s;}
-@keyframes drift{0%{transform:translate(0,0) scale(1);}100%{transform:translate(28px,18px) scale(1.06);}}
 .bg-grid{position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(139,92,246,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(139,92,246,0.035) 1px,transparent 1px);background-size:40px 40px;}
 
-/* NAV */
-.nav{position:sticky;top:0;z-index:100;height:64px;overflow:hidden;background:rgba(11,9,22,0.88);border-bottom:1px solid rgba(139,92,246,0.15);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
-.nav-inner{max-width:1200px;margin:0 auto;padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;}
-.nav-logo{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:900;letter-spacing:0.12em;text-decoration:none;background:linear-gradient(135deg,var(--purple-light),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.nav-links{display:flex;align-items:center;gap:0.15rem;}
-.nav-links a{font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.45);text-decoration:none;padding:0.4rem 0.9rem;border-radius:8px;transition:color .2s,background .2s;}
-.nav-links a:hover{color:var(--text);background:rgba(255,255,255,0.06);}
-.nav-links a.active{color:var(--purple-light);}
-.nav-discord{font-family:'Rajdhani',sans-serif;font-size:0.82rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;background:rgba(139,92,246,0.14);border:1px solid rgba(139,92,246,0.35);color:var(--purple-light);text-decoration:none;padding:0.42rem 1.1rem;border-radius:9px;transition:all .2s;margin-left:0.5rem;}
-.nav-discord:hover{background:rgba(139,92,246,0.26);box-shadow:0 0 18px rgba(139,92,246,0.3);}
-.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;}
-.hamburger span{display:block;width:22px;height:2px;background:rgba(255,255,255,0.55);border-radius:2px;}
-.mobile-menu{display:none;position:absolute;top:64px;left:0;right:0;background:rgba(11,9,22,0.97);border-bottom:1px solid rgba(139,92,246,0.12);padding:1rem;flex-direction:column;gap:0.4rem;z-index:99;}
-.mobile-menu.open{display:flex;}
-.mobile-menu a{font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.55);text-decoration:none;padding:0.75rem 1rem;border-radius:10px;}
-.mobile-menu a:hover,.mobile-menu a.active{color:var(--purple-light);background:rgba(139,92,246,0.1);}
-@media(max-width:680px){.nav-links{display:none;}.hamburger{display:flex;}}
 
 /* HERO */
 .hero{position:relative;z-index:1;text-align:center;padding:3.5rem 1.5rem 2rem;}
 .hero-eyebrow{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);border-radius:100px;padding:0.4rem 1rem;font-family:'Rajdhani',sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--purple-light);margin-bottom:1.5rem;}
 .pulse-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e;animation:pdot 2s ease-in-out infinite;}
-@keyframes pdot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.45;transform:scale(0.75);}}
 .hero-title{font-family:'Orbitron',sans-serif;font-size:clamp(2rem,5vw,3.4rem);font-weight:900;letter-spacing:0.06em;line-height:1.1;margin-bottom:1rem;}
 .hero-title .line1{background:linear-gradient(135deg,#fff,var(--purple-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .hero-title .line2{background:linear-gradient(135deg,var(--purple-light),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
@@ -283,9 +263,6 @@ input[type=range]#winsSlider::-moz-range-track{background:rgba(255,255,255,0.08)
 .sec-item{display:flex;align-items:center;gap:0.35rem;font-size:0.63rem;color:rgba(255,255,255,0.22);font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:0.04em;}
 .sec-item svg{opacity:0.35;}
 
-.form-msg{margin-top:0.75rem;padding:0.8rem 1rem;border-radius:10px;font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:600;display:none;line-height:1.5;}
-.form-msg.success{background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.25);color:#34d399;}
-.form-msg.error{background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.25);color:#f87171;}
 
 /* SIDEBAR */
 .sidebar{display:flex;flex-direction:column;gap:1.2rem;}
@@ -293,7 +270,6 @@ input[type=range]#winsSlider::-moz-range-track{background:rgba(255,255,255,0.08)
 .profile-card::before{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(139,92,246,0.07) 0%,transparent 55%);pointer-events:none;border-radius:20px;}
 .avatar-wrap{position:relative;width:90px;height:90px;margin:0 auto 1rem;}
 .avatar-ring{position:absolute;inset:-3px;border-radius:50%;background:conic-gradient(from 0deg,var(--purple),#c084fc,var(--cyan),var(--purple));animation:spin 4s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);}}
 .avatar-inner{position:absolute;inset:3px;border-radius:50%;background:#1a1535;overflow:hidden;display:flex;align-items:center;justify-content:center;}
 .avatar-inner img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
 .avatar-online{position:absolute;bottom:4px;right:4px;width:14px;height:14px;border-radius:50%;background:#22c55e;border:2px solid #0e0b1a;box-shadow:0 0 8px rgba(34,197,94,0.6);animation:pdot 2s ease-in-out infinite;}
@@ -340,15 +316,6 @@ input[type=range]#winsSlider::-moz-range-track{background:rgba(255,255,255,0.08)
 .discord-cta-btn{flex-shrink:0;background:rgba(88,101,242,0.2);border:1px solid rgba(88,101,242,0.45);border-radius:10px;padding:0.5rem 1rem;font-family:'Rajdhani',sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8b9cf8;text-decoration:none;transition:all 0.2s;white-space:nowrap;}
 .discord-cta-btn:hover{background:rgba(88,101,242,0.3);box-shadow:0 0 18px rgba(88,101,242,0.3);}
 
-/* Footer */
-footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-align:center;position:relative;z-index:1;}
-.footer-inner{max-width:700px;margin:0 auto;}
-.footer-logo{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:900;letter-spacing:0.15em;background:linear-gradient(135deg,var(--purple-light),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:1.2rem;}
-.footer-links{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem;}
-.footer-links a{font-family:'Rajdhani',sans-serif;font-size:0.78rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.3);text-decoration:none;transition:color .2s;}
-.footer-links a:hover{color:rgba(255,255,255,0.65);}
-.footer-copy{font-size:0.7rem;color:rgba(255,255,255,0.18);}
-
 @media(max-width:920px){.main-grid{grid-template-columns:1fr;}.sidebar{order:-1;}.price-table-card{display:none;}}
 @media(max-width:600px){.form-row{grid-template-columns:1fr;}.hero{padding:2.5rem 1rem 1.5rem;}.configurator{padding:1.5rem;}.payment-section{padding:0 1.5rem 1.5rem;}.stat-item{padding:0.5rem 1rem;}}
 
@@ -370,6 +337,22 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
 .rank-boost-section.visible{display:block;}
 @keyframes fadeInRB{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
 .rb-grid{display:grid;grid-template-columns:1fr 36px 1fr;gap:0.75rem;align-items:end;margin-bottom:0.9rem;}
+
+/* LP PICKER */
+.rb-lp-section{background:rgba(0,0,0,0.2);border:1px solid rgba(139,92,246,0.15);border-radius:14px;padding:0.9rem 1rem;margin-bottom:0.9rem;}
+.rb-lp-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:0.6rem;}
+.rb-lp-label{font-family:'Rajdhani',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);}
+.rb-lp-val{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:900;background:linear-gradient(135deg,var(--purple-light),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
+.rb-lp-chips{display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.65rem;}
+.rb-lp-chip{padding:0.25rem 0.6rem;border-radius:8px;border:1px solid rgba(255,255,255,0.09);background:rgba(255,255,255,0.04);font-family:'Rajdhani',sans-serif;font-size:0.77rem;font-weight:700;color:rgba(255,255,255,0.36);cursor:pointer;transition:all 0.15s;user-select:none;}
+.rb-lp-chip:hover{border-color:var(--purple);color:var(--purple-light);background:rgba(139,92,246,0.08);}
+.rb-lp-chip.active{border-color:var(--purple);color:var(--purple-light);background:rgba(139,92,246,0.14);}
+.rb-lp-note{font-family:'Rajdhani',sans-serif;font-size:0.7rem;font-weight:600;color:rgba(52,211,153,0.8);margin-top:0.5rem;min-height:1rem;}
+input[type=range]#rbLPSlider{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;outline:none;cursor:pointer;background:rgba(255,255,255,0.08);}
+input[type=range]#rbLPSlider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid var(--purple);box-shadow:0 0 0 4px rgba(139,92,246,0.22),0 2px 8px rgba(0,0,0,0.4);cursor:grab;transition:transform 0.12s cubic-bezier(.34,1.56,.64,1);}
+input[type=range]#rbLPSlider:active::-webkit-slider-thumb{cursor:grabbing;transform:scale(1.25);}
+input[type=range]#rbLPSlider::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid var(--purple);box-shadow:0 0 0 4px rgba(139,92,246,0.22);cursor:grab;}
+input[type=range]#rbLPSlider::-moz-range-progress{background:linear-gradient(90deg,var(--purple),var(--cyan));border-radius:6px;}
 .rb-field{display:flex;flex-direction:column;gap:0.4rem;}
 .rb-label{font-family:'Rajdhani',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);}
 .rb-selects{display:flex;gap:0.45rem;}
@@ -385,23 +368,22 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
 .rb-path-divs{font-family:'Rajdhani',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:0.12em;color:var(--purple-light);text-transform:uppercase;}
 .rb-error{font-size:0.75rem;color:#f87171;font-family:'Rajdhani',sans-serif;font-weight:600;padding:0.4rem 0.2rem;}
 
-/* FLOATING PARTICLES */
-#particles-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
-
 /* EXTRA ORBS */
 .orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;}
 .orb-1{width:280px;height:280px;top:8%;right:4%;background:radial-gradient(circle,rgba(34,211,238,0.07),transparent 70%);animation:orbFloat 9s ease-in-out infinite;}
 .orb-2{width:200px;height:200px;bottom:12%;left:5%;background:radial-gradient(circle,rgba(139,92,246,0.09),transparent 70%);animation:orbFloat 7s ease-in-out infinite 3s;}
 .orb-3{width:120px;height:120px;top:55%;right:18%;background:radial-gradient(circle,rgba(251,191,36,0.06),transparent 70%);animation:orbFloat 11s ease-in-out infinite 1s;}
-@keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1);}33%{transform:translate(12px,-18px) scale(1.04);}66%{transform:translate(-8px,8px) scale(0.97);}}
-
-/* SCAN LINE */
-.scan-line{position:fixed;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(139,92,246,0.35),rgba(34,211,238,0.25),transparent);z-index:0;pointer-events:none;animation:scanDown 10s linear infinite;opacity:0.4;}
-@keyframes scanDown{0%{top:-2px;opacity:0;}5%{opacity:0.4;}95%{opacity:0.4;}100%{top:100vh;opacity:0;}}
 
 /* PRICING CARD shimmer */
 .pricing-card::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,0.025) 50%,transparent 62%);background-size:250% 100%;border-radius:24px;pointer-events:none;}
 @keyframes shimmer{0%{background-position:250% 0}100%{background-position:-250% 0}}
+
+/* ── REGION SELECTOR (pricing page) ── */
+.region-bar{display:flex;align-items:center;justify-content:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.2rem;}
+.region-btn{display:inline-flex;align-items:center;gap:0.38rem;padding:0.36rem 1rem;border-radius:100px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.03);font-family:'Rajdhani',sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.38);cursor:pointer;transition:all 0.2s;}
+.region-btn:hover{border-color:rgba(139,92,246,0.4);color:rgba(255,255,255,0.72);background:rgba(139,92,246,0.07);}
+.region-btn.active{border-color:rgba(139,92,246,0.55);color:var(--purple-light);background:rgba(139,92,246,0.13);box-shadow:0 0 12px rgba(139,92,246,0.15);}
+.same-pricing-banner{display:flex;align-items:center;justify-content:center;gap:0.5rem;background:rgba(34,211,153,0.05);border:1px solid rgba(34,211,153,0.2);border-radius:12px;padding:0.65rem 1.2rem;margin:0 0 1.5rem;font-family:'Rajdhani',sans-serif;font-size:0.82rem;font-weight:700;color:rgba(52,211,153,0.85);letter-spacing:0.04em;text-align:center;}
 </style>
 </head>
 <body>
@@ -420,6 +402,7 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
       <a href="pricing.html" class="active">Pricing</a>
       <a href="reviews.html">Reviews</a>
       <a href="faq.html">FAQ</a>
+      <a href="blog/index.html">Blog</a>
       <a href="https://discord.gg/pxsTfTJF" class="nav-discord" target="_blank">Discord</a>
     </div>
     <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
@@ -427,29 +410,37 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
   <div class="mobile-menu" id="mobileMenu">
     <a href="index.html">Home</a><a href="pricing.html" class="active">Pricing</a>
     <a href="reviews.html">Reviews</a><a href="faq.html">FAQ</a>
+    <a href="blog/index.html">Blog</a>
     <a href="https://discord.gg/pxsTfTJF" target="_blank">Discord</a>
   </div>
 </nav>
 
 <div class="hero">
-  <div class="hero-eyebrow"><div class="pulse-dot"></div>Stain is Online · Ready to Boost</div>
-  <h1 class="hero-title"><div class="line1">BUILD YOUR</div><div class="line2">BOOST ORDER</div></h1>
-  <p class="hero-sub">Pick your rank, wins, and type — price updates live. Every order personally delivered by Stain.</p>
+  <div class="hero-eyebrow"><div class="pulse-dot"></div>Stain is Online · Taking Orders Now</div>
+  <h1 class="hero-title"><div class="line1">CONFIGURE YOUR</div><div class="line2">BOOST ORDER</div></h1>
+  <p class="hero-sub" id="pricingHeroSub">Price updates live as you configure. No hidden fees. Every order starts within hours — personally handled by the #1 Master Yi on Middle East server.</p>
   <div class="stats-row">
     <div class="stat-item"><div class="stat-num">500+</div><div class="stat-label">Orders Done</div></div>
     <div class="stat-item"><div class="stat-num">100%</div><div class="stat-label">Completion</div></div>
     <div class="stat-item"><div class="stat-num">#1</div><div class="stat-label">Master Yi ME</div></div>
-    <div class="stat-item"><div class="stat-num">&lt;5min</div><div class="stat-label">Avg Reply</div></div>
+    <div class="stat-item"><div class="stat-num">100%</div><div class="stat-label">Manual Play</div></div>
   </div>
   <div class="hero-badges">
-    <div class="hero-badge gold">⚔️ Jungle Specialist</div>
-    <div class="hero-badge green">✓ 500+ Orders Completed</div>
-    <div class="hero-badge blue">⚡ Starts Within Hours</div>
-    <div class="hero-badge">🎁 Free Win at 5+</div>
+    <div class="hero-badge gold">🎁 Buy 5 Get 1 Free</div>
+    <div class="hero-badge green">✓ Starts Within Hours</div>
+    <div class="hero-badge blue">🔒 Account Safety First</div>
+    <div class="hero-badge">💬 Replies in &lt;5 min</div>
   </div>
 </div>
 
 <div class="reviews-strip"><div class="reviews-scroll" id="reviewsScroll"></div></div>
+
+<!-- SAME PRICING BANNER -->
+<div style="max-width:1200px;margin:0 auto;padding:0 1.5rem;">
+  <div class="same-pricing-banner">
+    🌍 Same pricing across all regions – no extra fees
+  </div>
+</div>
 
 <div class="page-wrap">
   <div class="main-grid">
@@ -458,7 +449,7 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
         <div class="cfg-header">
           <div>
             <div class="cfg-title">Order Configurator</div>
-            <div class="cfg-sub">Master Yi · #1 ME Server · VPN + Offline Mode Always On</div>
+            <div class="cfg-sub">Master Yi · <span id="cfgServerLabel">#1 ME Server</span> · VPN + Offline Mode Always On</div>
           </div>
           <div class="online-status"><div class="online-dot-live"></div><div class="online-label">Online</div></div>
         </div>
@@ -544,6 +535,24 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
               </div>
             </div>
           </div>
+          <!-- LP Picker -->
+          <div class="rb-lp-section">
+            <div class="rb-lp-header">
+              <div class="rb-lp-label">📊 Current LP</div>
+              <div class="rb-lp-val" id="rbLPDisplay">0 <span style="font-size:0.55rem;font-family:'Rajdhani',sans-serif;-webkit-text-fill-color:var(--muted);color:var(--muted);">LP</span></div>
+            </div>
+            <div class="rb-lp-chips">
+              <div class="rb-lp-chip active" onclick="setLP(0)">0</div>
+              <div class="rb-lp-chip" onclick="setLP(20)">20</div>
+              <div class="rb-lp-chip" onclick="setLP(40)">40</div>
+              <div class="rb-lp-chip" onclick="setLP(60)">60</div>
+              <div class="rb-lp-chip" onclick="setLP(80)">80</div>
+              <div class="rb-lp-chip" onclick="setLP(99)">99</div>
+            </div>
+            <input type="range" id="rbLPSlider" min="0" max="99" value="0" oninput="setLP(parseInt(this.value))">
+            <div class="rb-lp-note" id="rbLPNote"></div>
+          </div>
+
           <div class="rb-path" id="rbPath">
             <span style="font-size:0.8rem;color:var(--muted);font-family:'Rajdhani',sans-serif;">Select ranks above to calculate price</span>
           </div>
@@ -554,6 +563,15 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
 
         <div class="cfg-step-label" id="stepLabelDetails">③ Your details</div>
         <div class="form-grid">
+          <div class="field">
+            <label>Server Region</label>
+            <div class="region-bar" style="justify-content:flex-start;margin-top:0.25rem;">
+              <button class="region-btn active" data-region="me" onclick="setPricingRegion('me')">Middle East</button>
+              <button class="region-btn" data-region="euw" onclick="setPricingRegion('euw')">EUW</button>
+              <button class="region-btn" data-region="eune" onclick="setPricingRegion('eune')">EUNE</button>
+            </div>
+            <div class="field-hint">Select the server your League of Legends account is on</div>
+          </div>
           <div class="form-row">
             <div class="field">
               <label>Discord Tag *</label>
@@ -590,6 +608,12 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
           </div>
           <div class="savings-note" id="savingsNote"></div>
         </div>
+      </div>
+
+      <!-- URGENCY BAR above payment -->
+      <div style="margin:0 2rem 1.2rem;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);border-radius:12px;padding:.7rem 1rem;display:flex;align-items:center;gap:.65rem;">
+        <div style="width:7px;height:7px;border-radius:50%;background:#ef4444;box-shadow:0 0 8px #ef4444;flex-shrink:0;animation:pdot 1.4s ease-in-out infinite;"></div>
+        <div style="font-family:'Rajdhani',sans-serif;font-size:.75rem;font-weight:700;color:#fca5a5;letter-spacing:.05em;">Stain is currently handling <strong style="color:#fff;" id="pricingActiveOrders">4</strong> active orders — slots are limited. Secure yours now.</div>
       </div>
 
       <div class="payment-section">
@@ -717,9 +741,9 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
   <div class="footer-inner">
     <div class="footer-logo">STAINBOOST</div>
     <div class="footer-links">
-      <a href="index.html">Home</a><a href="pricing.html">Pricing</a><a href="reviews.html">Reviews</a><a href="faq.html">FAQ</a><a href="https://discord.gg/pxsTfTJF" target="_blank">Discord</a>
+      <a href="index.html">Home</a><a href="pricing.html">Pricing</a><a href="reviews.html">Reviews</a><a href="faq.html">FAQ</a><a href="blog/index.html">Blog</a><a href="https://discord.gg/pxsTfTJF" target="_blank">Discord</a>
     </div>
-    <div class="footer-copy">© 2026 StainBoost · Middle East Server · #1 Master Yi</div>
+    <div class="footer-copy">© 2026 StainBoost · Middle East · EUW · EUNE · #1 Trusted Elo Boosting</div>
   </div>
 </footer>
 
@@ -775,7 +799,7 @@ function rbDivPrice(tier, div, type) {
   const p = RB_DIV_PRICE[key];
   return type === 'solo' ? p.solo : p.duo;
 }
-function calcRankBoostTotal(fromTier, fromDiv, toTier, toDiv, type) {
+function calcRankBoostTotal(fromTier, fromDiv, toTier, toDiv, type, lp) {
   let total = 0;
   const from = rbDivIdx(fromTier, fromDiv);
   const to   = rbDivIdx(toTier, toDiv);
@@ -783,9 +807,33 @@ function calcRankBoostTotal(fromTier, fromDiv, toTier, toDiv, type) {
   for (let d = from; d < to; d++) {
     const t = Math.min(Math.floor(d / 4), 7);
     const dv = d % 4;
-    total += rbDivPrice(t, dv, type);
+    let divCost = rbDivPrice(t, dv, type);
+    // First division: discount proportional to current LP (lp/100 of the way done)
+    if (d === from) divCost = divCost * ((100 - lp) / 100);
+    total += divCost;
   }
   return total;
+}
+
+function setLP(val) {
+  rbLP = val;
+  document.getElementById('rbLPSlider').value = val;
+  document.getElementById('rbLPDisplay').innerHTML = `${val} <span style="font-size:0.55rem;font-family:'Rajdhani',sans-serif;-webkit-text-fill-color:var(--muted);color:var(--muted);">LP</span>`;
+  // sync chips
+  document.querySelectorAll('.rb-lp-chip').forEach(c => {
+    c.classList.toggle('active', parseInt(c.textContent) === val);
+  });
+  // fill slider track
+  const pct = (val / 99) * 100;
+  document.getElementById('rbLPSlider').style.background =
+    `linear-gradient(to right,#8b5cf6 0%,#22d3ee ${pct}%,rgba(255,255,255,0.08) ${pct}%)`;
+  // note
+  const note = document.getElementById('rbLPNote');
+  if (val >= 75) note.textContent = `✓ You're ${val}LP — almost there! Discount applied.`;
+  else if (val >= 40) note.textContent = `✓ ${val}LP into your division — partial discount applied.`;
+  else if (val > 0) note.textContent = `✓ ${val}LP counted — small discount applied.`;
+  else note.textContent = '';
+  updatePrice();
 }
 
 const reviews=[
@@ -798,9 +846,13 @@ const reviews=[
 ];
 
 let selIdx=-1,selType='solo',selWins=5,selFlash='D';
-let rbMode='rank',rbFromTier=2,rbFromDiv=2,rbToTier=3,rbToDiv=0;
+let rbMode='rank',rbFromTier=2,rbFromDiv=2,rbToTier=3,rbToDiv=0,rbLP=0;
 const BINANCE_ID='987280057',MIN=1,MAX=30;
-let EGP_RATE = 54.6; 
+let EGP_RATE = 54.6; // fallback — overwritten by live fetch below
+fetch('/api/exchange-rate')
+  .then(r => r.json())
+  .then(d => { if (d && d.rate) { EGP_RATE = d.rate; updatePrice(); } })
+  .catch(() => {}); // silently keep fallback on network error
 
 // Reviews
 (function(){
@@ -982,11 +1034,11 @@ function updatePrice(){
       return;
     }
     
-    const total=calcRankBoostTotal(rbFromTier,rbFromDiv,rbToTier,rbToDiv,selType);
+    const total=calcRankBoostTotal(rbFromTier,rbFromDiv,rbToTier,rbToDiv,selType,rbLP);
     const totalEGP = (total * EGP_RATE).toFixed(0);
     const divs=toIdx-fromIdx;
     
-    document.getElementById('summaryLine').textContent=`${fromName} → ${toName} · ${selType} · ${divs} division${divs!==1?'s':''}`;
+    document.getElementById('summaryLine').textContent=`${fromName} (${rbLP}LP) → ${toName} · ${selType} · ${divs} div${divs!==1?'s':''}`;
     document.getElementById('summaryBaseVal').textContent=`$${total.toFixed(2)}`;
     document.getElementById('totalVal').textContent=`$${total.toFixed(2)}`;
     document.getElementById('binanceAmountText').innerHTML=`Send exactly <strong style="color:#fff;font-size:1rem;">$${total.toFixed(2)} USDT</strong> to ID <strong style="color:#fff">${BINANCE_ID}</strong>`;
@@ -1073,12 +1125,12 @@ async function submitOrder(method){
     const fromIdx=rbDivIdx(rbFromTier,rbFromDiv);
     const toIdx  =rbDivIdx(rbToTier,rbToDiv);
     if(toIdx<=fromIdx){showMsg('error','Please select a valid rank range.');return;}
-    orderData={discord,ign,type:selType,flash:selFlash,paymentMethod:payMethodStr,orderType:'rank_boost',fromTier:rbFromTier,fromDiv:rbFromDiv,toTier:rbToTier,toDiv:rbToDiv};
+    orderData={discord,ign,type:selType,flash:selFlash,paymentMethod:payMethodStr,orderType:'rank_boost',fromTier:rbFromTier,fromDiv:rbFromDiv,toTier:rbToTier,toDiv:rbToDiv,currentLP:rbLP,region:selRegion};
   }else{
     if(selIdx<0||selWins<1){showMsg('error','Please select a rank and number of wins.');return;}
     const r=ranks[selIdx];const total=getTotal().toFixed(2);
     const fw=selWins>=5?Math.floor(selWins/5):0;
-    orderData={discord,ign,rank:r.name,type:selType,wins:selWins,flash:selFlash,total,paymentMethod:payMethodStr,orderType:'win_boost',freeWins:fw};
+    orderData={discord,ign,rank:r.name,type:selType,wins:selWins,flash:selFlash,total,paymentMethod:payMethodStr,orderType:'win_boost',freeWins:fw,region:selRegion};
   }
   
   const bid=method==='paypal'?'paypalSubmitBtn':(method==='instapay'?'instapaySubmitBtn':'binanceSubmitBtn');
@@ -1096,47 +1148,51 @@ async function submitOrder(method){
   btn.disabled=false;btn.textContent="✅ I've Sent — Submit Order";
 }
 
-function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open');}
-
 // Init
 fillSlider(5);showWins(5);
 buildRBSelects();
 
-// Floating particles
+// ── REGION SYSTEM ──
+let selRegion = localStorage.getItem('stainRegion') || 'me';
+
+const PRICING_REGION_DATA = {
+  me:   { label: '#1 ME Server',   sub: 'Price updates live as you configure. No hidden fees. Every order starts within hours — personally handled by the #1 Master Yi on Middle East server.' },
+  euw:  { label: 'EUW Server',     sub: 'Price updates live as you configure. No hidden fees. Every EUW order starts within hours — fast EU delivery, zero bans, guaranteed results.' },
+  eune: { label: 'EUNE Server',    sub: 'Price updates live as you configure. No hidden fees. Every EUNE order starts within hours — expert EU boosters, zero bans, guaranteed results.' }
+};
+
+function setPricingRegion(code) {
+  if (!PRICING_REGION_DATA[code]) return;
+  selRegion = code;
+  localStorage.setItem('stainRegion', code);
+  const data = PRICING_REGION_DATA[code];
+
+  // Update selector buttons
+  document.querySelectorAll('.region-btn[data-region]').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('data-region') === code);
+  });
+
+  // Update hero sub
+  const sub = document.getElementById('pricingHeroSub');
+  if (sub) sub.textContent = data.sub;
+
+  // Update configurator server label
+  const lbl = document.getElementById('cfgServerLabel');
+  if (lbl) lbl.textContent = data.label;
+}
+
+// Init region from localStorage
+setPricingRegion(selRegion);
+
+</script>
+<script>
+// Active orders counter — varies by hour to feel live
 (function(){
-  const canvas=document.getElementById('particles-canvas');
-  if(!canvas)return;
-  const ctx=canvas.getContext('2d');
-  let W,H,particles=[];
-  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
-  resize();
-  window.addEventListener('resize',resize);
-  const COLORS=['rgba(139,92,246,','rgba(34,211,238,','rgba(196,181,253,','rgba(251,191,36,'];
-  for(let i=0;i<20;i++){
-    particles.push({
-      x:Math.random()*W,y:Math.random()*H,
-      r:Math.random()*1.6+0.3,
-      dx:(Math.random()-0.5)*0.28,dy:(Math.random()-0.5)*0.28,
-      o:Math.random()*0.2+0.04,
-      c:COLORS[Math.floor(Math.random()*COLORS.length)],
-      pulse:Math.random()*Math.PI*2,pulseSpeed:Math.random()*0.018+0.005
-    });
-  }
-  function draw(){
-    ctx.clearRect(0,0,W,H);
-    particles.forEach(p=>{
-      p.pulse+=p.pulseSpeed;
-      const alpha=p.o*(0.7+0.3*Math.sin(p.pulse));
-      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fillStyle=p.c+alpha+')';ctx.fill();
-      p.x+=p.dx;p.y+=p.dy;
-      if(p.x<-5)p.x=W+5;if(p.x>W+5)p.x=-5;
-      if(p.y<-5)p.y=H+5;if(p.y>H+5)p.y=-5;
-    });
-    requestAnimationFrame(draw);
-  }
-  draw();
+  var base=[4,3,5,4,3,4,5,3,4,4,5,3,4,4,3,5,4,3,4,5,3,4,4,3];
+  var el=document.getElementById('pricingActiveOrders');
+  if(el)el.textContent=base[new Date().getHours()];
 })();
 </script>
+<script src="main.js"></script>
 </body>
 </html>

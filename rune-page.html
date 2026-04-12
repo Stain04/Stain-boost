@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>html,body{background:#080714;}</style>
+<link rel="stylesheet" href="shared.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rune Page Builder – StainBoost</title>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600&display=block" rel="stylesheet">
+<style>
+:root{
+  --bg:#080714;--surface:#0f0d22;--surface2:#161330;
+  --border:rgba(139,92,246,0.18);--purple:#8b5cf6;--purple-light:#c4b5fd;
+  --cyan:#22d3ee;--gold:#fbbf24;--text:#e2e8f0;--muted:rgba(255,255,255,0.38);
+}
+
+/* ── PAGE LAYOUT ── */
+.page-outer{max-width:860px;margin:0 auto;padding:0 1.25rem 5rem;}
+.page-hero{text-align:center;padding:3rem 1rem 2.5rem;}
+.page-eyebrow{display:inline-flex;align-items:center;gap:.5rem;background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.3);border-radius:100px;padding:.4rem 1rem;font-family:'Rajdhani',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--purple-light);margin-bottom:1rem;}
+.page-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.6rem,4vw,2.6rem);font-weight:900;letter-spacing:.06em;line-height:1.1;margin-bottom:.75rem;background:linear-gradient(135deg,#fff,var(--purple-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.page-sub{font-size:.88rem;color:var(--muted);max-width:440px;margin:0 auto;}
+
+/* ── BUILDER CARD ── */
+.builder-card{background:rgba(18,14,38,.92);border:1px solid var(--border);border-radius:24px;padding:2rem;position:relative;}
+
+/* ── SECTION LABEL ── */
+.sec-label{font-family:'Rajdhani',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:.9rem;}
+
+/* ── TREE TABS ── */
+.tree-tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.5rem;}
+.tree-tab{display:flex;align-items:center;gap:.45rem;padding:.42rem .9rem;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);font-family:'Rajdhani',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.06em;color:rgba(255,255,255,.35);cursor:pointer;transition:all .2s;user-select:none;}
+.tree-tab:hover{border-color:rgba(255,255,255,.18);color:rgba(255,255,255,.65);}
+.tree-tab.active{border-color:var(--tc);color:var(--tc);background:rgba(255,255,255,.04);box-shadow:0 0 14px rgba(255,255,255,.06);}
+.tree-tab .tab-dot{width:8px;height:8px;border-radius:50%;background:var(--tc);box-shadow:0 0 6px var(--tc);}
+.tree-tab.disabled{opacity:.3;pointer-events:none;}
+
+/* ── RUNE GRID ── */
+.rune-grid{display:flex;flex-direction:column;align-items:center;gap:14px;}
+.rune-row{display:flex;justify-content:center;align-items:center;gap:18px;}
+.rune-row.keystones{gap:12px;}
+
+/* ── RUNE NODE ── */
+.rn{position:relative;cursor:pointer;border-radius:50%;flex-shrink:0;transition:transform .15s;}
+.rn:hover{transform:scale(1.1);}
+.rn.sz-reg{width:52px;height:52px;}
+.rn.sz-ks{width:64px;height:64px;}
+.rn.sz-sm{width:40px;height:40px;}
+.rn img{width:100%;height:100%;border-radius:50%;display:block;object-fit:cover;opacity:.38;transition:opacity .2s;background:rgba(255,255,255,.04);}
+.rn.sel img{opacity:1;}
+.rn.sel::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:2px solid #4a90e2;box-shadow:0 0 0 1px rgba(74,144,226,.25),0 0 14px rgba(74,144,226,.6);pointer-events:none;}
+
+/* Tooltip */
+.rn::before{content:attr(data-name);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:rgba(8,6,18,.97);color:#e2e8f0;font-family:'Rajdhani',sans-serif;font-size:.7rem;font-weight:600;letter-spacing:.04em;white-space:nowrap;padding:3px 8px;border-radius:6px;border:1px solid rgba(255,255,255,.1);opacity:0;pointer-events:none;transition:opacity .15s;z-index:20;}
+.rn:hover::before{opacity:1;}
+
+/* ── SECTION DIVIDER ── */
+.sec-divider{border:none;border-top:1px solid rgba(255,255,255,.07);margin:1.75rem 0;}
+
+/* ── STAT SHARDS ── */
+.shards-wrap{display:flex;flex-direction:column;gap:10px;align-items:center;margin-bottom:1.5rem;}
+.shard-row{display:flex;justify-content:center;align-items:center;gap:14px;}
+
+/* ── SELECTED SHARDS DISPLAY ── */
+.shards-display{display:flex;align-items:flex-start;gap:28px;}
+.shard-disp-item{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.shard-disp-img{width:44px;height:44px;border-radius:50%;display:block;object-fit:cover;background:rgba(255,255,255,.06);border:2px solid #4a90e2;box-shadow:0 0 12px rgba(74,144,226,.45);}
+.shard-disp-label{font-family:'Rajdhani',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.05em;color:rgba(255,255,255,.45);text-align:center;max-width:64px;line-height:1.25;}
+
+/* ── COPY BAR ── */
+.copy-bar{margin-top:1.75rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;}
+.copy-summary{font-family:'Rajdhani',sans-serif;font-size:.78rem;font-weight:600;color:var(--muted);line-height:1.5;}
+.copy-summary strong{color:var(--text);}
+.copy-btn-main{padding:.52rem 1.25rem;background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.4);border-radius:10px;font-family:'Rajdhani',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple-light);cursor:pointer;transition:all .2s;white-space:nowrap;}
+.copy-btn-main:hover{background:rgba(139,92,246,.25);box-shadow:0 0 16px rgba(139,92,246,.25);}
+
+/* ── PLACE ORDER LINK ── */
+.order-cta{display:block;margin-top:1rem;width:100%;padding:.9rem;background:linear-gradient(135deg,#6d28d9,#7c3aed);border:none;border-radius:12px;font-family:'Rajdhani',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#fff;text-align:center;text-decoration:none;cursor:pointer;box-shadow:0 0 24px rgba(139,92,246,.2);transition:all .2s;}
+.order-cta:hover{box-shadow:0 0 36px rgba(139,92,246,.4);transform:translateY(-2px);}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">STAINBOOST</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="reviews.html">Reviews</a>
+      <a href="faq.html">FAQ</a>
+      <a href="blog/index.html">Blog</a>
+      <a href="https://discord.gg/pxsTfTJF" class="nav-discord" target="_blank">Discord</a>
+    </div>
+    <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Home</a><a href="pricing.html">Pricing</a>
+    <a href="reviews.html">Reviews</a><a href="faq.html">FAQ</a>
+    <a href="blog/index.html">Blog</a>
+    <a href="https://discord.gg/pxsTfTJF" target="_blank">Discord</a>
+  </div>
+</nav>
+
+<div class="page-outer">
+  <div class="page-hero">
+    <div class="page-eyebrow">⚡ Order Add-On</div>
+    <h1 class="page-title">RUNE PAGE BUILDER</h1>
+    <p class="page-sub">Select your preferred rune page and Stain will use it on your account. Optional — skip if you don't care.</p>
+  </div>
+
+  <div class="builder-card">
+
+    <!-- PRIMARY TREE -->
+    <div class="sec-label">① PRIMARY TREE — KEYSTONE + 3 ROWS</div>
+    <div class="tree-tabs" id="primaryTabs"></div>
+    <div class="rune-grid" id="primaryGrid"></div>
+
+    <hr class="sec-divider">
+
+    <!-- SECONDARY TREE -->
+    <div class="sec-label">② SECONDARY TREE — CHOOSE 2 RUNES</div>
+    <div class="tree-tabs" id="secondaryTabs"></div>
+    <div class="rune-grid" id="secondaryGrid"></div>
+
+    <hr class="sec-divider">
+
+    <!-- STAT SHARDS -->
+    <div class="sec-label">STAT SHARDS</div>
+    <div class="shards-wrap" id="shardsGrid"></div>
+    <div class="shards-display" id="shardsDisplay"></div>
+
+    <!-- COPY + ORDER -->
+    <div class="copy-bar">
+      <div class="copy-summary" id="copySummary">Select runes above to build your page.</div>
+      <button class="copy-btn-main" onclick="copyRunePage()">📋 Copy Rune Page</button>
+    </div>
+    <a href="pricing.html" class="order-cta" onclick="saveRunePage()">Order Now — Attach This Rune Page →</a>
+
+  </div>
+</div>
+
+<script>
+// ── CDragon base ──
+var CDR='https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/perk-images/';
+
+// ── Tree definitions ──
+var TREES=[
+  {
+    key:'precision',name:'Precision',color:'#c89b3c',
+    keystones:[
+      {name:'Press the Attack',img:'styles/precision/presstheattack/presstheattack.png'},
+      {name:'Lethal Tempo',    img:'styles/precision/lethaltempo/lethaltempo.png'},
+      {name:'Fleet Footwork',  img:'styles/precision/fleetfootwork/fleetfootwork.png'},
+      {name:'Conqueror',       img:'styles/precision/conqueror/conqueror.png'},
+    ],
+    rows:[
+      [{name:'Overheal',img:'styles/precision/overheal/overheal.png'},
+       {name:'Triumph',img:'styles/precision/triumph/triumph.png'},
+       {name:'Presence of Mind',img:'styles/precision/presenceofmind/presenceofmind.png'}],
+      [{name:'Legend: Alacrity',img:'styles/precision/legendalacrity/legendalacrity.png'},
+       {name:'Legend: Haste',   img:'styles/precision/legendhaste/legendhaste.png'},
+       {name:'Legend: Bloodline',img:'styles/precision/legendbloodline/legendbloodline.png'}],
+      [{name:'Coup de Grace',img:'styles/precision/coupdegrace/coupdegrace.png'},
+       {name:'Cut Down',     img:'styles/precision/cutdown/cutdown.png'},
+       {name:'Last Stand',   img:'styles/precision/laststand/laststand.png'}],
+    ],
+  },
+  {
+    key:'domination',name:'Domination',color:'#bf2323',
+    keystones:[
+      {name:'Electrocute',  img:'styles/domination/electrocute/electrocute.png'},
+      {name:'Predator',     img:'styles/domination/predator/predator.png'},
+      {name:'Dark Harvest', img:'styles/domination/darkharvest/darkharvest.png'},
+      {name:'Hail of Blades',img:'styles/domination/hailofblades/hailofblades.png'},
+    ],
+    rows:[
+      [{name:'Cheap Shot',    img:'styles/domination/cheapshot/cheapshot.png'},
+       {name:'Taste of Blood',img:'styles/domination/tasteofblood/tasteofblood.png'},
+       {name:'Sudden Impact', img:'styles/domination/suddenimpact/suddenimpact.png'}],
+      [{name:'Zombie Ward',       img:'styles/domination/zombieward/zombieward.png'},
+       {name:'Ghost Poro',        img:'styles/domination/ghostporo/ghostporo.png'},
+       {name:'Eyeball Collection',img:'styles/domination/eyeballcollection/eyeballcollection.png'}],
+      [{name:'Treasure Hunter', img:'styles/domination/treasurehunter/treasurehunter.png'},
+       {name:'Relentless Hunter',img:'styles/domination/relentlesshunter/relentlesshunter.png'},
+       {name:'Ultimate Hunter',  img:'styles/domination/ultimatehunter/ultimatehunter.png'}],
+    ],
+  },
+  {
+    key:'sorcery',name:'Sorcery',color:'#9d6cd2',
+    keystones:[
+      {name:'Summon Aery',  img:'styles/sorcery/summonaery/summonaery.png'},
+      {name:'Arcane Comet', img:'styles/sorcery/arcanecomet/arcanecomet.png'},
+      {name:'Phase Rush',   img:'styles/sorcery/phaserush/phaserush.png'},
+    ],
+    rows:[
+      [{name:'Nullifying Orb',img:'styles/sorcery/nullifyingorb/nullifyingorb.png'},
+       {name:'Manaflow Band', img:'styles/sorcery/manaflowband/manaflowband.png'},
+       {name:'Nimbus Cloak',  img:'styles/sorcery/nimbuscloak/nimbuscloak.png'}],
+      [{name:'Transcendence', img:'styles/sorcery/transcendence/transcendence.png'},
+       {name:'Celerity',      img:'styles/sorcery/celerity/celerity.png'},
+       {name:'Absolute Focus',img:'styles/sorcery/absolutefocus/absolutefocus.png'}],
+      [{name:'Scorch',          img:'styles/sorcery/scorch/scorch.png'},
+       {name:'Waterwalking',    img:'styles/sorcery/waterwalking/waterwalking.png'},
+       {name:'Gathering Storm', img:'styles/sorcery/gatheringstorm/gatheringstorm.png'}],
+    ],
+  },
+  {
+    key:'resolve',name:'Resolve',color:'#4a7a4a',
+    keystones:[
+      {name:'Grasp of the Undying',img:'styles/resolve/graspoftheundying/graspoftheundying.png'},
+      {name:'Aftershock',          img:'styles/resolve/aftershock/aftershock.png'},
+      {name:'Guardian',            img:'styles/resolve/guardian/guardian.png'},
+    ],
+    rows:[
+      [{name:'Demolish',     img:'styles/resolve/demolish/demolish.png'},
+       {name:'Font of Life', img:'styles/resolve/fontoflife/fontoflife.png'},
+       {name:'Shield Bash',  img:'styles/resolve/shieldbash/shieldbash.png'}],
+      [{name:'Conditioning', img:'styles/resolve/conditioning/conditioning.png'},
+       {name:'Second Wind',  img:'styles/resolve/secondwind/secondwind.png'},
+       {name:'Bone Plating', img:'styles/resolve/boneplating/boneplating.png'}],
+      [{name:'Overgrowth',  img:'styles/resolve/overgrowth/overgrowth.png'},
+       {name:'Revitalize',  img:'styles/resolve/revitalize/revitalize.png'},
+       {name:'Unflinching', img:'styles/resolve/unflinching/unflinching.png'}],
+    ],
+  },
+  {
+    key:'inspiration',name:'Inspiration',color:'#49aab9',
+    keystones:[
+      {name:'Glacial Augment',    img:'styles/inspiration/glacialaugment/glacialaugment.png'},
+      {name:'First Strike',       img:'styles/inspiration/firststrike/firststrike.png'},
+      {name:'Unsealed Spellbook', img:'styles/inspiration/unsealedspellbook/unsealedspellbook.png'},
+    ],
+    rows:[
+      [{name:'Hextech Flashtraption',img:'styles/inspiration/hextechflashtraption/hextechflashtraption.png'},
+       {name:'Magical Footwear',     img:'styles/inspiration/magicalfootwear/magicalfootwear.png'},
+       {name:'Perfect Timing',       img:'styles/inspiration/perfecttiming/perfecttiming.png'}],
+      [{name:"Future's Market",       img:'styles/inspiration/futuresmarket/futuresmarket.png'},
+       {name:'Minion Dematerializer', img:'styles/inspiration/miniondematerializer/miniondematerializer.png'},
+       {name:'Triple Tonic',          img:'styles/inspiration/tripletonic/tripletonic.png'}],
+      [{name:'Biscuit Delivery', img:'styles/inspiration/biscuitdelivery/biscuitdelivery.png'},
+       {name:'Cosmic Insight',   img:'styles/inspiration/cosmicinsight/cosmicinsight.png'},
+       {name:'Approach Velocity',img:'styles/inspiration/approachvelocity/approachvelocity.png'}],
+    ],
+  },
+];
+
+// ── Stat shards ──
+var SHARDS=[
+  [
+    {name:'Adaptive Force',img:'statmods/statmodsadaptiveforceicon.png'},
+    {name:'Attack Speed',  img:'statmods/statmodsattackspeedicon.png'},
+    {name:'Ability Haste', img:'statmods/statmodsabilityhasteicon.png'},
+  ],
+  [
+    {name:'Adaptive Force',img:'statmods/statmodsadaptiveforceicon.png'},
+    {name:'Armor',         img:'statmods/statmodsarmoricon.png'},
+    {name:'Magic Resist',  img:'statmods/statmodsmagicresicon.png'},
+  ],
+  [
+    {name:'Health',       img:'statmods/statmodshealthscalingicon.png'},
+    {name:'Armor',        img:'statmods/statmodsarmoricon.png'},
+    {name:'Magic Resist', img:'statmods/statmodsmagicresicon.png'},
+  ],
+];
+
+// ── State ──
+var state={
+  primary:0,        // tree index
+  keystone:null,    // rune name
+  rows:[null,null,null],   // primary row selections
+  secondary:1,      // secondary tree index
+  secRows:[null,null,null],// secondary row (max 2 chosen across all rows)
+  secCount:0,
+  shards:[0,0,0],   // shard index per row
+};
+
+// ── Build primary tabs ──
+function buildTabs(containerId,activeIdx,clickFn,disabledIdx){
+  var c=document.getElementById(containerId);
+  c.innerHTML='';
+  TREES.forEach(function(t,i){
+    var btn=document.createElement('button');
+    btn.className='tree-tab'+(i===activeIdx?' active':'')+(i===disabledIdx?' disabled':'');
+    btn.style.setProperty('--tc',t.color);
+    btn.innerHTML='<span class="tab-dot"></span>'+t.name;
+    btn.onclick=function(){clickFn(i);};
+    c.appendChild(btn);
+  });
+}
+
+// ── Build a full rune tree grid (primary or secondary) ──
+function buildTreeGrid(containerId,treeIdx,selKeystone,selRows,isSecondary,secPicks){
+  var c=document.getElementById(containerId);
+  c.innerHTML='';
+  var t=TREES[treeIdx];
+
+  // Keystones row (only for primary)
+  if(!isSecondary){
+    var ksRow=document.createElement('div');
+    ksRow.className='rune-row keystones';
+    t.keystones.forEach(function(rune){
+      ksRow.appendChild(makeNode(rune,rune.name===selKeystone,'sz-ks',function(name){
+        state.keystone=name;
+        buildTreeGrid('primaryGrid',state.primary,state.keystone,state.rows,false);
+        updateCopySummary();
+      }));
+    });
+    c.appendChild(ksRow);
+  }
+
+  // Regular rows (3 each)
+  t.rows.forEach(function(rowRunes,ri){
+    var row=document.createElement('div');
+    row.className='rune-row';
+    rowRunes.forEach(function(rune){
+      var isSel=isSecondary
+        ?(secPicks&&secPicks.indexOf(rune.name)>-1)
+        :(selRows[ri]===rune.name);
+      row.appendChild(makeNode(rune,isSel,'sz-reg',function(name){
+        if(isSecondary){
+          // max 2 selections across all secondary rows
+          var arr=state.secRows.slice();
+          var flat=arr.filter(Boolean);
+          if(isSel){
+            // deselect
+            arr[ri]=null;
+          } else if(flat.length<2){
+            arr[ri]=name;
+          } else {
+            // replace the one in this row if it exists, else swap oldest
+            if(arr[ri]){arr[ri]=name;}
+            else{
+              // find first non-null and remove it (replace with this row)
+              for(var k=0;k<arr.length;k++){if(arr[k]){arr[k]=null;break;}}
+              arr[ri]=name;
+            }
+          }
+          state.secRows=arr;
+          buildTreeGrid('secondaryGrid',state.secondary,null,null,true,state.secRows.filter(Boolean));
+        } else {
+          state.rows[ri]=name;
+          buildTreeGrid('primaryGrid',state.primary,state.keystone,state.rows,false);
+        }
+        updateCopySummary();
+      }));
+    });
+    c.appendChild(row);
+  });
+}
+
+// ── Make a single rune node ──
+function makeNode(rune,selected,sizeClass,clickFn){
+  var wrap=document.createElement('div');
+  wrap.className='rn '+sizeClass+(selected?' sel':'');
+  wrap.setAttribute('data-name',rune.name);
+  var img=document.createElement('img');
+  img.src=CDR+rune.img;
+  img.alt=rune.name;
+  img.loading='lazy';
+  wrap.appendChild(img);
+  wrap.onclick=function(){clickFn(rune.name);};
+  return wrap;
+}
+
+// ── Build stat shards ──
+function buildShards(){
+  var grid=document.getElementById('shardsGrid');
+  grid.innerHTML='';
+  SHARDS.forEach(function(rowShards,ri){
+    var row=document.createElement('div');
+    row.className='shard-row';
+    rowShards.forEach(function(shard,si){
+      var wrap=document.createElement('div');
+      wrap.className='rn sz-sm'+(state.shards[ri]===si?' sel':'');
+      wrap.setAttribute('data-name',shard.name);
+      var img=document.createElement('img');
+      img.src=CDR+shard.img;
+      img.alt=shard.name;
+      img.loading='lazy';
+      wrap.appendChild(img);
+      wrap.onclick=function(){
+        state.shards[ri]=si;
+        buildShards();
+        updateCopySummary();
+      };
+      row.appendChild(wrap);
+    });
+    grid.appendChild(row);
+  });
+  // selected display
+  buildShardsDisplay();
+}
+
+// ── Shards display: 3 icons in a single horizontal row ──
+function buildShardsDisplay(){
+  var disp=document.getElementById('shardsDisplay');
+  disp.innerHTML='';
+  SHARDS.forEach(function(rowShards,ri){
+    var shard=rowShards[state.shards[ri]];
+    var item=document.createElement('div');
+    item.className='shard-disp-item';
+    var img=document.createElement('img');
+    img.className='shard-disp-img';
+    img.src=CDR+shard.img;
+    img.alt=shard.name;
+    var lbl=document.createElement('div');
+    lbl.className='shard-disp-label';
+    lbl.textContent=shard.name;
+    item.appendChild(img);
+    item.appendChild(lbl);
+    disp.appendChild(item);
+  });
+}
+
+// ── Copy summary ──
+function updateCopySummary(){
+  var pt=TREES[state.primary];
+  var st=TREES[state.secondary];
+  var parts=[];
+  if(state.keystone) parts.push('<strong>'+state.keystone+'</strong>');
+  state.rows.forEach(function(r){if(r)parts.push(r);});
+  var secPicks=state.secRows.filter(Boolean);
+  if(secPicks.length) parts.push('('+st.name+': '+secPicks.join(', ')+')');
+  var shardNames=SHARDS.map(function(r,i){return r[state.shards[i]].name;});
+  parts.push('Shards: '+shardNames.join(' / '));
+  document.getElementById('copySummary').innerHTML=pt.name+' → '+parts.join(' · ');
+}
+
+// ── Copy to clipboard ──
+function copyRunePage(){
+  var el=document.getElementById('copySummary');
+  navigator.clipboard.writeText(el.textContent).then(function(){
+    var btn=document.querySelector('.copy-btn-main');
+    btn.textContent='✓ Copied!';
+    setTimeout(function(){btn.textContent='📋 Copy Rune Page';},2000);
+  });
+}
+
+// ── Save to localStorage before navigating to pricing ──
+function saveRunePage(){
+  var el=document.getElementById('copySummary');
+  localStorage.setItem('stainRunePage',el.textContent);
+}
+
+// ── Set primary tree ──
+function setPrimary(idx){
+  state.primary=idx;
+  state.keystone=null;
+  state.rows=[null,null,null];
+  // prevent same as secondary
+  if(state.secondary===idx){
+    state.secondary=(idx+1)%TREES.length;
+    state.secRows=[null,null,null];
+  }
+  renderAll();
+}
+
+// ── Set secondary tree ──
+function setSecondary(idx){
+  if(idx===state.primary)return;
+  state.secondary=idx;
+  state.secRows=[null,null,null];
+  renderAll();
+}
+
+// ── Render everything ──
+function renderAll(){
+  buildTabs('primaryTabs',state.primary,setPrimary,-1);
+  buildTreeGrid('primaryGrid',state.primary,state.keystone,state.rows,false);
+  buildTabs('secondaryTabs',state.secondary,setSecondary,state.primary);
+  buildTreeGrid('secondaryGrid',state.secondary,null,null,true,state.secRows.filter(Boolean));
+  buildShards();
+  updateCopySummary();
+}
+
+renderAll();
+</script>
+
+<script src="main.js"></script>
+</body>
+</html>

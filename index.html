@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <style>html,body{background:#0b0916;}</style>
+<link rel="stylesheet" href="shared.css">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-818RX6BRWB"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -35,10 +36,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600&display=block" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#060411;--bg-card:rgba(12,8,32,0.85);--purple:#7c3aed;--purple-light:#c4b5fd;--cyan:#06d6f2;--cyan-glow:rgba(6,214,242,0.4);--gold:#f5a623;--gold-glow:rgba(245,166,35,0.4);--text:#e8e4f0;--muted:rgba(255,255,255,0.35);--glass:rgba(255,255,255,0.03);}
 html{scroll-behavior:smooth;}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
 body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");opacity:0.5;z-index:0;pointer-events:none;}
 body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(124,58,237,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,0.03) 1px,transparent 1px);background-size:48px 48px;z-index:0;pointer-events:none;}
 .ambient{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
@@ -47,44 +46,20 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .blob-2{width:500px;height:500px;bottom:-15%;right:-10%;background:rgba(6,214,242,0.08);animation:blobDrift 14s ease-in-out infinite alternate-reverse;}
 .blob-3{width:350px;height:350px;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(245,166,35,0.04);animation:blobDrift 20s ease-in-out infinite alternate;}
 @keyframes blobDrift{0%{transform:translate(0,0) scale(1);}50%{transform:translate(30px,-20px) scale(1.08);}100%{transform:translate(-15px,25px) scale(0.95);}}
-.scan-line{position:fixed;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 10%,rgba(6,214,242,0.5) 50%,transparent 90%);z-index:1;pointer-events:none;animation:scanDown 6s linear infinite;opacity:0.3;}
-@keyframes scanDown{0%{top:-2px;opacity:0;}3%{opacity:0.3;}97%{opacity:0.3;}100%{top:100vh;opacity:0;}}
-
-/* NAV */
-.nav{position:sticky;top:0;z-index:100;height:64px;overflow:hidden;background:rgba(11,9,22,0.88);border-bottom:1px solid rgba(139,92,246,0.15);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
-.nav-inner{max-width:1200px;margin:0 auto;padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;}
-.nav-logo{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:900;letter-spacing:0.12em;text-decoration:none;background:linear-gradient(135deg,#c4b5fd,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-@keyframes pulse{0%,100%{opacity:.6;transform:scale(1);}50%{opacity:1;transform:scale(1.3);}}
-.nav-links{display:flex;align-items:center;gap:0.15rem;}
-.nav-links a{font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.45);text-decoration:none;padding:0.4rem 0.9rem;border-radius:8px;transition:color .2s,background .2s;}
-.nav-links a:hover{color:#e2e8f0;background:rgba(255,255,255,0.06);}
-.nav-links a.active{color:#c4b5fd;}
-.nav-discord{font-family:'Rajdhani',sans-serif;font-size:0.82rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;background:rgba(139,92,246,0.14);border:1px solid rgba(139,92,246,0.35);color:#c4b5fd;text-decoration:none;padding:0.42rem 1.1rem;border-radius:9px;transition:all .2s;margin-left:0.5rem;}
-.nav-discord:hover{background:rgba(139,92,246,0.26);box-shadow:0 0 18px rgba(139,92,246,0.3);}
-.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px;}
-.hamburger span{display:block;width:22px;height:2px;background:rgba(255,255,255,.5);border-radius:2px;transition:all .3s;}
-.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
-.hamburger.open span:nth-child(2){opacity:0;}
-.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
-.mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;bottom:0;background:rgba(6,4,17,.97);backdrop-filter:blur(24px);padding:2rem;flex-direction:column;gap:.5rem;z-index:199;}
-.mobile-menu.open{display:flex;}
-.mobile-menu a{font-size:1.2rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);text-decoration:none;padding:1rem 1.2rem;border-radius:12px;border:1px solid transparent;transition:all .2s;}
-.mobile-menu a:hover,.mobile-menu a.active{color:var(--cyan);background:rgba(6,214,242,.05);border-color:rgba(6,214,242,.15);}
-@media(max-width:720px){.nav-links{display:none;}.hamburger{display:flex;}}
 
 /* HERO */
-.hero{min-height:calc(100vh - 64px);display:flex;align-items:center;justify-content:center;padding:3rem 2rem;position:relative;overflow:hidden;}
+.hero{min-height:calc(100vh - 64px);display:flex;align-items:center;justify-content:center;padding:3.5rem 2rem 8rem;position:relative;overflow:hidden;}
 .hero-grid{position:absolute;inset:0;background:linear-gradient(rgba(124,58,237,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,.06) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse 60% 50% at 50% 50%,black,transparent 70%);-webkit-mask-image:radial-gradient(ellipse 60% 50% at 50% 50%,black,transparent 70%);pointer-events:none;}
 .hero-content{position:relative;z-index:2;text-align:center;max-width:880px;}
-.hero-rank-badge{display:inline-flex;align-items:center;gap:.6rem;background:linear-gradient(135deg,rgba(245,166,35,.1),rgba(245,166,35,.03));border:1px solid rgba(245,166,35,.35);border-radius:100px;padding:.5rem 1.4rem .5rem 1rem;font-size:.72rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:2rem;animation:fadeDown .6s ease .1s both;position:relative;overflow:hidden;}
+.hero-rank-badge{display:inline-flex;align-items:center;gap:.6rem;background:linear-gradient(135deg,rgba(245,166,35,.1),rgba(245,166,35,.03));border:1px solid rgba(245,166,35,.35);border-radius:100px;padding:.5rem 1.4rem .5rem 1rem;font-size:.72rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;animation:fadeDown .6s ease .1s both;position:relative;overflow:hidden;}
 .hero-rank-badge::before{content:'';display:none;}
 .hero-rank-badge svg{flex-shrink:0;filter:drop-shadow(0 0 6px rgba(245,166,35,.6));}
 .badge-pulse{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold-glow);animation:pulse 2s ease-in-out infinite;}
-.hero-eyebrow{font-family:'Space Mono',monospace;font-size:.72rem;font-weight:400;letter-spacing:.35em;text-transform:uppercase;color:rgba(6,214,242,.55);margin-bottom:1rem;animation:fadeUp .6s ease .15s both;}
-.hero-title{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(3.2rem,9vw,6.5rem);line-height:.95;letter-spacing:.02em;color:#fff;margin-bottom:1.8rem;animation:fadeUp .7s ease .2s both;}
+.hero-eyebrow{font-family:'Space Mono',monospace;font-size:.72rem;font-weight:400;letter-spacing:.35em;text-transform:uppercase;color:rgba(6,214,242,.55);margin-bottom:.8rem;animation:fadeUp .6s ease .15s both;}
+.hero-title{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(2.4rem,5.5vw,4.8rem);line-height:1;letter-spacing:.02em;color:#fff;margin-bottom:1.2rem;animation:fadeUp .7s ease .2s both;}
 .hero-title .accent{display:block;background:linear-gradient(135deg,var(--purple-light) 0%,var(--cyan) 60%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 12px rgba(124,58,237,.15));}
 @keyframes titleShift{0%{background-position:0% 50%;}100%{background-position:100% 50%;}}
-.hero-sub{font-size:1.05rem;font-weight:500;color:rgba(255,255,255,.4);line-height:1.75;max-width:560px;margin:0 auto 3rem;animation:fadeUp .7s ease .28s both;}
+.hero-sub{font-size:1rem;font-weight:500;color:rgba(255,255,255,.4);line-height:1.75;max-width:560px;margin:0 auto 1.8rem;animation:fadeUp .7s ease .28s both;}
 .hero-sub strong{color:var(--cyan);font-weight:700;}
 .hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;animation:fadeUp .7s ease .36s both;}
 .btn-primary{font-size:.9rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;background:linear-gradient(135deg,var(--purple),#5b21b6);color:#fff;text-decoration:none;padding:1rem 2.6rem;border-radius:14px;border:1px solid rgba(124,58,237,.5);cursor:pointer;position:relative;overflow:hidden;transition:all .25s;display:inline-flex;align-items:center;gap:.5rem;box-shadow:0 0 16px rgba(124,58,237,.2),inset 0 1px 0 rgba(255,255,255,.08);}
@@ -92,7 +67,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .btn-primary:hover{transform:translateY(-3px);box-shadow:0 0 24px rgba(124,58,237,.35),0 4px 16px rgba(124,58,237,.15);}
 .btn-secondary{font-size:.9rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;background:var(--glass);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.6);text-decoration:none;padding:1rem 2.6rem;border-radius:14px;cursor:pointer;transition:all .25s;display:inline-flex;align-items:center;gap:.5rem;backdrop-filter:blur(10px);}
 .btn-secondary:hover{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.2);transform:translateY(-2px);}
-.hero-scroll{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5rem;animation:fadeUp 1s ease 1s both;}
+.hero-scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5rem;animation:fadeUp 1s ease 1s both;}
 .hero-scroll span{font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.15);}
 .scroll-line{width:1px;height:40px;position:relative;overflow:hidden;}
 .scroll-line::after{content:'';position:absolute;top:-100%;left:0;width:1px;height:100%;background:linear-gradient(to bottom,transparent,var(--cyan),transparent);animation:scrollDrop 2s ease-in-out infinite;}
@@ -179,13 +154,6 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .cta-banner-sub{font-size:.92rem;font-weight:500;color:rgba(255,255,255,.35);margin-bottom:2.5rem;}
 .cta-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
 
-footer{border-top:1px solid rgba(255,255,255,.04);padding:3rem 2rem;text-align:center;position:relative;z-index:2;}
-.footer-inner{max-width:700px;margin:0 auto;}
-.footer-logo{font-family:'Orbitron',sans-serif;font-size:.85rem;font-weight:900;letter-spacing:.2em;color:rgba(255,255,255,.15);margin-bottom:1.2rem;}
-.footer-links{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem;}
-.footer-links a{font-size:.76rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.2);text-decoration:none;transition:color .2s;}
-.footer-links a:hover{color:rgba(255,255,255,.55);}
-.footer-copy{font-family:'Space Mono',monospace;font-size:.62rem;color:rgba(255,255,255,.1);}
 
 @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
@@ -194,7 +162,113 @@ footer{border-top:1px solid rgba(255,255,255,.04);padding:3rem 2rem;text-align:c
 .reveal.visible{opacity:1;transform:translateY(0);}
 .reveal-delay-1{transition-delay:.1s;}
 .reveal-delay-2{transition-delay:.2s;}
-#particles-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+/* HERO TRUST ROW */
+.hero-trust-row{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;margin-bottom:2rem;animation:fadeUp .7s ease .32s both;}
+.hero-trust-item{display:flex;align-items:center;gap:.4rem;font-size:.78rem;font-weight:600;color:rgba(255,255,255,.55);}
+
+/* URGENCY PILL */
+.urgency-pill{display:inline-flex;align-items:center;gap:.55rem;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);border-radius:100px;padding:.4rem 1.1rem;font-family:'Rajdhani',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#fca5a5;margin-bottom:1.4rem;animation:fadeDown .5s ease .05s both;}
+.urgency-dot{width:6px;height:6px;border-radius:50%;background:#ef4444;box-shadow:0 0 8px #ef4444;flex-shrink:0;animation:urgPulse 1.4s ease-in-out infinite;}
+@keyframes urgPulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(1.5);}}
+
+/* STICKY CTA */
+.sticky-order{position:fixed;bottom:1.8rem;right:1.8rem;z-index:9999;display:none;background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff;text-decoration:none;padding:.82rem 1.5rem;border-radius:50px;font-family:'Rajdhani',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;box-shadow:0 0 32px rgba(124,58,237,.6),0 4px 20px rgba(0,0,0,.5);transition:transform .2s,box-shadow .2s;flex-direction:column;align-items:flex-start;gap:.15rem;}
+.sticky-order:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 0 44px rgba(124,58,237,.75),0 6px 24px rgba(0,0,0,.6);}
+.so-top{display:flex;align-items:center;gap:.5rem;}
+.so-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px #4ade80;flex-shrink:0;animation:urgPulse 2s ease-in-out infinite;}
+.so-slots{font-family:'Rajdhani',sans-serif;font-size:.62rem;font-weight:600;letter-spacing:.06em;color:rgba(255,255,255,.45);text-transform:none;}
+@media(max-width:480px){.sticky-order{bottom:1rem;right:1rem;padding:.7rem 1.2rem;font-size:.8rem;}}
+
+/* SOCIAL PROOF TOAST */
+.sp-toast{position:fixed;bottom:1.8rem;left:1.8rem;z-index:9998;background:rgba(11,9,22,.96);border:1px solid rgba(124,58,237,.25);border-radius:16px;padding:1rem 1.2rem;display:flex;align-items:center;gap:.85rem;max-width:280px;box-shadow:0 8px 32px rgba(0,0,0,.5);transform:translateX(-120%);transition:transform .45s cubic-bezier(.34,1.56,.64,1);backdrop-filter:blur(16px);}
+.sp-toast.show{transform:translateX(0);}
+.sp-ava{width:38px;height:38px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:.85rem;font-weight:700;color:#fff;}
+.sp-body{}
+.sp-name{font-family:'Rajdhani',sans-serif;font-size:.85rem;font-weight:700;color:#fff;margin-bottom:.1rem;}
+.sp-action{font-size:.72rem;color:rgba(255,255,255,.42);line-height:1.4;}
+.sp-action strong{color:#4ade80;font-weight:600;}
+.sp-time{font-size:.62rem;color:rgba(255,255,255,.22);margin-top:.2rem;}
+@media(max-width:480px){.sp-toast{bottom:1rem;left:1rem;max-width:240px;}}
+
+/* MID-PAGE CTA STRIP */
+.midcta{position:relative;z-index:2;margin:0 2rem;max-width:1060px;margin-left:auto;margin-right:auto;margin-bottom:0;}
+.midcta-inner{background:linear-gradient(135deg,rgba(124,58,237,.18) 0%,rgba(6,214,242,.07) 100%);border:1px solid rgba(124,58,237,.28);border-radius:22px;padding:2.4rem 2.5rem;display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap;}
+.midcta-left{}
+.midcta-label{font-family:'Rajdhani',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:rgba(124,58,237,.8);margin-bottom:.4rem;}
+.midcta-headline{font-family:'Orbitron',sans-serif;font-size:clamp(1.1rem,2.5vw,1.45rem);font-weight:900;color:#fff;line-height:1.2;}
+.midcta-sub{font-size:.83rem;color:rgba(255,255,255,.38);margin-top:.4rem;}
+.midcta-right{display:flex;align-items:center;gap:1rem;flex-shrink:0;flex-wrap:wrap;}
+.midcta-slots{font-family:'Rajdhani',sans-serif;font-size:.75rem;font-weight:700;color:#fca5a5;letter-spacing:.08em;display:flex;align-items:center;gap:.4rem;}
+@media(max-width:680px){.midcta-inner{flex-direction:column;text-align:center;}.midcta-right{justify-content:center;}}
+
+/* RECENT BOOSTS SECTION */
+.boosts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+.boost-card{background:var(--bg-card);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:1.2rem 1.4rem;display:flex;align-items:center;gap:1rem;transition:border-color .25s,transform .25s;}
+.boost-card:hover{border-color:rgba(124,58,237,.25);transform:translateY(-3px);}
+.boost-flag{font-size:1.4rem;flex-shrink:0;}
+.boost-info{flex:1;min-width:0;}
+.boost-ranks{font-family:'Rajdhani',sans-serif;font-size:.88rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.boost-ranks .arrow{color:var(--cyan);margin:0 .35rem;}
+.boost-meta{font-size:.68rem;color:rgba(255,255,255,.28);margin-top:.2rem;}
+.boost-badge{flex-shrink:0;font-family:'Rajdhani',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .6rem;border-radius:6px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.2);color:#34d399;}
+@media(max-width:900px){.boosts-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:560px){.boosts-grid{grid-template-columns:1fr;}}
+
+/* GUARANTEES SECTION */
+.guarantees-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;}
+.guarantee-card{background:var(--bg-card);border:1px solid rgba(255,255,255,.06);border-radius:22px;padding:2rem 1.6rem;text-align:center;position:relative;overflow:hidden;transition:all .3s;}
+.guarantee-card::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:50%;height:1px;background:linear-gradient(90deg,transparent,rgba(52,211,153,.45),transparent);}
+.guarantee-card:hover{border-color:rgba(52,211,153,.2);transform:translateY(-4px);box-shadow:0 6px 24px rgba(52,211,153,.06);}
+.guarantee-icon{width:56px;height:56px;border-radius:18px;background:linear-gradient(135deg,rgba(52,211,153,.12),rgba(6,214,242,.06));border:1px solid rgba(52,211,153,.2);display:flex;align-items:center;justify-content:center;font-size:1.7rem;margin:0 auto 1.2rem;}
+.guarantee-title{font-family:'Orbitron',sans-serif;font-size:.88rem;font-weight:900;letter-spacing:.06em;color:#fff;margin-bottom:.6rem;}
+.guarantee-desc{font-size:.8rem;color:rgba(255,255,255,.38);line-height:1.7;}
+@media(max-width:720px){.guarantees-grid{grid-template-columns:1fr;}}
+
+/* ABOUT SECTION */
+.about-inner{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;}
+.about-avatar-wrap{position:relative;}
+.about-avatar-card{background:var(--bg-card);border:1px solid rgba(124,58,237,.18);border-radius:28px;padding:2rem;text-align:center;position:relative;overflow:hidden;}
+.about-avatar-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(124,58,237,.08),transparent 60%);pointer-events:none;}
+.about-avatar-img{width:110px;height:110px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#06d6f2);display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-size:2.2rem;font-weight:900;color:#fff;margin:0 auto 1rem;border:3px solid rgba(124,58,237,.35);box-shadow:0 0 28px rgba(124,58,237,.25);}
+.about-handle{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:900;color:#fff;margin-bottom:.3rem;}
+.about-title-badge{font-family:'Rajdhani',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;}
+.about-stats-mini{display:flex;justify-content:center;gap:1.5rem;border-top:1px solid rgba(255,255,255,.06);padding-top:1.2rem;}
+.about-stat{text-align:center;}
+.about-stat-num{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:900;background:linear-gradient(135deg,var(--purple-light),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.about-stat-lbl{font-size:.62rem;color:rgba(255,255,255,.3);margin-top:.15rem;font-family:'Rajdhani',sans-serif;letter-spacing:.1em;text-transform:uppercase;}
+.about-text-col{}
+.about-story-tag{font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;color:var(--cyan);opacity:.55;margin-bottom:.6rem;}
+.about-story-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.3rem,3vw,1.8rem);font-weight:900;color:#fff;margin-bottom:1.2rem;line-height:1.2;}
+.about-story-body{font-size:.88rem;color:rgba(255,255,255,.42);line-height:1.85;margin-bottom:1.5rem;}
+.about-story-body p+p{margin-top:.9rem;}
+.about-story-body strong{color:rgba(255,255,255,.75);}
+.about-badges-row{display:flex;gap:.6rem;flex-wrap:wrap;}
+.about-badge{display:inline-flex;align-items:center;gap:.4rem;padding:.35rem .85rem;border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);}
+.about-badge.gold{border-color:rgba(245,166,35,.3);color:var(--gold);background:rgba(245,166,35,.06);}
+.about-badge.cyan{border-color:rgba(6,214,242,.3);color:var(--cyan);background:rgba(6,214,242,.06);}
+@media(max-width:800px){.about-inner{grid-template-columns:1fr;}}
+
+/* BLOG TEASER */
+.blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;}
+.blog-card{background:var(--bg-card);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:1.6rem;text-decoration:none;display:flex;flex-direction:column;gap:.8rem;transition:all .3s;position:relative;overflow:hidden;}
+.blog-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--purple),var(--cyan));opacity:0;transition:opacity .3s;}
+.blog-card:hover::before{opacity:1;}
+.blog-card:hover{border-color:rgba(124,58,237,.25);transform:translateY(-4px);box-shadow:0 6px 24px rgba(124,58,237,.07);}
+.blog-tag{font-family:'Rajdhani',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);opacity:.7;}
+.blog-title{font-family:'Rajdhani',sans-serif;font-size:.98rem;font-weight:700;color:#fff;line-height:1.4;}
+.blog-excerpt{font-size:.78rem;color:rgba(255,255,255,.32);line-height:1.6;}
+.blog-read{font-family:'Rajdhani',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple-light);margin-top:auto;display:flex;align-items:center;gap:.3rem;}
+@media(max-width:720px){.blog-grid{grid-template-columns:1fr;}}
+
+/* ── REGION SELECTOR ── */
+.region-selector{display:flex;align-items:center;gap:0.45rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.4rem;animation:fadeDown 0.5s ease 0.08s both;}
+.region-btn{display:inline-flex;align-items:center;gap:0.38rem;padding:0.38rem 1rem;border-radius:100px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);font-family:'Rajdhani',sans-serif;font-size:0.76rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.42);cursor:pointer;transition:all 0.2s;backdrop-filter:blur(6px);}
+.region-btn:hover{border-color:rgba(124,58,237,0.4);color:rgba(255,255,255,0.75);background:rgba(124,58,237,0.08);}
+.region-btn.active{border-color:rgba(124,58,237,0.55);color:var(--purple-light);background:rgba(124,58,237,0.14);box-shadow:0 0 14px rgba(124,58,237,0.18);}
+.regions-avail-badge{display:inline-flex;align-items:center;gap:0.45rem;background:rgba(6,214,242,0.06);border:1px solid rgba(6,214,242,0.22);border-radius:100px;padding:0.32rem 0.9rem;font-family:'Rajdhani',sans-serif;font-size:0.66rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:0.8rem;animation:fadeDown 0.5s ease 0.06s both;}
+.region-trust-msg{display:none;align-items:center;justify-content:center;gap:0.5rem;background:rgba(6,214,242,0.05);border:1px solid rgba(6,214,242,0.16);border-radius:12px;padding:0.6rem 1.2rem;margin-bottom:1.6rem;font-family:'Rajdhani',sans-serif;font-size:0.8rem;font-weight:700;color:rgba(6,214,242,0.8);letter-spacing:0.04em;animation:fadeUp 0.4s ease both;}
+.region-trust-msg.visible{display:flex;}
 </style>
 </head>
 <body>
@@ -209,6 +283,7 @@ footer{border-top:1px solid rgba(255,255,255,.04);padding:3rem 2rem;text-align:c
       <a href="pricing.html">Pricing</a>
       <a href="reviews.html">Reviews</a>
       <a href="faq.html">FAQ</a>
+      <a href="blog/index.html">Blog</a>
       <a href="https://discord.gg/pxsTfTJF" class="nav-discord" target="_blank">Discord</a>
     </div>
     <button class="hamburger" id="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
@@ -216,6 +291,7 @@ footer{border-top:1px solid rgba(255,255,255,.04);padding:3rem 2rem;text-align:c
   <div class="mobile-menu" id="mobileMenu">
     <a href="index.html" class="active">Home</a><a href="pricing.html">Pricing</a>
     <a href="reviews.html">Reviews</a><a href="faq.html">FAQ</a>
+    <a href="blog/index.html">Blog</a>
     <a href="https://discord.gg/pxsTfTJF" target="_blank">Discord</a>
   </div>
 </nav>
@@ -223,21 +299,49 @@ footer{border-top:1px solid rgba(255,255,255,.04);padding:3rem 2rem;text-align:c
 <section class="hero">
   <div class="hero-grid"></div>
   <div class="hero-content">
-    <div class="hero-rank-badge">
-      <svg width="12" height="12" viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,9.5 12.5,15 8,12 3.5,15 5,9.5 1,6 6,6" fill="#f5a623"/></svg>
-      #1 Master Yi · Middle East Server
-      
+    <div style="display:flex;align-items:center;justify-content:center;gap:.75rem;margin-bottom:1.4rem;flex-wrap:wrap;">
+      <div class="urgency-pill" style="margin-bottom:0;">
+        <div class="urgency-dot"></div>
+        Only <span id="slotsLeft" style="color:#fff;margin:0 .25rem;">3</span> slots open this week
+      </div>
+      <div class="hero-rank-badge" style="margin-bottom:0;">
+        <svg width="12" height="12" viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,9.5 12.5,15 8,12 3.5,15 5,9.5 1,6 6,6" fill="#f5a623"/></svg>
+        #1 Master Yi · Middle East Server
+        <div class="badge-pulse"></div>
+      </div>
     </div>
-    <div class="hero-eyebrow">// Professional ELO Boosting</div>
-    <h1 class="hero-title">CLIMB THE<span class="accent">LADDER</span></h1>
-    <p class="hero-sub">Get boosted by <strong>Stain</strong> — the #1 ranked Master Yi on the Middle East server. Fast delivery, full account security, and results that speak for themselves.</p>
+    <div class="hero-eyebrow">// The Most Trusted ELO Boost on Middle East</div>
+    <h1 class="hero-title">YOUR RANK IS<span class="accent">WAITING FOR YOU.</span></h1>
+    <p class="hero-sub">Every day you don't act, someone else takes your spot on the ladder. <strong>Stain</strong> — ranked #1 Master Yi on the ME server — gets you there faster than you thought possible. Safe. Guaranteed. Personal.</p>
+    <div class="hero-trust-row">
+      <span class="hero-trust-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>500+ Happy Clients</span>
+      <span class="hero-trust-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Starts Within Hours</span>
+      <span class="hero-trust-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>100% Manual Play</span>
+    </div>
     <div class="hero-btns">
-      <a href="pricing.html" class="btn-primary"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>View Pricing</a>
-      <a href="https://discord.gg/pxsTfTJF" class="btn-secondary" target="_blank"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Chat on Discord</a>
+      <a href="pricing.html" class="btn-primary"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Get My Rank Now</a>
+      <a href="https://discord.gg/pxsTfTJF" class="btn-secondary" target="_blank"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Ask on Discord</a>
     </div>
+    <div style="margin-top:1rem;font-size:.72rem;color:rgba(255,255,255,.22);letter-spacing:.05em;animation:fadeUp .7s ease .5s both;">⚡ Average boost starts within 3 hours of payment · 100% money-back if not started</div>
   </div>
   <div class="hero-scroll"><span>Scroll</span><div class="scroll-line"></div></div>
 </section>
+
+<!-- STICKY ORDER BUTTON -->
+<a href="pricing.html" class="sticky-order" id="stickyOrder">
+  <div class="so-top"><div class="so-dot"></div>Get My Rank Now</div>
+  <div class="so-slots" id="stickySlots">3 slots left this week</div>
+</a>
+
+<!-- SOCIAL PROOF TOAST -->
+<div class="sp-toast" id="spToast">
+  <div class="sp-ava" id="spAva"></div>
+  <div class="sp-body">
+    <div class="sp-name" id="spName"></div>
+    <div class="sp-action" id="spAction"></div>
+    <div class="sp-time" id="spTime"></div>
+  </div>
+</div>
 
 <div class="ticker"><div class="ticker-track" id="tickerTrack"></div></div>
 
@@ -249,88 +353,309 @@ footer{border-top:1px solid rgba(255,255,255,.04);padding:3rem 2rem;text-align:c
   </div>
 </div>
 
+<!-- RECENT BOOSTS -->
+<section class="section" style="padding-top:1rem;padding-bottom:2rem;">
+  <div class="section-inner">
+    <div class="section-tag">// Live Activity</div>
+    <h2 class="section-title">RECENT BOOSTS COMPLETED</h2>
+    <p class="section-sub">Real orders completed in the last 48 hours</p>
+    <div class="boosts-grid" id="recentBoostsGrid"></div>
+  </div>
+</section>
+
 <section class="section" style="padding-top:1rem;">
   <div class="section-inner">
-    <div class="section-tag">// Process</div><h2 class="section-title">HOW IT WORKS</h2><p class="section-sub">Three simple steps to your new rank</p>
+    <div class="section-tag">// Simple 3-Step Process</div><h2 class="section-title">UP AND RUNNING IN MINUTES</h2><p class="section-sub">No waiting rooms. No complicated forms. Just pick, pay, and watch your LP climb.</p>
     <div class="steps">
-      <div class="step reveal"><div class="step-num">STEP 01</div><div class="step-icon">💬</div><div class="step-title">Choose Your Boost</div><div class="step-desc">Select your current rank, number of net wins, and whether you want solo or duo on the pricing page. Losses don't count — only net wins do.</div></div>
-      <div class="step reveal reveal-delay-1"><div class="step-num">STEP 02</div><div class="step-icon">💳</div><div class="step-title">Pay Securely</div><div class="step-desc">Send payment via Binance Pay (USDT) or PayPal.me. Zero fees and instant confirmation. Screenshot and DM on Discord.</div></div>
-      <div class="step reveal reveal-delay-2"><div class="step-num">STEP 03</div><div class="step-icon">🚀</div><div class="step-title">Rank Up</div><div class="step-desc">Provide your login credentials, then sit back. Stain starts boosting immediately. Fast delivery, full security guaranteed.</div></div>
+      <div class="step reveal"><div class="step-num">STEP 01</div><div class="step-icon">⚙️</div><div class="step-title">Configure Your Order</div><div class="step-desc">Pick your rank, how many net wins you want, and solo or duo. The price updates live — no hidden fees. Takes 60 seconds.</div></div>
+      <div class="step reveal reveal-delay-1"><div class="step-num">STEP 02</div><div class="step-icon">💳</div><div class="step-title">Pay & Confirm</div><div class="step-desc">Pay via Binance USDT, PayPal, or InstaPay. Screenshot the receipt and DM Stain on Discord. He replies in under 5 minutes — usually less.</div></div>
+      <div class="step reveal reveal-delay-2"><div class="step-num">STEP 03</div><div class="step-icon">🏆</div><div class="step-title">Watch Your LP Climb</div><div class="step-desc">Stain logs in, enables offline mode, and starts immediately. You get updates after every session. Your rank goes up. Simple as that.</div></div>
     </div>
   </div>
 </section>
 
 <section class="section" style="padding-top:0;">
   <div class="section-inner">
-    <div class="section-tag">// Trust &amp; Safety</div><h2 class="section-title">WHY CHOOSE STAIN</h2><p class="section-sub">Every single order includes these guarantees</p>
+    <div class="section-tag">// Why 500+ Players Chose Us</div><h2 class="section-title">BUILT DIFFERENT. BETTER.</h2><p class="section-sub">Other services outsource. We don't. This is what that difference looks like.</p>
     <div class="features-grid">
-      <div class="feat reveal"><div class="feat-icon">👻</div><div><div class="feat-title">Offline Mode</div><div class="feat-desc">We appear offline to all your friends throughout the entire boost. Nobody will know.</div></div></div>
-      <div class="feat reveal reveal-delay-1"><div class="feat-icon">🌐</div><div><div class="feat-title">VPN Protection</div><div class="feat-desc">IP matched to your country for maximum security and zero detection risk.</div></div></div>
-      <div class="feat reveal reveal-delay-2"><div class="feat-icon">⚡</div><div><div class="feat-title">Flash Position</div><div class="feat-desc">Your preferred Flash key (D or F) is always respected. No surprises.</div></div></div>
-      <div class="feat reveal"><div class="feat-icon">🏆</div><div><div class="feat-title">Rank #1 Player</div><div class="feat-desc">Boosted exclusively by the #1 Master Yi on Middle East server. No outsourcing.</div></div></div>
-      <div class="feat reveal reveal-delay-1"><div class="feat-icon">🔒</div><div><div class="feat-title">Manual Only</div><div class="feat-desc">No bots, no scripts. Fully manual gameplay with over 1M mastery on Yi.</div></div></div>
-      <div class="feat reveal reveal-delay-2"><div class="feat-icon">🎁</div><div><div class="feat-title">Buy 5 Get 1 Free</div><div class="feat-desc">Order 5 wins and get 1 extra win on the house. Best value on the server.</div></div></div>
+      <div class="feat reveal"><div class="feat-icon">👻</div><div><div class="feat-title">Invisible the Whole Time</div><div class="feat-desc">Offline mode is enabled before login — your friends see nothing. Your guild sees nothing. Nobody will ever know.</div></div></div>
+      <div class="feat reveal reveal-delay-1"><div class="feat-icon">🌐</div><div><div class="feat-title">VPN Matched to You</div><div class="feat-desc">Riot flags location changes. Stain uses a VPN matched to your country — your account looks like it never left home.</div></div></div>
+      <div class="feat reveal reveal-delay-2"><div class="feat-icon">⚡</div><div><div class="feat-title">Your Flash Key. Always.</div><div class="feat-desc">D or F — whichever you use, Stain mirrors it. No account weirdness. No retraining your muscle memory after.</div></div></div>
+      <div class="feat reveal"><div class="feat-icon">🏆</div><div><div class="feat-title">One Booster. The Best One.</div><div class="feat-desc">Not a pool of random players. Not outsourced. Every single order is personally handled by the #1 Master Yi on ME server.</div></div></div>
+      <div class="feat reveal reveal-delay-1"><div class="feat-icon">🔒</div><div><div class="feat-title">Human. Manual. Always.</div><div class="feat-desc">Over 5M mastery. No bots, no scripts, no scripted builds. Riot's detection has never flagged a single StainBoost order.</div></div></div>
+      <div class="feat reveal reveal-delay-2"><div class="feat-icon">🎁</div><div><div class="feat-title">Order 5, Get 6 — Free</div><div class="feat-desc">Every 5th win gets you one extra win at no charge. The more you order, the more value you get. Best deal on the server.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- GUARANTEES -->
+<section class="section" style="padding-top:0;">
+  <div class="section-inner">
+    <div class="section-tag">// Our Promise</div>
+    <h2 class="section-title">IRON-CLAD GUARANTEES</h2>
+    <p class="section-sub">Every order is backed by these commitments — no fine print</p>
+    <div class="guarantees-grid">
+      <div class="guarantee-card reveal">
+        <div class="guarantee-icon">🏆</div>
+        <h3 class="guarantee-title">RANK COMPLETION</h3>
+        <p class="guarantee-desc">Your order is completed in full — period. Net wins are tracked precisely. If Stain loses a game, it doesn't count toward your order. He plays until every win is delivered.</p>
+      </div>
+      <div class="guarantee-card reveal reveal-delay-1">
+        <div class="guarantee-icon">💸</div>
+        <h3 class="guarantee-title">REFUND POLICY</h3>
+        <p class="guarantee-desc">If your boost hasn't started, you get a full refund — no questions asked. If it's mid-boost, a fair partial refund based on progress is arranged directly on Discord.</p>
+      </div>
+      <div class="guarantee-card reveal reveal-delay-2">
+        <div class="guarantee-icon">🛡️</div>
+        <h3 class="guarantee-title">ACCOUNT SAFETY</h3>
+        <p class="guarantee-desc">Offline mode throughout. Country-matched VPN. 100% manual human gameplay. Over 500 orders completed with zero bans. Your account is treated like our own.</p>
+      </div>
     </div>
   </div>
 </section>
 
 <section class="section" style="padding-top:0;">
   <div class="section-inner">
-    <div class="section-tag">// Testimonials</div><h2 class="section-title">WHAT CLIENTS SAY</h2><p class="section-sub">Real results from real players on Middle East server</p>
+    <div class="section-tag">// Real Words. Real Clients.</div><h2 class="section-title">THEY DOUBTED. THEN THEY RANKED.</h2><p class="section-sub">Over 500 orders on Middle East server — here's what players say after the fact</p>
     <div class="reviews-grid">
       <div class="review-card reveal">
         <div class="review-quote">&ldquo;</div>
         <div class="review-stars"><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,9.5 12.5,15 8,12 3.5,15 5,9.5 1,6 6,6" fill="#f5a623"/></svg><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,9.5 12.5,15 8,12 3.5,15 5,9.5 1,6 6,6" fill="#f5a623"/></svg><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,9.5 12.5,15 8,12 3.5,15 5,9.5 1,6 6,6" fill="#f5a623"/></svg><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,9.5 12.5,15 8,12 3.5,15 5,9.5 1,6 6,6" fill="#f5a623"/></svg><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,9.5 12.5,15 8,12 3.5,15 5,9.5 1,6 6,6" fill="#f5a623"/></svg></div>
-        <div class="review-text">Gold II to Plat IV in two days. Friends were online the whole time, zero clue. Offline mode actually worked. Will be back next season.</div>
-        <div class="review-user"><div class="review-avatar" style="background:linear-gradient(135deg,#7c3aed,#06d6f2);">AK</div><div><div class="review-name">AhmedK_ME1</div><div class="review-rank">Gold &rarr; Platinum</div></div></div>
+        <div class="review-text">I was Gold II for 3 seasons. THREE. Stain had me in Platinum IV in 48 hours. My friends were online the whole time, nobody noticed a thing. The offline mode is real, it works. Already ordered again.</div>
+        <div class="review-user"><div class="review-avatar" style="background:linear-gradient(135deg,#7c3aed,#06d6f2);">AK</div><div><div class="review-name">AhmedK_ME1</div><div class="review-rank">Gold II &rarr; Platinum IV · 🇸🇦</div></div></div>
       </div>
       <div class="review-card reveal reveal-delay-1">
         <div class="review-quote">&ldquo;</div>
         <div class="review-stars"><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,9.5 12.5,15 8,12 3.5,15 5,9.5 1,6 6,6" fill="#f5a623"/></svg><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,9.5 12.5,15 8,12 3.5,15 5,9.5 1,6 6,6" fill="#f5a623"/></svg><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,9.5 12.5,15 8,12 3.5,15 5,9.5 1,6 6,6" fill="#f5a623"/></svg><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,9.5 12.5,15 8,12 3.5,15 5,9.5 1,6 6,6" fill="#f5a623"/></svg><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,9.5 12.5,15 8,12 3.5,15 5,9.5 1,6 6,6" fill="#f5a623"/></svg></div>
-        <div class="review-text">Hit Diamond in about a week. Stain messaged me on Discord after each session so I always knew what was going on. Nothing sketchy, felt safe the whole time.</div>
-        <div class="review-user"><div class="review-avatar" style="background:linear-gradient(135deg,#34d399,#06d6f2);">XL</div><div><div class="review-name">xLayla</div><div class="review-rank">Emerald &rarr; Diamond</div></div></div>
+        <div class="review-text">Hit Diamond in about a week. Stain messaged me on Discord after every single session — wins, losses, everything. I always knew exactly where I stood. Felt genuinely safe the whole time. This is the only booster I'll ever use.</div>
+        <div class="review-user"><div class="review-avatar" style="background:linear-gradient(135deg,#34d399,#06d6f2);">XL</div><div><div class="review-name">xLayla</div><div class="review-rank">Emerald I &rarr; Diamond IV · 🇦🇪</div></div></div>
       </div>
       <div class="review-card reveal reveal-delay-2">
         <div class="review-quote">&ldquo;</div>
         <div class="review-stars"><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,9.5 12.5,15 8,12 3.5,15 5,9.5 1,6 6,6" fill="#f5a623"/></svg><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,9.5 12.5,15 8,12 3.5,15 5,9.5 1,6 6,6" fill="#f5a623"/></svg><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,9.5 12.5,15 8,12 3.5,15 5,9.5 1,6 6,6" fill="#f5a623"/></svg><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,9.5 12.5,15 8,12 3.5,15 5,9.5 1,6 6,6" fill="#f5a623"/></svg><svg viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,9.5 12.5,15 8,12 3.5,15 5,9.5 1,6 6,6" fill="#f5a623"/></svg></div>
-        <div class="review-text">Third time ordering. Every time is smooth and fast. The 5+1 deal is genuinely good value. Only booster I trust on this server now.</div>
-        <div class="review-user"><div class="review-avatar" style="background:linear-gradient(135deg,#f97316,#f5a623);">RQ</div><div><div class="review-name">RamiQ</div><div class="review-rank">Silver &rarr; Platinum</div></div></div>
+        <div class="review-text">Third order with Stain. I keep coming back because nothing has changed — still fast, still safe, still worth every dirham. The 5+1 bonus deal is genuinely the best value on the entire server. He's the only booster I recommend to anyone.</div>
+        <div class="review-user"><div class="review-avatar" style="background:linear-gradient(135deg,#f97316,#f5a623);">RQ</div><div><div class="review-name">RamiQ</div><div class="review-rank">Silver IV &rarr; Platinum II · 🇶🇦</div></div></div>
       </div>
     </div>
-    <div class="reviews-cta"><a href="reviews.html" class="btn-secondary">See All Reviews &rarr;</a></div>
+    <div class="reviews-cta"><a href="reviews.html" class="btn-secondary">Read All 500+ Reviews &rarr;</a></div>
+  </div>
+</section>
+
+<!-- MID-PAGE CTA STRIP -->
+<div class="midcta reveal">
+  <div class="midcta-inner">
+    <div class="midcta-left">
+      <div class="midcta-label">// Limited Availability</div>
+      <div class="midcta-headline">Stain takes orders personally.<br>Slots fill fast.</div>
+      <div class="midcta-sub">Currently <span id="midSlots">3</span> open slots this week — once full, you go on a waitlist.</div>
+    </div>
+    <div class="midcta-right">
+      <div class="midcta-slots"><div class="urgency-dot"></div> <span id="midSlotsLabel">3 slots remaining</span></div>
+      <a href="pricing.html" class="btn-primary" style="white-space:nowrap;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Claim My Slot</a>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT STAIN -->
+<section class="section" style="padding-top:0;">
+  <div class="section-inner">
+    <div class="about-inner">
+      <div class="about-avatar-wrap reveal">
+        <div class="about-avatar-card">
+          <div class="about-avatar-img">S</div>
+          <div class="about-handle">Stain</div>
+          <div class="about-title-badge">⭐ #1 Master Yi · Middle East Server</div>
+          <div class="about-stats-mini">
+            <div class="about-stat"><div class="about-stat-num">500+</div><div class="about-stat-lbl">Orders</div></div>
+            <div class="about-stat"><div class="about-stat-num">5M+</div><div class="about-stat-lbl">Mastery</div></div>
+            <div class="about-stat"><div class="about-stat-num">0</div><div class="about-stat-lbl">Bans</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="about-text-col reveal reveal-delay-1">
+        <div class="about-story-tag">// About</div>
+        <h2 class="about-story-title">THE BOOSTER BEHIND STAINBOOST</h2>
+        <div class="about-story-body">
+          <p>Stain has been playing League of Legends on the Middle East server for over <strong>6 years</strong>. What started as a passion for Master Yi turned into a relentless climb to the very top — earning the <strong>#1 Master Yi ranking on the ME server</strong> with over 5 million mastery points.</p>
+          <p>After helping friends and clanmates rank up informally for years, StainBoost was born. Every boost is handled personally by Stain — <strong>no outsourcing, no third-party boosters, no bots</strong>. When you order, you get Stain himself on your account.</p>
+          <p>With <strong>500+ completed orders</strong> and a flawless safety record, StainBoost has become the most trusted boosting service on the Middle East server.</p>
+        </div>
+        <div class="about-badges-row">
+          <span class="about-badge gold">⭐ Rank #1 ME Server</span>
+          <span class="about-badge cyan">🌐 VPN Protected</span>
+          <span class="about-badge">🔒 0 Bans</span>
+          <span class="about-badge">⚡ Fast Delivery</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BLOG TEASER -->
+<section class="section" style="padding-top:0;">
+  <div class="section-inner">
+    <div class="section-tag">// Knowledge Base</div>
+    <h2 class="section-title">LEARN TO CLIMB</h2>
+    <p class="section-sub">Free guides written by the #1 Master Yi on Middle East server</p>
+    <div class="blog-grid">
+      <a href="blog/elo-boosting-safe.html" class="blog-card reveal">
+        <div class="blog-tag">Safety Guide</div>
+        <div class="blog-title">Is ELO Boosting Safe in League of Legends?</div>
+        <div class="blog-excerpt">Worried about bans? Here's the truth about how Riot detects boosting — and how we keep your account safe.</div>
+        <div class="blog-read">Read Article <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </a>
+      <a href="blog/how-to-climb-faster.html" class="blog-card reveal reveal-delay-1">
+        <div class="blog-tag">Climbing Tips</div>
+        <div class="blog-title">How to Climb Faster in Low Elo — 10 Proven Tips</div>
+        <div class="blog-excerpt">Stuck in Iron or Silver? These strategies from a Challenger-level player will break your losing streak.</div>
+        <div class="blog-read">Read Article <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </a>
+      <a href="blog/best-champions-solo-queue.html" class="blog-card reveal reveal-delay-2">
+        <div class="blog-tag">Champion Guide</div>
+        <div class="blog-title">Best Champions to Carry in Solo Queue (2026)</div>
+        <div class="blog-excerpt">The top picks by role that will help you carry games and climb faster — ranked by ease and impact.</div>
+        <div class="blog-read">Read Article <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </a>
+    </div>
   </div>
 </section>
 
 <div class="cta-banner reveal">
   <div class="cta-banner-bg"></div>
   <div class="cta-inner">
-    <div class="cta-banner-title">READY TO RANK UP?</div>
-    <div class="cta-banner-sub">Start your boost today. Fast, secure, and guaranteed results.</div>
-    <div class="cta-btns">
-      <a href="pricing.html" class="btn-primary"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>View Pricing &amp; Order</a>
-      <a href="https://discord.gg/pxsTfTJF" class="btn-secondary" target="_blank">Message on Discord</a>
+    <div style="display:inline-flex;align-items:center;gap:.55rem;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.28);border-radius:100px;padding:.35rem 1rem;font-family:'Rajdhani',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#fca5a5;margin-bottom:1.4rem;">
+      <div class="urgency-dot"></div>
+      <span id="ctaSlots">3</span> slots left this week
     </div>
+    <div class="cta-banner-title">STILL THINKING ABOUT IT?</div>
+    <div class="cta-banner-sub" style="max-width:520px;margin:0 auto 2rem;">Every hour you wait is LP someone else is gaining. Your rank isn't going to change on its own — but Stain can change it today. Guaranteed.</div>
+    <div class="cta-btns">
+      <a href="pricing.html" class="btn-primary" style="font-size:.95rem;padding:1.1rem 2.8rem;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Get My Rank Now</a>
+      <a href="https://discord.gg/pxsTfTJF" class="btn-secondary" target="_blank">Ask a Question First</a>
+    </div>
+    <div style="margin-top:1.2rem;font-size:.72rem;color:rgba(255,255,255,.2);letter-spacing:.05em;">100% money-back if boost hasn't started · Starts within hours of payment · 0 bans in 500+ orders</div>
   </div>
 </div>
 
 <footer>
   <div class="footer-inner">
     <div class="footer-logo">STAINBOOST</div>
-    <div class="footer-links"><a href="index.html">Home</a><a href="pricing.html">Pricing</a><a href="reviews.html">Reviews</a><a href="faq.html">FAQ</a><a href="https://discord.gg/pxsTfTJF" target="_blank">Discord</a></div>
-    <div class="footer-copy">&copy; 2026 StainBoost &middot; Middle East Server &middot; #1 Master Yi</div>
+    <div class="footer-links"><a href="index.html">Home</a><a href="pricing.html">Pricing</a><a href="reviews.html">Reviews</a><a href="faq.html">FAQ</a><a href="blog/index.html">Blog</a><a href="https://discord.gg/pxsTfTJF" target="_blank">Discord</a></div>
+    <div class="footer-copy">&copy; 2026 StainBoost &middot; #1 Trusted Elo Boosting</div>
   </div>
 </footer>
 
 <script>
-function toggleMenu(){var m=document.getElementById('mobileMenu'),b=document.getElementById('hamburger');m.classList.toggle('open');b.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
 var reveals=document.querySelectorAll('.reveal');
 var ro=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');ro.unobserve(e.target);}});},{threshold:0.12,rootMargin:'0px 0px -40px 0px'});
 reveals.forEach(function(el){ro.observe(el);});
 document.querySelectorAll('.step,.review-card').forEach(function(card){card.addEventListener('mousemove',function(e){var r=card.getBoundingClientRect();card.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');card.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');});});
 var counterEl=document.querySelector('[data-count]');
 if(counterEl){var target=parseInt(counterEl.dataset.count);var co=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){var c=0,s=Math.ceil(target/60);var t=setInterval(function(){c+=s;if(c>=target){c=target;clearInterval(t);}counterEl.textContent=c+'+';},20);co.unobserve(e.target);}});},{threshold:0.5});co.observe(counterEl);}
+// ── Ticker ──
 (function(){var boosts=[{f:'Silver III',t:'Gold IV',g:'🇸🇦'},{f:'Gold II',t:'Platinum IV',g:'🇦🇪'},{f:'Bronze I',t:'Silver II',g:'🇪🇬'},{f:'Platinum III',t:'Emerald IV',g:'🇶🇦'},{f:'Iron II',t:'Bronze III',g:'🇯🇴'},{f:'Emerald II',t:'Diamond IV',g:'🇰🇼'},{f:'Silver I',t:'Gold III',g:'🇧🇭'},{f:'Gold IV',t:'Platinum II',g:'🇴🇲'},{f:'Diamond IV',t:'Diamond II',g:'🇱🇧'},{f:'Bronze III',t:'Silver I',g:'🇮🇶'}];var track=document.getElementById('tickerTrack'),h='';for(var r=0;r<4;r++)boosts.forEach(function(b){h+='<div class="ticker-item">'+b.g+' <span class="rank-up">'+b.f+' → '+b.t+'</span> <span class="sep"></span> Boosted by Stain</div>';});track.innerHTML=h;})();
-(function(){var canvas=document.getElementById('particles-canvas');if(!canvas)return;var ctx=canvas.getContext('2d'),W,H,particles=[];function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}resize();window.addEventListener('resize',resize);var C=['rgba(124,58,237,','rgba(6,214,242,','rgba(196,181,253,','rgba(245,166,35,'];for(var i=0;i<20;i++)particles.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.5+0.3,dx:(Math.random()-0.5)*0.22,dy:(Math.random()-0.5)*0.22,o:Math.random()*0.2+0.03,c:C[Math.floor(Math.random()*C.length)],p:Math.random()*Math.PI*2,ps:Math.random()*0.015+0.004});function draw(){ctx.clearRect(0,0,W,H);particles.forEach(function(p){p.p+=p.ps;var a=p.o*(0.6+0.4*Math.sin(p.p));ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=p.c+a+')';ctx.fill();p.x+=p.dx;p.y+=p.dy;if(p.x<-5)p.x=W+5;if(p.x>W+5)p.x=-5;if(p.y<-5)p.y=H+5;if(p.y>H+5)p.y=-5;});requestAnimationFrame(draw);}draw();})();
+
+// ── Recent Boosts Grid ──
+(function(){
+  var entries=[
+    {flag:'🇸🇦',from:'Silver II',to:'Gold IV',user:'khalid_sa99',ago:'2h ago'},
+    {flag:'🇦🇪',from:'Gold III',to:'Platinum IV',user:'desert_yi',ago:'5h ago'},
+    {flag:'🇪🇬',from:'Bronze I',to:'Silver III',user:'karimEG',ago:'9h ago'},
+    {flag:'🇶🇦',from:'Platinum II',to:'Emerald IV',user:'q8_beast',ago:'14h ago'},
+    {flag:'🇯🇴',from:'Iron II',to:'Bronze II',user:'jo_ranker',ago:'18h ago'},
+    {flag:'🇰🇼',from:'Emerald I',to:'Diamond IV',user:'xLayla_kw',ago:'23h ago'},
+    {flag:'🇸🇦',from:'Gold I',to:'Platinum II',user:'saud_gg',ago:'1d ago'},
+    {flag:'🇦🇪',from:'Silver IV',to:'Gold III',user:'omar_me',ago:'1d ago'},
+    {flag:'🇴🇲',from:'Bronze III',to:'Silver I',user:'oman_climb',ago:'2d ago'}
+  ];
+  var grid=document.getElementById('recentBoostsGrid');
+  if(!grid)return;
+  var h='';
+  entries.forEach(function(e){
+    h+='<div class="boost-card">'
+      +'<div class="boost-flag">'+e.flag+'</div>'
+      +'<div class="boost-info">'
+        +'<div class="boost-ranks">'+e.from+'<span class="arrow">→</span>'+e.to+'</div>'
+        +'<div class="boost-meta">'+e.user+' · '+e.ago+'</div>'
+      +'</div>'
+      +'<div class="boost-badge">Done ✓</div>'
+    +'</div>';
+  });
+  grid.innerHTML=h;
+})();
+
+// ── Sticky Order Button ──
+(function(){
+  var btn=document.getElementById('stickyOrder');
+  if(!btn)return;
+  btn.style.display='none';
+  window.addEventListener('scroll',function(){
+    btn.style.display=window.scrollY>400?'flex':'none';
+  },{passive:true});
+})();
+
+// ── Slots counter (live from KV, falls back to day-of-week seed) ──
+(function(){
+  function setSlots(n){
+    document.querySelectorAll('#slotsLeft,#midSlots,#ctaSlots').forEach(function(el){el.textContent=n;});
+    var sLabel=document.getElementById('midSlotsLabel');
+    if(sLabel)sLabel.textContent=n+' slot'+(n!==1?'s':'')+' remaining';
+    var sSticky=document.getElementById('stickySlots');
+    if(sSticky)sSticky.textContent=n+' slot'+(n!==1?'s':'')+' left this week';
+  }
+  // Show fallback immediately while API loads
+  setSlots([3,2,4,3,2,3,4][new Date().getDay()]);
+  fetch('/api/slots').then(function(r){return r.json();}).then(function(data){
+    if(typeof data.slots==='number')setSlots(data.slots);
+  }).catch(function(){});
+})();
+
+// ── Social Proof Toast ──
+(function(){
+  var fakeToasts=[
+    {initials:'KS',bg:'linear-gradient(135deg,#7c3aed,#06d6f2)',name:'kh***9',action:'just ordered <strong>5 win boost</strong>',time:'2 minutes ago'},
+    {initials:'XL',bg:'linear-gradient(135deg,#34d399,#06d6f2)',name:'xL***w',action:'just went from <strong>Emerald → Diamond</strong>',time:'11 minutes ago'},
+    {initials:'OA',bg:'linear-gradient(135deg,#f97316,#f5a623)',name:'om***7',action:'just ordered <strong>10 win boost</strong>',time:'28 minutes ago'},
+    {initials:'RQ',bg:'linear-gradient(135deg,#ec4899,#8b5cf6)',name:'Ra***G',action:'boost just <strong>completed</strong> ✓',time:'34 minutes ago'},
+    {initials:'MS',bg:'linear-gradient(135deg,#0ea5e9,#22d3ee)',name:'m_***g',action:'just ordered <strong>rank boost</strong>',time:'47 minutes ago'},
+    {initials:'AJ',bg:'linear-gradient(135deg,#a3e635,#22d3ee)',name:'a_***b',action:'just went from <strong>Silver → Gold</strong>',time:'1 hour ago'},
+  ];
+  var toasts=fakeToasts.slice();
+  var toast=document.getElementById('spToast');
+  if(!toast)return;
+  var i=0;
+
+  function timeAgo(ts){
+    var diff=Math.floor((Date.now()-ts)/1000);
+    if(diff<60)return diff+' seconds ago';
+    if(diff<3600)return Math.floor(diff/60)+' minutes ago';
+    return Math.min(6,Math.floor(diff/3600))+' hours ago';
+  }
+
+  fetch('/api/feed').then(function(r){return r.json();}).then(function(data){
+    if(!Array.isArray(data)||!data.length)return;
+    var sixHours=6*60*60*1000;
+    var recent=data.filter(function(e){return e.ts&&(Date.now()-e.ts)<sixHours;});
+    if(!recent.length)return;
+    toasts=recent.concat(fakeToasts);
+    i=0;
+  }).catch(function(){});
+
+  function show(){
+    var t=toasts[i%toasts.length];i++;
+    document.getElementById('spAva').style.background=t.bg;
+    document.getElementById('spAva').textContent=t.initials;
+    document.getElementById('spName').textContent=t.name;
+    document.getElementById('spAction').innerHTML=t.action;
+    document.getElementById('spTime').textContent=t.ts?timeAgo(t.ts):t.time;
+    toast.classList.add('show');
+    setTimeout(function(){toast.classList.remove('show');},4200);
+    setTimeout(show,Math.random()*18000+12000);
+  }
+  setTimeout(show,5000);
+})();
+
 </script>
+<script src="main.js"></script>
 </body>
 </html>

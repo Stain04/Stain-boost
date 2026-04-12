@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <style>html,body{background:#0b0916;}</style>
+<link rel="stylesheet" href="shared.css">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-818RX6BRWB"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -12,8 +13,8 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FAQ – StainBoost · ELO Boosting Middle East</title>
-<meta name="description" content="Frequently asked questions about ELO boosting. Safety, process, payments, and more.">
+<title>ELO Boosting FAQ – Is It Safe? How Does It Work? | StainBoost</title>
+<meta name="description" content="Answers to every question about ELO boosting on Middle East server. Account safety, payment methods, how long it takes, refund policy, and more.">
 <link rel="canonical" href="https://stainboost.com/faq">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/favicon-48.png" sizes="48x48" type="image/png">
@@ -40,28 +41,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600&display=block" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',sans-serif;background:#0b0916;color:#e2e8f0;min-height:100vh;overflow-x:hidden;}
 body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 70% 60% at 10% 20%,rgba(80,30,120,0.38) 0%,transparent 65%),radial-gradient(ellipse 60% 50% at 90% 80%,rgba(20,80,120,0.25) 0%,transparent 60%);z-index:0;pointer-events:none;}
 body::after{content:'';position:fixed;inset:0;background-image:radial-gradient(rgba(255,255,255,0.035) 1px,transparent 1px);background-size:28px 28px;z-index:0;pointer-events:none;}
-
-/* NAV */
-.nav{position:sticky;top:0;z-index:100;height:64px;overflow:hidden;background:rgba(11,9,22,0.88);border-bottom:1px solid rgba(139,92,246,0.15);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
-.nav-inner{max-width:1200px;margin:0 auto;padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;}
-.nav-logo{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:900;letter-spacing:0.12em;text-decoration:none;background:linear-gradient(135deg,#c4b5fd,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.nav-links{display:flex;align-items:center;gap:0.15rem;}
-.nav-links a{font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.45);text-decoration:none;padding:0.4rem 0.9rem;border-radius:8px;transition:color .2s,background .2s;}
-.nav-links a:hover{color:#e2e8f0;background:rgba(255,255,255,0.06);}
-.nav-links a.active{color:#c4b5fd;}
-.nav-discord{font-family:'Rajdhani',sans-serif;font-size:0.82rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;background:rgba(139,92,246,0.14);border:1px solid rgba(139,92,246,0.35);color:#c4b5fd;text-decoration:none;padding:0.42rem 1.1rem;border-radius:9px;transition:all .2s;margin-left:0.5rem;}
-.nav-discord:hover{background:rgba(139,92,246,0.26);box-shadow:0 0 18px rgba(139,92,246,0.3);}
-.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;}
-.hamburger span{display:block;width:22px;height:2px;background:rgba(255,255,255,0.55);border-radius:2px;}
-.mobile-menu{display:none;position:absolute;top:64px;left:0;right:0;background:rgba(11,9,22,0.97);border-bottom:1px solid rgba(139,92,246,0.12);padding:1rem;flex-direction:column;gap:0.4rem;z-index:99;}
-.mobile-menu.open{display:flex;}
-.mobile-menu a{font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.55);text-decoration:none;padding:0.75rem 1rem;border-radius:10px;}
-.mobile-menu a:hover,.mobile-menu a.active{color:#c4b5fd;background:rgba(139,92,246,0.1);}
-@media(max-width:680px){.nav-links{display:none;}.hamburger{display:flex;}}
 
 /* PAGE */
 .page{position:relative;z-index:1;padding:0 2rem 5rem;}
@@ -126,25 +107,10 @@ body::after{content:'';position:fixed;inset:0;background-image:radial-gradient(r
 .btn-primary{font-family:'Rajdhani',sans-serif;font-size:0.92rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff;text-decoration:none;padding:0.9rem 2.2rem;border-radius:12px;border:none;cursor:pointer;box-shadow:0 0 28px rgba(124,58,237,0.4);transition:all .22s;display:inline-block;}
 .btn-primary:hover{box-shadow:0 0 42px rgba(124,58,237,0.6);transform:translateY(-2px);}
 
-/* FOOTER */
-footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.8rem 2rem;text-align:center;position:relative;z-index:1;}
-.footer-inner{max-width:700px;margin:0 auto;}
-.footer-logo{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:900;letter-spacing:0.15em;background:linear-gradient(135deg,#c4b5fd,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:1.2rem;}
-.footer-links{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem;}
-.footer-links a{font-family:'Rajdhani',sans-serif;font-size:0.78rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.32);text-decoration:none;transition:color .2s;}
-.footer-links a:hover{color:rgba(255,255,255,0.65);}
-.footer-copy{font-size:0.7rem;color:rgba(255,255,255,0.18);}
-
-/* PARTICLES */
-#particles-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
 /* ORBS */
 .orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;}
 .orb-1{width:250px;height:250px;top:5%;right:5%;background:radial-gradient(circle,rgba(139,92,246,0.08),transparent 70%);animation:orbFloat 8s ease-in-out infinite;}
 .orb-2{width:180px;height:180px;bottom:12%;left:7%;background:radial-gradient(circle,rgba(34,211,238,0.07),transparent 70%);animation:orbFloat 10s ease-in-out infinite 3s;}
-@keyframes orbFloat{0%,100%{transform:translate(0,0);}50%{transform:translate(12px,-14px);}}
-/* SCAN LINE */
-.scan-line{position:fixed;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(139,92,246,0.35),rgba(34,211,238,0.25),transparent);z-index:0;pointer-events:none;animation:scanDown 10s linear infinite;opacity:0.35;}
-@keyframes scanDown{0%{top:-2px;opacity:0;}5%{opacity:0.35;}95%{opacity:0.35;}100%{top:100vh;opacity:0;}}
 /* FAQ item glow on open */
 .faq-item.open{box-shadow:0 0 24px rgba(139,92,246,0.1),inset 0 0 0 1px rgba(139,92,246,0.25);}
 </style>
@@ -164,6 +130,7 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.8rem 2rem;text-alig
       <a href="pricing.html">Pricing</a>
       <a href="reviews.html">Reviews</a>
       <a href="faq.html" class="active">FAQ</a>
+      <a href="blog/index.html">Blog</a>
       <a href="https://discord.gg/pxsTfTJF" class="nav-discord" target="_blank">Discord</a>
     </div>
     <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
@@ -173,6 +140,7 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.8rem 2rem;text-alig
     <a href="pricing.html">Pricing</a>
     <a href="reviews.html">Reviews</a>
     <a href="faq.html" class="active">FAQ</a>
+    <a href="blog/index.html">Blog</a>
     <a href="https://discord.gg/pxsTfTJF" target="_blank">Discord</a>
   </div>
 </nav>
@@ -318,6 +286,7 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.8rem 2rem;text-alig
       <a href="pricing.html">Pricing</a>
       <a href="reviews.html">Reviews</a>
       <a href="faq.html">FAQ</a>
+      <a href="blog/index.html">Blog</a>
       <a href="https://discord.gg/pxsTfTJF" target="_blank">Discord</a>
     </div>
     <div class="footer-copy">© 2026 StainBoost · Middle East Server · #1 Master Yi</div>
@@ -332,44 +301,7 @@ function toggleFaq(btn) {
   if (!isOpen) item.classList.add('open');
 }
 
-function toggleMenu() {
-  document.getElementById('mobileMenu').classList.toggle('open');
-}
-
-(function(){
-  const canvas = document.getElementById('particles-canvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  let W, H, particles = [];
-  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-  resize();
-  window.addEventListener('resize', resize);
-  const COLORS = ['rgba(139,92,246,','rgba(34,211,238,','rgba(196,181,253,'];
-  for (let i = 0; i < 18; i++) {
-    particles.push({
-      x: Math.random()*W, y: Math.random()*H,
-      r: Math.random()*1.5+0.3,
-      dx: (Math.random()-0.5)*0.25, dy: (Math.random()-0.5)*0.25,
-      o: Math.random()*0.18+0.04,
-      c: COLORS[Math.floor(Math.random()*COLORS.length)],
-      pulse: Math.random()*Math.PI*2, pulseSpeed: Math.random()*0.016+0.005
-    });
-  }
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-    particles.forEach(p => {
-      p.pulse += p.pulseSpeed;
-      const alpha = p.o * (0.7 + 0.3 * Math.sin(p.pulse));
-      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-      ctx.fillStyle = p.c + alpha + ')'; ctx.fill();
-      p.x += p.dx; p.y += p.dy;
-      if (p.x < -5) p.x = W+5; if (p.x > W+5) p.x = -5;
-      if (p.y < -5) p.y = H+5; if (p.y > H+5) p.y = -5;
-    });
-    requestAnimationFrame(draw);
-  }
-  draw();
-})();
 </script>
+<script src="main.js"></script>
 </body>
 </html>
