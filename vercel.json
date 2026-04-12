@@ -1,3 +1,11 @@
 {
-  "cleanUrls": true
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/how-to-climb-faster",       "destination": "/blog/how-to-climb-faster.html" },
+    { "source": "/elo-boosting-safe",          "destination": "/blog/elo-boosting-safe.html" },
+    { "source": "/best-champions-solo-queue",  "destination": "/blog/best-champions-solo-queue.html" },
+    { "source": "/what-is-elo-boosting",       "destination": "/blog/what-is-elo-boosting.html" },
+    { "source": "/how-to-escape-silver",       "destination": "/blog/how-to-escape-silver.html" },
+    { "source": "/master-yi-build-guide",      "destination": "/blog/master-yi-build-guide.html" }
+  ]
 }
