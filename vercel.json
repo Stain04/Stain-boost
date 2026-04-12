@@ -6,6 +6,7 @@
     { "source": "/best-champions-solo-queue",  "destination": "/blog/best-champions-solo-queue" },
     { "source": "/what-is-elo-boosting",       "destination": "/blog/what-is-elo-boosting" },
     { "source": "/how-to-escape-silver",       "destination": "/blog/how-to-escape-silver" },
-    { "source": "/master-yi-build-guide",      "destination": "/blog/master-yi-build-guide" }
+    { "source": "/master-yi-build-guide",      "destination": "/blog/master-yi-build-guide" },
+    { "source": "/how-to-reach-diamond",        "destination": "/blog/how-to-reach-diamond" }
   ]
 }
