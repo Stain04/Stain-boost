@@ -1,6 +1,21 @@
 import { createClient } from '@vercel/kv';
 import { randomBytes } from 'crypto';
 
+// ── Feed helpers ──
+const FEED_BG = [
+  'linear-gradient(135deg,#7c3aed,#06d6f2)',
+  'linear-gradient(135deg,#34d399,#06d6f2)',
+  'linear-gradient(135deg,#f97316,#f5a623)',
+  'linear-gradient(135deg,#ec4899,#8b5cf6)',
+  'linear-gradient(135deg,#0ea5e9,#22d3ee)',
+  'linear-gradient(135deg,#a3e635,#22d3ee)',
+];
+function strHash(s) {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = Math.imul(31, h) + s.charCodeAt(i) | 0;
+  return Math.abs(h);
+}
+
 // ── WIN BOOST — server-side price table (client-submitted `total` is ignored) ──
 const WIN_PRICES = {
   'Iron':          { solo: 1.50, duo: 2.50  },
@@ -93,7 +108,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Missing Discord tag or IGN.' });
   }
 
-  let computedTotal, orderSummary;
+  let computedTotal, orderSummary, toastAction;
   const RB_DIVS = ['IV', 'III', 'II', 'I'];
 
   if (orderType === 'rank_boost') {
@@ -117,6 +132,7 @@ export default async function handler(req, res) {
     const fromName = RB_TIERS[ft] + (ft < 7 ? ' ' + RB_DIVS[fd] : '');
     const toName   = RB_TIERS[tt] + (tt < 7 ? ' ' + RB_DIVS[td] : '');
     orderSummary = `Rank Boost: ${fromName} → ${toName} · ${cleanType}`;
+    toastAction  = `just went from <strong>${fromName} → ${toName}</strong>`;
 
   } else {
     // win_boost (default)
@@ -135,6 +151,7 @@ export default async function handler(req, res) {
     const chargedWins  = cleanWins - freeWins;
     computedTotal = (chargedWins * pricePerWin).toFixed(2);
     orderSummary = `Win Boost: ${cleanRank} · ${cleanWins} wins (+${freeWins} free) · ${cleanType}`;
+    toastAction  = `just ordered <strong>${cleanWins} win boost</strong>`;
   }
 
   // ── GENERATE SECURE REVIEW TOKEN ──
@@ -155,6 +172,29 @@ export default async function handler(req, res) {
     try {
       const kv = createClient({ url: dbUrl, token: dbToken });
       await kv.sadd('valid_tokens', reviewToken);
+
+      // ── Push anonymised entry to activity feed ──
+      const maskedName = cleanIgn.slice(0, 2) + '***' + cleanIgn.slice(-1);
+      const feedEntry = JSON.stringify({
+        initials: cleanIgn.slice(0, 2).toUpperCase(),
+        bg:       FEED_BG[strHash(cleanIgn) % FEED_BG.length],
+        name:     maskedName,
+        action:   toastAction,
+        ts:       Date.now(),
+      });
+      await kv.lpush('order_feed', feedEntry);
+      await kv.ltrim('order_feed', 0, 19); // keep last 20
+
+      // ── Decrement weekly slots counter ──
+      const currentWeek = Math.floor(Date.now() / (7 * 24 * 60 * 60 * 1000));
+      const storedWeek  = await kv.get('slots_week');
+      if (storedWeek !== currentWeek) {
+        await kv.set('slots_week',  currentWeek);
+        await kv.set('slots_count', Math.max(0, 5 - 1));
+      } else {
+        const current = await kv.get('slots_count') ?? 5;
+        await kv.set('slots_count', Math.max(0, current - 1));
+      }
     } catch (e) {
       console.error('KV Database error:', e);
     }
