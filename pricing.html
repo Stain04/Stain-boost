@@ -340,19 +340,44 @@ input[type=range]#winsSlider::-moz-range-track{background:rgba(255,255,255,0.08)
 
 /* LP PICKER */
 .rb-lp-section{background:rgba(0,0,0,0.2);border:1px solid rgba(139,92,246,0.15);border-radius:14px;padding:0.9rem 1rem;margin-bottom:0.9rem;}
-.rb-lp-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:0.6rem;}
-.rb-lp-label{font-family:'Rajdhani',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);}
-.rb-lp-val{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:900;background:linear-gradient(135deg,var(--purple-light),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
-.rb-lp-chips{display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.65rem;}
-.rb-lp-chip{padding:0.25rem 0.6rem;border-radius:8px;border:1px solid rgba(255,255,255,0.09);background:rgba(255,255,255,0.04);font-family:'Rajdhani',sans-serif;font-size:0.77rem;font-weight:700;color:rgba(255,255,255,0.36);cursor:pointer;transition:all 0.15s;user-select:none;}
-.rb-lp-chip:hover{border-color:var(--purple);color:var(--purple-light);background:rgba(139,92,246,0.08);}
-.rb-lp-chip.active{border-color:var(--purple);color:var(--purple-light);background:rgba(139,92,246,0.14);}
+.rb-lp-label{font-family:'Rajdhani',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:0.6rem;display:block;}
 .rb-lp-note{font-family:'Rajdhani',sans-serif;font-size:0.7rem;font-weight:600;color:rgba(52,211,153,0.8);margin-top:0.5rem;min-height:1rem;}
-input[type=range]#rbLPSlider{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;outline:none;cursor:pointer;background:rgba(255,255,255,0.08);}
-input[type=range]#rbLPSlider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid var(--purple);box-shadow:0 0 0 4px rgba(139,92,246,0.22),0 2px 8px rgba(0,0,0,0.4);cursor:grab;transition:transform 0.12s cubic-bezier(.34,1.56,.64,1);}
-input[type=range]#rbLPSlider:active::-webkit-slider-thumb{cursor:grabbing;transform:scale(1.25);}
-input[type=range]#rbLPSlider::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid var(--purple);box-shadow:0 0 0 4px rgba(139,92,246,0.22);cursor:grab;}
-input[type=range]#rbLPSlider::-moz-range-progress{background:linear-gradient(90deg,var(--purple),var(--cyan));border-radius:6px;}
+.coupon-row{display:flex;gap:0.5rem;margin-top:0.75rem;}
+.coupon-input{flex:1;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.1);border-radius:9px;padding:0.5rem 0.75rem;font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:600;color:#fff;outline:none;transition:border-color 0.15s,box-shadow 0.15s;letter-spacing:0.08em;}
+.coupon-input::placeholder{color:rgba(255,255,255,0.28);font-weight:500;letter-spacing:0;}
+.coupon-input:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(139,92,246,0.15);}
+.coupon-input.error{border-color:#ef4444;animation:cshake 0.3s ease;}
+.coupon-input.success{border-color:#34d399;}
+.coupon-apply-btn{padding:0.5rem 1.1rem;background:linear-gradient(135deg,var(--purple),var(--cyan));border:none;border-radius:9px;font-family:'Rajdhani',sans-serif;font-size:0.82rem;font-weight:700;color:#fff;cursor:pointer;white-space:nowrap;letter-spacing:0.07em;text-transform:uppercase;transition:opacity 0.15s,transform 0.1s;}
+.coupon-apply-btn:hover{opacity:0.88;}
+.coupon-apply-btn:active{transform:scale(0.97);}
+.coupon-error{font-family:'Rajdhani',sans-serif;font-size:0.72rem;font-weight:600;color:#ef4444;margin-top:0.3rem;display:none;}
+.promo-discount-banner{display:none;background:linear-gradient(135deg,rgba(23,20,60,0.97),rgba(10,18,35,0.97));border:1px solid rgba(139,92,246,0.35);border-radius:14px;padding:0.85rem 1rem 0.85rem 1.1rem;margin:0 2rem 1rem;position:relative;overflow:hidden;gap:1rem;align-items:center;}
+.promo-discount-banner::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 12px,rgba(255,255,255,0.012) 12px,rgba(255,255,255,0.012) 24px);pointer-events:none;}
+.promo-discount-banner.visible{display:flex;}
+.promo-discount-left{display:flex;align-items:center;gap:0.75rem;flex:1;position:relative;}
+.promo-discount-icon{width:40px;height:40px;border-radius:50%;background:rgba(139,92,246,0.18);border:1.5px solid rgba(139,92,246,0.45);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.promo-discount-title{font-family:'Orbitron',sans-serif;font-size:0.75rem;font-weight:800;color:#fff;letter-spacing:0.04em;}
+.promo-discount-sub{font-family:'Rajdhani',sans-serif;font-size:0.68rem;color:rgba(255,255,255,0.45);margin-top:0.1rem;}
+.promo-discount-right{text-align:right;flex-shrink:0;position:relative;}
+.promo-orig-label{font-family:'Rajdhani',sans-serif;font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:0.18em;color:rgba(255,255,255,0.38);}
+.promo-prices{display:flex;align-items:baseline;gap:0.45rem;justify-content:flex-end;margin-top:0.1rem;}
+.promo-orig-price{font-family:'Rajdhani',sans-serif;font-size:0.92rem;font-weight:700;color:#f87171;text-decoration:line-through;opacity:0.9;}
+.promo-new-price{font-family:'Orbitron',sans-serif;font-size:1.05rem;font-weight:900;color:#fff;}
+.promo-save-text{font-family:'Rajdhani',sans-serif;font-size:0.72rem;font-weight:700;color:#34d399;margin-top:0.15rem;}
+.promo-close-btn{position:absolute;top:0.45rem;right:0.45rem;width:20px;height:20px;border-radius:50%;background:rgba(239,68,68,0.75);border:none;color:#fff;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;padding:0;transition:background 0.15s;}
+.promo-close-btn:hover{background:#ef4444;}
+@keyframes cshake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.rb-lp-dropdown{position:relative;user-select:none;}
+.rb-lp-dropdown-selected{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.04);border:1.5px solid rgba(139,92,246,0.4);border-radius:10px;padding:0.6rem 0.85rem;cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:0.9rem;font-weight:700;color:var(--purple-light);transition:border-color 0.15s,background 0.15s;}
+.rb-lp-dropdown-selected:hover{border-color:var(--purple);background:rgba(139,92,246,0.08);}
+.rb-lp-dropdown-selected svg{width:16px;height:16px;color:var(--purple-light);transition:transform 0.2s;flex-shrink:0;}
+.rb-lp-dropdown-selected.open{border-color:var(--purple);background:rgba(139,92,246,0.08);border-bottom-left-radius:0;border-bottom-right-radius:0;}
+.rb-lp-dropdown-selected.open svg{transform:rotate(180deg);}
+.rb-lp-dropdown-options{position:absolute;top:100%;left:0;right:0;background:#13111a;border:1.5px solid var(--purple);border-top:none;border-bottom-left-radius:10px;border-bottom-right-radius:10px;z-index:50;overflow:hidden;}
+.rb-lp-option{padding:0.55rem 0.85rem;font-family:'Rajdhani',sans-serif;font-size:0.88rem;font-weight:600;color:rgba(255,255,255,0.6);cursor:pointer;transition:background 0.12s,color 0.12s;border-left:3px solid transparent;}
+.rb-lp-option:hover{background:rgba(139,92,246,0.1);color:rgba(255,255,255,0.9);}
+.rb-lp-option.active{color:var(--purple-light);border-left-color:var(--purple);background:rgba(139,92,246,0.08);}
 .rb-field{display:flex;flex-direction:column;gap:0.4rem;}
 .rb-label{font-family:'Rajdhani',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);}
 .rb-selects{display:flex;gap:0.45rem;}
@@ -535,22 +560,41 @@ input[type=range]#rbLPSlider::-moz-range-progress{background:linear-gradient(90d
               </div>
             </div>
           </div>
-          <!-- LP Picker -->
-          <div class="rb-lp-section">
-            <div class="rb-lp-header">
+          <!-- LP Picker + LP Gain side by side -->
+          <div style="display:flex;gap:0.7rem;margin-bottom:0.9rem;">
+            <div class="rb-lp-section" style="flex:1;margin-bottom:0;">
               <div class="rb-lp-label">📊 Current LP</div>
-              <div class="rb-lp-val" id="rbLPDisplay">0 <span style="font-size:0.55rem;font-family:'Rajdhani',sans-serif;-webkit-text-fill-color:var(--muted);color:var(--muted);">LP</span></div>
+              <div class="rb-lp-dropdown" id="rbLPDropdown">
+                <div class="rb-lp-dropdown-selected" id="rbLPSelected" onclick="toggleLPDropdown()">
+                  <span id="rbLPSelectedText">0-20 LP</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                </div>
+                <div class="rb-lp-dropdown-options" id="rbLPOptions" style="display:none;">
+                  <div class="rb-lp-option active" onclick="selectLPRange('0-20 LP',10)">0-20 LP</div>
+                  <div class="rb-lp-option" onclick="selectLPRange('21-40 LP',30)">21-40 LP</div>
+                  <div class="rb-lp-option" onclick="selectLPRange('41-60 LP',50)">41-60 LP</div>
+                  <div class="rb-lp-option" onclick="selectLPRange('61-80 LP',70)">61-80 LP</div>
+                  <div class="rb-lp-option" onclick="selectLPRange('81-100 LP',90)">81-100 LP</div>
+                </div>
+              </div>
+              <div class="rb-lp-note" id="rbLPNote"></div>
             </div>
-            <div class="rb-lp-chips">
-              <div class="rb-lp-chip active" onclick="setLP(0)">0</div>
-              <div class="rb-lp-chip" onclick="setLP(20)">20</div>
-              <div class="rb-lp-chip" onclick="setLP(40)">40</div>
-              <div class="rb-lp-chip" onclick="setLP(60)">60</div>
-              <div class="rb-lp-chip" onclick="setLP(80)">80</div>
-              <div class="rb-lp-chip" onclick="setLP(99)">99</div>
+
+            <div class="rb-lp-section" style="flex:1;margin-bottom:0;">
+              <div class="rb-lp-label">⚡ AVG. LP PER WIN</div>
+              <div class="rb-lp-dropdown" id="rbLPGainDropdown">
+                <div class="rb-lp-dropdown-selected" id="rbLPGainSelected" onclick="toggleLPGainDropdown()">
+                  <span id="rbLPGainText">Normal (23+ LP)</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                </div>
+                <div class="rb-lp-dropdown-options" id="rbLPGainOptions" style="display:none;">
+                  <div class="rb-lp-option" onclick="selectLPGain('Very Low (8-15)', 2.0)">Very Low (8-15)</div>
+                  <div class="rb-lp-option" onclick="selectLPGain('Low (16-22)', 1.4)">Low (16-22)</div>
+                  <div class="rb-lp-option active" onclick="selectLPGain('Normal (23+ LP)', 1.0)">Normal (23+ LP) ✓</div>
+                </div>
+              </div>
+              <div class="rb-lp-note" id="rbLPGainNote"></div>
             </div>
-            <input type="range" id="rbLPSlider" min="0" max="99" value="0" oninput="setLP(parseInt(this.value))">
-            <div class="rb-lp-note" id="rbLPNote"></div>
           </div>
 
           <div class="rb-path" id="rbPath">
@@ -607,6 +651,32 @@ input[type=range]#rbLPSlider::-moz-range-progress{background:linear-gradient(90d
             <div class="price-total-val" id="totalVal">$0.00</div>
           </div>
           <div class="savings-note" id="savingsNote"></div>
+          <!-- Coupon Code -->
+          <div class="coupon-row" id="couponRow">
+            <input type="text" id="couponInput" class="coupon-input" placeholder="🏷️ Coupon code" onkeydown="if(event.key==='Enter')applyCoupon()">
+            <button class="coupon-apply-btn" onclick="applyCoupon()">Apply</button>
+          </div>
+          <div class="coupon-error" id="couponError">❌ Invalid coupon code</div>
+        </div>
+      </div>
+
+      <!-- PROMO DISCOUNT BANNER -->
+      <div class="promo-discount-banner" id="promoDiscountBanner">
+        <button class="promo-close-btn" onclick="removeCoupon()" title="Remove coupon">×</button>
+        <div class="promo-discount-left">
+          <div class="promo-discount-icon">%</div>
+          <div>
+            <div class="promo-discount-title">50% Discount Applied</div>
+            <div class="promo-discount-sub">Special promotion active</div>
+          </div>
+        </div>
+        <div class="promo-discount-right">
+          <div class="promo-orig-label">Original Price</div>
+          <div class="promo-prices">
+            <span class="promo-orig-price" id="couponOrigPrice">$0.00</span>
+            <span class="promo-new-price" id="couponNewPrice">$0.00</span>
+          </div>
+          <div class="promo-save-text" id="couponSaveText">You save $0.00</div>
         </div>
       </div>
 
@@ -783,8 +853,8 @@ const RB_DIV_PRICE = {
   Gold:     {solo:16.50,  duo:23.50},
   Platinum: {solo:23.50,  duo:31.00},
   Emerald:  {solo:26.50,  duo:38.00},
-  DiamondL: {solo:37.00,  duo:57.00}, 
-  DiamondH: {solo:47.00,  duo:72.00}, 
+  DiamondL: {solo:37.00,  duo:57.00},
+  DiamondH: {solo:47.00,  duo:72.00},
 };
 
 function rbDivIdx(tier, div) {
@@ -815,23 +885,64 @@ function calcRankBoostTotal(fromTier, fromDiv, toTier, toDiv, type, lp) {
   return total;
 }
 
+function toggleLPDropdown() {
+  const opts = document.getElementById('rbLPOptions');
+  const sel = document.getElementById('rbLPSelected');
+  const open = opts.style.display !== 'none';
+  opts.style.display = open ? 'none' : 'block';
+  sel.classList.toggle('open', !open);
+}
+function selectLPRange(label, val) {
+  document.getElementById('rbLPSelectedText').textContent = label;
+  document.getElementById('rbLPOptions').style.display = 'none';
+  document.getElementById('rbLPSelected').classList.remove('open');
+  document.querySelectorAll('.rb-lp-option').forEach(o => {
+    o.classList.toggle('active', o.textContent === label);
+  });
+  setLP(val);
+}
+document.addEventListener('click', function(e) {
+  const dd = document.getElementById('rbLPDropdown');
+  if (dd && !dd.contains(e.target)) {
+    document.getElementById('rbLPOptions').style.display = 'none';
+    document.getElementById('rbLPSelected').classList.remove('open');
+  }
+  const ddg = document.getElementById('rbLPGainDropdown');
+  if (ddg && !ddg.contains(e.target)) {
+    document.getElementById('rbLPGainOptions').style.display = 'none';
+    document.getElementById('rbLPGainSelected').classList.remove('open');
+  }
+});
+
+// LP Gain Multiplier
+let lpGainMultiplier = 1.0;
+function toggleLPGainDropdown() {
+  const opts = document.getElementById('rbLPGainOptions');
+  const sel  = document.getElementById('rbLPGainSelected');
+  const open = opts.style.display !== 'none';
+  opts.style.display = open ? 'none' : 'block';
+  sel.classList.toggle('open', !open);
+}
+function selectLPGain(label, multiplier) {
+  document.getElementById('rbLPGainText').textContent = label;
+  document.getElementById('rbLPGainOptions').style.display = 'none';
+  document.getElementById('rbLPGainSelected').classList.remove('open');
+  document.querySelectorAll('#rbLPGainOptions .rb-lp-option').forEach(o => {
+    o.classList.toggle('active', o.textContent.startsWith(label));
+  });
+  lpGainMultiplier = multiplier;
+  const note = document.getElementById('rbLPGainNote');
+  if (multiplier >= 2.0)      note.textContent = '⚠️ +100% price — very few LP means 2× more games needed.';
+  else if (multiplier >= 1.4) note.textContent = '⚠️ +40% price — fewer LP means more games needed.';
+  else                         note.textContent = '';
+  updatePrice();
+}
 function setLP(val) {
   rbLP = val;
-  document.getElementById('rbLPSlider').value = val;
-  document.getElementById('rbLPDisplay').innerHTML = `${val} <span style="font-size:0.55rem;font-family:'Rajdhani',sans-serif;-webkit-text-fill-color:var(--muted);color:var(--muted);">LP</span>`;
-  // sync chips
-  document.querySelectorAll('.rb-lp-chip').forEach(c => {
-    c.classList.toggle('active', parseInt(c.textContent) === val);
-  });
-  // fill slider track
-  const pct = (val / 99) * 100;
-  document.getElementById('rbLPSlider').style.background =
-    `linear-gradient(to right,#8b5cf6 0%,#22d3ee ${pct}%,rgba(255,255,255,0.08) ${pct}%)`;
-  // note
   const note = document.getElementById('rbLPNote');
-  if (val >= 75) note.textContent = `✓ You're ${val}LP — almost there! Discount applied.`;
-  else if (val >= 40) note.textContent = `✓ ${val}LP into your division — partial discount applied.`;
-  else if (val > 0) note.textContent = `✓ ${val}LP counted — small discount applied.`;
+  if (val >= 75) note.textContent = `✓ Almost there — discount applied.`;
+  else if (val >= 40) note.textContent = `✓ Partial LP counted — discount applied.`;
+  else if (val > 0) note.textContent = `✓ LP counted — small discount applied.`;
   else note.textContent = '';
   updatePrice();
 }
@@ -1011,6 +1122,55 @@ function getTotal(){
   return ppw*(selWins-freeWins);
 }
 
+// Coupon System
+const COUPONS = { 'STAIN50': 0.50 };
+let couponDiscount = 0;
+let couponActive = false;
+
+function applyCoupon() {
+  const input = document.getElementById('couponInput');
+  const errorEl = document.getElementById('couponError');
+  const code = input.value.trim().toUpperCase();
+  if (COUPONS[code] !== undefined) {
+    couponDiscount = COUPONS[code];
+    couponActive = true;
+    input.classList.remove('error');
+    input.classList.add('success');
+    errorEl.style.display = 'none';
+    document.getElementById('couponRow').style.display = 'none';
+    errorEl.style.display = 'none';
+    updatePrice();
+  } else {
+    input.classList.add('error');
+    input.classList.remove('success');
+    errorEl.style.display = 'block';
+    setTimeout(() => input.classList.remove('error'), 350);
+  }
+}
+function removeCoupon() {
+  couponDiscount = 0;
+  couponActive = false;
+  const input = document.getElementById('couponInput');
+  input.value = '';
+  input.classList.remove('success','error');
+  document.getElementById('couponRow').style.display = 'flex';
+  document.getElementById('couponError').style.display = 'none';
+  document.getElementById('promoDiscountBanner').classList.remove('visible');
+  updatePrice();
+}
+function applyBannerDiscount(rawTotal) {
+  if (!couponActive || rawTotal <= 0) {
+    document.getElementById('promoDiscountBanner').classList.remove('visible');
+    return rawTotal;
+  }
+  const discounted = rawTotal * (1 - couponDiscount);
+  document.getElementById('couponOrigPrice').textContent = `$${rawTotal.toFixed(2)}`;
+  document.getElementById('couponNewPrice').textContent  = `$${discounted.toFixed(2)}`;
+  document.getElementById('couponSaveText').textContent  = `You save $${(rawTotal - discounted).toFixed(2)}`;
+  document.getElementById('promoDiscountBanner').classList.add('visible');
+  return discounted;
+}
+
 function updatePrice(){
   // RANK BOOST MODE
   if(rbMode==='rank'){
@@ -1034,12 +1194,13 @@ function updatePrice(){
       return;
     }
     
-    const total=calcRankBoostTotal(rbFromTier,rbFromDiv,rbToTier,rbToDiv,selType,rbLP);
+    const rawTotal=calcRankBoostTotal(rbFromTier,rbFromDiv,rbToTier,rbToDiv,selType,rbLP) * lpGainMultiplier;
+    const total=applyBannerDiscount(rawTotal);
     const totalEGP = (total * EGP_RATE).toFixed(0);
     const divs=toIdx-fromIdx;
-    
+
     document.getElementById('summaryLine').textContent=`${fromName} (${rbLP}LP) → ${toName} · ${selType} · ${divs} div${divs!==1?'s':''}`;
-    document.getElementById('summaryBaseVal').textContent=`$${total.toFixed(2)}`;
+    document.getElementById('summaryBaseVal').textContent=`$${rawTotal.toFixed(2)}`;
     document.getElementById('totalVal').textContent=`$${total.toFixed(2)}`;
     document.getElementById('binanceAmountText').innerHTML=`Send exactly <strong style="color:#fff;font-size:1rem;">$${total.toFixed(2)} USDT</strong> to ID <strong style="color:#fff">${BINANCE_ID}</strong>`;
     document.getElementById('paypalAmountText').textContent=`Send $${total.toFixed(2)} USD · ${fromName} → ${toName}`;
@@ -1050,11 +1211,12 @@ function updatePrice(){
 
   // WIN BOOST MODE
   const r=ranks[selIdx];const hasRank=selIdx>=0;
-  const total=getTotal();
+  const rawTotal=getTotal();
+  const total=applyBannerDiscount(rawTotal);
   const ppw=hasRank?(selType==='solo'?r.solo:r.duo):0;
   const fw=selWins>=5?Math.floor(selWins/5):0;
   const hasBonus=fw>0;
-  
+
   if(hasRank){
     document.getElementById('summaryLine').textContent=`${r.name} · ${selWins} net win${selWins!==1?'s':''} × $${ppw.toFixed(2)}`;
     document.getElementById('summaryBaseVal').textContent=`$${(ppw*selWins).toFixed(2)}`;
@@ -1062,23 +1224,23 @@ function updatePrice(){
     document.getElementById('summaryLine').textContent='Select a rank above to continue';
     document.getElementById('summaryBaseVal').textContent='—';
   }
-  
+
   document.getElementById('freeWinLine').style.display=hasBonus?'flex':'none';
   document.getElementById('totalVal').textContent=hasRank?`$${total.toFixed(2)}`:'$0.00';
-  
+
   const sn=document.getElementById('savingsNote');
   if(hasBonus&&hasRank){sn.textContent=`You're saving $${(ppw*fw).toFixed(2)} with the free win bonus!`;sn.classList.add('visible');}
   else sn.classList.remove('visible');
-  
+
   const strip=document.getElementById('promoStrip');
   if(hasBonus){strip.classList.add('visible');document.getElementById('promoFreeCount').textContent=fw;document.getElementById('promoBadge').textContent=`+${fw} FREE`;document.getElementById('promoPaid').textContent=selWins;document.getElementById('promoTotal').textContent=selWins+fw;}
   else strip.classList.remove('visible');
-  
+
   const bt=hasBonus?` · +${fw} free win${fw>1?'s':''} 🎁`:'';
   if(hasRank&&total>0){
     const totalEGP = (total * EGP_RATE).toFixed(0);
     document.getElementById('binanceAmountText').innerHTML=`Send exactly <strong style="color:#fff;font-size:1rem;">$${total.toFixed(2)} USDT</strong> to ID <strong style="color:#fff">${BINANCE_ID}</strong>${bt}`;
-    document.getElementById('paypalAmountText').textContent=`Send $${total.toFixed(2)} USD via PayPal.me${hasBonus?` (+${fw} free win${fw>1?'s':''}!)`:''}`; 
+    document.getElementById('paypalAmountText').textContent=`Send $${total.toFixed(2)} USD via PayPal.me${hasBonus?` (+${fw} free win${fw>1?'s':''}!)`:''}`;
     document.getElementById('paypalMeBtn').href=`https://paypal.me/stainboost/${total.toFixed(2)}USD`;
     document.getElementById('instapayAmountText').innerHTML=`Send exactly <strong style="color:#fff;font-size:1rem;">${totalEGP} EGP</strong> (approx $${total.toFixed(2)})${bt}`;
   }else{
@@ -1151,6 +1313,12 @@ async function submitOrder(method){
 // Init
 fillSlider(5);showWins(5);
 buildRBSelects();
+
+// Auto-apply coupon on load
+(function(){
+  document.getElementById('couponInput').value = 'stain50';
+  applyCoupon();
+})();
 
 // ── REGION SYSTEM ──
 let selRegion = localStorage.getItem('stainRegion') || 'me';
