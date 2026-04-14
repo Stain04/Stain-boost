@@ -29,7 +29,15 @@ const WIN_PRICES = {
   'Masters':       { solo:15.00, duo: 20.00 },
 };
 
-// ── RANK BOOST — per-division price table (mirrors client RB_DIV_PRICE) ──
+// ── VALID LP GAIN MULTIPLIERS (must match frontend options) ──
+const VALID_LP_MULTIPLIERS = [1.0, 1.4, 2.0];
+
+// ── COUPON CODES (single source of truth — also in validate-coupon.js) ──
+const COUPONS = {
+  'STAIN50': 0.50,
+};
+
+// ── RANK BOOST — per-division price table ──
 const RB_TIERS = ['Iron','Bronze','Silver','Gold','Platinum','Emerald','Diamond','Masters'];
 const RB_DIV_PRICE = {
   Iron:     { solo: 7.00,  duo: 11.50 },
@@ -108,6 +116,14 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Missing Discord tag or IGN.' });
   }
 
+  // ── LP GAIN MULTIPLIER — validate against whitelist ──
+  const rawMultiplier = parseFloat(req.body.lpGainMultiplier);
+  const cleanLPGain = VALID_LP_MULTIPLIERS.includes(rawMultiplier) ? rawMultiplier : 1.0;
+
+  // ── COUPON CODE — validate server-side ──
+  const rawCoupon = sanitize(req.body.couponCode || '', 30).toUpperCase();
+  const couponDiscount = COUPONS[rawCoupon] || 0;
+
   let computedTotal, orderSummary, toastAction;
   const RB_DIVS = ['IV', 'III', 'II', 'I'];
 
@@ -123,15 +139,19 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Invalid rank range.' });
     }
 
-    const total = calcRankBoostTotal(ft, fd, tt, td, cleanType);
-    if (total <= 0) {
+    const baseTotal = calcRankBoostTotal(ft, fd, tt, td, cleanType);
+    if (baseTotal <= 0) {
       return res.status(400).json({ error: 'Destination rank must be higher than current rank.' });
     }
 
+    // Apply LP gain multiplier then coupon discount
+    const total = baseTotal * cleanLPGain * (1 - couponDiscount);
     computedTotal = total.toFixed(2);
     const fromName = RB_TIERS[ft] + (ft < 7 ? ' ' + RB_DIVS[fd] : '');
     const toName   = RB_TIERS[tt] + (tt < 7 ? ' ' + RB_DIVS[td] : '');
-    orderSummary = `Rank Boost: ${fromName} → ${toName} · ${cleanType}`;
+    const lpGainLabel = cleanLPGain === 2.0 ? ' · Very Low LP gain' : cleanLPGain === 1.4 ? ' · Low LP gain' : '';
+    const couponLabel = couponDiscount > 0 ? ` · ${Math.round(couponDiscount*100)}% coupon` : '';
+    orderSummary = `Rank Boost: ${fromName} → ${toName} · ${cleanType}${lpGainLabel}${couponLabel}`;
     toastAction  = `just went from <strong>${fromName} → ${toName}</strong>`;
 
   } else {
@@ -149,8 +169,11 @@ export default async function handler(req, res) {
     const pricePerWin  = WIN_PRICES[cleanRank][cleanType];
     const freeWins     = Math.floor(cleanWins / 5);
     const chargedWins  = cleanWins - freeWins;
-    computedTotal = (chargedWins * pricePerWin).toFixed(2);
-    orderSummary = `Win Boost: ${cleanRank} · ${cleanWins} wins (+${freeWins} free) · ${cleanType}`;
+    const baseWinTotal = chargedWins * pricePerWin;
+    // Apply coupon discount (LP gain multiplier doesn't apply to win boost)
+    computedTotal = (baseWinTotal * (1 - couponDiscount)).toFixed(2);
+    const couponLabel = couponDiscount > 0 ? ` · ${Math.round(couponDiscount*100)}% coupon` : '';
+    orderSummary = `Win Boost: ${cleanRank} · ${cleanWins} wins (+${freeWins} free) · ${cleanType}${couponLabel}`;
     toastAction  = `just ordered <strong>${cleanWins} win boost</strong>`;
   }
 

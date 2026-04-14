@@ -410,6 +410,8 @@ input[type=range]#winsSlider::-moz-range-track{background:rgba(255,255,255,0.08)
 .region-btn.active{border-color:rgba(139,92,246,0.55);color:var(--purple-light);background:rgba(139,92,246,0.13);box-shadow:0 0 12px rgba(139,92,246,0.15);}
 .same-pricing-banner{display:flex;align-items:center;justify-content:center;gap:0.5rem;background:rgba(34,211,153,0.05);border:1px solid rgba(34,211,153,0.2);border-radius:12px;padding:0.65rem 1.2rem;margin:0 0 1.5rem;font-family:'Rajdhani',sans-serif;font-size:0.82rem;font-weight:700;color:rgba(52,211,153,0.85);letter-spacing:0.04em;text-align:center;}
 </style>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+  <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
 <canvas id="particles-canvas"></canvas>
@@ -818,16 +820,17 @@ input[type=range]#winsSlider::-moz-range-track{background:rgba(255,255,255,0.08)
 </footer>
 
 <script>
+// Prices are fetched from /api/prices — do NOT add solo/duo values here
 const ranks=[
-  {name:'Iron',short:'Iron',color:'#94a3b8',bg:'rgba(148,163,184,0.12)',solo:1.50,duo:2.50},
-  {name:'Bronze',short:'Bronze',color:'#cd7f32',bg:'rgba(205,127,50,0.12)',solo:2.00,duo:3.00},
-  {name:'Silver',short:'Silver',color:'#cbd5e1',bg:'rgba(203,213,225,0.12)',solo:2.50,duo:3.50},
-  {name:'Gold',short:'Gold',color:'#fbbf24',bg:'rgba(251,191,36,0.12)',solo:3.50,duo:5.00},
-  {name:'Platinum',short:'Plat',color:'#22d3ee',bg:'rgba(34,211,238,0.12)',solo:5.00,duo:6.50},
-  {name:'Emerald',short:'Emerald',color:'#34d399',bg:'rgba(52,211,153,0.12)',solo:5.50,duo:8.00},
-  {name:'Diamond IV-III',short:'Dia IV',color:'#67e8f9',bg:'rgba(103,232,249,0.12)',solo:8.00,duo:12.00},
-  {name:'Diamond II-I',short:'Dia II',color:'#a5f3fc',bg:'rgba(165,243,252,0.08)',solo:10.00,duo:16.00},
-  {name:'Masters',short:'Masters',color:'#e879f9',bg:'rgba(232,121,249,0.12)',solo:15.00,duo:20.00},
+  {name:'Iron',short:'Iron',color:'#94a3b8',bg:'rgba(148,163,184,0.12)',solo:0,duo:0},
+  {name:'Bronze',short:'Bronze',color:'#cd7f32',bg:'rgba(205,127,50,0.12)',solo:0,duo:0},
+  {name:'Silver',short:'Silver',color:'#cbd5e1',bg:'rgba(203,213,225,0.12)',solo:0,duo:0},
+  {name:'Gold',short:'Gold',color:'#fbbf24',bg:'rgba(251,191,36,0.12)',solo:0,duo:0},
+  {name:'Platinum',short:'Plat',color:'#22d3ee',bg:'rgba(34,211,238,0.12)',solo:0,duo:0},
+  {name:'Emerald',short:'Emerald',color:'#34d399',bg:'rgba(52,211,153,0.12)',solo:0,duo:0},
+  {name:'Diamond IV-III',short:'Dia IV',color:'#67e8f9',bg:'rgba(103,232,249,0.12)',solo:0,duo:0},
+  {name:'Diamond II-I',short:'Dia II',color:'#a5f3fc',bg:'rgba(165,243,252,0.08)',solo:0,duo:0},
+  {name:'Masters',short:'Masters',color:'#e879f9',bg:'rgba(232,121,249,0.12)',solo:0,duo:0},
 ];
 const ri={
   Iron:c=>`<svg width="15" height="15" viewBox="0 0 16 16"><polygon points="8,2 14,6 14,10 8,14 2,10 2,6" fill="none" stroke="${c}" stroke-width="1.5"/></svg>`,
@@ -845,17 +848,8 @@ function br(n){return n.startsWith('Diamond')?'Diamond':n;}
 const RB_TIERS = ['Iron','Bronze','Silver','Gold','Platinum','Emerald','Diamond','Masters'];
 const RB_DIVS  = ['IV','III','II','I'];
 const RB_COLORS = {Iron:'#94a3b8',Bronze:'#cd7f32',Silver:'#cbd5e1',Gold:'#fbbf24',Platinum:'#22d3ee',Emerald:'#34d399',Diamond:'#67e8f9',Masters:'#e879f9'};
-// Price per division climbed
-const RB_DIV_PRICE = {
-  Iron:     {solo:7.00,   duo:11.50},
-  Bronze:   {solo:9.00,   duo:14.00},
-  Silver:   {solo:12.00,  duo:17.00},
-  Gold:     {solo:16.50,  duo:23.50},
-  Platinum: {solo:23.50,  duo:31.00},
-  Emerald:  {solo:26.50,  duo:38.00},
-  DiamondL: {solo:37.00,  duo:57.00},
-  DiamondH: {solo:47.00,  duo:72.00},
-};
+// Prices fetched from /api/prices on load — never hardcoded here
+const RB_DIV_PRICE = {};
 
 function rbDivIdx(tier, div) {
   if (tier === 7) return 28; 
@@ -977,10 +971,11 @@ fetch('/api/exchange-rate')
   });
 })();
 
-// Build rank tabs + price table
-(function(){
+// Build rank tabs + price table (called after prices load from API)
+function buildWinTabs(){
   const tabs=document.getElementById('rankTabs');
   const tbody=document.getElementById('priceTableBody');
+  tabs.innerHTML=''; tbody.innerHTML='';
   ranks.forEach((r,i)=>{
     const tab=document.createElement('div');
     tab.className='rank-tab';
@@ -994,7 +989,7 @@ fetch('/api/exchange-rate')
     row.onclick=()=>selectRank(i);
     tbody.appendChild(row);
   });
-})();
+}
 
 // Build rank boost dropdowns
 function buildRBSelects(){
@@ -1122,39 +1117,53 @@ function getTotal(){
   return ppw*(selWins-freeWins);
 }
 
-// Coupon System
-const COUPONS = { 'STAIN50': 0.50 };
+// Coupon System — codes validated server-side, never defined here
 let couponDiscount = 0;
 let couponActive = false;
+let activeCouponCode = '';
 
-function applyCoupon() {
+async function applyCoupon() {
   const input = document.getElementById('couponInput');
   const errorEl = document.getElementById('couponError');
-  const code = input.value.trim().toUpperCase();
-  if (COUPONS[code] !== undefined) {
-    couponDiscount = COUPONS[code];
-    couponActive = true;
-    input.classList.remove('error');
-    input.classList.add('success');
-    errorEl.style.display = 'none';
-    document.getElementById('couponRow').style.display = 'none';
-    errorEl.style.display = 'none';
-    updatePrice();
-  } else {
-    input.classList.add('error');
-    input.classList.remove('success');
+  const code = input.value.trim();
+  if (!code) return;
+  try {
+    const res = await fetch('/api/validate-coupon', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ code })
+    });
+    const data = await res.json();
+    if (data.valid) {
+      couponDiscount = data.discount;
+      couponActive = true;
+      activeCouponCode = code;
+      input.classList.remove('error');
+      input.classList.add('success');
+      errorEl.style.display = 'none';
+      document.getElementById('couponRow').style.display = 'none';
+      updatePrice();
+    } else {
+      input.classList.add('error');
+      input.classList.remove('success');
+      errorEl.style.display = 'block';
+      setTimeout(() => input.classList.remove('error'), 350);
+    }
+  } catch(e) {
+    errorEl.textContent = '⚠️ Could not verify code. Try again.';
     errorEl.style.display = 'block';
-    setTimeout(() => input.classList.remove('error'), 350);
   }
 }
 function removeCoupon() {
   couponDiscount = 0;
   couponActive = false;
+  activeCouponCode = '';
   const input = document.getElementById('couponInput');
   input.value = '';
   input.classList.remove('success','error');
   document.getElementById('couponRow').style.display = 'flex';
   document.getElementById('couponError').style.display = 'none';
+  document.getElementById('couponError').textContent = '❌ Invalid coupon code';
   document.getElementById('promoDiscountBanner').classList.remove('visible');
   updatePrice();
 }
@@ -1287,12 +1296,12 @@ async function submitOrder(method){
     const fromIdx=rbDivIdx(rbFromTier,rbFromDiv);
     const toIdx  =rbDivIdx(rbToTier,rbToDiv);
     if(toIdx<=fromIdx){showMsg('error','Please select a valid rank range.');return;}
-    orderData={discord,ign,type:selType,flash:selFlash,paymentMethod:payMethodStr,orderType:'rank_boost',fromTier:rbFromTier,fromDiv:rbFromDiv,toTier:rbToTier,toDiv:rbToDiv,currentLP:rbLP,region:selRegion};
+    orderData={discord,ign,type:selType,flash:selFlash,paymentMethod:payMethodStr,orderType:'rank_boost',fromTier:rbFromTier,fromDiv:rbFromDiv,toTier:rbToTier,toDiv:rbToDiv,currentLP:rbLP,region:selRegion,lpGainMultiplier,couponCode:activeCouponCode};
   }else{
     if(selIdx<0||selWins<1){showMsg('error','Please select a rank and number of wins.');return;}
     const r=ranks[selIdx];const total=getTotal().toFixed(2);
     const fw=selWins>=5?Math.floor(selWins/5):0;
-    orderData={discord,ign,rank:r.name,type:selType,wins:selWins,flash:selFlash,total,paymentMethod:payMethodStr,orderType:'win_boost',freeWins:fw,region:selRegion};
+    orderData={discord,ign,rank:r.name,type:selType,wins:selWins,flash:selFlash,paymentMethod:payMethodStr,orderType:'win_boost',freeWins:fw,region:selRegion,couponCode:activeCouponCode};
   }
   
   const bid=method==='paypal'?'paypalSubmitBtn':(method==='instapay'?'instapaySubmitBtn':'binanceSubmitBtn');
@@ -1310,15 +1319,32 @@ async function submitOrder(method){
   btn.disabled=false;btn.textContent="✅ I've Sent — Submit Order";
 }
 
-// Init
-fillSlider(5);showWins(5);
-buildRBSelects();
-
-// Auto-apply coupon on load
-(function(){
-  document.getElementById('couponInput').value = 'stain50';
-  applyCoupon();
-})();
+// ── INIT: fetch prices from server, then boot the page ──
+fetch('/api/prices')
+  .then(r => r.json())
+  .then(data => {
+    // Inject win boost prices into ranks array
+    ranks.forEach(r => {
+      const p = data.winPrices[r.name];
+      if (p) { r.solo = p.solo; r.duo = p.duo; }
+    });
+    // Inject rank boost prices
+    Object.assign(RB_DIV_PRICE, data.rbDivPrice);
+    // Now build all UI that depends on prices
+    buildWinTabs();
+    fillSlider(5); showWins(5);
+    buildRBSelects();
+    // Auto-apply coupon (validated server-side)
+    document.getElementById('couponInput').value = 'stain50';
+    applyCoupon();
+  })
+  .catch(() => {
+    // Fallback: still boot UI, prices will show $0.00 until resolved
+    buildWinTabs();
+    fillSlider(5); showWins(5);
+    buildRBSelects();
+    console.warn('Could not load prices from server.');
+  });
 
 // ── REGION SYSTEM ──
 let selRegion = localStorage.getItem('stainRegion') || 'me';
