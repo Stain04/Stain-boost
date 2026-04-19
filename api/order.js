@@ -34,7 +34,7 @@ const VALID_LP_MULTIPLIERS = [1.0, 1.4, 2.0];
 
 // ── COUPON CODES (single source of truth — also in validate-coupon.js) ──
 const COUPONS = {
-  'STAIN50': 0.50,
+  // 'STAIN50': 0.50,  // disabled
 };
 
 // ── RANK BOOST — per-division price table ──

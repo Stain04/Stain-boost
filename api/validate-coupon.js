@@ -2,7 +2,7 @@
 // Add or remove codes here. The frontend never sees the discount values.
 
 const COUPONS = {
-  'STAIN50': 0.50,  // 50% off
+  // 'STAIN50': 0.50,  // 50% off — disabled
 };
 
 // Basic rate limiting (max 10 attempts per IP per minute)
