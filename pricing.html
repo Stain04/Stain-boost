@@ -1357,8 +1357,7 @@ async function doSubmitOrder(method){
     const res=await fetch('/api/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(orderData)});
     const data=await res.json();
     if(res.ok&&data.ok){
-      const tokenNote=data.token?` | Review token: ${data.token} (save this!)`:'';;
-      showMsg('success',`✅ Order confirmed! Total: $${data.total}${tokenNote} — Stain will verify your payment and DM you on Discord shortly.`);
+      showMsg('success',`✅ Order confirmed! Total: $${data.total} — Stain will verify your payment and DM you on Discord shortly.`);
       document.getElementById('fDiscord').value='';document.getElementById('fIGN').value='';
     }
     else showMsg('error','Submission failed. Please DM Stain on Discord directly.');
@@ -1381,9 +1380,7 @@ fetch('/api/prices')
     buildWinTabs();
     fillSlider(5); showWins(5);
     buildRBSelects();
-    // Auto-apply coupon (validated server-side)
-    document.getElementById('couponInput').value = 'stain50';
-    applyCoupon();
+
   })
   .catch(() => {
     // Fallback: still boot UI, prices will show $0.00 until resolved

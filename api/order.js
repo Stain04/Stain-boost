@@ -292,5 +292,5 @@ export default async function handler(req, res) {
     }
   }
 
-  return res.status(200).json({ ok: true, total: computedTotal, token: reviewToken });
+  return res.status(200).json({ ok: true, total: computedTotal });
 }
