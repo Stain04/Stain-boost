@@ -11,7 +11,13 @@
     { "source": "/what-is-elo-boosting",       "destination": "/blog/what-is-elo-boosting" },
     { "source": "/how-to-escape-silver",       "destination": "/blog/how-to-escape-silver" },
     { "source": "/master-yi-build-guide",      "destination": "/blog/master-yi-build-guide" },
-    { "source": "/how-to-reach-diamond",        "destination": "/blog/how-to-reach-diamond" }
+    { "source": "/how-to-reach-diamond",        "destination": "/blog/how-to-reach-diamond" },
+    { "source": "/is-elo-boosting-worth-it",    "destination": "/blog/is-elo-boosting-worth-it" },
+    { "source": "/why-am-i-hardstuck",           "destination": "/blog/why-am-i-hardstuck" },
+    { "source": "/how-to-escape-gold",              "destination": "/blog/how-to-escape-gold" },
+    { "source": "/what-is-mmr-league-of-legends",  "destination": "/blog/what-is-mmr-league-of-legends" },
+    { "source": "/how-to-reach-emerald",            "destination": "/blog/how-to-reach-emerald" },
+    { "source": "/best-times-to-play-ranked",       "destination": "/blog/best-times-to-play-ranked" }
   ],
   "headers": [
     {
