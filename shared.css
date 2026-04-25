@@ -32,6 +32,8 @@ body::after{content:'';position:fixed;inset:0;background-image:radial-gradient(r
 .nav-links a.active{color:#c4b5fd;}
 .nav-discord{font-family:'Rajdhani',sans-serif;font-size:0.82rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;background:rgba(139,92,246,0.14);border:1px solid rgba(139,92,246,0.35);color:#c4b5fd;text-decoration:none;padding:0.42rem 1.1rem;border-radius:9px;transition:all .2s;margin-left:0.5rem;}
 .nav-discord:hover{background:rgba(139,92,246,0.26);box-shadow:0 0 18px rgba(139,92,246,0.3);}
+.nav-login{font-family:'Rajdhani',sans-serif;font-size:0.82rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;background:linear-gradient(135deg,#7c3aed,#06d6f2);color:#fff;text-decoration:none;padding:0.42rem 1.1rem;border-radius:9px;transition:all .2s;margin-left:0.5rem;}
+.nav-login:hover{opacity:0.85;box-shadow:0 0 18px rgba(124,58,237,0.4);}
 .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;}
 .hamburger span{display:block;width:22px;height:2px;background:rgba(255,255,255,0.55);border-radius:2px;}
 .mobile-menu{display:none;position:absolute;top:64px;left:0;right:0;background:rgba(11,9,22,0.97);border-bottom:1px solid rgba(139,92,246,0.12);padding:1rem;flex-direction:column;gap:0.4rem;z-index:99;}
