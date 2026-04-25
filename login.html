@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>html,body{background:#0b0916;}</style>
+<link rel="stylesheet" href="shared.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login · StainBoost</title>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600&display=block" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#060411;
+  --bg-card:rgba(12,8,32,0.85);
+  --purple:#7c3aed;
+  --purple-light:#c4b5fd;
+  --cyan:#06d6f2;
+  --text:#e8e4f0;
+  --muted:rgba(255,255,255,0.35);
+  --glass:rgba(255,255,255,0.03);
+  --error:#f87171;
+  --success:#34d399;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+}
+
+/* Animated background glow */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(ellipse 60% 40% at 30% 20%, rgba(124,58,237,0.15) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 35% at 70% 80%, rgba(6,214,242,0.10) 0%, transparent 60%);
+  pointer-events:none;
+}
+
+.auth-wrapper{
+  width:100%;
+  max-width:440px;
+  position:relative;
+  z-index:1;
+}
+
+/* Logo / brand */
+.brand{
+  text-align:center;
+  margin-bottom:32px;
+}
+.brand-name{
+  font-family:'Orbitron',sans-serif;
+  font-size:28px;
+  font-weight:900;
+  background:linear-gradient(135deg,#7c3aed,#06d6f2);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  letter-spacing:2px;
+}
+.brand-sub{
+  font-size:13px;
+  color:var(--muted);
+  margin-top:4px;
+}
+
+/* Card */
+.card{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:20px;
+  padding:36px;
+  backdrop-filter:blur(20px);
+  box-shadow:0 24px 64px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+/* Tab switcher */
+.tabs{
+  display:flex;
+  background:rgba(0,0,0,0.3);
+  border-radius:10px;
+  padding:4px;
+  margin-bottom:28px;
+  gap:4px;
+}
+.tab{
+  flex:1;
+  padding:10px;
+  border:none;
+  background:transparent;
+  color:var(--muted);
+  border-radius:8px;
+  font-family:'Rajdhani',sans-serif;
+  font-size:15px;
+  font-weight:600;
+  letter-spacing:1px;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.tab.active{
+  background:linear-gradient(135deg,#7c3aed,#5b21b6);
+  color:#fff;
+  box-shadow:0 4px 16px rgba(124,58,237,0.4);
+}
+
+/* Form fields */
+.field{
+  margin-bottom:18px;
+}
+.field label{
+  display:block;
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:1px;
+  color:var(--muted);
+  text-transform:uppercase;
+  margin-bottom:8px;
+}
+.field input{
+  width:100%;
+  padding:12px 16px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:10px;
+  color:#fff;
+  font-size:14px;
+  font-family:'Inter',sans-serif;
+  outline:none;
+  transition:border-color 0.2s, box-shadow 0.2s;
+}
+.field input:focus{
+  border-color:var(--purple);
+  box-shadow:0 0 0 3px rgba(124,58,237,0.2);
+}
+.field input::placeholder{color:rgba(255,255,255,0.2);}
+
+/* Role selector (register only) */
+.role-row{
+  display:flex;
+  gap:10px;
+  margin-bottom:18px;
+}
+.role-btn{
+  flex:1;
+  padding:10px;
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:10px;
+  background:transparent;
+  color:var(--muted);
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.role-btn.selected{
+  border-color:var(--cyan);
+  color:var(--cyan);
+  background:rgba(6,214,242,0.08);
+}
+
+/* Submit button */
+.btn-submit{
+  width:100%;
+  padding:14px;
+  background:linear-gradient(135deg,#7c3aed,#06d6f2);
+  border:none;
+  border-radius:10px;
+  color:#fff;
+  font-family:'Rajdhani',sans-serif;
+  font-size:16px;
+  font-weight:700;
+  letter-spacing:1.5px;
+  cursor:pointer;
+  transition:opacity 0.2s, transform 0.1s;
+  margin-top:4px;
+}
+.btn-submit:hover{opacity:0.9;}
+.btn-submit:active{transform:scale(0.98);}
+.btn-submit:disabled{opacity:0.5;cursor:not-allowed;}
+
+/* Status message */
+.status{
+  margin-top:16px;
+  padding:12px 16px;
+  border-radius:10px;
+  font-size:13px;
+  font-weight:500;
+  display:none;
+}
+.status.error{background:rgba(248,113,113,0.12);border:1px solid rgba(248,113,113,0.3);color:var(--error);}
+.status.success{background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);color:var(--success);}
+.status.show{display:block;}
+
+/* User info panel (shown after login) */
+.user-panel{
+  display:none;
+  text-align:center;
+}
+.user-panel.show{display:block;}
+.user-avatar{
+  width:64px;height:64px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#7c3aed,#06d6f2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;font-weight:700;font-family:'Orbitron',sans-serif;
+  margin:0 auto 16px;
+}
+.user-name{font-size:20px;font-weight:700;font-family:'Rajdhani',sans-serif;letter-spacing:1px;}
+.user-role{
+  display:inline-block;
+  margin-top:6px;
+  padding:4px 12px;
+  border-radius:20px;
+  font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+}
+.user-role.admin{background:rgba(245,166,35,0.15);color:#f5a623;border:1px solid rgba(245,166,35,0.3);}
+.user-role.customer{background:rgba(124,58,237,0.15);color:var(--purple-light);border:1px solid rgba(124,58,237,0.3);}
+.user-email{font-size:13px;color:var(--muted);margin-top:8px;}
+
+.btn-logout{
+  margin-top:20px;
+  padding:10px 24px;
+  background:rgba(248,113,113,0.1);
+  border:1px solid rgba(248,113,113,0.3);
+  border-radius:8px;
+  color:var(--error);
+  font-size:13px;font-weight:600;cursor:pointer;
+  transition:all 0.2s;
+}
+.btn-logout:hover{background:rgba(248,113,113,0.2);}
+
+/* Admin panel */
+.admin-panel{
+  display:none;
+  margin-top:20px;
+}
+.admin-panel.show{display:block;}
+.admin-title{
+  font-family:'Orbitron',sans-serif;
+  font-size:12px;letter-spacing:2px;color:#f5a623;
+  text-transform:uppercase;margin-bottom:12px;
+}
+.order-list{max-height:200px;overflow-y:auto;}
+.order-item{
+  padding:10px 12px;
+  background:rgba(245,166,35,0.05);
+  border:1px solid rgba(245,166,35,0.15);
+  border-radius:8px;
+  margin-bottom:8px;
+  font-size:12px;
+}
+.order-item .o-name{font-weight:600;color:#f5a623;}
+.order-item .o-action{color:var(--muted);margin-top:2px;}
+
+.back-link{
+  display:block;text-align:center;margin-top:20px;
+  color:var(--muted);font-size:13px;text-decoration:none;
+  transition:color 0.2s;
+}
+.back-link:hover{color:var(--text);}
+</style>
+</head>
+
+<body>
+<div class="auth-wrapper">
+
+  <div class="brand">
+    <div class="brand-name">STAINBOOST</div>
+    <div class="brand-sub">Secure Account Access</div>
+  </div>
+
+  <!-- AUTH CARD -->
+  <div class="card" id="authCard">
+
+    <!-- Tab switcher -->
+    <div class="tabs">
+      <button class="tab active" id="tabLogin"    onclick="switchTab('login')">LOGIN</button>
+      <button class="tab"        id="tabRegister" onclick="switchTab('register')">REGISTER</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <div class="field">
+        <label>Username</label>
+        <input type="text" id="loginUsername" placeholder="your username" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="btn-submit" id="loginBtn">LOGIN</button>
+      <div class="status" id="loginStatus"></div>
+    </form>
+
+    <!-- REGISTER FORM (hidden by default) -->
+    <form id="registerForm" onsubmit="handleRegister(event)" style="display:none">
+      <div class="field">
+        <label>Username</label>
+        <input type="text" id="regUsername" placeholder="choose a username" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="regEmail" placeholder="you@example.com" autocomplete="email" required>
+      </div>
+      <div class="field">
+        <label>Password <span style="color:var(--muted);font-size:10px;">(min 8 chars)</span></label>
+        <input type="password" id="regPassword" placeholder="••••••••" autocomplete="new-password" required>
+      </div>
+      <div class="field">
+        <label>Role</label>
+        <div class="role-row">
+          <button type="button" class="role-btn selected" id="roleCustomer" onclick="selectRole('customer')">Customer</button>
+          <button type="button" class="role-btn"          id="roleAdmin"    onclick="selectRole('admin')">Admin</button>
+        </div>
+      </div>
+      <button type="submit" class="btn-submit" id="registerBtn">CREATE ACCOUNT</button>
+      <div class="status" id="registerStatus"></div>
+    </form>
+
+  </div><!-- /card -->
+
+  <!-- USER PANEL (shown after login) -->
+  <div class="card" id="userCard" style="display:none">
+    <div class="user-panel show">
+      <div class="user-avatar" id="userAvatar">?</div>
+      <div class="user-name"   id="userName">—</div>
+      <div class="user-role"   id="userRoleBadge">—</div>
+      <div class="user-email"  id="userEmail">—</div>
+
+      <!-- Admin-only section -->
+      <div class="admin-panel" id="adminPanel">
+        <div class="admin-title">Recent Orders (Admin View)</div>
+        <div class="order-list" id="orderList">Loading…</div>
+      </div>
+
+      <button class="btn-logout" onclick="handleLogout()">Logout</button>
+    </div>
+  </div>
+
+  <a href="/" class="back-link">← Back to StainBoost</a>
+
+</div><!-- /wrapper -->
+
+<script>
+// ──────────────────────────────────────────────────────────────
+//  Frontend auth logic
+//  Stores the JWT in localStorage so it persists across page reloads.
+//  On page load, we call /api/auth/me to check if already logged in.
+// ──────────────────────────────────────────────────────────────
+
+let selectedRole = 'customer';
+
+// ── On page load: check if user already has a valid token ──
+window.addEventListener('DOMContentLoaded', async () => {
+  const token = localStorage.getItem('sb_token');
+  if (token) await fetchProfile(token);
+});
+
+// ── Tab switcher ──
+function switchTab(tab) {
+  document.getElementById('loginForm').style.display    = tab === 'login'    ? 'block' : 'none';
+  document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
+  document.getElementById('tabLogin').classList.toggle('active',    tab === 'login');
+  document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+  clearStatuses();
+}
+
+function selectRole(role) {
+  selectedRole = role;
+  document.getElementById('roleCustomer').classList.toggle('selected', role === 'customer');
+  document.getElementById('roleAdmin').classList.toggle('selected',    role === 'admin');
+}
+
+function showStatus(id, msg, type) {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.className = `status ${type} show`;
+}
+
+function clearStatuses() {
+  ['loginStatus','registerStatus'].forEach(id => {
+    const el = document.getElementById(id);
+    el.className = 'status';
+    el.textContent = '';
+  });
+}
+
+// ── LOGIN ─────────────────────────────────────────────────────
+async function handleLogin(e) {
+  e.preventDefault();
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true; btn.textContent = 'LOGGING IN…';
+
+  const username = document.getElementById('loginUsername').value.trim();
+  const password = document.getElementById('loginPassword').value;
+
+  try {
+    const res  = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      showStatus('loginStatus', data.error || 'Login failed.', 'error');
+    } else {
+      // Store JWT in localStorage
+      localStorage.setItem('sb_token', data.token);
+      await fetchProfile(data.token);
+    }
+  } catch {
+    showStatus('loginStatus', 'Network error. Please try again.', 'error');
+  } finally {
+    btn.disabled = false; btn.textContent = 'LOGIN';
+  }
+}
+
+// ── REGISTER ──────────────────────────────────────────────────
+async function handleRegister(e) {
+  e.preventDefault();
+  const btn = document.getElementById('registerBtn');
+  btn.disabled = true; btn.textContent = 'CREATING…';
+
+  const username = document.getElementById('regUsername').value.trim();
+  const email    = document.getElementById('regEmail').value.trim();
+  const password = document.getElementById('regPassword').value;
+
+  try {
+    const res  = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, email, password, role: selectedRole }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      showStatus('registerStatus', data.error || 'Registration failed.', 'error');
+    } else {
+      localStorage.setItem('sb_token', data.token);
+      await fetchProfile(data.token);
+    }
+  } catch {
+    showStatus('registerStatus', 'Network error. Please try again.', 'error');
+  } finally {
+    btn.disabled = false; btn.textContent = 'CREATE ACCOUNT';
+  }
+}
+
+// ── FETCH PROFILE (/api/auth/me) ──────────────────────────────
+async function fetchProfile(token) {
+  try {
+    const res  = await fetch('/api/auth/me', {
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+
+    if (!res.ok) {
+      // Token invalid or expired — clear it
+      localStorage.removeItem('sb_token');
+      return;
+    }
+
+    const user = await res.json();
+    showUserPanel(user, token);
+  } catch {
+    localStorage.removeItem('sb_token');
+  }
+}
+
+// ── SHOW USER PANEL ───────────────────────────────────────────
+function showUserPanel(user, token) {
+  document.getElementById('authCard').style.display = 'none';
+  document.getElementById('userCard').style.display = 'block';
+
+  document.getElementById('userAvatar').textContent = user.username[0].toUpperCase();
+  document.getElementById('userName').textContent   = user.username;
+  document.getElementById('userEmail').textContent  = user.email;
+
+  const badge = document.getElementById('userRoleBadge');
+  badge.textContent  = user.role.toUpperCase();
+  badge.className    = `user-role ${user.role}`;
+
+  // If admin, show the orders panel
+  if (user.role === 'admin') {
+    document.getElementById('adminPanel').classList.add('show');
+    loadAdminOrders(token);
+  }
+}
+
+// ── ADMIN: LOAD ORDERS (/api/admin/orders) ────────────────────
+async function loadAdminOrders(token) {
+  const list = document.getElementById('orderList');
+  try {
+    const res  = await fetch('/api/admin/orders', {
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+    const data = await res.json();
+
+    if (!res.ok || !data.orders?.length) {
+      list.innerHTML = '<div style="color:var(--muted);font-size:12px;">No orders yet.</div>';
+      return;
+    }
+
+    list.innerHTML = data.orders.map(o => `
+      <div class="order-item">
+        <div class="o-name">${o.name || 'Anonymous'}</div>
+        <div class="o-action">${o.action || ''}</div>
+      </div>
+    `).join('');
+  } catch {
+    list.innerHTML = '<div style="color:var(--error);font-size:12px;">Failed to load orders.</div>';
+  }
+}
+
+// ── LOGOUT (/api/auth/logout) ─────────────────────────────────
+async function handleLogout() {
+  const token = localStorage.getItem('sb_token');
+  if (token) {
+    // Tell server to blacklist this token
+    await fetch('/api/auth/logout', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` },
+    }).catch(() => {});
+  }
+  localStorage.removeItem('sb_token');
+  // Reload to show login form
+  window.location.reload();
+}
+</script>
+</body>
+</html>
