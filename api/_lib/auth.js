@@ -8,13 +8,18 @@
 //    - The server verifies the signature to trust the token WITHOUT
 //      needing to look it up in a database every time (stateless).
 //    - On logout we BLACKLIST the token in Redis so it can't be reused.
+//
+//  NOTE: We use 'jose' instead of 'jsonwebtoken' because jose is a
+//  modern ESM-native library — fully compatible with Vercel's bundler.
 // ─────────────────────────────────────────────────────────────
 
-import jwt from 'jsonwebtoken';
+import { SignJWT, jwtVerify } from 'jose';
 import { createClient } from '@vercel/kv';
 
-// JWT secret — MUST be set as an environment variable in Vercel dashboard
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-change-in-production';
+// JWT secret converted to bytes — jose requires a Uint8Array key
+const JWT_SECRET = new TextEncoder().encode(
+  process.env.JWT_SECRET || 'fallback-secret-change-in-production'
+);
 
 // ── Build and return a Vercel KV (Redis) client ──
 export function getKV() {
@@ -26,8 +31,11 @@ export function getKV() {
 
 // ── Create a signed JWT containing the user's username and role ──
 // The token expires in 2 hours — after that the user must log in again.
-export function signToken(payload) {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: '2h' });
+export async function signToken(payload) {
+  return new SignJWT(payload)
+    .setProtectedHeader({ alg: 'HS256' })
+    .setExpirationTime('2h')
+    .sign(JWT_SECRET);
 }
 
 // ── Verify the JWT sent by the client and return its decoded payload ──
@@ -41,8 +49,8 @@ export async function verifyToken(req, kv) {
   const token = authHeader.slice(7); // strip "Bearer " prefix
 
   try {
-    // jwt.verify() checks the signature AND the expiry time
-    const decoded = jwt.verify(token, JWT_SECRET);
+    // jwtVerify() checks the signature AND the expiry time
+    const { payload } = await jwtVerify(token, JWT_SECRET);
 
     // Check our logout blacklist stored in Redis
     if (kv) {
@@ -50,7 +58,7 @@ export async function verifyToken(req, kv) {
       if (blacklisted) return null; // user already logged out
     }
 
-    return decoded; // { username, role, iat, exp }
+    return payload; // { username, role, iat, exp }
   } catch {
     return null; // expired or tampered token
   }

@@ -76,7 +76,7 @@ export default async function handler(req, res) {
 
     await kv.set(`user:${cleanUsername}`, JSON.stringify(user));
 
-    const token = signToken({ username: cleanUsername, role: cleanRole });
+    const token = await signToken({ username: cleanUsername, role: cleanRole });
     return res.status(201).json({ ok: true, token, role: cleanRole });
   }
 
@@ -98,7 +98,7 @@ export default async function handler(req, res) {
     if (!match) return res.status(401).json({ error: 'Invalid username or password.' });
 
     // Issue JWT (Section 1)
-    const token = signToken({ username: user.username, role: user.role });
+    const token = await signToken({ username: user.username, role: user.role });
     return res.status(200).json({ ok: true, token, role: user.role });
   }
 
