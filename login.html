@@ -346,6 +346,12 @@ body::before{
         <div class="order-list" id="orderList">Loading…</div>
       </div>
 
+      <!-- Customer-only section -->
+      <div class="admin-panel" id="customerPanel">
+        <div class="admin-title" style="color:var(--purple-light);">Customer Dashboard</div>
+        <div class="order-list" id="customerInfo">Loading…</div>
+      </div>
+
       <button class="btn-logout" onclick="handleLogout()">Logout</button>
     </div>
   </div>
@@ -493,10 +499,13 @@ function showUserPanel(user, token) {
   badge.textContent  = user.role.toUpperCase();
   badge.className    = `user-role ${user.role}`;
 
-  // If admin, show the orders panel
+  // Show the correct panel based on role (User Permissions Management)
   if (user.role === 'admin') {
     document.getElementById('adminPanel').classList.add('show');
     loadAdminOrders(token);
+  } else if (user.role === 'customer') {
+    document.getElementById('customerPanel').classList.add('show');
+    loadCustomerDashboard(token);
   }
 }
 
@@ -522,6 +531,30 @@ async function loadAdminOrders(token) {
     `).join('');
   } catch {
     list.innerHTML = '<div style="color:var(--error);font-size:12px;">Failed to load orders.</div>';
+  }
+}
+
+// ── CUSTOMER: LOAD DASHBOARD (/api/customer/dashboard) ───────
+async function loadCustomerDashboard(token) {
+  const box = document.getElementById('customerInfo');
+  try {
+    const res  = await fetch('/api/customer/dashboard', {
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      box.innerHTML = `<div style="color:var(--error);font-size:12px;">${data.error}</div>`;
+      return;
+    }
+
+    box.innerHTML = `
+      <div class="order-item" style="border-color:rgba(124,58,237,0.3);">
+        <div class="o-name" style="color:var(--purple-light);">${data.message}</div>
+        <div class="o-action">Logged in as: ${data.username} · Role: ${data.role}</div>
+      </div>`;
+  } catch {
+    box.innerHTML = '<div style="color:var(--error);font-size:12px;">Failed to load dashboard.</div>';
   }
 }
 

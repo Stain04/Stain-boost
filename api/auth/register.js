@@ -59,7 +59,8 @@ export default async function handler(req, res) {
   const cleanUsername = sanitize(username, 50).toLowerCase();
   const cleanEmail    = sanitize(email, 100).toLowerCase();
 
-  // Only allow "admin" or "customer" — default to "customer" for safety
+  // Role comes from the request — "admin" or "customer" (default: "customer")
+  // This matches lab4.py: role = request.json.get("role", "student")
   const cleanRole = role === 'admin' ? 'admin' : 'customer';
 
   // Validate required fields
