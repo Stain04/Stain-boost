@@ -300,18 +300,20 @@ async function loadUsers() {
   try {
     const { res, data } = await api('/api/admin/users');
     if (!res.ok || !data.users?.length) { el.innerHTML = '<p style="color:var(--muted);font-size:12px">No users found.</p>'; return; }
+    const me = document.getElementById('uName').textContent; // logged-in admin's username
     el.innerHTML = data.users.map(u => `
       <div class="urow" id="urow-${u.username}">
         <div>
-          <div class="uinfo2">${u.username}</div>
+          <div class="uinfo2">${u.username} ${u.username===me?'<span style="color:var(--muted);font-size:10px">(you)</span>':''}</div>
           <div class="umeta" id="umeta-${u.username}">${u.email} · <strong>${u.role}</strong></div>
         </div>
         <div class="ubtns">
+          ${u.username===me ? '<span style="font-size:11px;color:var(--muted)">—</span>' : `
           <button class="ubtn ${u.role==='admin'?'demote':'promote'}" id="ubtn-${u.username}"
             onclick="changeRole('${u.username}','${u.role==='admin'?'customer':'admin'}')">
             ${u.role==='admin'?'Demote':'Promote'}
           </button>
-          <button class="ubtn del" id="udel-${u.username}" onclick="deleteUser('${u.username}')">🗑</button>
+          <button class="ubtn del" id="udel-${u.username}" onclick="deleteUser('${u.username}')">🗑</button>`}
         </div>
       </div>`).join('');
   } catch { el.textContent = 'Failed to load.'; }

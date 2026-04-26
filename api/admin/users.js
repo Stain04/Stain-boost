@@ -40,6 +40,7 @@ export default async function handler(req, res) {
   if (req.method === 'PATCH') {
     const newRole = req.body.role;
     if (!targetUsername) return res.status(400).json({ error: 'Missing ?user= query parameter.' });
+    if (targetUsername === decoded.username) return res.status(400).json({ error: 'You cannot change your own role.' });
     if (newRole !== 'admin' && newRole !== 'customer') return res.status(400).json({ error: 'Role must be "admin" or "customer".' });
 
     const raw = await kv.get(`user:${targetUsername}`);
