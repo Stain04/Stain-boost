@@ -1,7 +1,3 @@
-// GET /api/customer/dashboard
-// returns dashboard info for the logged in customer
-// admins are blocked from this route (403)
-
 import { getKV, verifyToken } from '../_lib/auth.js';
 
 export default async function handler(req, res) {
