@@ -76,6 +76,9 @@ export default async function handler(req, res) {
 
     await kv.set(`user:${cleanUsername}`, JSON.stringify(user));
 
+    // Track every username in a Redis Set so admin/users.js can list all users
+    await kv.sadd('registered_users', cleanUsername);
+
     const token = await signToken({ username: cleanUsername, role: cleanRole });
     return res.status(201).json({ ok: true, token, role: cleanRole });
   }
