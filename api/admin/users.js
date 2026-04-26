@@ -1,168 +1,73 @@
-// ─────────────────────────────────────────────────────────────
-//  admin/users.js  —  GET and PATCH /api/admin/users
-//
-//  CONCEPT: User Permissions Management (Coversheet criteria #4)
-//
-//  This file is the MANAGEMENT layer — it lets an admin:
-//    GET   → see every user's username, email, and role
-//    PATCH → change a user's role (promote or demote)
-//
-//  Why is this DIFFERENT from RBAC (criteria #3)?
-//
-//    RBAC (criteria 3) = CHECKING roles to allow/deny access
-//      "Are you admin? No? Then 403."
-//
-//    Permissions Management (criteria 4) = CHANGING roles
-//      "User X is a customer. Promote them to admin."
-//
-//  Think of it like a university system:
-//    - RBAC        → the door that only lets professors in
-//    - Management  → the office that decides who IS a professor
-//
-//  Both routes below are admin-only (customers get 403).
-// ─────────────────────────────────────────────────────────────
+// GET, PATCH, DELETE /api/admin/users
+// lets the admin manage user accounts and their roles
+// customers cannot access any of these
 
 import { getKV, verifyToken } from '../_lib/auth.js';
 
-export default async function handler(req, res) {
+function parseUser(raw) {
+  return typeof raw === 'string' ? JSON.parse(raw) : raw;
+}
 
-  // ── Connect to database ──────────────────────────────────────
+export default async function handler(req, res) {
   const kv = getKV();
   if (!kv) return res.status(500).json({ error: 'Database not configured.' });
 
-  // ── AUTHENTICATION: must be logged in ───────────────────────
-  // verifyToken() checks the JWT in the Authorization header.
-  // If the token is missing, expired, or blacklisted → null → 401.
+  // check login
   const decoded = await verifyToken(req, kv);
-  if (!decoded) {
-    return res.status(401).json({ error: 'Unauthorized. Please log in.' });
-  }
+  if (!decoded) return res.status(401).json({ error: 'Unauthorized. Please log in.' });
 
-  // ── AUTHORIZATION: must be an admin ─────────────────────────
-  // Customers cannot manage other users' permissions.
-  // This is the same RBAC check used in admin/orders.js.
-  if (decoded.role !== 'admin') {
-    return res.status(403).json({ error: 'Forbidden. Admin access required.' });
-  }
+  // only admins can manage users
+  if (decoded.role !== 'admin') return res.status(403).json({ error: 'Forbidden. Admin access required.' });
 
-  // ────────────────────────────────────────────────────────────
-  //  GET /api/admin/users
-  //  Returns a list of every registered user with their role.
-  // ────────────────────────────────────────────────────────────
+  // GET - return a list of all users
   if (req.method === 'GET') {
-
-    // 'registered_users' is a Redis Set we keep updated on registration.
-    // It holds every username string, e.g. { "ahmed", "stain", "omar" }
     const usernames = await kv.smembers('registered_users') || [];
-
-    // For each username, fetch the full user object from Redis.
-    // kv.get('user:ahmed') returns the object we stored during registration.
-    const users = await Promise.all(
-      usernames.map(async (username) => {
-        const raw  = await kv.get(`user:${username}`);
-        const user = typeof raw === 'string' ? JSON.parse(raw) : raw;
-        if (!user) return null;
-
-        // Only return safe fields — never return passwordHash!
-        return {
-          username:  user.username,
-          email:     user.email,
-          role:      user.role,       // 'admin' or 'customer'
-          createdAt: user.createdAt,
-        };
+    const users = (await Promise.all(
+      usernames.map(async (u) => {
+        const raw = await kv.get(`user:${u}`);
+        if (!raw) return null;
+        const { username, email, role, createdAt } = parseUser(raw);
+        return { username, email, role, createdAt }; // don't return the password hash
       })
-    );
+    )).filter(Boolean);
 
-    // Filter out any nulls (in case a username existed but its data was deleted)
-    const cleanList = users.filter(Boolean);
-
-    return res.status(200).json({
-      ok:    true,
-      count: cleanList.length,
-      users: cleanList,
-    });
+    return res.status(200).json({ ok: true, count: users.length, users });
   }
 
-  // ────────────────────────────────────────────────────────────
-  //  PATCH /api/admin/users?user=<username>
-  //  Changes a user's role to 'admin' or 'customer'.
-  //  This is the core of "User Permissions Management".
-  // ────────────────────────────────────────────────────────────
+  const targetUsername = (req.query.user || '').toLowerCase().trim();
+
+  // PATCH - change a user's role
   if (req.method === 'PATCH') {
+    const newRole = req.body.role;
+    if (!targetUsername) return res.status(400).json({ error: 'Missing ?user= query parameter.' });
+    if (newRole !== 'admin' && newRole !== 'customer') return res.status(400).json({ error: 'Role must be "admin" or "customer".' });
 
-    const targetUsername = (req.query.user || '').toLowerCase().trim();
-    const newRole        = req.body.role;
-
-    // Validate inputs
-    if (!targetUsername) {
-      return res.status(400).json({ error: 'Missing ?user= query parameter.' });
-    }
-    if (newRole !== 'admin' && newRole !== 'customer') {
-      return res.status(400).json({ error: 'Role must be "admin" or "customer".' });
-    }
-
-    // Load the target user from Redis
     const raw = await kv.get(`user:${targetUsername}`);
-    if (!raw) {
-      return res.status(404).json({ error: `User "${targetUsername}" not found.` });
-    }
-
-    const user = typeof raw === 'string' ? JSON.parse(raw) : raw;
+    if (!raw) return res.status(404).json({ error: `User "${targetUsername}" not found.` });
+    const user = parseUser(raw);
 
     const oldRole = user.role;
-
-    // Update the role and save back to Redis
     user.role = newRole;
     await kv.set(`user:${targetUsername}`, JSON.stringify(user));
 
-    // Return what changed so the caller can confirm
-    return res.status(200).json({
-      ok:       true,
-      username: user.username,
-      oldRole,          // what the role was before
-      newRole,          // what the role is now
-      message:  `User "${user.username}" role changed from "${oldRole}" to "${newRole}".`,
-    });
+    return res.status(200).json({ ok: true, username: user.username, oldRole, newRole,
+      message: `User "${user.username}" role changed from "${oldRole}" to "${newRole}".` });
   }
 
-  // ────────────────────────────────────────────────────────────
-  //  DELETE /api/admin/users?user=<username>
-  //  Permanently removes a user account from the database.
-  //  Also removes them from the registered_users Set so they
-  //  no longer appear in the GET list.
-  // ────────────────────────────────────────────────────────────
+  // DELETE - remove a user account
   if (req.method === 'DELETE') {
+    if (!targetUsername) return res.status(400).json({ error: 'Missing ?user= query parameter.' });
+    if (targetUsername === decoded.username) return res.status(400).json({ error: 'You cannot delete your own account.' });
 
-    const targetUsername = (req.query.user || '').toLowerCase().trim();
-
-    if (!targetUsername) {
-      return res.status(400).json({ error: 'Missing ?user= query parameter.' });
-    }
-
-    // Safety guard: an admin cannot delete themselves
-    if (targetUsername === decoded.username) {
-      return res.status(400).json({ error: 'You cannot delete your own account.' });
-    }
-
-    // Check the user actually exists
     const raw = await kv.get(`user:${targetUsername}`);
-    if (!raw) {
-      return res.status(404).json({ error: `User "${targetUsername}" not found.` });
-    }
+    if (!raw) return res.status(404).json({ error: `User "${targetUsername}" not found.` });
 
-    // Delete the user's data object from Redis
     await kv.del(`user:${targetUsername}`);
-
-    // Remove them from the registered_users Set so GET no longer lists them
     await kv.srem('registered_users', targetUsername);
 
-    return res.status(200).json({
-      ok:      true,
-      deleted: targetUsername,
-      message: `User "${targetUsername}" has been permanently deleted.`,
-    });
+    return res.status(200).json({ ok: true, deleted: targetUsername,
+      message: `User "${targetUsername}" has been permanently deleted.` });
   }
 
-  // Any other HTTP method is not allowed
   return res.status(405).json({ error: 'Method not allowed.' });
 }

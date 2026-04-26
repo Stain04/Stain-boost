@@ -1,37 +1,40 @@
-// ─────────────────────────────────────────────────────────────
-//  auth.js  —  Single file handling all auth actions
+// handles register, login, logout, change-password, and get profile
+// all in one file to stay under the Vercel function limit
 //
-//  Routes (via ?action= query param):
-//    POST /api/auth?action=register  →  create account (bcrypt + pepper)
-//    POST /api/auth?action=login     →  verify password, return JWT
-//    POST /api/auth?action=logout    →  blacklist JWT in Redis
-//    GET  /api/auth                  →  return logged-in user profile
-//
-//  Merged into one file to stay within Vercel Hobby plan (12 functions max).
-// ─────────────────────────────────────────────────────────────
+// GET  /api/auth                        → get logged in user info
+// POST /api/auth?action=register        → create a new account
+// POST /api/auth?action=login           → login and get a token
+// POST /api/auth?action=logout          → logout and blacklist the token
+// POST /api/auth?action=change-password → change your password
 
 import bcrypt from 'bcryptjs';
 import { getKV, signToken, verifyToken } from './_lib/auth.js';
 
 const PEPPER = process.env.PASSWORD_PEPPER || 'sb-default-pepper-change-me';
 
-function sanitize(str, maxLen = 100) {
+// remove special characters and limit the length
+function sanitize(str, max = 100) {
   if (typeof str !== 'string') return '';
-  return str.replace(/[<>"'&]/g, '').trim().slice(0, maxLen);
+  return str.replace(/[<>"'&]/g, '').trim().slice(0, max);
+}
+
+// redis stores values as JSON strings so we need to parse them
+function parseUser(raw) {
+  return typeof raw === 'string' ? JSON.parse(raw) : raw;
 }
 
 export default async function handler(req, res) {
   const kv = getKV();
   if (!kv) return res.status(500).json({ error: 'Database not configured.' });
 
-  // ── GET /api/auth  →  return logged-in user profile (me) ────
+  // GET /api/auth - return info about the currently logged in user
   if (req.method === 'GET') {
     const decoded = await verifyToken(req, kv);
     if (!decoded) return res.status(401).json({ error: 'Unauthorized. Please log in.' });
 
-    const raw  = await kv.get(`user:${decoded.username}`);
-    if (!raw)  return res.status(404).json({ error: 'User not found.' });
-    const user = typeof raw === 'string' ? JSON.parse(raw) : raw;
+    const raw = await kv.get(`user:${decoded.username}`);
+    if (!raw) return res.status(404).json({ error: 'User not found.' });
+    const user = parseUser(raw);
 
     return res.status(200).json({
       username:  user.username,
@@ -45,7 +48,7 @@ export default async function handler(req, res) {
 
   const action = req.query.action;
 
-  // ── POST /api/auth?action=register ───────────────────────────
+  // register - save a new user with a hashed password
   if (action === 'register') {
     const { username, email, password, role } = req.body;
 
@@ -53,17 +56,15 @@ export default async function handler(req, res) {
     const cleanEmail    = sanitize(email, 100).toLowerCase();
     const cleanRole     = role === 'admin' ? 'admin' : 'customer';
 
-    if (!cleanUsername || !cleanEmail || !password) {
+    if (!cleanUsername || !cleanEmail || !password)
       return res.status(400).json({ error: 'Username, email, and password are required.' });
-    }
-    if (password.length < 8) {
+    if (password.length < 8)
       return res.status(400).json({ error: 'Password must be at least 8 characters.' });
-    }
+    if (await kv.get(`user:${cleanUsername}`))
+      return res.status(409).json({ error: 'Username already taken.' });
 
-    const existing = await kv.get(`user:${cleanUsername}`);
-    if (existing) return res.status(409).json({ error: 'Username already taken.' });
-
-    // Hash password: pepper + bcrypt (Section 3 & 4)
+    // bcrypt automatically generates a salt and hashes the password
+    // we also add a pepper (server secret) before hashing for extra security
     const passwordHash = await bcrypt.hash(password + PEPPER, 12);
 
     const user = {
@@ -75,84 +76,64 @@ export default async function handler(req, res) {
     };
 
     await kv.set(`user:${cleanUsername}`, JSON.stringify(user));
-
-    // Track every username in a Redis Set so admin/users.js can list all users
     await kv.sadd('registered_users', cleanUsername);
 
     const token = await signToken({ username: cleanUsername, role: cleanRole });
     return res.status(201).json({ ok: true, token, role: cleanRole });
   }
 
-  // ── POST /api/auth?action=login ──────────────────────────────
+  // login - check the password and return a JWT
   if (action === 'login') {
     const { username, password } = req.body;
-
-    if (!username || !password) {
+    if (!username || !password)
       return res.status(400).json({ error: 'Username and password are required.' });
-    }
 
     const raw = await kv.get(`user:${username.toLowerCase().trim()}`);
+    // use the same error message for both cases so attackers can't tell
+    // if the username exists or not
     if (!raw) return res.status(401).json({ error: 'Invalid username or password.' });
 
-    const user  = typeof raw === 'string' ? JSON.parse(raw) : raw;
-
-    // Verify password: bcrypt.compare(input + pepper, storedHash) (Section 3 & 4)
+    const user = parseUser(raw);
     const match = await bcrypt.compare(password + PEPPER, user.passwordHash);
     if (!match) return res.status(401).json({ error: 'Invalid username or password.' });
 
-    // Issue JWT (Section 1)
     const token = await signToken({ username: user.username, role: user.role });
     return res.status(200).json({ ok: true, token, role: user.role });
   }
 
-  // ── POST /api/auth?action=change-password ───────────────────
-  // Works for BOTH admin and customer — any logged-in user can use this.
-  // Steps:
-  //   1. Verify JWT (must be logged in)
-  //   2. Verify current password (so someone who grabbed your screen can't change it)
-  //   3. Hash the new password with bcrypt + pepper
-  //   4. Save the new hash to Redis
+  // change-password - verify the old password first, then save the new one
   if (action === 'change-password') {
     const decoded = await verifyToken(req, kv);
     if (!decoded) return res.status(401).json({ error: 'Unauthorized. Please log in.' });
 
     const { currentPassword, newPassword } = req.body;
-
-    if (!currentPassword || !newPassword) {
+    if (!currentPassword || !newPassword)
       return res.status(400).json({ error: 'Current password and new password are required.' });
-    }
-    if (newPassword.length < 8) {
+    if (newPassword.length < 8)
       return res.status(400).json({ error: 'New password must be at least 8 characters.' });
-    }
-    if (currentPassword === newPassword) {
+    if (currentPassword === newPassword)
       return res.status(400).json({ error: 'New password must be different from current password.' });
-    }
 
-    // Load the user from Redis
-    const raw  = await kv.get(`user:${decoded.username}`);
-    if (!raw)  return res.status(404).json({ error: 'User not found.' });
-    const user = typeof raw === 'string' ? JSON.parse(raw) : raw;
+    const raw = await kv.get(`user:${decoded.username}`);
+    if (!raw) return res.status(404).json({ error: 'User not found.' });
+    const user = parseUser(raw);
 
-    // Verify the current password before allowing the change (Section 3 & 4)
+    // make sure they know the current password before allowing a change
     const match = await bcrypt.compare(currentPassword + PEPPER, user.passwordHash);
     if (!match) return res.status(401).json({ error: 'Current password is incorrect.' });
 
-    // Hash the new password and save
     user.passwordHash = await bcrypt.hash(newPassword + PEPPER, 12);
     await kv.set(`user:${decoded.username}`, JSON.stringify(user));
-
     return res.status(200).json({ ok: true, message: 'Password changed successfully.' });
   }
 
-  // ── POST /api/auth?action=logout ─────────────────────────────
+  // logout - add the token to a blacklist so it can't be used again
   if (action === 'logout') {
     const decoded = await verifyToken(req, kv);
     if (!decoded) return res.status(401).json({ error: 'Invalid or expired token.' });
 
-    // Blacklist the token in Redis (Section 2)
     const token = req.headers['authorization'].slice(7);
     await kv.sadd('auth_blacklisted_tokens', token);
-
     return res.status(200).json({ ok: true, message: 'Logged out successfully.' });
   }
 

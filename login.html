@@ -1,822 +1,390 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<style>html,body{background:#0b0916;}</style>
-<link rel="stylesheet" href="shared.css">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Login · StainBoost</title>
-<link rel="icon" href="/favicon.ico" sizes="32x32">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600&display=block" rel="stylesheet">
-
+<link rel="stylesheet" href="shared.css">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Orbitron:wght@900&family=Inter:wght@400;500;600&display=block" rel="stylesheet">
 <style>
-:root{
-  --bg:#060411;
-  --bg-card:rgba(12,8,32,0.85);
-  --purple:#7c3aed;
-  --purple-light:#c4b5fd;
-  --cyan:#06d6f2;
-  --text:#e8e4f0;
-  --muted:rgba(255,255,255,0.35);
-  --glass:rgba(255,255,255,0.03);
-  --error:#f87171;
-  --success:#34d399;
-}
-
+:root{--purple:#7c3aed;--cyan:#06d6f2;--err:#f87171;--ok:#34d399;--muted:rgba(255,255,255,0.35);}
 *{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',sans-serif;background:#060411;color:#e8e4f0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
 
-body{
-  font-family:'Inter',sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:24px;
-}
+.wrap{width:100%;max-width:440px;z-index:1;}
+.brand{text-align:center;margin-bottom:32px;}
+.brand-name{font-family:'Orbitron',sans-serif;font-size:28px;font-weight:900;background:linear-gradient(135deg,#7c3aed,#06d6f2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:2px;}
+.brand-sub{font-size:13px;color:var(--muted);margin-top:4px;}
+.card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:36px;backdrop-filter:blur(20px);box-shadow:0 24px 64px rgba(0,0,0,0.5);}
+.back{display:block;text-align:center;margin-top:20px;color:var(--muted);font-size:13px;text-decoration:none;}
+.back:hover{color:#e8e4f0;}
 
-/* Animated background glow */
-body::before{
-  content:'';
-  position:fixed;
-  inset:0;
-  background:
-    radial-gradient(ellipse 60% 40% at 30% 20%, rgba(124,58,237,0.15) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 35% at 70% 80%, rgba(6,214,242,0.10) 0%, transparent 60%);
-  pointer-events:none;
-}
+/* Tabs */
+.tabs{display:flex;background:rgba(0,0,0,0.3);border-radius:10px;padding:4px;margin-bottom:28px;gap:4px;}
+.tab{flex:1;padding:10px;border:none;background:transparent;color:var(--muted);border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:600;letter-spacing:1px;cursor:pointer;transition:all .2s;}
+.tab.active{background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff;box-shadow:0 4px 16px rgba(124,58,237,0.4);}
 
-.auth-wrapper{
-  width:100%;
-  max-width:440px;
-  position:relative;
-  z-index:1;
-}
+/* Inputs */
+.field{margin-bottom:16px;}
+.field label{display:block;font-size:12px;font-weight:600;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:6px;}
+input[type=text],input[type=email],input[type=password]{width:100%;padding:11px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:#fff;font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s;}
+input:focus{border-color:var(--purple);}
+input::placeholder{color:rgba(255,255,255,0.2);}
 
-/* Logo / brand */
-.brand{
-  text-align:center;
-  margin-bottom:32px;
-}
-.brand-name{
-  font-family:'Orbitron',sans-serif;
-  font-size:28px;
-  font-weight:900;
-  background:linear-gradient(135deg,#7c3aed,#06d6f2);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
-  letter-spacing:2px;
-}
-.brand-sub{
-  font-size:13px;
-  color:var(--muted);
-  margin-top:4px;
-}
+/* Role picker */
+.role-row{display:flex;gap:8px;margin-bottom:16px;}
+.role-btn{flex:1;padding:10px;border:1px solid rgba(255,255,255,0.1);border-radius:8px;background:transparent;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;}
+.role-btn.selected{border-color:var(--cyan);color:var(--cyan);background:rgba(6,214,242,0.08);}
 
-/* Card */
-.card{
-  background:rgba(255,255,255,0.03);
-  border:1px solid rgba(255,255,255,0.08);
-  border-radius:20px;
-  padding:36px;
-  backdrop-filter:blur(20px);
-  box-shadow:0 24px 64px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
-}
+/* Buttons */
+.btn-primary{width:100%;padding:13px;background:linear-gradient(135deg,#7c3aed,#06d6f2);border:none;border-radius:8px;color:#fff;font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:opacity .2s;margin-top:4px;}
+.btn-primary:hover{opacity:.88;}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed;}
+.btn-danger{width:100%;padding:10px;background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.3);border-radius:8px;color:var(--err);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;margin-top:16px;}
+.btn-danger:hover{background:rgba(248,113,113,0.2);}
 
-/* Tab switcher */
-.tabs{
-  display:flex;
-  background:rgba(0,0,0,0.3);
-  border-radius:10px;
-  padding:4px;
-  margin-bottom:28px;
-  gap:4px;
-}
-.tab{
-  flex:1;
-  padding:10px;
-  border:none;
-  background:transparent;
-  color:var(--muted);
-  border-radius:8px;
-  font-family:'Rajdhani',sans-serif;
-  font-size:15px;
-  font-weight:600;
-  letter-spacing:1px;
-  cursor:pointer;
-  transition:all 0.2s;
-}
-.tab.active{
-  background:linear-gradient(135deg,#7c3aed,#5b21b6);
-  color:#fff;
-  box-shadow:0 4px 16px rgba(124,58,237,0.4);
-}
+/* Status messages */
+.msg{margin-top:10px;padding:10px 14px;border-radius:8px;font-size:13px;font-weight:600;display:none;}
+.msg.ok {display:block;background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.25);color:var(--ok);}
+.msg.err{display:block;background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.25);color:var(--err);}
 
-/* Form fields */
-.field{
-  margin-bottom:18px;
-}
-.field label{
-  display:block;
-  font-size:12px;
-  font-weight:600;
-  letter-spacing:1px;
-  color:var(--muted);
-  text-transform:uppercase;
-  margin-bottom:8px;
-}
-.field input{
-  width:100%;
-  padding:12px 16px;
-  background:rgba(255,255,255,0.05);
-  border:1px solid rgba(255,255,255,0.1);
-  border-radius:10px;
-  color:#fff;
-  font-size:14px;
-  font-family:'Inter',sans-serif;
-  outline:none;
-  transition:border-color 0.2s, box-shadow 0.2s;
-}
-.field input:focus{
-  border-color:var(--purple);
-  box-shadow:0 0 0 3px rgba(124,58,237,0.2);
-}
-.field input::placeholder{color:rgba(255,255,255,0.2);}
+/* User panel */
+.user-panel{text-align:center;}
+.avatar{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#06d6f2);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;font-family:'Orbitron',sans-serif;margin:0 auto 12px;}
+.uname{font-size:20px;font-weight:700;font-family:'Rajdhani',sans-serif;letter-spacing:1px;}
+.role-badge{display:inline-block;margin-top:6px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;}
+.role-badge.admin   {background:rgba(245,166,35,0.15);color:#f5a623;border:1px solid rgba(245,166,35,0.3);}
+.role-badge.customer{background:rgba(124,58,237,0.15);color:#c4b5fd; border:1px solid rgba(124,58,237,0.3);}
+.uemail{font-size:13px;color:var(--muted);margin-top:6px;}
 
-/* Role selector (register only) */
-.role-row{
-  display:flex;
-  gap:10px;
-  margin-bottom:18px;
-}
-.role-btn{
-  flex:1;
-  padding:10px;
-  border:1px solid rgba(255,255,255,0.1);
-  border-radius:10px;
-  background:transparent;
-  color:var(--muted);
-  font-size:13px;
-  font-weight:600;
-  cursor:pointer;
-  transition:all 0.2s;
-}
-.role-btn.selected{
-  border-color:var(--cyan);
-  color:var(--cyan);
-  background:rgba(6,214,242,0.08);
-}
+/* Collapsible sections inside the user panel */
+.section{margin-top:20px;border-top:1px solid rgba(255,255,255,0.07);padding-top:16px;text-align:left;display:none;}
+.section.show{display:block;}
+.sec-title{font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
 
-/* Submit button */
-.btn-submit{
-  width:100%;
-  padding:14px;
-  background:linear-gradient(135deg,#7c3aed,#06d6f2);
-  border:none;
-  border-radius:10px;
-  color:#fff;
-  font-family:'Rajdhani',sans-serif;
-  font-size:16px;
-  font-weight:700;
-  letter-spacing:1.5px;
-  cursor:pointer;
-  transition:opacity 0.2s, transform 0.1s;
-  margin-top:4px;
-}
-.btn-submit:hover{opacity:0.9;}
-.btn-submit:active{transform:scale(0.98);}
-.btn-submit:disabled{opacity:0.5;cursor:not-allowed;}
+/* Order items (admin orders list) */
+.order-list{max-height:180px;overflow-y:auto;}
+.order-item{padding:10px 12px;background:rgba(245,166,35,0.05);border:1px solid rgba(245,166,35,0.15);border-radius:8px;margin-bottom:6px;font-size:12px;}
+.order-item .oname{font-weight:600;color:#f5a623;}
+.order-item .oact {color:var(--muted);margin-top:2px;}
 
-/* Status message */
-.status{
-  margin-top:16px;
-  padding:12px 16px;
-  border-radius:10px;
-  font-size:13px;
-  font-weight:500;
-  display:none;
-}
-.status.error{background:rgba(248,113,113,0.12);border:1px solid rgba(248,113,113,0.3);color:var(--error);}
-.status.success{background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);color:var(--success);}
-.status.show{display:block;}
-
-/* User info panel (shown after login) */
-.user-panel{
-  display:none;
-  text-align:center;
-}
-.user-panel.show{display:block;}
-.user-avatar{
-  width:64px;height:64px;
-  border-radius:50%;
-  background:linear-gradient(135deg,#7c3aed,#06d6f2);
-  display:flex;align-items:center;justify-content:center;
-  font-size:26px;font-weight:700;font-family:'Orbitron',sans-serif;
-  margin:0 auto 16px;
-}
-.user-name{font-size:20px;font-weight:700;font-family:'Rajdhani',sans-serif;letter-spacing:1px;}
-.user-role{
-  display:inline-block;
-  margin-top:6px;
-  padding:4px 12px;
-  border-radius:20px;
-  font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
-}
-.user-role.admin{background:rgba(245,166,35,0.15);color:#f5a623;border:1px solid rgba(245,166,35,0.3);}
-.user-role.customer{background:rgba(124,58,237,0.15);color:var(--purple-light);border:1px solid rgba(124,58,237,0.3);}
-.user-email{font-size:13px;color:var(--muted);margin-top:8px;}
-
-.btn-logout{
-  margin-top:20px;
-  padding:10px 24px;
-  background:rgba(248,113,113,0.1);
-  border:1px solid rgba(248,113,113,0.3);
-  border-radius:8px;
-  color:var(--error);
-  font-size:13px;font-weight:600;cursor:pointer;
-  transition:all 0.2s;
-}
-.btn-logout:hover{background:rgba(248,113,113,0.2);}
-
-/* Admin panel */
-.admin-panel{
-  display:none;
-  margin-top:20px;
-}
-.admin-panel.show{display:block;}
-.admin-title{
-  font-family:'Orbitron',sans-serif;
-  font-size:12px;letter-spacing:2px;color:#f5a623;
-  text-transform:uppercase;margin-bottom:12px;
-}
-.order-list{max-height:200px;overflow-y:auto;}
-.order-item{
-  padding:10px 12px;
-  background:rgba(245,166,35,0.05);
-  border:1px solid rgba(245,166,35,0.15);
-  border-radius:8px;
-  margin-bottom:8px;
-  font-size:12px;
-}
-.order-item .o-name{font-weight:600;color:#f5a623;}
-.order-item .o-action{color:var(--muted);margin-top:2px;}
-
-.back-link{
-  display:block;text-align:center;margin-top:20px;
-  color:var(--muted);font-size:13px;text-decoration:none;
-  transition:color 0.2s;
-}
-.back-link:hover{color:var(--text);}
-
-/* ── User Permissions Management panel ── */
-.users-section{margin-top:20px;border-top:1px solid rgba(255,255,255,0.06);padding-top:16px;}
-.users-title{
-  font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:2px;
-  color:var(--cyan);text-transform:uppercase;margin-bottom:12px;
-}
-.user-item{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:10px 12px;background:rgba(6,214,242,0.04);
-  border:1px solid rgba(6,214,242,0.12);border-radius:8px;margin-bottom:8px;
-}
-.u-info .u-name{font-size:13px;font-weight:600;}
-.u-info .u-meta{font-size:11px;color:var(--muted);margin-top:2px;}
-.btn-role{
-  padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;
-  letter-spacing:1px;cursor:pointer;transition:all 0.2s;border:1px solid;
-}
-.btn-role.promote{background:rgba(245,166,35,0.12);color:#f5a623;border-color:rgba(245,166,35,0.3);}
-.btn-role.demote {background:rgba(248,113,113,0.12);color:var(--error);border-color:rgba(248,113,113,0.3);}
-.btn-role:disabled{opacity:0.4;cursor:not-allowed;}
-.btn-delete{
-  padding:5px 10px;border-radius:6px;font-size:11px;font-weight:700;
-  letter-spacing:1px;cursor:pointer;transition:all 0.2s;
-  background:rgba(248,113,113,0.08);color:var(--error);
-  border:1px solid rgba(248,113,113,0.2);margin-left:6px;
-}
-.btn-delete:hover{background:rgba(248,113,113,0.2);}
-.btn-delete:disabled{opacity:0.4;cursor:not-allowed;}
-.u-actions{display:flex;align-items:center;gap:0;}
-
-/* ── Change Password section ── */
-.pw-section{margin-top:20px;border-top:1px solid rgba(255,255,255,0.06);padding-top:16px;text-align:left;}
-.pw-title{
-  font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:2px;
-  color:var(--purple-light);text-transform:uppercase;margin-bottom:12px;
-}
-.pw-field{margin-bottom:10px;}
-.pw-field input{
-  width:100%;padding:10px 14px;
-  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);
-  border-radius:8px;color:#fff;font-size:13px;font-family:'Inter',sans-serif;outline:none;
-  transition:border-color 0.2s;
-}
-.pw-field input:focus{border-color:var(--purple);}
-.pw-field input::placeholder{color:rgba(255,255,255,0.2);}
-.btn-pw{
-  width:100%;padding:10px;border:none;border-radius:8px;
-  background:linear-gradient(135deg,#7c3aed,#06d6f2);
-  color:#fff;font-family:'Rajdhani',sans-serif;font-size:14px;
-  font-weight:700;letter-spacing:1px;cursor:pointer;transition:opacity 0.2s;
-}
-.btn-pw:hover{opacity:0.88;}
-.btn-pw:disabled{opacity:0.5;cursor:not-allowed;}
-.pw-msg{margin-top:8px;font-size:12px;font-weight:600;display:none;padding:8px 10px;border-radius:7px;}
-.pw-msg.success{display:block;background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.25);color:var(--success);}
-.pw-msg.error  {display:block;background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.25);color:var(--error);}
+/* User rows (permissions management) */
+.urow{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:rgba(6,214,242,0.04);border:1px solid rgba(6,214,242,0.12);border-radius:8px;margin-bottom:6px;}
+.urow .uinfo2{font-size:13px;font-weight:600;}
+.urow .umeta {font-size:11px;color:var(--muted);margin-top:2px;}
+.ubtns{display:flex;gap:5px;}
+/* all small action buttons share the same base style */
+.ubtn{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;border:1px solid;transition:all .2s;}
+.ubtn.promote{background:rgba(245,166,35,0.12);color:#f5a623;border-color:rgba(245,166,35,0.3);}
+.ubtn.demote {background:rgba(248,113,113,0.12);color:var(--err);border-color:rgba(248,113,113,0.3);}
+.ubtn.del    {background:rgba(248,113,113,0.08);color:var(--err);border-color:rgba(248,113,113,0.2);}
+.ubtn:disabled{opacity:.4;cursor:not-allowed;}
 </style>
 </head>
 
 <body>
-<div class="auth-wrapper">
+<div class="wrap">
 
   <div class="brand">
     <div class="brand-name">STAINBOOST</div>
     <div class="brand-sub">Secure Account Access</div>
   </div>
 
-  <!-- AUTH CARD -->
+  <!-- LOGIN / REGISTER CARD -->
   <div class="card" id="authCard">
-
-    <!-- Tab switcher -->
     <div class="tabs">
-      <button class="tab active" id="tabLogin"    onclick="switchTab('login')">LOGIN</button>
-      <button class="tab"        id="tabRegister" onclick="switchTab('register')">REGISTER</button>
+      <button class="tab active" onclick="switchTab('login')">LOGIN</button>
+      <button class="tab"        onclick="switchTab('register')">REGISTER</button>
     </div>
 
-    <!-- LOGIN FORM -->
-    <form id="loginForm" onsubmit="handleLogin(event)">
-      <div class="field">
-        <label>Username</label>
-        <input type="text" id="loginUsername" placeholder="your username" autocomplete="username" required>
-      </div>
-      <div class="field">
-        <label>Password</label>
-        <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password" required>
-      </div>
-      <button type="submit" class="btn-submit" id="loginBtn">LOGIN</button>
-      <div class="status" id="loginStatus"></div>
+    <form id="loginForm" onsubmit="doLogin(event)">
+      <div class="field"><label>Username</label><input type="text"     id="lUser" placeholder="your username"    required></div>
+      <div class="field"><label>Password</label><input type="password" id="lPass" placeholder="••••••••"         required></div>
+      <button class="btn-primary" id="lBtn">LOGIN</button>
+      <div class="msg" id="lMsg"></div>
     </form>
 
-    <!-- REGISTER FORM (hidden by default) -->
-    <form id="registerForm" onsubmit="handleRegister(event)" style="display:none">
-      <div class="field">
-        <label>Username</label>
-        <input type="text" id="regUsername" placeholder="choose a username" autocomplete="username" required>
-      </div>
-      <div class="field">
-        <label>Email</label>
-        <input type="email" id="regEmail" placeholder="you@example.com" autocomplete="email" required>
-      </div>
-      <div class="field">
-        <label>Password <span style="color:var(--muted);font-size:10px;">(min 8 chars)</span></label>
-        <input type="password" id="regPassword" placeholder="••••••••" autocomplete="new-password" required>
-      </div>
+    <form id="regForm" onsubmit="doRegister(event)" style="display:none">
+      <div class="field"><label>Username</label><input type="text"     id="rUser"  placeholder="choose a username" required></div>
+      <div class="field"><label>Email</label>   <input type="email"    id="rEmail" placeholder="you@example.com"   required></div>
+      <div class="field"><label>Password <span style="opacity:.5;font-size:10px">(min 8 chars)</span></label>
+        <input type="password" id="rPass" placeholder="••••••••" required></div>
       <div class="field">
         <label>Role</label>
         <div class="role-row">
-          <button type="button" class="role-btn selected" id="roleCustomer" onclick="selectRole('customer')">Customer</button>
-          <button type="button" class="role-btn"          id="roleAdmin"    onclick="selectRole('admin')">Admin</button>
+          <button type="button" class="role-btn selected" id="rcCustomer" onclick="setRole('customer')">Customer</button>
+          <button type="button" class="role-btn"          id="rcAdmin"    onclick="setRole('admin')">Admin</button>
         </div>
       </div>
-      <button type="submit" class="btn-submit" id="registerBtn">CREATE ACCOUNT</button>
-      <div class="status" id="registerStatus"></div>
+      <button class="btn-primary" id="rBtn">CREATE ACCOUNT</button>
+      <div class="msg" id="rMsg"></div>
     </form>
-
-  </div><!-- /card -->
+  </div>
 
   <!-- USER PANEL (shown after login) -->
   <div class="card" id="userCard" style="display:none">
-    <div class="user-panel show">
-      <div class="user-avatar" id="userAvatar">?</div>
-      <div class="user-name"   id="userName">—</div>
-      <div class="user-role"   id="userRoleBadge">—</div>
-      <div class="user-email"  id="userEmail">—</div>
+    <div class="user-panel">
+      <div class="avatar"     id="uAvatar"></div>
+      <div class="uname"      id="uName"></div>
+      <div class="role-badge" id="uBadge"></div>
+      <div class="uemail"     id="uEmail"></div>
 
-      <!-- Admin-only section -->
-      <div class="admin-panel" id="adminPanel">
-
-        <!-- Criteria 3: RBAC — admin sees the order feed, customer cannot -->
-        <div class="admin-title">Recent Orders (Admin View)</div>
+      <!-- ADMIN ONLY — Criteria 3: RBAC (admin sees orders, customer cannot) -->
+      <div class="section" id="ordersSection">
+        <div class="sec-title" style="color:#f5a623">Recent Orders (Admin View)</div>
         <div class="order-list" id="orderList">Loading…</div>
-
-        <!-- Criteria 4: User Permissions Management — admin can change roles -->
-        <div class="users-section">
-          <div class="users-title">User Permissions Management</div>
-          <div id="usersList">Loading…</div>
-        </div>
-
       </div>
 
-      <!-- Customer-only section -->
-      <div class="admin-panel" id="customerPanel">
-        <div class="admin-title" style="color:var(--purple-light);">Customer Dashboard</div>
-        <div class="order-list" id="customerInfo">Loading…</div>
+      <!-- ADMIN ONLY — Criteria 4: User Permissions Management -->
+      <div class="section" id="usersSection">
+        <div class="sec-title" style="color:var(--cyan)">User Permissions Management</div>
+        <div id="usersList">Loading…</div>
       </div>
 
-      <!-- Change Password — available to both admin and customer -->
-      <div class="pw-section">
-        <div class="pw-title">Change Password</div>
-        <div class="pw-field">
-          <input type="password" id="pwCurrent" placeholder="Current password">
-        </div>
-        <div class="pw-field">
-          <input type="password" id="pwNew" placeholder="New password (min 8 chars)">
-        </div>
-        <button class="btn-pw" id="pwBtn" onclick="handleChangePassword()">UPDATE PASSWORD</button>
-        <div class="pw-msg" id="pwMsg"></div>
+      <!-- CUSTOMER ONLY — Criteria 3: RBAC (customer panel, admin cannot access) -->
+      <div class="section" id="custSection">
+        <div class="sec-title" style="color:#c4b5fd">Customer Dashboard</div>
+        <div id="custInfo">Loading…</div>
       </div>
 
-      <button class="btn-logout" onclick="handleLogout()">Logout</button>
+      <!-- BOTH ROLES — Change Password -->
+      <div class="section show">
+        <div class="sec-title" style="color:#c4b5fd">Change Password</div>
+        <div class="field"><input type="password" id="pwCur" placeholder="Current password"></div>
+        <div class="field"><input type="password" id="pwNew" placeholder="New password (min 8 chars)"></div>
+        <button class="btn-primary" id="pwBtn" onclick="doChangePassword()">UPDATE PASSWORD</button>
+        <div class="msg" id="pwMsg"></div>
+      </div>
+
+      <button class="btn-danger" onclick="doLogout()">Logout</button>
     </div>
   </div>
 
-  <a href="/" class="back-link">← Back to StainBoost</a>
-
-</div><!-- /wrapper -->
+  <a href="/" class="back">← Back to StainBoost</a>
+</div>
 
 <script>
-// ──────────────────────────────────────────────────────────────
-//  Frontend auth logic
-//  Stores the JWT in localStorage so it persists across page reloads.
-//  On page load, we call /api/auth/me to check if already logged in.
-// ──────────────────────────────────────────────────────────────
-
 let selectedRole = 'customer';
 
-// ── On page load: check if user already has a valid token ──
+// On page load — check if already logged in
 window.addEventListener('DOMContentLoaded', async () => {
   const token = localStorage.getItem('sb_token');
-  if (token) await fetchProfile(token);
+  if (token) await loadProfile();
 });
 
-// ── Tab switcher ──
-function switchTab(tab) {
-  document.getElementById('loginForm').style.display    = tab === 'login'    ? 'block' : 'none';
-  document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
-  document.getElementById('tabLogin').classList.toggle('active',    tab === 'login');
-  document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
-  clearStatuses();
-}
-
-function selectRole(role) {
-  selectedRole = role;
-  document.getElementById('roleCustomer').classList.toggle('selected', role === 'customer');
-  document.getElementById('roleAdmin').classList.toggle('selected',    role === 'admin');
-}
-
-function showStatus(id, msg, type) {
-  const el = document.getElementById(id);
-  el.textContent = msg;
-  el.className = `status ${type} show`;
-}
-
-function clearStatuses() {
-  ['loginStatus','registerStatus'].forEach(id => {
-    const el = document.getElementById(id);
-    el.className = 'status';
-    el.textContent = '';
+// ── Shared fetch helper — automatically adds the auth header ──
+// Instead of writing headers every time, we call api() once.
+async function api(url, opts = {}) {
+  const token = localStorage.getItem('sb_token');
+  const res = await fetch(url, {
+    ...opts,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
   });
+  return { res, data: await res.json() };
 }
 
-// ── LOGIN ─────────────────────────────────────────────────────
-async function handleLogin(e) {
+// ── Show a message under any element ─────────────────────────
+function showMsg(id, text, type) {
+  const el = document.getElementById(id);
+  el.textContent = text;
+  el.className = `msg ${type}`;
+}
+
+// ── Tab + role switchers ──────────────────────────────────────
+function switchTab(tab) {
+  document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('regForm').style.display   = tab === 'login' ? 'none'  : 'block';
+  document.querySelectorAll('.tab').forEach((t, i) =>
+    t.classList.toggle('active', i === (tab === 'login' ? 0 : 1))
+  );
+}
+
+function setRole(r) {
+  selectedRole = r;
+  document.getElementById('rcCustomer').classList.toggle('selected', r === 'customer');
+  document.getElementById('rcAdmin').classList.toggle('selected',    r === 'admin');
+}
+
+// ── Criteria 2: Authentication — LOGIN ───────────────────────
+// Sends username + password → server returns a JWT token
+async function doLogin(e) {
   e.preventDefault();
-  const btn = document.getElementById('loginBtn');
+  const btn = document.getElementById('lBtn');
   btn.disabled = true; btn.textContent = 'LOGGING IN…';
-
-  const username = document.getElementById('loginUsername').value.trim();
-  const password = document.getElementById('loginPassword').value;
-
   try {
-    const res  = await fetch('/api/auth?action=login', {
+    const { res, data } = await api('/api/auth?action=login', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({
+        username: document.getElementById('lUser').value.trim(),
+        password: document.getElementById('lPass').value,
+      }),
     });
-    const data = await res.json();
-
-    if (!res.ok) {
-      showStatus('loginStatus', data.error || 'Login failed.', 'error');
-    } else {
-      // Store JWT in localStorage
-      localStorage.setItem('sb_token', data.token);
-      await fetchProfile(data.token);
-    }
-  } catch {
-    showStatus('loginStatus', 'Network error. Please try again.', 'error');
-  } finally {
-    btn.disabled = false; btn.textContent = 'LOGIN';
-  }
+    if (!res.ok) return showMsg('lMsg', data.error || 'Login failed.', 'err');
+    localStorage.setItem('sb_token', data.token); // store JWT
+    await loadProfile();
+  } catch { showMsg('lMsg', 'Network error.', 'err'); }
+  finally  { btn.disabled = false; btn.textContent = 'LOGIN'; }
 }
 
-// ── REGISTER ──────────────────────────────────────────────────
-async function handleRegister(e) {
+// ── Criteria 1: Password Security — REGISTER ─────────────────
+// Server will bcrypt.hash(password + PEPPER) before storing
+async function doRegister(e) {
   e.preventDefault();
-  const btn = document.getElementById('registerBtn');
+  const btn = document.getElementById('rBtn');
   btn.disabled = true; btn.textContent = 'CREATING…';
-
-  const username = document.getElementById('regUsername').value.trim();
-  const email    = document.getElementById('regEmail').value.trim();
-  const password = document.getElementById('regPassword').value;
-
   try {
-    const res  = await fetch('/api/auth?action=register', {
+    const { res, data } = await api('/api/auth?action=register', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, email, password, role: selectedRole }),
+      body: JSON.stringify({
+        username: document.getElementById('rUser').value.trim(),
+        email:    document.getElementById('rEmail').value.trim(),
+        password: document.getElementById('rPass').value,
+        role:     selectedRole,
+      }),
     });
-    const data = await res.json();
-
-    if (!res.ok) {
-      showStatus('registerStatus', data.error || 'Registration failed.', 'error');
-    } else {
-      localStorage.setItem('sb_token', data.token);
-      await fetchProfile(data.token);
-    }
-  } catch {
-    showStatus('registerStatus', 'Network error. Please try again.', 'error');
-  } finally {
-    btn.disabled = false; btn.textContent = 'CREATE ACCOUNT';
-  }
+    if (!res.ok) return showMsg('rMsg', data.error || 'Registration failed.', 'err');
+    localStorage.setItem('sb_token', data.token);
+    await loadProfile();
+  } catch { showMsg('rMsg', 'Network error.', 'err'); }
+  finally  { btn.disabled = false; btn.textContent = 'CREATE ACCOUNT'; }
 }
 
-// ── FETCH PROFILE (/api/auth/me) ──────────────────────────────
-async function fetchProfile(token) {
+// ── Load the logged-in user's profile ─────────────────────────
+async function loadProfile() {
   try {
-    const res  = await fetch('/api/auth', {
-      headers: { 'Authorization': `Bearer ${token}` },
-    });
-
-    if (!res.ok) {
-      // Token invalid or expired — clear it
-      localStorage.removeItem('sb_token');
-      return;
-    }
-
-    const user = await res.json();
-    showUserPanel(user, token);
-  } catch {
-    localStorage.removeItem('sb_token');
-  }
+    const { res, data } = await api('/api/auth'); // GET — verifies JWT
+    if (!res.ok) { localStorage.removeItem('sb_token'); return; }
+    showUserPanel(data);
+  } catch { localStorage.removeItem('sb_token'); }
 }
 
-// ── SHOW USER PANEL ───────────────────────────────────────────
-function showUserPanel(user, token) {
+// ── Show the correct panel based on role ─────────────────────
+function showUserPanel(user) {
   document.getElementById('authCard').style.display = 'none';
   document.getElementById('userCard').style.display = 'block';
+  document.getElementById('uAvatar').textContent    = user.username[0].toUpperCase();
+  document.getElementById('uName').textContent      = user.username;
+  document.getElementById('uEmail').textContent     = user.email;
+  const badge = document.getElementById('uBadge');
+  badge.textContent = user.role.toUpperCase();
+  badge.className   = `role-badge ${user.role}`;
 
-  document.getElementById('userAvatar').textContent = user.username[0].toUpperCase();
-  document.getElementById('userName').textContent   = user.username;
-  document.getElementById('userEmail').textContent  = user.email;
-
-  const badge = document.getElementById('userRoleBadge');
-  badge.textContent  = user.role.toUpperCase();
-  badge.className    = `user-role ${user.role}`;
-
-  // Show the correct panel based on role
+  // Criteria 3: RBAC — show different sections based on role
   if (user.role === 'admin') {
-    document.getElementById('adminPanel').classList.add('show');
-    loadAdminOrders(token);
-    loadAdminUsers(token);   // Criteria 4: load the user permissions table
-  } else if (user.role === 'customer') {
-    document.getElementById('customerPanel').classList.add('show');
-    loadCustomerDashboard(token);
+    document.getElementById('ordersSection').classList.add('show');
+    document.getElementById('usersSection').classList.add('show');
+    loadOrders(); loadUsers();
+  } else {
+    document.getElementById('custSection').classList.add('show');
+    loadCustomerDash();
   }
 }
 
-// ── ADMIN: LOAD ORDERS (/api/admin/orders) ────────────────────
-async function loadAdminOrders(token) {
-  const list = document.getElementById('orderList');
+// ── Criteria 3: Admin sees orders, customers blocked ──────────
+async function loadOrders() {
+  const el = document.getElementById('orderList');
   try {
-    const res  = await fetch('/api/admin/orders', {
-      headers: { 'Authorization': `Bearer ${token}` },
-    });
-    const data = await res.json();
-
-    if (!res.ok || !data.orders?.length) {
-      list.innerHTML = '<div style="color:var(--muted);font-size:12px;">No orders yet.</div>';
-      return;
-    }
-
-    list.innerHTML = data.orders.map(o => `
-      <div class="order-item">
-        <div class="o-name">${o.name || 'Anonymous'}</div>
-        <div class="o-action">${o.action || ''}</div>
-      </div>
-    `).join('');
-  } catch {
-    list.innerHTML = '<div style="color:var(--error);font-size:12px;">Failed to load orders.</div>';
-  }
+    const { res, data } = await api('/api/admin/orders');
+    if (!res.ok || !data.orders?.length) { el.innerHTML = '<p style="color:var(--muted);font-size:12px">No orders yet.</p>'; return; }
+    el.innerHTML = data.orders.map(o =>
+      `<div class="order-item"><div class="oname">${o.name||'Anonymous'}</div><div class="oact">${o.action||''}</div></div>`
+    ).join('');
+  } catch { el.textContent = 'Failed to load.'; }
 }
 
-// ── CUSTOMER: LOAD DASHBOARD (/api/customer/dashboard) ───────
-async function loadCustomerDashboard(token) {
-  const box = document.getElementById('customerInfo');
+// ── Criteria 3: Customer dashboard, admins blocked ────────────
+async function loadCustomerDash() {
+  const el = document.getElementById('custInfo');
   try {
-    const res  = await fetch('/api/customer/dashboard', {
-      headers: { 'Authorization': `Bearer ${token}` },
-    });
-    const data = await res.json();
-
-    if (!res.ok) {
-      box.innerHTML = `<div style="color:var(--error);font-size:12px;">${data.error}</div>`;
-      return;
-    }
-
-    box.innerHTML = `
-      <div class="order-item" style="border-color:rgba(124,58,237,0.3);">
-        <div class="o-name" style="color:var(--purple-light);">${data.message}</div>
-        <div class="o-action">Logged in as: ${data.username} · Role: ${data.role}</div>
-      </div>`;
-  } catch {
-    box.innerHTML = '<div style="color:var(--error);font-size:12px;">Failed to load dashboard.</div>';
-  }
+    const { res, data } = await api('/api/customer/dashboard');
+    el.innerHTML = res.ok
+      ? `<div class="order-item" style="border-color:rgba(124,58,237,0.3)"><div class="oname" style="color:#c4b5fd">${data.message}</div><div class="oact">Role: ${data.role}</div></div>`
+      : `<p style="color:var(--err);font-size:12px">${data.error}</p>`;
+  } catch { el.textContent = 'Failed to load.'; }
 }
 
-// ── ADMIN: LOAD USERS (/api/admin/users) ─────────────────────
-// Criteria 4 — User Permissions Management
-// Fetches every registered user and shows their current role.
-// The admin can click Promote / Demote to change a user's role.
-async function loadAdminUsers(token) {
-  const list = document.getElementById('usersList');
+// ── Criteria 4: Load all users for admin to manage ───────────
+async function loadUsers() {
+  const el = document.getElementById('usersList');
   try {
-    const res  = await fetch('/api/admin/users', {
-      headers: { 'Authorization': `Bearer ${token}` },
-    });
-    const data = await res.json();
-
-    if (!res.ok || !data.users?.length) {
-      list.innerHTML = '<div style="color:var(--muted);font-size:12px;">No users found.</div>';
-      return;
-    }
-    renderUsers(data.users, token);
-  } catch {
-    list.innerHTML = '<div style="color:var(--error);font-size:12px;">Failed to load users.</div>';
-  }
+    const { res, data } = await api('/api/admin/users');
+    if (!res.ok || !data.users?.length) { el.innerHTML = '<p style="color:var(--muted);font-size:12px">No users found.</p>'; return; }
+    el.innerHTML = data.users.map(u => `
+      <div class="urow" id="urow-${u.username}">
+        <div>
+          <div class="uinfo2">${u.username}</div>
+          <div class="umeta" id="umeta-${u.username}">${u.email} · <strong>${u.role}</strong></div>
+        </div>
+        <div class="ubtns">
+          <button class="ubtn ${u.role==='admin'?'demote':'promote'}" id="ubtn-${u.username}"
+            onclick="changeRole('${u.username}','${u.role==='admin'?'customer':'admin'}')">
+            ${u.role==='admin'?'Demote':'Promote'}
+          </button>
+          <button class="ubtn del" id="udel-${u.username}" onclick="deleteUser('${u.username}')">🗑</button>
+        </div>
+      </div>`).join('');
+  } catch { el.textContent = 'Failed to load.'; }
 }
 
-// Build the HTML list of users with Promote/Demote and Delete buttons
-function renderUsers(users, token) {
-  const list = document.getElementById('usersList');
-  list.innerHTML = users.map(u => `
-    <div class="user-item" id="urow-${u.username}">
-      <div class="u-info">
-        <div class="u-name">${u.username}</div>
-        <div class="u-meta" id="umeta-${u.username}">${u.email} · Role: <strong>${u.role}</strong></div>
-      </div>
-      <div class="u-actions">
-        <button
-          class="btn-role ${u.role === 'admin' ? 'demote' : 'promote'}"
-          id="ubtn-${u.username}"
-          onclick="changeRole('${u.username}', '${u.role === 'admin' ? 'customer' : 'admin'}', '${token}')">
-          ${u.role === 'admin' ? 'Demote' : 'Promote'}
-        </button>
-        <button
-          class="btn-delete"
-          id="udel-${u.username}"
-          onclick="deleteUser('${u.username}', '${token}')">
-          🗑
-        </button>
-      </div>
-    </div>
-  `).join('');
-}
-
-// Called when admin clicks Promote or Demote
-// Sends PATCH /api/admin/users?user=<username> with the new role
-async function changeRole(username, newRole, token) {
+// ── Criteria 4: Promote / Demote a user ──────────────────────
+async function changeRole(username, newRole) {
   const btn = document.getElementById(`ubtn-${username}`);
-  btn.disabled = true;
-  btn.textContent = '…';
-
+  btn.disabled = true; btn.textContent = '…';
   try {
-    const res  = await fetch(`/api/admin/users?user=${username}`, {
-      method:  'PATCH',
-      headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ role: newRole }),
+    const { res, data } = await api(`/api/admin/users?user=${username}`, {
+      method: 'PATCH', body: JSON.stringify({ role: newRole }),
     });
-    const data = await res.json();
-
     if (res.ok) {
-      // Update the meta text to show the new role
-      document.getElementById(`umeta-${username}`).innerHTML =
-        `${data.username} · Role: <strong>${newRole}</strong>`;
-      // Flip the button to the opposite action
-      const oppositeRole = newRole === 'admin' ? 'customer' : 'admin';
-      btn.className   = `btn-role ${newRole === 'admin' ? 'demote' : 'promote'}`;
+      document.getElementById(`umeta-${username}`).innerHTML = `${data.username} · <strong>${newRole}</strong>`;
+      const opp = newRole === 'admin' ? 'customer' : 'admin';
+      btn.className   = `ubtn ${newRole==='admin'?'demote':'promote'}`;
       btn.textContent = newRole === 'admin' ? 'Demote' : 'Promote';
-      btn.onclick     = () => changeRole(username, oppositeRole, token);
-    } else {
-      btn.textContent = 'Error';
-    }
-  } catch {
-    btn.textContent = 'Error';
-  } finally {
-    btn.disabled = false;
-  }
+      btn.onclick     = () => changeRole(username, opp);
+    } else { btn.textContent = 'Error'; }
+  } catch { btn.textContent = 'Error'; }
+  finally  { btn.disabled = false; }
 }
 
-// ── CHANGE PASSWORD (/api/auth?action=change-password) ───────
-// Available to both admin and customer.
-// Sends current + new password — server verifies current before saving new hash.
-async function handleChangePassword() {
-  const btn        = document.getElementById('pwBtn');
-  const msg        = document.getElementById('pwMsg');
-  const current    = document.getElementById('pwCurrent').value;
-  const newPass    = document.getElementById('pwNew').value;
-  const token      = localStorage.getItem('sb_token');
-
-  // Reset message
-  msg.className = 'pw-msg';
-  msg.textContent = '';
-
-  if (!current || !newPass) {
-    msg.className = 'pw-msg error';
-    msg.textContent = 'Please fill in both fields.';
-    return;
-  }
-
-  btn.disabled = true;
-  btn.textContent = 'UPDATING…';
-
-  try {
-    const res  = await fetch('/api/auth?action=change-password', {
-      method:  'POST',
-      headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ currentPassword: current, newPassword: newPass }),
-    });
-    const data = await res.json();
-
-    if (res.ok) {
-      msg.className = 'pw-msg success';
-      msg.textContent = 'Password updated successfully!';
-      // Clear the fields
-      document.getElementById('pwCurrent').value = '';
-      document.getElementById('pwNew').value     = '';
-    } else {
-      msg.className = 'pw-msg error';
-      msg.textContent = data.error || 'Failed to update password.';
-    }
-  } catch {
-    msg.className = 'pw-msg error';
-    msg.textContent = 'Network error. Please try again.';
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'UPDATE PASSWORD';
-  }
-}
-
-// ── ADMIN: DELETE USER (/api/admin/users?user=x) ─────────────
-// Sends DELETE request to permanently remove a user account.
-// The row is removed from the UI on success.
-async function deleteUser(username, token) {
-  if (!confirm(`Delete user "${username}"? This cannot be undone.`)) return;
-
+// ── Criteria 4: Delete a user ────────────────────────────────
+async function deleteUser(username) {
+  if (!confirm(`Delete "${username}"? This cannot be undone.`)) return;
   const btn = document.getElementById(`udel-${username}`);
-  btn.disabled = true;
-  btn.textContent = '…';
-
+  btn.disabled = true; btn.textContent = '…';
   try {
-    const res  = await fetch(`/api/admin/users?user=${username}`, {
-      method:  'DELETE',
-      headers: { 'Authorization': `Bearer ${token}` },
-    });
-    const data = await res.json();
-
-    if (res.ok) {
-      // Remove the entire row from the page
-      const row = document.getElementById(`urow-${username}`);
-      if (row) row.remove();
-    } else {
-      alert(data.error || 'Delete failed.');
-      btn.disabled = false;
-      btn.textContent = '🗑';
-    }
-  } catch {
-    alert('Network error.');
-    btn.disabled = false;
-    btn.textContent = '🗑';
-  }
+    const { res, data } = await api(`/api/admin/users?user=${username}`, { method: 'DELETE' });
+    if (res.ok) document.getElementById(`urow-${username}`)?.remove();
+    else { alert(data.error); btn.disabled = false; btn.textContent = '🗑'; }
+  } catch { alert('Network error.'); btn.disabled = false; btn.textContent = '🗑'; }
 }
 
-// ── LOGOUT (/api/auth/logout) ─────────────────────────────────
-async function handleLogout() {
-  const token = localStorage.getItem('sb_token');
-  if (token) {
-    // Tell server to blacklist this token
-    await fetch('/api/auth?action=logout', {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${token}` },
-    }).catch(() => {});
-  }
+// ── Criteria 1: Change Password ───────────────────────────────
+// Server verifies current password before saving the new bcrypt hash
+async function doChangePassword() {
+  const cur = document.getElementById('pwCur').value;
+  const nw  = document.getElementById('pwNew').value;
+  if (!cur || !nw) return showMsg('pwMsg', 'Fill in both fields.', 'err');
+  const btn = document.getElementById('pwBtn');
+  btn.disabled = true; btn.textContent = 'UPDATING…';
+  try {
+    const { res, data } = await api('/api/auth?action=change-password', {
+      method: 'POST', body: JSON.stringify({ currentPassword: cur, newPassword: nw }),
+    });
+    if (res.ok) {
+      showMsg('pwMsg', 'Password updated!', 'ok');
+      document.getElementById('pwCur').value = document.getElementById('pwNew').value = '';
+    } else { showMsg('pwMsg', data.error || 'Failed.', 'err'); }
+  } catch { showMsg('pwMsg', 'Network error.', 'err'); }
+  finally  { btn.disabled = false; btn.textContent = 'UPDATE PASSWORD'; }
+}
+
+// ── Criteria 2: Logout — blacklists the JWT on the server ────
+async function doLogout() {
+  await api('/api/auth?action=logout', { method: 'POST' }).catch(() => {});
   localStorage.removeItem('sb_token');
-  // Reload to show login form
-  window.location.reload();
+  location.reload();
 }
 </script>
 </body>

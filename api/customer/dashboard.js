@@ -1,24 +1,6 @@
-// ─────────────────────────────────────────────────────────────
-//  customer/dashboard.js  —  GET /api/customer/dashboard
-//
-//  CONCEPT: User Permissions Management (Coversheet criteria #4)
-//
-//  This is the CUSTOMER-only route.
-//  It mirrors lab4.py's /student route:
-//
-//    @app.route("/student")
-//    def student():
-//        if session["role"] != "student":
-//            return "Students only", 403
-//
-//  Together with /api/admin/orders, this proves the permission
-//  system works in BOTH directions:
-//    - Admin  → can access /api/admin/orders,  blocked from here
-//    - Customer → can access /api/customer/dashboard, blocked from admin
-//
-//  This is what "User Permissions Management" means:
-//  different users have different permissions based on their role.
-// ─────────────────────────────────────────────────────────────
+// GET /api/customer/dashboard
+// returns dashboard info for the logged in customer
+// admins are blocked from this route (403)
 
 import { getKV, verifyToken } from '../_lib/auth.js';
 
@@ -28,18 +10,13 @@ export default async function handler(req, res) {
   const kv = getKV();
   if (!kv) return res.status(500).json({ error: 'Database not configured.' });
 
-  // STEP 1: Authentication — must be logged in
+  // check that the user is logged in
   const decoded = await verifyToken(req, kv);
-  if (!decoded) {
-    return res.status(401).json({ error: 'Unauthorized. Please log in.' });
-  }
+  if (!decoded) return res.status(401).json({ error: 'Unauthorized. Please log in.' });
 
-  // STEP 2: Authorization — must be a customer (RBAC)
-  if (decoded.role !== 'customer') {
-    return res.status(403).json({ error: 'Customers only. Admins cannot access this route.' });
-  }
+  // this route is for customers only, admins cannot access it
+  if (decoded.role !== 'customer') return res.status(403).json({ error: 'Customers only. Admins cannot access this route.' });
 
-  // Fetch the user's data from Redis
   const raw = await kv.get(`user:${decoded.username}`);
   const user = typeof raw === 'string' ? JSON.parse(raw) : raw;
 
