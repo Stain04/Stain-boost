@@ -147,15 +147,6 @@ input::placeholder{color:rgba(255,255,255,0.2);}
         <div id="custInfo">Loading…</div>
       </div>
 
-      <!-- BOTH ROLES — Change Password -->
-      <div class="section show">
-        <div class="sec-title" style="color:#c4b5fd">Change Password</div>
-        <div class="field"><input type="password" id="pwCur" placeholder="Current password"></div>
-        <div class="field"><input type="password" id="pwNew" placeholder="New password (min 8 chars)"></div>
-        <button class="btn-primary" id="pwBtn" onclick="doChangePassword()">UPDATE PASSWORD</button>
-        <div class="msg" id="pwMsg"></div>
-      </div>
-
       <button class="btn-danger" onclick="doLogout()">Logout</button>
     </div>
   </div>
@@ -172,8 +163,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   if (token) await loadProfile();
 });
 
-// ── Shared fetch helper — automatically adds the auth header ──
-// Instead of writing headers every time, we call api() once.
+// helper to call the API — adds the auth token header automatically
 async function api(url, opts = {}) {
   const token = localStorage.getItem('sb_token');
   const res = await fetch(url, {
@@ -186,14 +176,14 @@ async function api(url, opts = {}) {
   return { res, data: await res.json() };
 }
 
-// ── Show a message under any element ─────────────────────────
+// show a success or error message under a form field
 function showMsg(id, text, type) {
   const el = document.getElementById(id);
   el.textContent = text;
   el.className = `msg ${type}`;
 }
 
-// ── Tab + role switchers ──────────────────────────────────────
+// switch between login and register tabs
 function switchTab(tab) {
   document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
   document.getElementById('regForm').style.display   = tab === 'login' ? 'none'  : 'block';
@@ -208,8 +198,7 @@ function setRole(r) {
   document.getElementById('rcAdmin').classList.toggle('selected',    r === 'admin');
 }
 
-// ── Criteria 2: Authentication — LOGIN ───────────────────────
-// Sends username + password → server returns a JWT token
+// send login request and store the JWT token
 async function doLogin(e) {
   e.preventDefault();
   const btn = document.getElementById('lBtn');
@@ -229,8 +218,7 @@ async function doLogin(e) {
   finally  { btn.disabled = false; btn.textContent = 'LOGIN'; }
 }
 
-// ── Criteria 1: Password Security — REGISTER ─────────────────
-// Server will bcrypt.hash(password + PEPPER) before storing
+// send register request — server hashes the password before saving
 async function doRegister(e) {
   e.preventDefault();
   const btn = document.getElementById('rBtn');
@@ -252,7 +240,7 @@ async function doRegister(e) {
   finally  { btn.disabled = false; btn.textContent = 'CREATE ACCOUNT'; }
 }
 
-// ── Load the logged-in user's profile ─────────────────────────
+// load the current user's profile using the saved token
 async function loadProfile() {
   try {
     const { res, data } = await api('/api/auth'); // GET — verifies JWT
@@ -261,7 +249,7 @@ async function loadProfile() {
   } catch { localStorage.removeItem('sb_token'); }
 }
 
-// ── Show the correct panel based on role ─────────────────────
+// show the dashboard after login — different content per role
 function showUserPanel(user) {
   document.getElementById('authCard').style.display = 'none';
   document.getElementById('userCard').style.display = 'block';
@@ -283,7 +271,7 @@ function showUserPanel(user) {
   }
 }
 
-// ── Criteria 3: Admin sees orders, customers blocked ──────────
+// admin only — load the order feed from the server
 async function loadOrders() {
   const el = document.getElementById('orderList');
   try {
@@ -295,7 +283,7 @@ async function loadOrders() {
   } catch { el.textContent = 'Failed to load.'; }
 }
 
-// ── Criteria 3: Customer dashboard, admins blocked ────────────
+// customer only — load their dashboard info
 async function loadCustomerDash() {
   const el = document.getElementById('custInfo');
   try {
@@ -306,7 +294,7 @@ async function loadCustomerDash() {
   } catch { el.textContent = 'Failed to load.'; }
 }
 
-// ── Criteria 4: Load all users for admin to manage ───────────
+// load all users so the admin can manage their roles
 async function loadUsers() {
   const el = document.getElementById('usersList');
   try {
@@ -329,7 +317,7 @@ async function loadUsers() {
   } catch { el.textContent = 'Failed to load.'; }
 }
 
-// ── Criteria 4: Promote / Demote a user ──────────────────────
+// change a user's role when the admin clicks promote or demote
 async function changeRole(username, newRole) {
   const btn = document.getElementById(`ubtn-${username}`);
   btn.disabled = true; btn.textContent = '…';
@@ -348,7 +336,7 @@ async function changeRole(username, newRole) {
   finally  { btn.disabled = false; }
 }
 
-// ── Criteria 4: Delete a user ────────────────────────────────
+// delete a user account when the admin clicks the delete button
 async function deleteUser(username) {
   if (!confirm(`Delete "${username}"? This cannot be undone.`)) return;
   const btn = document.getElementById(`udel-${username}`);
@@ -360,27 +348,7 @@ async function deleteUser(username) {
   } catch { alert('Network error.'); btn.disabled = false; btn.textContent = '🗑'; }
 }
 
-// ── Criteria 1: Change Password ───────────────────────────────
-// Server verifies current password before saving the new bcrypt hash
-async function doChangePassword() {
-  const cur = document.getElementById('pwCur').value;
-  const nw  = document.getElementById('pwNew').value;
-  if (!cur || !nw) return showMsg('pwMsg', 'Fill in both fields.', 'err');
-  const btn = document.getElementById('pwBtn');
-  btn.disabled = true; btn.textContent = 'UPDATING…';
-  try {
-    const { res, data } = await api('/api/auth?action=change-password', {
-      method: 'POST', body: JSON.stringify({ currentPassword: cur, newPassword: nw }),
-    });
-    if (res.ok) {
-      showMsg('pwMsg', 'Password updated!', 'ok');
-      document.getElementById('pwCur').value = document.getElementById('pwNew').value = '';
-    } else { showMsg('pwMsg', data.error || 'Failed.', 'err'); }
-  } catch { showMsg('pwMsg', 'Network error.', 'err'); }
-  finally  { btn.disabled = false; btn.textContent = 'UPDATE PASSWORD'; }
-}
-
-// ── Criteria 2: Logout — blacklists the JWT on the server ────
+// logout — tells the server to blacklist the token so it can't be reused
 async function doLogout() {
   await api('/api/auth?action=logout', { method: 'POST' }).catch(() => {});
   localStorage.removeItem('sb_token');

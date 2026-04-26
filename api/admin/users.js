@@ -26,8 +26,8 @@ export default async function handler(req, res) {
       usernames.map(async (u) => {
         const raw = await kv.get(`user:${u}`);
         if (!raw) return null;
-        const { username, email, role, createdAt } = parseUser(raw);
-        return { username, email, role, createdAt }; // don't return the password hash
+        const { username, email, role } = parseUser(raw);
+        return { username, email, role }; // don't return the password hash
       })
     )).filter(Boolean);
 
