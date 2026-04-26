@@ -6,7 +6,8 @@ import { getKV, verifyToken } from '../_lib/auth.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
-
+  
+  // bn3ml connect le database
   const kv = getKV();
   if (!kv) return res.status(500).json({ error: 'Database not configured.' });
 
