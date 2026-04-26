@@ -292,6 +292,42 @@ body::before{
 .btn-role.promote{background:rgba(245,166,35,0.12);color:#f5a623;border-color:rgba(245,166,35,0.3);}
 .btn-role.demote {background:rgba(248,113,113,0.12);color:var(--error);border-color:rgba(248,113,113,0.3);}
 .btn-role:disabled{opacity:0.4;cursor:not-allowed;}
+.btn-delete{
+  padding:5px 10px;border-radius:6px;font-size:11px;font-weight:700;
+  letter-spacing:1px;cursor:pointer;transition:all 0.2s;
+  background:rgba(248,113,113,0.08);color:var(--error);
+  border:1px solid rgba(248,113,113,0.2);margin-left:6px;
+}
+.btn-delete:hover{background:rgba(248,113,113,0.2);}
+.btn-delete:disabled{opacity:0.4;cursor:not-allowed;}
+.u-actions{display:flex;align-items:center;gap:0;}
+
+/* ── Change Password section ── */
+.pw-section{margin-top:20px;border-top:1px solid rgba(255,255,255,0.06);padding-top:16px;text-align:left;}
+.pw-title{
+  font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:2px;
+  color:var(--purple-light);text-transform:uppercase;margin-bottom:12px;
+}
+.pw-field{margin-bottom:10px;}
+.pw-field input{
+  width:100%;padding:10px 14px;
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);
+  border-radius:8px;color:#fff;font-size:13px;font-family:'Inter',sans-serif;outline:none;
+  transition:border-color 0.2s;
+}
+.pw-field input:focus{border-color:var(--purple);}
+.pw-field input::placeholder{color:rgba(255,255,255,0.2);}
+.btn-pw{
+  width:100%;padding:10px;border:none;border-radius:8px;
+  background:linear-gradient(135deg,#7c3aed,#06d6f2);
+  color:#fff;font-family:'Rajdhani',sans-serif;font-size:14px;
+  font-weight:700;letter-spacing:1px;cursor:pointer;transition:opacity 0.2s;
+}
+.btn-pw:hover{opacity:0.88;}
+.btn-pw:disabled{opacity:0.5;cursor:not-allowed;}
+.pw-msg{margin-top:8px;font-size:12px;font-weight:600;display:none;padding:8px 10px;border-radius:7px;}
+.pw-msg.success{display:block;background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.25);color:var(--success);}
+.pw-msg.error  {display:block;background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.25);color:var(--error);}
 </style>
 </head>
 
@@ -380,6 +416,19 @@ body::before{
       <div class="admin-panel" id="customerPanel">
         <div class="admin-title" style="color:var(--purple-light);">Customer Dashboard</div>
         <div class="order-list" id="customerInfo">Loading…</div>
+      </div>
+
+      <!-- Change Password — available to both admin and customer -->
+      <div class="pw-section">
+        <div class="pw-title">Change Password</div>
+        <div class="pw-field">
+          <input type="password" id="pwCurrent" placeholder="Current password">
+        </div>
+        <div class="pw-field">
+          <input type="password" id="pwNew" placeholder="New password (min 8 chars)">
+        </div>
+        <button class="btn-pw" id="pwBtn" onclick="handleChangePassword()">UPDATE PASSWORD</button>
+        <div class="pw-msg" id="pwMsg"></div>
       </div>
 
       <button class="btn-logout" onclick="handleLogout()">Logout</button>
@@ -611,21 +660,29 @@ async function loadAdminUsers(token) {
   }
 }
 
-// Build the HTML list of users with a Promote / Demote button on each
+// Build the HTML list of users with Promote/Demote and Delete buttons
 function renderUsers(users, token) {
   const list = document.getElementById('usersList');
   list.innerHTML = users.map(u => `
-    <div class="user-item">
+    <div class="user-item" id="urow-${u.username}">
       <div class="u-info">
         <div class="u-name">${u.username}</div>
         <div class="u-meta" id="umeta-${u.username}">${u.email} · Role: <strong>${u.role}</strong></div>
       </div>
-      <button
-        class="btn-role ${u.role === 'admin' ? 'demote' : 'promote'}"
-        id="ubtn-${u.username}"
-        onclick="changeRole('${u.username}', '${u.role === 'admin' ? 'customer' : 'admin'}', '${token}')">
-        ${u.role === 'admin' ? 'Demote' : 'Promote'}
-      </button>
+      <div class="u-actions">
+        <button
+          class="btn-role ${u.role === 'admin' ? 'demote' : 'promote'}"
+          id="ubtn-${u.username}"
+          onclick="changeRole('${u.username}', '${u.role === 'admin' ? 'customer' : 'admin'}', '${token}')">
+          ${u.role === 'admin' ? 'Demote' : 'Promote'}
+        </button>
+        <button
+          class="btn-delete"
+          id="udel-${u.username}"
+          onclick="deleteUser('${u.username}', '${token}')">
+          🗑
+        </button>
+      </div>
     </div>
   `).join('');
 }
@@ -661,6 +718,89 @@ async function changeRole(username, newRole, token) {
     btn.textContent = 'Error';
   } finally {
     btn.disabled = false;
+  }
+}
+
+// ── CHANGE PASSWORD (/api/auth?action=change-password) ───────
+// Available to both admin and customer.
+// Sends current + new password — server verifies current before saving new hash.
+async function handleChangePassword() {
+  const btn        = document.getElementById('pwBtn');
+  const msg        = document.getElementById('pwMsg');
+  const current    = document.getElementById('pwCurrent').value;
+  const newPass    = document.getElementById('pwNew').value;
+  const token      = localStorage.getItem('sb_token');
+
+  // Reset message
+  msg.className = 'pw-msg';
+  msg.textContent = '';
+
+  if (!current || !newPass) {
+    msg.className = 'pw-msg error';
+    msg.textContent = 'Please fill in both fields.';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'UPDATING…';
+
+  try {
+    const res  = await fetch('/api/auth?action=change-password', {
+      method:  'POST',
+      headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ currentPassword: current, newPassword: newPass }),
+    });
+    const data = await res.json();
+
+    if (res.ok) {
+      msg.className = 'pw-msg success';
+      msg.textContent = 'Password updated successfully!';
+      // Clear the fields
+      document.getElementById('pwCurrent').value = '';
+      document.getElementById('pwNew').value     = '';
+    } else {
+      msg.className = 'pw-msg error';
+      msg.textContent = data.error || 'Failed to update password.';
+    }
+  } catch {
+    msg.className = 'pw-msg error';
+    msg.textContent = 'Network error. Please try again.';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'UPDATE PASSWORD';
+  }
+}
+
+// ── ADMIN: DELETE USER (/api/admin/users?user=x) ─────────────
+// Sends DELETE request to permanently remove a user account.
+// The row is removed from the UI on success.
+async function deleteUser(username, token) {
+  if (!confirm(`Delete user "${username}"? This cannot be undone.`)) return;
+
+  const btn = document.getElementById(`udel-${username}`);
+  btn.disabled = true;
+  btn.textContent = '…';
+
+  try {
+    const res  = await fetch(`/api/admin/users?user=${username}`, {
+      method:  'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+    const data = await res.json();
+
+    if (res.ok) {
+      // Remove the entire row from the page
+      const row = document.getElementById(`urow-${username}`);
+      if (row) row.remove();
+    } else {
+      alert(data.error || 'Delete failed.');
+      btn.disabled = false;
+      btn.textContent = '🗑';
+    }
+  } catch {
+    alert('Network error.');
+    btn.disabled = false;
+    btn.textContent = '🗑';
   }
 }
 

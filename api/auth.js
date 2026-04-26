@@ -105,6 +105,45 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: true, token, role: user.role });
   }
 
+  // ── POST /api/auth?action=change-password ───────────────────
+  // Works for BOTH admin and customer — any logged-in user can use this.
+  // Steps:
+  //   1. Verify JWT (must be logged in)
+  //   2. Verify current password (so someone who grabbed your screen can't change it)
+  //   3. Hash the new password with bcrypt + pepper
+  //   4. Save the new hash to Redis
+  if (action === 'change-password') {
+    const decoded = await verifyToken(req, kv);
+    if (!decoded) return res.status(401).json({ error: 'Unauthorized. Please log in.' });
+
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ error: 'Current password and new password are required.' });
+    }
+    if (newPassword.length < 8) {
+      return res.status(400).json({ error: 'New password must be at least 8 characters.' });
+    }
+    if (currentPassword === newPassword) {
+      return res.status(400).json({ error: 'New password must be different from current password.' });
+    }
+
+    // Load the user from Redis
+    const raw  = await kv.get(`user:${decoded.username}`);
+    if (!raw)  return res.status(404).json({ error: 'User not found.' });
+    const user = typeof raw === 'string' ? JSON.parse(raw) : raw;
+
+    // Verify the current password before allowing the change (Section 3 & 4)
+    const match = await bcrypt.compare(currentPassword + PEPPER, user.passwordHash);
+    if (!match) return res.status(401).json({ error: 'Current password is incorrect.' });
+
+    // Hash the new password and save
+    user.passwordHash = await bcrypt.hash(newPassword + PEPPER, 12);
+    await kv.set(`user:${decoded.username}`, JSON.stringify(user));
+
+    return res.status(200).json({ ok: true, message: 'Password changed successfully.' });
+  }
+
   // ── POST /api/auth?action=logout ─────────────────────────────
   if (action === 'logout') {
     const decoded = await verifyToken(req, kv);
