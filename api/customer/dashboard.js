@@ -10,11 +10,11 @@ export default async function handler(req, res) {
   const kv = getKV();
   if (!kv) return res.status(500).json({ error: 'Database not configured.' });
 
-  // check that the user is logged in
+  // by3ml check lw el user logged in 
   const decoded = await verifyToken(req, kv);
   if (!decoded) return res.status(401).json({ error: 'Unauthorized. Please log in.' });
 
-  // this route is for customers only, admins cannot access it
+  // el admin my2drsh yshof el section da (bs el customer)
   if (decoded.role !== 'customer') return res.status(403).json({ error: 'Customers only. Admins cannot access this route.' });
 
   const raw = await kv.get(`user:${decoded.username}`);
