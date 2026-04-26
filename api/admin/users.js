@@ -125,6 +125,44 @@ export default async function handler(req, res) {
     });
   }
 
-  // Any other HTTP method (PUT, DELETE, etc.) is not allowed
+  // ────────────────────────────────────────────────────────────
+  //  DELETE /api/admin/users?user=<username>
+  //  Permanently removes a user account from the database.
+  //  Also removes them from the registered_users Set so they
+  //  no longer appear in the GET list.
+  // ────────────────────────────────────────────────────────────
+  if (req.method === 'DELETE') {
+
+    const targetUsername = (req.query.user || '').toLowerCase().trim();
+
+    if (!targetUsername) {
+      return res.status(400).json({ error: 'Missing ?user= query parameter.' });
+    }
+
+    // Safety guard: an admin cannot delete themselves
+    if (targetUsername === decoded.username) {
+      return res.status(400).json({ error: 'You cannot delete your own account.' });
+    }
+
+    // Check the user actually exists
+    const raw = await kv.get(`user:${targetUsername}`);
+    if (!raw) {
+      return res.status(404).json({ error: `User "${targetUsername}" not found.` });
+    }
+
+    // Delete the user's data object from Redis
+    await kv.del(`user:${targetUsername}`);
+
+    // Remove them from the registered_users Set so GET no longer lists them
+    await kv.srem('registered_users', targetUsername);
+
+    return res.status(200).json({
+      ok:      true,
+      deleted: targetUsername,
+      message: `User "${targetUsername}" has been permanently deleted.`,
+    });
+  }
+
+  // Any other HTTP method is not allowed
   return res.status(405).json({ error: 'Method not allowed.' });
 }
