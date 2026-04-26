@@ -271,6 +271,27 @@ body::before{
   transition:color 0.2s;
 }
 .back-link:hover{color:var(--text);}
+
+/* ── User Permissions Management panel ── */
+.users-section{margin-top:20px;border-top:1px solid rgba(255,255,255,0.06);padding-top:16px;}
+.users-title{
+  font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:2px;
+  color:var(--cyan);text-transform:uppercase;margin-bottom:12px;
+}
+.user-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 12px;background:rgba(6,214,242,0.04);
+  border:1px solid rgba(6,214,242,0.12);border-radius:8px;margin-bottom:8px;
+}
+.u-info .u-name{font-size:13px;font-weight:600;}
+.u-info .u-meta{font-size:11px;color:var(--muted);margin-top:2px;}
+.btn-role{
+  padding:5px 12px;border-radius:6px;font-size:11px;font-weight:700;
+  letter-spacing:1px;cursor:pointer;transition:all 0.2s;border:1px solid;
+}
+.btn-role.promote{background:rgba(245,166,35,0.12);color:#f5a623;border-color:rgba(245,166,35,0.3);}
+.btn-role.demote {background:rgba(248,113,113,0.12);color:var(--error);border-color:rgba(248,113,113,0.3);}
+.btn-role:disabled{opacity:0.4;cursor:not-allowed;}
 </style>
 </head>
 
@@ -342,8 +363,17 @@ body::before{
 
       <!-- Admin-only section -->
       <div class="admin-panel" id="adminPanel">
+
+        <!-- Criteria 3: RBAC — admin sees the order feed, customer cannot -->
         <div class="admin-title">Recent Orders (Admin View)</div>
         <div class="order-list" id="orderList">Loading…</div>
+
+        <!-- Criteria 4: User Permissions Management — admin can change roles -->
+        <div class="users-section">
+          <div class="users-title">User Permissions Management</div>
+          <div id="usersList">Loading…</div>
+        </div>
+
       </div>
 
       <!-- Customer-only section -->
@@ -499,10 +529,11 @@ function showUserPanel(user, token) {
   badge.textContent  = user.role.toUpperCase();
   badge.className    = `user-role ${user.role}`;
 
-  // Show the correct panel based on role (User Permissions Management)
+  // Show the correct panel based on role
   if (user.role === 'admin') {
     document.getElementById('adminPanel').classList.add('show');
     loadAdminOrders(token);
+    loadAdminUsers(token);   // Criteria 4: load the user permissions table
   } else if (user.role === 'customer') {
     document.getElementById('customerPanel').classList.add('show');
     loadCustomerDashboard(token);
@@ -555,6 +586,81 @@ async function loadCustomerDashboard(token) {
       </div>`;
   } catch {
     box.innerHTML = '<div style="color:var(--error);font-size:12px;">Failed to load dashboard.</div>';
+  }
+}
+
+// ── ADMIN: LOAD USERS (/api/admin/users) ─────────────────────
+// Criteria 4 — User Permissions Management
+// Fetches every registered user and shows their current role.
+// The admin can click Promote / Demote to change a user's role.
+async function loadAdminUsers(token) {
+  const list = document.getElementById('usersList');
+  try {
+    const res  = await fetch('/api/admin/users', {
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+    const data = await res.json();
+
+    if (!res.ok || !data.users?.length) {
+      list.innerHTML = '<div style="color:var(--muted);font-size:12px;">No users found.</div>';
+      return;
+    }
+    renderUsers(data.users, token);
+  } catch {
+    list.innerHTML = '<div style="color:var(--error);font-size:12px;">Failed to load users.</div>';
+  }
+}
+
+// Build the HTML list of users with a Promote / Demote button on each
+function renderUsers(users, token) {
+  const list = document.getElementById('usersList');
+  list.innerHTML = users.map(u => `
+    <div class="user-item">
+      <div class="u-info">
+        <div class="u-name">${u.username}</div>
+        <div class="u-meta" id="umeta-${u.username}">${u.email} · Role: <strong>${u.role}</strong></div>
+      </div>
+      <button
+        class="btn-role ${u.role === 'admin' ? 'demote' : 'promote'}"
+        id="ubtn-${u.username}"
+        onclick="changeRole('${u.username}', '${u.role === 'admin' ? 'customer' : 'admin'}', '${token}')">
+        ${u.role === 'admin' ? 'Demote' : 'Promote'}
+      </button>
+    </div>
+  `).join('');
+}
+
+// Called when admin clicks Promote or Demote
+// Sends PATCH /api/admin/users?user=<username> with the new role
+async function changeRole(username, newRole, token) {
+  const btn = document.getElementById(`ubtn-${username}`);
+  btn.disabled = true;
+  btn.textContent = '…';
+
+  try {
+    const res  = await fetch(`/api/admin/users?user=${username}`, {
+      method:  'PATCH',
+      headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ role: newRole }),
+    });
+    const data = await res.json();
+
+    if (res.ok) {
+      // Update the meta text to show the new role
+      document.getElementById(`umeta-${username}`).innerHTML =
+        `${data.username} · Role: <strong>${newRole}</strong>`;
+      // Flip the button to the opposite action
+      const oppositeRole = newRole === 'admin' ? 'customer' : 'admin';
+      btn.className   = `btn-role ${newRole === 'admin' ? 'demote' : 'promote'}`;
+      btn.textContent = newRole === 'admin' ? 'Demote' : 'Promote';
+      btn.onclick     = () => changeRole(username, oppositeRole, token);
+    } else {
+      btn.textContent = 'Error';
+    }
+  } catch {
+    btn.textContent = 'Error';
+  } finally {
+    btn.disabled = false;
   }
 }
 
