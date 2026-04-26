@@ -1,9 +1,3 @@
-// handles register, login, logout, and get profile
-// GET  /api/auth                 → get logged in user info
-// POST /api/auth?action=register → create a new account
-// POST /api/auth?action=login    → login and get a token
-// POST /api/auth?action=logout   → logout and blacklist the token
-
 import bcrypt from 'bcryptjs';
 import { getKV, signToken, verifyToken } from './_lib/auth.js';
 
