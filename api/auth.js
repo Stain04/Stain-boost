@@ -1,6 +1,4 @@
 // handles register, login, logout, and get profile
-// all in one file to stay under the Vercel function limit
-//
 // GET  /api/auth                 → get logged in user info
 // POST /api/auth?action=register → create a new account
 // POST /api/auth?action=login    → login and get a token
