@@ -1,4 +1,4 @@
-import { getKV, verifyToken } from '../_lib/auth.js';
+import { getKV, verifyToken } from '../_lib/authfun.js';
 
 function parseUser(raw) {
   return typeof raw === 'string' ? JSON.parse(raw) : raw;
