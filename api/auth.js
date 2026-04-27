@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   const kv = getKV();
   if (!kv) return res.status(500).json({ error: 'Database not configured.' });
 
-  // GET /api/auth - return info about the currently logged in user
+  // bt3ml 'GET' LL info bta3t el current user 
   if (req.method === 'GET') {
     const decoded = await verifyToken(req, kv);
     if (!decoded) return res.status(401).json({ error: 'Unauthorized. Please log in.' });
@@ -27,7 +27,7 @@ export default async function handler(req, res) {
 
   const action = req.query.action;
 
-  // register - save a new user with a hashed password
+  // hna bt3ml register (wbt3ml save LL user m3 el hashed password bta3t'h)
   if (action === 'register') {
     const { username, email, password, role } = req.body;
 
@@ -42,8 +42,8 @@ export default async function handler(req, res) {
     if (await kv.get(`user:${cleanUsername}`))
       return res.status(409).json({ error: 'Username already taken.' });
 
-    // bcrypt automatically generates a salt and hashes the password
-    // we also add a pepper (server secret) before hashing for extra security
+    // bcrypt bt3ml salt lw7dha (built in) wbt3ml hash LL password
+    // bndef hna el pepper LL password abl ma n3ml hash (layer security zeyada bs)
     const passwordHash = await bcrypt.hash(password + PEPPER, 12);
 
     const user = {
@@ -60,7 +60,7 @@ export default async function handler(req, res) {
     return res.status(201).json({ ok: true, token, role: cleanRole });
   }
 
-  // login - check the password and return a JWT
+  // by3ml check LL password b3den byrg3 JWT 
   if (action === 'login') {
     const { username, password } = req.body;
     if (!username || !password)
@@ -77,7 +77,7 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: true, token, role: user.role });
   }
 
-  // logout - add the token to a blacklist so it can't be used again
+  // logout (bydef el token LL blacklist 3shan mnst3mlah tane)
   if (action === 'logout') {
     const decoded = await verifyToken(req, kv);
     if (!decoded) return res.status(401).json({ error: 'Invalid or expired token.' });
