@@ -1,7 +1,3 @@
-// GET, PATCH, DELETE /api/admin/users
-// lets the admin manage user accounts and their roles
-// customers cannot access any of these
-
 import { getKV, verifyToken } from '../_lib/auth.js';
 
 function parseUser(raw) {
@@ -12,14 +8,14 @@ export default async function handler(req, res) {
   const kv = getKV();
   if (!kv) return res.status(500).json({ error: 'Database not configured.' });
 
-  // check login
+  // by3ml check LL login
   const decoded = await verifyToken(req, kv);
   if (!decoded) return res.status(401).json({ error: 'Unauthorized. Please log in.' });
 
-  // only admins can manage users
+  // bs el admin b3mlo manage LL users
   if (decoded.role !== 'admin') return res.status(403).json({ error: 'Forbidden. Admin access required.' });
 
-  // GET - return a list of all users
+  // b return list lkl el users
   if (req.method === 'GET') {
     const usernames = await kv.smembers('registered_users') || [];
     const users = (await Promise.all(
@@ -36,7 +32,7 @@ export default async function handler(req, res) {
 
   const targetUsername = (req.query.user || '').toLowerCase().trim();
 
-  // PATCH - change a user's role
+  // hna bt3ml change LL user role
   if (req.method === 'PATCH') {
     const newRole = req.body.role;
     if (!targetUsername) return res.status(400).json({ error: 'Missing ?user= query parameter.' });
@@ -55,7 +51,7 @@ export default async function handler(req, res) {
       message: `User "${user.username}" role changed from "${oldRole}" to "${newRole}".` });
   }
 
-  // DELETE - remove a user account
+  // btshel user ( delete)
   if (req.method === 'DELETE') {
     if (!targetUsername) return res.status(400).json({ error: 'Missing ?user= query parameter.' });
     if (targetUsername === decoded.username) return res.status(400).json({ error: 'You cannot delete your own account.' });
