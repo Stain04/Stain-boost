@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { getKV, signToken, verifyToken } from './_lib/auth.js';
+import { getKV, signToken, verifyToken } from './_lib/authfun.js';
 
 const PEPPER = process.env.PASSWORD_PEPPER || 'sb-default-pepper-change-me';
 
