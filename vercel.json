@@ -18,7 +18,8 @@
     { "source": "/what-is-mmr-league-of-legends",  "destination": "/blog/what-is-mmr-league-of-legends" },
     { "source": "/how-to-reach-emerald",            "destination": "/blog/how-to-reach-emerald" },
     { "source": "/best-times-to-play-ranked",       "destination": "/blog/best-times-to-play-ranked" },
-    { "source": "/track/:token",                    "destination": "/track" }
+    { "source": "/track/:token",                    "destination": "/track" },
+    { "source": "/review/:token",                   "destination": "/review" }
   ],
   "headers": [
     {
