@@ -94,7 +94,7 @@ button.danger{background:linear-gradient(135deg,#dc2626,#991b1b);}
       <div class="row">
         <div>
           <label for="orderToken">Order Token</label>
-          <input type="text" id="orderToken" placeholder="SB-XXXX-XXXX" maxlength="11" autocomplete="off" spellcheck="false" style="font-family:'Space Mono',monospace;letter-spacing:.06em;">
+          <input type="text" id="orderToken" placeholder="SB-XXXX-XXXX" maxlength="12" autocomplete="off" spellcheck="false" style="font-family:'Space Mono',monospace;letter-spacing:.06em;">
         </div>
       </div>
       <button class="primary" id="loadBtn" style="width:100%;">Load Order</button>
@@ -223,7 +223,7 @@ button.danger{background:linear-gradient(135deg,#dc2626,#991b1b);}
   function formatTime(ts){if(!ts)return '';var d=Math.floor((Date.now()-ts)/1000);if(d<60)return d+'s ago';if(d<3600)return Math.floor(d/60)+'m ago';if(d<86400)return Math.floor(d/3600)+'h ago';return new Date(ts).toLocaleString();}
   function showAlert(el,msg){el.textContent=msg||el.textContent;el.classList.add('show');setTimeout(function(){el.classList.remove('show');},3500);}
 
-  $('orderToken').addEventListener('input',function(){this.value=this.value.toUpperCase().replace(/[^A-Z0-9-]/g,'').slice(0,11);});
+  $('orderToken').addEventListener('input',function(){this.value=this.value.toUpperCase().replace(/[^A-Z0-9-]/g,'').slice(0,12);});
 
   $('loadBtn').addEventListener('click',load);
   $('orderToken').addEventListener('keydown',function(e){if(e.key==='Enter')load();});

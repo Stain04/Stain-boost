@@ -162,7 +162,7 @@
   <!-- TOKEN GATE -->
   <div class="gate" id="gate">
     <label class="gate-label" for="tokenInput">Enter Your Order Token</label>
-    <input class="gate-input" id="tokenInput" type="text" placeholder="SB-XXXX-XXXX" maxlength="11" autocomplete="off" spellcheck="false">
+    <input class="gate-input" id="tokenInput" type="text" placeholder="SB-XXXX-XXXX" maxlength="12" autocomplete="off" spellcheck="false">
     <button class="gate-btn" id="gateBtn">Open Dashboard</button>
     <div class="gate-error" id="gateError"></div>
     <p class="gate-hint">You received this token in your order confirmation email and Discord. Format: <strong style="color:#c4b5fd;">SB-XXXX-XXXX</strong>. Lost it? <a href="https://discord.com/invite/8ak4MSjp" target="_blank" style="color:#22d3ee;">Ask Stain on Discord</a>.</p>
@@ -282,7 +282,7 @@ function toggleMenu(){var m=document.getElementById('mobileMenu');m.classList.to
 
   input.addEventListener('input',function(){
     var v=this.value.toUpperCase().replace(/[^A-Z0-9-]/g,'');
-    if(v.length>11)v=v.slice(0,11);
+    if(v.length>12)v=v.slice(0,12);
     this.value=v;
     clearError();
   });
