@@ -35,6 +35,7 @@ export default async function handler(req, res) {
     case 'update': return update(req, res);
     case 'chat':   return chat(req, res);
     case 'mine':   return mine(req, res);
+    case 'list':   return list(req, res);
     default:       return res.status(404).json({ error: 'Not found' });
   }
 }
@@ -177,6 +178,54 @@ async function chat(req, res) {
   }
 
   return res.status(405).json({ error: 'Method not allowed' });
+}
+
+async function list(req, res) {
+  if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
+  if (rateLimit('list:' + getIp(req), 30, 60_000)) return res.status(429).json({ error: 'Too many requests.' });
+
+  const sessionUser = await getUser(req);
+  const sessionOk = isAdmin(sessionUser);
+  const ADMIN_KEY = process.env.ADMIN_KEY;
+  const provided = req.headers['x-admin-key'];
+  const keyOk = ADMIN_KEY && provided === ADMIN_KEY;
+  if (!sessionOk && !keyOk) return res.status(401).json({ error: 'Unauthorized.' });
+
+  const kv = getKv();
+  if (!kv) return res.status(500).json({ error: 'Storage not configured.' });
+
+  try {
+    const tokens = await kv.smembers('valid_tokens');
+    if (!tokens || !tokens.length) return res.status(200).json({ orders: [] });
+
+    const records = await Promise.all(tokens.map(async (t) => {
+      try {
+        const r = await kv.get(`order:${t}`);
+        if (!r) return null;
+        const o = typeof r === 'string' ? JSON.parse(r) : r;
+        return {
+          token: o.token,
+          status: o.status,
+          summary: o.summary,
+          ign: o.ign,
+          discord: o.discord,
+          total: o.total,
+          meta: o.meta,
+          currentRank: o.currentRank || '',
+          currentLp: o.currentLp || 0,
+          eta: o.eta || '',
+          createdAt: o.createdAt,
+          updatedAt: o.updatedAt,
+        };
+      } catch { return null; }
+    }));
+
+    const orders = records.filter(Boolean).sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+    return res.status(200).json({ orders });
+  } catch (e) {
+    console.error('list error:', e);
+    return res.status(500).json({ error: 'Server error.' });
+  }
 }
 
 async function mine(req, res) {

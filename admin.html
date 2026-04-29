@@ -10,7 +10,7 @@
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
 <style>
-.wrap{max-width:980px;margin:0 auto;padding:2.5rem 1.5rem 5rem;position:relative;z-index:2;}
+.wrap{max-width:1080px;margin:0 auto;padding:2.5rem 1.5rem 5rem;position:relative;z-index:2;}
 .page-tag{font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;color:#fbbf24;opacity:.8;text-align:center;margin-bottom:.5rem;}
 .page-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.4rem,3.5vw,2rem);font-weight:900;letter-spacing:.05em;text-align:center;color:#fff;margin-bottom:.4rem;}
 .page-sub{text-align:center;font-size:.85rem;color:rgba(255,255,255,.4);margin-bottom:2rem;}
@@ -33,6 +33,7 @@ button.primary:hover{box-shadow:0 0 18px rgba(124,58,237,.4);}
 button.primary:disabled{opacity:.5;cursor:not-allowed;}
 button.gold{background:linear-gradient(135deg,#fbbf24,#d97706);}
 button.danger{background:linear-gradient(135deg,#dc2626,#991b1b);}
+button.ghost{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);}
 
 .gate{max-width:480px;margin:2.5rem auto;}
 .alert{padding:.7rem .95rem;border-radius:10px;font-size:.82rem;margin-top:.8rem;display:none;}
@@ -60,6 +61,46 @@ button.danger{background:linear-gradient(135deg,#dc2626,#991b1b);}
 .bubble.client .bubble-meta::before{content:'CLIENT · ';color:#fbbf24;}
 
 .empty{text-align:center;padding:1rem;color:rgba(255,255,255,.32);font-size:.82rem;}
+
+/* ── ORDER LIST VIEW ── */
+.list-toolbar{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;}
+.filter-chips{display:flex;gap:.5rem;flex-wrap:wrap;}
+.chip{font-family:'Rajdhani',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:.5rem .9rem;border-radius:999px;cursor:pointer;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.65);transition:all .15s;}
+.chip:hover{background:rgba(139,92,246,.1);color:#fff;}
+.chip.active{background:linear-gradient(135deg,rgba(124,58,237,.45),rgba(91,33,182,.3));border-color:rgba(139,92,246,.55);color:#fff;}
+.chip .count{margin-left:.4rem;font-size:.7rem;opacity:.7;}
+
+.search-box{flex:1;min-width:200px;max-width:340px;}
+.search-box input{padding:.55rem .85rem;font-size:.82rem;}
+
+.order-grid{display:grid;grid-template-columns:1fr;gap:.7rem;}
+.order-card{background:rgba(12,8,32,.7);border:1px solid rgba(139,92,246,.18);border-radius:14px;padding:1rem 1.1rem;cursor:pointer;transition:all .15s;display:grid;grid-template-columns:auto 1fr auto;gap:1rem;align-items:center;}
+.order-card:hover{border-color:rgba(139,92,246,.55);background:rgba(124,58,237,.08);transform:translateX(2px);}
+.order-card .ocard-status{display:flex;flex-direction:column;align-items:center;gap:.2rem;min-width:64px;}
+.status-dot{width:10px;height:10px;border-radius:50%;}
+.status-dot.queued{background:#fbbf24;box-shadow:0 0 8px rgba(251,191,36,.5);}
+.status-dot.in_progress{background:#22d3ee;box-shadow:0 0 8px rgba(34,211,238,.6);animation:pulse 1.5s ease-in-out infinite;}
+.status-dot.paused{background:#f87171;}
+.status-dot.completed{background:#34d399;box-shadow:0 0 8px rgba(52,211,153,.5);}
+.status-dot.cancelled{background:rgba(255,255,255,.25);}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.6;transform:scale(.85);}}
+.status-label{font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.55);}
+.ocard-body{min-width:0;}
+.ocard-title{font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;color:#fff;margin-bottom:.15rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ocard-sub{font-size:.78rem;color:rgba(255,255,255,.5);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ocard-token{font-family:'Space Mono',monospace;font-size:.65rem;color:#fbbf24;letter-spacing:.05em;margin-top:.2rem;}
+.ocard-side{text-align:right;font-size:.74rem;color:rgba(255,255,255,.45);min-width:110px;}
+.ocard-side .ts{font-family:'Space Mono',monospace;}
+.ocard-side .total{color:#fbbf24;font-weight:700;font-size:.95rem;font-family:'Rajdhani',sans-serif;}
+@media(max-width:560px){
+  .order-card{grid-template-columns:auto 1fr;gap:.7rem;padding:.85rem .9rem;}
+  .ocard-side{grid-column:1 / -1;text-align:left;display:flex;justify-content:space-between;padding-top:.4rem;border-top:1px solid rgba(255,255,255,.06);min-width:0;}
+}
+
+.list-loading{text-align:center;padding:2rem 1rem;color:rgba(255,255,255,.4);font-family:'Space Mono',monospace;font-size:.8rem;letter-spacing:.1em;}
+
+.session-banner{font-size:.82rem;color:rgba(52,211,153,.85);background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.2);padding:.6rem .85rem;border-radius:10px;margin-bottom:.85rem;display:flex;justify-content:space-between;align-items:center;gap:.8rem;flex-wrap:wrap;}
+.session-banner .so{color:#f87171;cursor:pointer;font-size:.78rem;}
 </style>
 </head>
 <body>
@@ -81,40 +122,61 @@ button.danger{background:linear-gradient(135deg,#dc2626,#991b1b);}
   <h1 class="page-title">ADMIN DASHBOARD</h1>
   <p class="page-sub">Update order progress, post notes, and chat with clients</p>
 
-  <!-- AUTH GATE -->
-  <div class="gate" id="gate">
+  <!-- AUTH GATE (only when no admin session) -->
+  <div class="gate" id="gate" style="display:none;">
     <div class="card">
-      <div class="card-title" id="gateTitle">Authenticate</div>
-      <div id="adminKeyRow" class="row">
+      <div class="card-title">Authenticate</div>
+      <div class="row">
         <div>
           <label for="adminKey">Admin Key</label>
           <input type="password" id="adminKey" placeholder="••••••••" autocomplete="current-password">
         </div>
       </div>
-      <div id="adminSessionMsg" style="display:none;font-size:.82rem;color:rgba(52,211,153,.85);background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.2);padding:.6rem .85rem;border-radius:10px;margin-bottom:.85rem;">
-        Signed in as <strong id="adminWhoami">—</strong> — admin session active. No key needed.
-      </div>
-      <div class="row">
-        <div>
-          <label for="orderToken">Order Token</label>
-          <input type="text" id="orderToken" placeholder="SB-XXXX-XXXX" maxlength="12" autocomplete="off" spellcheck="false" style="font-family:'Space Mono',monospace;letter-spacing:.06em;">
-        </div>
-      </div>
-      <button class="primary" id="loadBtn" style="width:100%;">Load Order</button>
+      <button class="primary" id="keyBtn" style="width:100%;">Unlock</button>
       <div class="alert err" id="gateError"></div>
-      <p style="font-size:.78rem;color:rgba(255,255,255,.36);text-align:center;margin-top:1rem;line-height:1.5;" id="gateHelp">
-        Tip: <a href="/login?return=/admin" style="color:#22d3ee;">Sign in</a> as an admin user to skip the key.
+      <p style="font-size:.78rem;color:rgba(255,255,255,.36);text-align:center;margin-top:1rem;line-height:1.5;">
+        Or <a href="/login?return=/admin" style="color:#22d3ee;">sign in</a> as an admin user.
       </p>
     </div>
   </div>
 
-  <!-- DASHBOARD -->
+  <!-- ORDER LIST -->
+  <div id="listView" style="display:none;">
+    <div class="session-banner" id="sessionBanner" style="display:none;">
+      <span>Signed in as <strong id="adminWhoami">—</strong> · admin session active</span>
+      <span class="so" id="adminLogout">Sign out</span>
+    </div>
+
+    <div class="card">
+      <div class="list-toolbar">
+        <div class="filter-chips" id="filterChips">
+          <span class="chip active" data-filter="active">Active <span class="count" id="cActive">0</span></span>
+          <span class="chip" data-filter="queued">Queued <span class="count" id="cQueued">0</span></span>
+          <span class="chip" data-filter="in_progress">In Progress <span class="count" id="cInProgress">0</span></span>
+          <span class="chip" data-filter="completed">Completed <span class="count" id="cCompleted">0</span></span>
+          <span class="chip" data-filter="all">All <span class="count" id="cAll">0</span></span>
+        </div>
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="Search IGN, token, summary…">
+        </div>
+        <button class="primary ghost" id="refreshBtn">↻ Refresh</button>
+      </div>
+
+      <div id="listContent" class="list-loading">Loading orders…</div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD (single-order management) -->
   <div id="panel" style="display:none;">
     <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:.8rem;flex-wrap:wrap;margin-bottom:1rem;">
+        <button class="primary ghost" id="backBtn">← Back to orders</button>
+        <div style="display:flex;gap:.4rem;">
+          <button class="primary ghost" id="reloadBtn">↻ Refresh</button>
+        </div>
+      </div>
       <div class="card-title">Order Details</div>
       <div class="order-meta" id="orderMeta"></div>
-      <button class="primary" id="reloadBtn" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);">↻ Refresh</button>
-      <button class="primary" id="signOutBtn" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);margin-left:.4rem;">Sign Out</button>
     </div>
 
     <div class="tools-grid">
@@ -220,13 +282,16 @@ button.danger{background:linear-gradient(135deg,#dc2626,#991b1b);}
 <script>
 (function(){
   var TOKEN_RE=/^SB-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
-  var adminKey='',orderToken='',currentOrder=null;
+  var adminKey='', orderToken='', currentOrder=null;
   var sessionAdmin=false;
+  var allOrders=[], currentFilter='active', currentSearch='';
+
   var gate=document.getElementById('gate');
+  var listView=document.getElementById('listView');
   var panel=document.getElementById('panel');
 
   function $(id){return document.getElementById(id);}
-  function escapeHtml(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function escapeHtml(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
   function formatTime(ts){if(!ts)return '';var d=Math.floor((Date.now()-ts)/1000);if(d<60)return d+'s ago';if(d<3600)return Math.floor(d/60)+'m ago';if(d<86400)return Math.floor(d/3600)+'h ago';return new Date(ts).toLocaleString();}
   function showAlert(el,msg){el.textContent=msg||el.textContent;el.classList.add('show');setTimeout(function(){el.classList.remove('show');},3500);}
 
@@ -235,45 +300,200 @@ button.danger{background:linear-gradient(135deg,#dc2626,#991b1b);}
     if(!sessionAdmin&&adminKey)h['x-admin-key']=adminKey;
     return h;
   }
+  function authGetHeaders(){
+    var h={};
+    if(!sessionAdmin&&adminKey)h['x-admin-key']=adminKey;
+    return h;
+  }
 
-  $('orderToken').addEventListener('input',function(){this.value=this.value.toUpperCase().replace(/[^A-Z0-9-]/g,'').slice(0,12);});
-
-  $('loadBtn').addEventListener('click',load);
-  $('orderToken').addEventListener('keydown',function(e){if(e.key==='Enter')load();});
-  $('adminKey').addEventListener('keydown',function(e){if(e.key==='Enter')load();});
-
-  function load(){
-    var tok=$('orderToken').value.toUpperCase().trim();
-    if(!TOKEN_RE.test(tok))return showAlert($('gateError'),'Token must be SB-XXXX-XXXX.');
-    if(!sessionAdmin){
-      var key=$('adminKey').value.trim();
-      if(!key)return showAlert($('gateError'),'Admin key required (or sign in as an admin user).');
-      adminKey=key;
+  // ── BOOT ──
+  fetch('/api/auth/me').then(function(r){return r.json();}).then(function(d){
+    if(d&&d.user&&d.user.isAdmin){
+      sessionAdmin=true;
+      $('sessionBanner').style.display='flex';
+      $('adminWhoami').textContent='@'+(d.user.username||'admin');
+      showList();
+    }else{
+      // try cached admin key
+      try{
+        var k=sessionStorage.getItem('sb_admin_key');
+        if(k){adminKey=k;showList();return;}
+      }catch(e){}
+      gate.style.display='block';
     }
-    orderToken=tok;
-    fetch('/api/order-tracking/status?token='+encodeURIComponent(tok))
+  }).catch(function(){gate.style.display='block';});
+
+  $('adminLogout').addEventListener('click',function(e){
+    e.preventDefault();
+    fetch('/api/auth/logout',{method:'POST'}).then(function(){location.reload();});
+  });
+
+  // ── KEY-ONLY AUTH (fallback) ──
+  $('keyBtn').addEventListener('click',tryKey);
+  $('adminKey').addEventListener('keydown',function(e){if(e.key==='Enter')tryKey();});
+  function tryKey(){
+    var k=$('adminKey').value.trim();
+    if(!k)return showAlert($('gateError'),'Enter the admin key.');
+    adminKey=k;
+    fetch('/api/order-tracking/list',{headers:authGetHeaders()})
       .then(function(r){return r.json().then(function(j){return {s:r.status,b:j};});})
       .then(function(res){
         if(res.s===200){
-          try{
-            if(!sessionAdmin)sessionStorage.setItem('sb_admin_key',adminKey);
-            sessionStorage.setItem('sb_admin_token',orderToken);
-          }catch(e){}
-          openPanel(res.b);
+          try{sessionStorage.setItem('sb_admin_key',adminKey);}catch(e){}
+          gate.style.display='none';
+          showList(res.b.orders);
         }else{
-          showAlert($('gateError'),res.b.error||'Could not load order.');
+          adminKey='';
+          showAlert($('gateError'),res.b.error||'Invalid key.');
         }
       })
-      .catch(function(){showAlert($('gateError'),'Network error.');});
+      .catch(function(){adminKey='';showAlert($('gateError'),'Network error.');});
   }
 
-  function openPanel(o){
-    currentOrder=o;
-    gate.style.display='none';
-    panel.style.display='block';
-    renderOrder(o);
-    fetchChat();
+  // ── LIST VIEW ──
+  function showList(preloaded){
+    listView.style.display='block';
+    panel.style.display='none';
+    if(preloaded){
+      allOrders=preloaded;
+      renderList();
+    }else{
+      loadList();
+    }
   }
+
+  function loadList(){
+    $('listContent').className='list-loading';
+    $('listContent').textContent='Loading orders…';
+    fetch('/api/order-tracking/list',{headers:authGetHeaders()})
+      .then(function(r){return r.json().then(function(j){return {s:r.status,b:j};});})
+      .then(function(res){
+        if(res.s===200){
+          allOrders=res.b.orders||[];
+          renderList();
+        }else if(res.s===401){
+          adminKey='';
+          try{sessionStorage.removeItem('sb_admin_key');}catch(e){}
+          listView.style.display='none';
+          if(!sessionAdmin)gate.style.display='block';
+        }else{
+          $('listContent').className='list-loading';
+          $('listContent').textContent=res.b.error||'Failed to load.';
+        }
+      })
+      .catch(function(){
+        $('listContent').className='list-loading';
+        $('listContent').textContent='Network error.';
+      });
+  }
+
+  function renderList(){
+    // counts
+    var counts={active:0,queued:0,in_progress:0,completed:0,all:allOrders.length};
+    allOrders.forEach(function(o){
+      if(o.status==='queued')counts.queued++;
+      if(o.status==='in_progress')counts.in_progress++;
+      if(o.status==='completed')counts.completed++;
+      if(o.status!=='completed'&&o.status!=='cancelled')counts.active++;
+    });
+    $('cActive').textContent=counts.active;
+    $('cQueued').textContent=counts.queued;
+    $('cInProgress').textContent=counts.in_progress;
+    $('cCompleted').textContent=counts.completed;
+    $('cAll').textContent=counts.all;
+
+    // filter
+    var filtered=allOrders.filter(function(o){
+      if(currentFilter==='active')return o.status!=='completed'&&o.status!=='cancelled';
+      if(currentFilter==='all')return true;
+      return o.status===currentFilter;
+    });
+    if(currentSearch){
+      var q=currentSearch.toLowerCase();
+      filtered=filtered.filter(function(o){
+        return (o.token||'').toLowerCase().indexOf(q)>=0
+            || (o.ign||'').toLowerCase().indexOf(q)>=0
+            || (o.summary||'').toLowerCase().indexOf(q)>=0
+            || (o.discord||'').toLowerCase().indexOf(q)>=0;
+      });
+    }
+
+    var box=$('listContent');
+    if(!filtered.length){
+      box.className='list-loading';
+      box.textContent=currentSearch?'No orders match your search.':'No orders in this category.';
+      return;
+    }
+
+    box.className='order-grid';
+    box.innerHTML=filtered.map(function(o){
+      var statusLabel={queued:'Queued',in_progress:'Active',paused:'Paused',completed:'Done',cancelled:'Cancelled'}[o.status]||o.status;
+      var winsLine='';
+      if(o.meta&&o.meta.kind==='win_boost'){
+        winsLine=' · '+(o.meta.winsDone||0)+'/'+(o.meta.wins||0)+' wins';
+      }else if(o.currentRank){
+        winsLine=' · '+escapeHtml(o.currentRank)+(o.currentLp?' '+o.currentLp+' LP':'');
+      }
+      return '<div class="order-card" data-token="'+escapeHtml(o.token)+'">'
+        +'<div class="ocard-status">'
+          +'<div class="status-dot '+escapeHtml(o.status||'')+'"></div>'
+          +'<div class="status-label">'+escapeHtml(statusLabel)+'</div>'
+        +'</div>'
+        +'<div class="ocard-body">'
+          +'<div class="ocard-title">'+escapeHtml(o.ign||'(no IGN)')+winsLine+'</div>'
+          +'<div class="ocard-sub">'+escapeHtml(o.summary||'')+'</div>'
+          +'<div class="ocard-token">'+escapeHtml(o.token)+'</div>'
+        +'</div>'
+        +'<div class="ocard-side">'
+          +(o.total?'<div class="total">$'+escapeHtml(o.total)+'</div>':'')
+          +'<div class="ts">'+escapeHtml(formatTime(o.updatedAt||o.createdAt))+'</div>'
+        +'</div>'
+      +'</div>';
+    }).join('');
+
+    Array.prototype.forEach.call(box.querySelectorAll('.order-card'),function(card){
+      card.addEventListener('click',function(){
+        var t=card.getAttribute('data-token');
+        if(t)openOrder(t);
+      });
+    });
+  }
+
+  // filter chips
+  Array.prototype.forEach.call(document.querySelectorAll('#filterChips .chip'),function(chip){
+    chip.addEventListener('click',function(){
+      Array.prototype.forEach.call(document.querySelectorAll('#filterChips .chip'),function(c){c.classList.remove('active');});
+      chip.classList.add('active');
+      currentFilter=chip.getAttribute('data-filter');
+      renderList();
+    });
+  });
+  $('searchInput').addEventListener('input',function(){
+    currentSearch=this.value.trim();
+    renderList();
+  });
+  $('refreshBtn').addEventListener('click',loadList);
+
+  // auto-refresh list every 20s
+  setInterval(function(){
+    if(listView.style.display!=='none'&&!document.hidden)loadList();
+  },20000);
+
+  // ── ORDER DETAIL VIEW ──
+  function openOrder(tok){
+    orderToken=tok;
+    listView.style.display='none';
+    panel.style.display='block';
+    fetch('/api/order-tracking/status?token='+encodeURIComponent(tok),{headers:authGetHeaders()})
+      .then(function(r){return r.ok?r.json():null;})
+      .then(function(o){if(o){currentOrder=o;renderOrder(o);fetchChat();}});
+  }
+
+  $('backBtn').addEventListener('click',function(){
+    orderToken='';currentOrder=null;
+    panel.style.display='none';
+    showList();
+  });
 
   function renderOrder(o){
     var meta='';
@@ -340,21 +560,14 @@ button.danger{background:linear-gradient(135deg,#dc2626,#991b1b);}
   });
 
   $('reloadBtn').addEventListener('click',function(){
-    fetch('/api/order-tracking/status?token='+encodeURIComponent(orderToken))
+    fetch('/api/order-tracking/status?token='+encodeURIComponent(orderToken),{headers:authGetHeaders()})
       .then(function(r){return r.ok?r.json():null;})
       .then(function(o){if(o)renderOrder(o);});
     fetchChat();
   });
 
-  $('signOutBtn').addEventListener('click',function(){
-    try{sessionStorage.removeItem('sb_admin_key');sessionStorage.removeItem('sb_admin_token');}catch(e){}
-    adminKey='';orderToken='';currentOrder=null;
-    panel.style.display='none';gate.style.display='block';
-    $('adminKey').value='';
-  });
-
   function fetchChat(){
-    fetch('/api/order-tracking/chat?token='+encodeURIComponent(orderToken))
+    fetch('/api/order-tracking/chat?token='+encodeURIComponent(orderToken),{headers:authGetHeaders()})
       .then(function(r){return r.ok?r.json():null;})
       .then(function(d){if(d&&d.messages)renderChat(d.messages);});
   }
@@ -377,29 +590,8 @@ button.danger{background:linear-gradient(135deg,#dc2626,#991b1b);}
       .then(function(){$('chatText').value='';fetchChat();});
   });
 
-  // Auto-poll chat every 12s
-  setInterval(function(){if(orderToken&&!document.hidden)fetchChat();},12000);
-
-  // Detect if user is signed in as an admin → skip the key field entirely
-  fetch('/api/auth/me').then(function(r){return r.json();}).then(function(d){
-    if(d&&d.user&&d.user.isAdmin){
-      sessionAdmin=true;
-      $('adminKeyRow').style.display='none';
-      $('adminSessionMsg').style.display='block';
-      $('adminWhoami').textContent='@'+(d.user.username||'admin');
-      $('gateHelp').innerHTML='Enter the order token to manage. <a href="#" id="adminLogout" style="color:#f87171;">Sign out</a>';
-      var lo=document.getElementById('adminLogout');
-      if(lo)lo.addEventListener('click',function(e){e.preventDefault();fetch('/api/auth/logout',{method:'POST'}).then(function(){location.reload();});});
-    }
-    // Restore previous token entry
-    try{
-      var t=sessionStorage.getItem('sb_admin_token');
-      var k=sessionStorage.getItem('sb_admin_key');
-      if(t&&TOKEN_RE.test(t))$('orderToken').value=t;
-      if(!sessionAdmin&&k)$('adminKey').value=k;
-      if(t&&TOKEN_RE.test(t)&&(sessionAdmin||k))load();
-    }catch(e){}
-  }).catch(function(){});
+  // Auto-poll chat every 12s while in detail view
+  setInterval(function(){if(orderToken&&panel.style.display!=='none'&&!document.hidden)fetchChat();},12000);
 })();
 </script>
 </body>
