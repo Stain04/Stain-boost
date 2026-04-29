@@ -294,7 +294,7 @@ function toggleMenu(){var m=document.getElementById('mobileMenu');m.classList.to
     var t=input.value.toUpperCase().trim();
     if(!TOKEN_RE.test(t)){showError('Token must look like SB-XXXX-XXXX.');return;}
     btn.disabled=true;
-    fetch('/api/order-status?token='+encodeURIComponent(t))
+    fetch('/api/order-tracking/status?token='+encodeURIComponent(t))
       .then(function(r){return r.json().then(function(j){return {status:r.status,body:j};});})
       .then(function(res){
         btn.disabled=false;
@@ -324,7 +324,7 @@ function toggleMenu(){var m=document.getElementById('mobileMenu');m.classList.to
 
   function poll(){
     if(!currentToken)return;
-    fetch('/api/order-status?token='+encodeURIComponent(currentToken))
+    fetch('/api/order-tracking/status?token='+encodeURIComponent(currentToken))
       .then(function(r){return r.ok?r.json():null;})
       .then(function(o){if(o)renderOrder(o);})
       .catch(function(){});
@@ -402,7 +402,7 @@ function toggleMenu(){var m=document.getElementById('mobileMenu');m.classList.to
 
   function fetchChat(scrollBottom){
     if(!currentToken)return;
-    fetch('/api/order-chat?token='+encodeURIComponent(currentToken))
+    fetch('/api/order-tracking/chat?token='+encodeURIComponent(currentToken))
       .then(function(r){return r.ok?r.json():null;})
       .then(function(d){if(d&&d.messages)renderChat(d.messages,scrollBottom);})
       .catch(function(){});
@@ -433,7 +433,7 @@ function toggleMenu(){var m=document.getElementById('mobileMenu');m.classList.to
     var text=chatInput.value.trim();
     if(!text||!currentToken)return;
     chatSend.disabled=true;
-    fetch('/api/order-chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:currentToken,text:text})})
+    fetch('/api/order-tracking/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:currentToken,text:text})})
       .then(function(r){return r.json();})
       .then(function(){
         chatInput.value='';

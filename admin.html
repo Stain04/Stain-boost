@@ -235,7 +235,7 @@ button.danger{background:linear-gradient(135deg,#dc2626,#991b1b);}
     if(!key)return showAlert($('gateError'),'Admin key required.');
     if(!TOKEN_RE.test(tok))return showAlert($('gateError'),'Token must be SB-XXXX-XXXX.');
     adminKey=key;orderToken=tok;
-    fetch('/api/order-status?token='+encodeURIComponent(tok))
+    fetch('/api/order-tracking/status?token='+encodeURIComponent(tok))
       .then(function(r){return r.json().then(function(j){return {s:r.status,b:j};});})
       .then(function(res){
         if(res.s===200){
@@ -288,7 +288,7 @@ button.danger{background:linear-gradient(135deg,#dc2626,#991b1b);}
 
   function postUpdate(payload,onOk,onErr){
     payload.token=orderToken;
-    fetch('/api/order-update',{method:'POST',headers:{'Content-Type':'application/json','x-admin-key':adminKey},body:JSON.stringify(payload)})
+    fetch('/api/order-tracking/update',{method:'POST',headers:{'Content-Type':'application/json','x-admin-key':adminKey},body:JSON.stringify(payload)})
       .then(function(r){return r.json().then(function(j){return {s:r.status,b:j};});})
       .then(function(res){
         if(res.s===200){currentOrder=res.b.order;renderOrder(res.b.order);onOk&&onOk();}
@@ -321,7 +321,7 @@ button.danger{background:linear-gradient(135deg,#dc2626,#991b1b);}
   });
 
   $('reloadBtn').addEventListener('click',function(){
-    fetch('/api/order-status?token='+encodeURIComponent(orderToken))
+    fetch('/api/order-tracking/status?token='+encodeURIComponent(orderToken))
       .then(function(r){return r.ok?r.json():null;})
       .then(function(o){if(o)renderOrder(o);});
     fetchChat();
@@ -335,7 +335,7 @@ button.danger{background:linear-gradient(135deg,#dc2626,#991b1b);}
   });
 
   function fetchChat(){
-    fetch('/api/order-chat?token='+encodeURIComponent(orderToken))
+    fetch('/api/order-tracking/chat?token='+encodeURIComponent(orderToken))
       .then(function(r){return r.ok?r.json():null;})
       .then(function(d){if(d&&d.messages)renderChat(d.messages);});
   }
@@ -353,7 +353,7 @@ button.danger{background:linear-gradient(135deg,#dc2626,#991b1b);}
   $('chatSendBtn').addEventListener('click',function(){
     var t=$('chatText').value.trim();
     if(!t)return;
-    fetch('/api/order-chat',{method:'POST',headers:{'Content-Type':'application/json','x-admin-key':adminKey},body:JSON.stringify({token:orderToken,text:t})})
+    fetch('/api/order-tracking/chat',{method:'POST',headers:{'Content-Type':'application/json','x-admin-key':adminKey},body:JSON.stringify({token:orderToken,text:t})})
       .then(function(r){return r.json();})
       .then(function(){$('chatText').value='';fetchChat();});
   });

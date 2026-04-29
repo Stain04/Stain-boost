@@ -144,7 +144,7 @@
   }
 
   function loadOrders(){
-    fetch('/api/my-orders').then(function(r){return r.json();}).then(function(d){
+    fetch('/api/order-tracking/mine').then(function(r){return r.json();}).then(function(d){
       renderOrders(d.orders||[]);
     }).catch(function(){
       $('ordersWrap').innerHTML='<div class="empty-card"><div class="empty-icon">⚠️</div><div class="empty-title">Could Not Load Orders</div><div class="empty-msg">Try refreshing the page.</div></div>';
