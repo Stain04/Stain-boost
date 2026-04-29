@@ -1295,7 +1295,7 @@ function copyText(text, btnId){
 }
 
 function showMsg(type,text){
-  const el=document.getElementById('formMsg');el.className='form-msg '+type;el.textContent=text;el.style.display='block';
+  const el=document.getElementById('formMsg');el.className='form-msg '+type;el.innerHTML=text;el.style.display='block';
   el.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
