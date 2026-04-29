@@ -84,12 +84,15 @@ button.danger{background:linear-gradient(135deg,#dc2626,#991b1b);}
   <!-- AUTH GATE -->
   <div class="gate" id="gate">
     <div class="card">
-      <div class="card-title">Authenticate</div>
-      <div class="row">
+      <div class="card-title" id="gateTitle">Authenticate</div>
+      <div id="adminKeyRow" class="row">
         <div>
           <label for="adminKey">Admin Key</label>
           <input type="password" id="adminKey" placeholder="••••••••" autocomplete="current-password">
         </div>
+      </div>
+      <div id="adminSessionMsg" style="display:none;font-size:.82rem;color:rgba(52,211,153,.85);background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.2);padding:.6rem .85rem;border-radius:10px;margin-bottom:.85rem;">
+        Signed in as <strong id="adminWhoami">—</strong> — admin session active. No key needed.
       </div>
       <div class="row">
         <div>
@@ -99,6 +102,9 @@ button.danger{background:linear-gradient(135deg,#dc2626,#991b1b);}
       </div>
       <button class="primary" id="loadBtn" style="width:100%;">Load Order</button>
       <div class="alert err" id="gateError"></div>
+      <p style="font-size:.78rem;color:rgba(255,255,255,.36);text-align:center;margin-top:1rem;line-height:1.5;" id="gateHelp">
+        Tip: <a href="/login?return=/admin" style="color:#22d3ee;">Sign in</a> as an admin user to skip the key.
+      </p>
     </div>
   </div>
 
@@ -215,6 +221,7 @@ button.danger{background:linear-gradient(135deg,#dc2626,#991b1b);}
 (function(){
   var TOKEN_RE=/^SB-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
   var adminKey='',orderToken='',currentOrder=null;
+  var sessionAdmin=false;
   var gate=document.getElementById('gate');
   var panel=document.getElementById('panel');
 
@@ -223,6 +230,12 @@ button.danger{background:linear-gradient(135deg,#dc2626,#991b1b);}
   function formatTime(ts){if(!ts)return '';var d=Math.floor((Date.now()-ts)/1000);if(d<60)return d+'s ago';if(d<3600)return Math.floor(d/60)+'m ago';if(d<86400)return Math.floor(d/3600)+'h ago';return new Date(ts).toLocaleString();}
   function showAlert(el,msg){el.textContent=msg||el.textContent;el.classList.add('show');setTimeout(function(){el.classList.remove('show');},3500);}
 
+  function authHeaders(){
+    var h={'Content-Type':'application/json'};
+    if(!sessionAdmin&&adminKey)h['x-admin-key']=adminKey;
+    return h;
+  }
+
   $('orderToken').addEventListener('input',function(){this.value=this.value.toUpperCase().replace(/[^A-Z0-9-]/g,'').slice(0,12);});
 
   $('loadBtn').addEventListener('click',load);
@@ -230,16 +243,22 @@ button.danger{background:linear-gradient(135deg,#dc2626,#991b1b);}
   $('adminKey').addEventListener('keydown',function(e){if(e.key==='Enter')load();});
 
   function load(){
-    var key=$('adminKey').value.trim();
     var tok=$('orderToken').value.toUpperCase().trim();
-    if(!key)return showAlert($('gateError'),'Admin key required.');
     if(!TOKEN_RE.test(tok))return showAlert($('gateError'),'Token must be SB-XXXX-XXXX.');
-    adminKey=key;orderToken=tok;
+    if(!sessionAdmin){
+      var key=$('adminKey').value.trim();
+      if(!key)return showAlert($('gateError'),'Admin key required (or sign in as an admin user).');
+      adminKey=key;
+    }
+    orderToken=tok;
     fetch('/api/order-tracking/status?token='+encodeURIComponent(tok))
       .then(function(r){return r.json().then(function(j){return {s:r.status,b:j};});})
       .then(function(res){
         if(res.s===200){
-          try{sessionStorage.setItem('sb_admin_key',adminKey);sessionStorage.setItem('sb_admin_token',orderToken);}catch(e){}
+          try{
+            if(!sessionAdmin)sessionStorage.setItem('sb_admin_key',adminKey);
+            sessionStorage.setItem('sb_admin_token',orderToken);
+          }catch(e){}
           openPanel(res.b);
         }else{
           showAlert($('gateError'),res.b.error||'Could not load order.');
@@ -288,7 +307,7 @@ button.danger{background:linear-gradient(135deg,#dc2626,#991b1b);}
 
   function postUpdate(payload,onOk,onErr){
     payload.token=orderToken;
-    fetch('/api/order-tracking/update',{method:'POST',headers:{'Content-Type':'application/json','x-admin-key':adminKey},body:JSON.stringify(payload)})
+    fetch('/api/order-tracking/update',{method:'POST',headers:authHeaders(),body:JSON.stringify(payload)})
       .then(function(r){return r.json().then(function(j){return {s:r.status,b:j};});})
       .then(function(res){
         if(res.s===200){currentOrder=res.b.order;renderOrder(res.b.order);onOk&&onOk();}
@@ -353,7 +372,7 @@ button.danger{background:linear-gradient(135deg,#dc2626,#991b1b);}
   $('chatSendBtn').addEventListener('click',function(){
     var t=$('chatText').value.trim();
     if(!t)return;
-    fetch('/api/order-tracking/chat',{method:'POST',headers:{'Content-Type':'application/json','x-admin-key':adminKey},body:JSON.stringify({token:orderToken,text:t})})
+    fetch('/api/order-tracking/chat',{method:'POST',headers:authHeaders(),body:JSON.stringify({token:orderToken,text:t})})
       .then(function(r){return r.json();})
       .then(function(){$('chatText').value='';fetchChat();});
   });
@@ -361,15 +380,26 @@ button.danger{background:linear-gradient(135deg,#dc2626,#991b1b);}
   // Auto-poll chat every 12s
   setInterval(function(){if(orderToken&&!document.hidden)fetchChat();},12000);
 
-  // Restore session
-  try{
-    var k=sessionStorage.getItem('sb_admin_key');
-    var t=sessionStorage.getItem('sb_admin_token');
-    if(k&&t&&TOKEN_RE.test(t)){
-      $('adminKey').value=k;$('orderToken').value=t;
-      load();
+  // Detect if user is signed in as an admin → skip the key field entirely
+  fetch('/api/auth/me').then(function(r){return r.json();}).then(function(d){
+    if(d&&d.user&&d.user.isAdmin){
+      sessionAdmin=true;
+      $('adminKeyRow').style.display='none';
+      $('adminSessionMsg').style.display='block';
+      $('adminWhoami').textContent='@'+(d.user.username||'admin');
+      $('gateHelp').innerHTML='Enter the order token to manage. <a href="#" id="adminLogout" style="color:#f87171;">Sign out</a>';
+      var lo=document.getElementById('adminLogout');
+      if(lo)lo.addEventListener('click',function(e){e.preventDefault();fetch('/api/auth/logout',{method:'POST'}).then(function(){location.reload();});});
     }
-  }catch(e){}
+    // Restore previous token entry
+    try{
+      var t=sessionStorage.getItem('sb_admin_token');
+      var k=sessionStorage.getItem('sb_admin_key');
+      if(t&&TOKEN_RE.test(t))$('orderToken').value=t;
+      if(!sessionAdmin&&k)$('adminKey').value=k;
+      if(t&&TOKEN_RE.test(t)&&(sessionAdmin||k))load();
+    }catch(e){}
+  }).catch(function(){});
 })();
 </script>
 </body>
