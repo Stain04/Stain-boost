@@ -1,0 +1,16 @@
+{
+  "name": "stainboost-companion",
+  "version": "1.0.0",
+  "description": "Local companion app that pushes League of Legends client data to StainBoost order tracking",
+  "main": "companion.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node companion.js"
+  },
+  "dependencies": {
+    "ws": "^8.16.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
