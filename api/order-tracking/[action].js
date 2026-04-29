@@ -1,4 +1,4 @@
-import { getKv, getUser, rateLimit, getIp } from '../../lib/auth.js';
+import { getKv, getUser, rateLimit, getIp, isAdmin } from '../../lib/auth.js';
 
 const TOKEN_RE = /^SB-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
 const VALID_STATUSES = ['queued', 'in_progress', 'paused', 'completed', 'cancelled'];
@@ -64,11 +64,13 @@ async function update(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
   if (rateLimit('update:' + getIp(req), 60, 60_000)) return res.status(429).json({ error: 'Too many requests.' });
 
+  // Auth: admin session OR admin key fallback
+  const sessionUser = await getUser(req);
+  const sessionOk = isAdmin(sessionUser);
   const ADMIN_KEY = process.env.ADMIN_KEY;
-  if (!ADMIN_KEY) return res.status(500).json({ error: 'Admin key not configured.' });
-
   const provided = req.headers['x-admin-key'] || req.body?.adminKey;
-  if (provided !== ADMIN_KEY) return res.status(401).json({ error: 'Unauthorized.' });
+  const keyOk = ADMIN_KEY && provided === ADMIN_KEY;
+  if (!sessionOk && !keyOk) return res.status(401).json({ error: 'Unauthorized.' });
 
   const token = String(req.body?.token || '').toUpperCase().trim();
   if (!TOKEN_RE.test(token)) return res.status(400).json({ error: 'Invalid token format.' });
@@ -154,8 +156,10 @@ async function chat(req, res) {
     if (!text) return res.status(400).json({ error: 'Message cannot be empty.' });
 
     const ADMIN_KEY = process.env.ADMIN_KEY;
-    const isAdmin = ADMIN_KEY && (req.headers['x-admin-key'] === ADMIN_KEY || body.adminKey === ADMIN_KEY);
-    const from = isAdmin ? 'stain' : 'client';
+    const keyOk = ADMIN_KEY && (req.headers['x-admin-key'] === ADMIN_KEY || body.adminKey === ADMIN_KEY);
+    const sessionUser = await getUser(req);
+    const sessionOk = isAdmin(sessionUser);
+    const from = (keyOk || sessionOk) ? 'stain' : 'client';
 
     try {
       const exists = await kv.get(`order:${token}`);
