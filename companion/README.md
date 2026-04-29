@@ -11,8 +11,12 @@ League client directly (the same way Blitz / Mobalytics / Porofessor do).
 - Reads the current ranked solo/duo tier and LP, pushes it to the order.
 - When a ranked game ends, posts the result, champion, KDA, and LP delta
   as a logged game.
-- Picks the order to attach to from your active StainBoost orders on
-  startup (or auto-selects if there's only one).
+- Picks the order to attach to by **matching the League account you're
+  signed into** against the IGN on each active order. If exactly one
+  active order has that IGN, it auto-selects. Otherwise it falls back
+  to a numbered list.
+- Detects **remakes** (early surrender / sub-4-minute games) and logs
+  them with their own marker — no false win or loss counted.
 
 ## One-time setup
 
@@ -28,10 +32,14 @@ League client directly (the same way Blitz / Mobalytics / Porofessor do).
 Double-click `start.bat`. First run installs the `ws` dependency, then
 the script starts.
 
-- If there's exactly one active order it attaches to it automatically.
-- If there are multiple, it shows a numbered list — pick one.
-- Your choice is saved to `companion-state.json`. To switch orders,
-  delete that file or run `node companion.js --pick`.
+- It reads the League account you're signed into and matches its IGN
+  against your active orders. If exactly one matches, it attaches
+  automatically.
+- If no IGN match (or multiple match), it falls back to a numbered
+  list — pick one.
+- The order resolves fresh on every launch, so just sign into the right
+  League account and run the script. To force the previously-used order
+  instead (e.g. you're on a smurf), run `node companion.js --keep`.
 
 Leave the window open while you're boosting. Each ranked solo/duo game
 that finishes will appear as a logged game on `/track/<token>` within
@@ -42,7 +50,7 @@ that finishes will appear as a logged game on `/track/<token>` within
 | Event in League client | What's sent to StainBoost |
 | --- | --- |
 | Ranked stats change | `currentRank`, `currentLp` |
-| Game ends (queue 420 / 440) | `addGame` with result, champion, KDA, and LP delta |
+| Game ends (queue 420 / 440) | `addGame` with result (W / L / R for remake), champion, KDA, and LP delta (skipped on remakes) |
 
 The companion only watches **ranked solo/duo** (queue 420) and falls back
 to **flex** (440) if no solo games are recent. Normal / ARAM / TFT games

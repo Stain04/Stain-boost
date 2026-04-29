@@ -85,6 +85,7 @@
 .game-result{font-family:'Orbitron',sans-serif;font-size:.78rem;font-weight:900;width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .game-result.W{background:rgba(52,211,153,.15);color:#34d399;border:1px solid rgba(52,211,153,.3);}
 .game-result.L{background:rgba(248,113,113,.12);color:#f87171;border:1px solid rgba(248,113,113,.25);}
+.game-result.R{background:rgba(255,255,255,.06);color:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.15);font-size:.62rem;letter-spacing:.08em;}
 .game-info{flex:1;min-width:0;}
 .game-champ{font-family:'Rajdhani',sans-serif;font-size:.92rem;font-weight:700;color:#fff;}
 .game-kda{font-family:'Space Mono',monospace;font-size:.74rem;color:rgba(255,255,255,.4);margin-top:.1rem;}
@@ -375,7 +376,7 @@ function toggleMenu(){var m=document.getElementById('mobileMenu');m.classList.to
           lpStr='<div class="game-lp '+cls+'">'+sign+g.lp+' LP</div>';
         }
         return '<div class="game-row">'
-          +'<div class="game-result '+(g.result==='W'?'W':'L')+'">'+(g.result==='W'?'W':'L')+'</div>'
+          +'<div class="game-result '+(g.result==='W'?'W':g.result==='R'?'R':'L')+'">'+(g.result==='W'?'W':g.result==='R'?'RM':'L')+'</div>'
           +'<div class="game-info">'
             +'<div class="game-champ">'+escapeHtml(g.champion||'Unknown')+'</div>'
             +'<div class="game-kda">'+escapeHtml(g.kda||'')+' · '+formatTime(g.ts)+'</div>'

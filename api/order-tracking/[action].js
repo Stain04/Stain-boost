@@ -95,8 +95,9 @@ async function update(req, res) {
     }
 
     if (body.addGame && typeof body.addGame === 'object') {
+      const r = body.addGame.result;
       const g = {
-        result: body.addGame.result === 'W' ? 'W' : 'L',
+        result: r === 'W' ? 'W' : r === 'R' ? 'R' : 'L',
         champion: sanitize(body.addGame.champion || '', 30),
         kda: sanitize(body.addGame.kda || '', 20),
         lp: typeof body.addGame.lp === 'number' ? Math.max(-99, Math.min(99, body.addGame.lp | 0)) : null,

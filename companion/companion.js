@@ -131,7 +131,41 @@ async function api(endpoint, method = 'GET', body = null) {
 }
 
 // ── PICK ORDER ─────────────────────────────────────────────────────────────
-async function pickOrder() {
+function ignVariants(s) {
+  const v = String(s || '').toLowerCase().trim();
+  // Drop tag (#EUW etc.) and surrounding whitespace so 'Stain#EUW' matches 'stain'.
+  const noTag = v.split('#')[0].trim();
+  return [v, noTag].filter(Boolean);
+}
+
+async function getCurrentSummonerIgn(lcu) {
+  try {
+    const me = await lcuRequest(lcu, '/lol-summoner/v1/current-summoner');
+    if (!me) return null;
+    // Newer clients: gameName + tagLine. Older: displayName / internalName.
+    const gameName = me.gameName || me.displayName || me.internalName || '';
+    const tag = me.tagLine || '';
+    return { gameName, tag, full: tag ? `${gameName}#${tag}` : gameName };
+  } catch (e) {
+    log('[warn] Could not read current summoner:', e.message);
+    return null;
+  }
+}
+
+function findOrderByIgn(orders, summoner) {
+  if (!summoner || !summoner.gameName) return null;
+  const candidates = [
+    summoner.full && summoner.full.toLowerCase(),
+    summoner.gameName && summoner.gameName.toLowerCase(),
+  ].filter(Boolean);
+  const matches = orders.filter(o => {
+    const variants = ignVariants(o.ign);
+    return variants.some(v => candidates.includes(v));
+  });
+  return matches.length === 1 ? matches[0] : null;
+}
+
+async function pickOrder(lcu) {
   log('Loading active orders from StainBoost…');
   const { orders } = await api('/api/order-tracking/list');
   const active = (orders || []).filter(o => o.status !== 'completed' && o.status !== 'cancelled');
@@ -139,6 +173,20 @@ async function pickOrder() {
     console.error('[fatal] No active orders found.');
     process.exit(1);
   }
+
+  // Try to match by current League account IGN.
+  if (lcu) {
+    const me = await getCurrentSummonerIgn(lcu);
+    if (me && me.gameName) {
+      const match = findOrderByIgn(active, me);
+      if (match) {
+        log(`Matched current account "${me.full}" → order ${match.token} (${match.summary}).`);
+        return match.token;
+      }
+      log(`Logged in as "${me.full}" but no active order matches that IGN. Falling back to manual pick.`);
+    }
+  }
+
   if (active.length === 1) {
     log(`Auto-selected the only active order: ${active[0].token} (${active[0].summary})`);
     return active[0].token;
@@ -230,14 +278,20 @@ async function pushLastRankedGame(orderToken, lcu) {
 
     const champion = CHAMPS[me.championId] || `Champ #${me.championId}`;
     const k = me.stats.kills | 0, d = me.stats.deaths | 0, a = me.stats.assists | 0;
-    const result = me.stats.win ? 'W' : 'L';
 
-    // LP delta: derive from before/after snapshot if we have one.
+    // Remake detection: client flags `gameEndedInEarlySurrender`, and
+    // remakes always end before ~4 minutes (240s). Either condition is a remake.
+    const isRemake = !!me.stats.gameEndedInEarlySurrender
+                  || (typeof game.gameDuration === 'number' && game.gameDuration > 0 && game.gameDuration < 240);
+    const result = isRemake ? 'R' : (me.stats.win ? 'W' : 'L');
+
+    // LP delta: derive from before/after snapshot if we have one. Remakes
+    // never change LP, so skip the delta entirely in that case.
     const before = state.lpBeforeGame;
     const after  = await lcuRequest(lcu, '/lol-ranked/v1/current-ranked-stats').catch(() => null);
     const soloAfter = after?.queues?.find(q => q.queueType === 'RANKED_SOLO_5x5');
     let lpChange = null;
-    if (soloAfter && typeof before === 'number') {
+    if (!isRemake && soloAfter && typeof before === 'number') {
       lpChange = (soloAfter.leaguePoints | 0) - before;
       if (lpChange < -99 || lpChange > 99) lpChange = null; // promo / demo skews this; skip rather than mislead
     }
@@ -249,7 +303,9 @@ async function pushLastRankedGame(orderToken, lcu) {
     if (lpChange !== null) payload.addGame.lp = lpChange;
 
     await api('/api/order-tracking/update', 'POST', payload);
-    log(`Game pushed: ${result} · ${champion} · ${k}/${d}/${a}${lpChange !== null ? ` · ${lpChange >= 0 ? '+' : ''}${lpChange} LP` : ''}`);
+    const lpStr = lpChange !== null ? ` · ${lpChange >= 0 ? '+' : ''}${lpChange} LP` : '';
+    const tag = isRemake ? 'REMAKE' : result;
+    log(`Game pushed: ${tag} · ${champion} · ${k}/${d}/${a}${lpStr}`);
 
     state.lastGameId = gameId;
     if (soloAfter) {
@@ -322,16 +378,19 @@ async function main() {
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   log('API base:', config.apiBase);
 
-  // Pick order on first run, remember it after that. (Pass --pick to choose again.)
-  if (!state.orderToken || process.argv.includes('--pick')) {
-    state.orderToken = await pickOrder();
-    saveState();
-  } else {
-    log(`Using saved order ${state.orderToken}. Pass --pick to choose a different one.`);
-  }
-
   await loadChampions();
   const lcu = await waitForLcu();
+
+  // Always re-pick on each launch — your active League account decides which
+  // order to attach to, so we should match it fresh. Pass --keep to reuse the
+  // last saved order regardless of who's logged in.
+  if (process.argv.includes('--keep') && state.orderToken) {
+    log(`Reusing saved order ${state.orderToken}. (--keep specified.)`);
+  } else {
+    state.orderToken = await pickOrder(lcu);
+    saveState();
+  }
+
   connectWs(lcu, state.orderToken);
 }
 
