@@ -142,7 +142,7 @@
       <a href="/reviews">Reviews</a>
       <a href="/faq">FAQ</a>
       <a href="/blog">Blog</a>
-      <a href="/track" class="active">Track</a>
+      <a href="/dashboard">Dashboard</a>
       <a href="https://discord.com/invite/8ak4MSjp" class="nav-discord" target="_blank">Discord</a>
     </div>
     <button class="hamburger" id="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
@@ -150,7 +150,7 @@
   <div class="mobile-menu" id="mobileMenu">
     <a href="/">Home</a><a href="/pricing">Pricing</a>
     <a href="/reviews">Reviews</a><a href="/faq">FAQ</a>
-    <a href="/blog">Blog</a><a href="/track" class="active">Track</a>
+    <a href="/blog">Blog</a><a href="/dashboard">Dashboard</a>
     <a href="https://discord.com/invite/8ak4MSjp" target="_blank">Discord</a>
   </div>
 </nav>
@@ -160,13 +160,11 @@
   <h1 class="page-title">YOUR BOOST PROGRESS</h1>
   <p class="page-sub">Real-time updates as Stain climbs the ladder for you</p>
 
-  <!-- TOKEN GATE -->
-  <div class="gate" id="gate">
-    <label class="gate-label" for="tokenInput">Enter Your Order Token</label>
-    <input class="gate-input" id="tokenInput" type="text" placeholder="SB-XXXX-XXXX" maxlength="12" autocomplete="off" spellcheck="false">
-    <button class="gate-btn" id="gateBtn">Open Dashboard</button>
-    <div class="gate-error" id="gateError"></div>
-    <p class="gate-hint">You received this token in your order confirmation email and Discord. Format: <strong style="color:#c4b5fd;">SB-XXXX-XXXX</strong>. Lost it? <a href="https://discord.com/invite/8ak4MSjp" target="_blank" style="color:#22d3ee;">Ask Stain on Discord</a>.</p>
+  <!-- LOAD STATE -->
+  <div class="gate" id="gate" style="text-align:center;">
+    <div id="gateMsg" style="color:rgba(255,255,255,.55);font-size:.95rem;line-height:1.6;">Loading your order…</div>
+    <div class="gate-error" id="gateError" style="margin-top:1.2rem;"></div>
+    <a href="/dashboard" class="gate-btn" id="gateDashLink" style="display:none;text-decoration:none;text-align:center;margin-top:1.2rem;">Go to your dashboard</a>
   </div>
 
   <!-- DASHBOARD -->
@@ -180,7 +178,7 @@
       <div class="dh-right">
         <span class="live-dot">Live</span>
         <span class="status-pill" id="statusPill"><span class="dot"></span><span id="statusText">…</span></span>
-        <button class="logout-btn" id="logoutBtn">Sign Out</button>
+        <a id="reviewCta" href="#" style="display:none;background:linear-gradient(135deg,#fbbf24,#d97706);color:#fff;text-decoration:none;font-family:'Rajdhani',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:.55rem 1rem;border-radius:9px;box-shadow:0 0 14px rgba(251,191,36,.35);">★ Leave a Review</a>
       </div>
     </div>
 
@@ -250,16 +248,16 @@ function toggleMenu(){var m=document.getElementById('mobileMenu');m.classList.to
 
   var gate=document.getElementById('gate');
   var dash=document.getElementById('dash');
-  var input=document.getElementById('tokenInput');
-  var btn=document.getElementById('gateBtn');
+  var gateMsg=document.getElementById('gateMsg');
+  var gateDashLink=document.getElementById('gateDashLink');
   var err=document.getElementById('gateError');
-  var logoutBtn=document.getElementById('logoutBtn');
   var chatMsgs=document.getElementById('chatMsgs');
   var chatInput=document.getElementById('chatInput');
   var chatSend=document.getElementById('chatSend');
+  var reviewCta=document.getElementById('reviewCta');
 
   function showError(msg){err.textContent=msg;err.classList.add('show');}
-  function clearError(){err.classList.remove('show');}
+  function setGateMsg(msg){gateMsg.textContent=msg;}
 
   function escapeHtml(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
@@ -276,39 +274,36 @@ function toggleMenu(){var m=document.getElementById('mobileMenu');m.classList.to
   function getTokenFromUrl(){
     var p=window.location.pathname.match(/\/track\/(SB-[A-Z0-9]{4}-[A-Z0-9]{4})/i);
     if(p)return p[1].toUpperCase();
-    var q=new URLSearchParams(window.location.search).get('token');
-    if(q)return q.toUpperCase();
     return null;
   }
 
-  input.addEventListener('input',function(){
-    var v=this.value.toUpperCase().replace(/[^A-Z0-9-]/g,'');
-    if(v.length>12)v=v.slice(0,12);
-    this.value=v;
-    clearError();
-  });
-
-  btn.addEventListener('click',submitToken);
-  input.addEventListener('keydown',function(e){if(e.key==='Enter')submitToken();});
-
-  function submitToken(){
-    var t=input.value.toUpperCase().trim();
-    if(!TOKEN_RE.test(t)){showError('Token must look like SB-XXXX-XXXX.');return;}
-    btn.disabled=true;
+  function loadOrder(t){
     fetch('/api/order-tracking/status?token='+encodeURIComponent(t))
       .then(function(r){return r.json().then(function(j){return {status:r.status,body:j};});})
       .then(function(res){
-        btn.disabled=false;
         if(res.status===200){
           currentToken=t;
-          try{localStorage.setItem('sb_track_token',t);}catch(e){}
-          history.replaceState(null,'','/track?token='+t);
           openDash(res.body);
+        }else if(res.status===401){
+          window.location.href='/login?return='+encodeURIComponent(window.location.pathname);
+        }else if(res.status===403){
+          setGateMsg('This order is not on your account.');
+          showError('Sign in with the account you used when placing the order.');
+          gateDashLink.style.display='block';
+        }else if(res.status===404){
+          setGateMsg('Order not found.');
+          gateDashLink.style.display='block';
         }else{
-          showError(res.body.error||'Could not load order.');
+          setGateMsg('Could not load this order.');
+          showError(res.body.error||'Try refreshing.');
+          gateDashLink.style.display='block';
         }
       })
-      .catch(function(){btn.disabled=false;showError('Network error. Try again.');});
+      .catch(function(){
+        setGateMsg('Network error.');
+        showError('Try refreshing the page.');
+        gateDashLink.style.display='block';
+      });
   }
 
   function openDash(order){
@@ -339,6 +334,14 @@ function toggleMenu(){var m=document.getElementById('mobileMenu');m.classList.to
     var pill=document.getElementById('statusPill');
     pill.className='status-pill status-'+(o.status||'queued');
     document.getElementById('statusText').textContent=statusLabels[o.status]||o.status||'…';
+
+    // Review CTA: only when the order is completed and not yet reviewed.
+    if(o.reviewable){
+      reviewCta.style.display='inline-block';
+      reviewCta.href='/review/'+encodeURIComponent(o.token||currentToken);
+    }else{
+      reviewCta.style.display='none';
+    }
 
     // Progress
     var done=0,total=1,lbl='Progress',val='—';
@@ -444,25 +447,34 @@ function toggleMenu(){var m=document.getElementById('mobileMenu');m.classList.to
       .catch(function(){chatSend.disabled=false;});
   }
 
-  logoutBtn.addEventListener('click',function(){
-    try{localStorage.removeItem('sb_track_token');}catch(e){}
-    if(pollTimer)clearInterval(pollTimer);
-    currentToken=null;
-    dash.classList.remove('active');
-    gate.style.display='block';
-    input.value='';
-    history.replaceState(null,'','/track');
-  });
-
-  // ── Init: check URL → check localStorage ──
+  // ── Init: must be signed in, must have an order token in the URL ──
   var urlToken=getTokenFromUrl();
-  var savedToken=null;
-  try{savedToken=localStorage.getItem('sb_track_token');}catch(e){}
-  var initToken=urlToken||savedToken;
-  if(initToken&&TOKEN_RE.test(initToken)){
-    input.value=initToken;
-    submitToken();
+  if(!urlToken){
+    // Bare /track has no order context — show a clear message instead of
+    // auto-redirecting (no sneaky redirects, even on noindex pages).
+    setGateMsg('No order selected. Open one of your orders from your dashboard.');
+    gateDashLink.style.display='block';
+    return;
   }
+  if(!TOKEN_RE.test(urlToken)){
+    setGateMsg('That order link is malformed.');
+    gateDashLink.style.display='block';
+    return;
+  }
+
+  // Check session first so we can redirect to login with a return URL.
+  fetch('/api/auth/me',{credentials:'same-origin'})
+    .then(function(r){return r.ok?r.json():{user:null};})
+    .then(function(d){
+      if(!d.user){
+        window.location.href='/login?return='+encodeURIComponent(window.location.pathname);
+        return;
+      }
+      loadOrder(urlToken);
+    })
+    .catch(function(){
+      window.location.href='/login?return='+encodeURIComponent(window.location.pathname);
+    });
 })();
 </script>
 <script src="main.js"></script>

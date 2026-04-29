@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>html,body{background:#0b0916;}</style>
+<link rel="stylesheet" href="shared.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leave a Review – StainBoost</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+.wrap{max-width:680px;margin:0 auto;padding:3rem 1.5rem 5rem;position:relative;z-index:2;}
+.page-tag{font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;color:#fbbf24;opacity:.8;text-align:center;margin-bottom:.5rem;}
+.page-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.5rem,4vw,2.2rem);font-weight:900;letter-spacing:.04em;text-align:center;color:#fff;margin-bottom:.4rem;}
+.page-sub{text-align:center;font-size:.92rem;color:rgba(255,255,255,.45);margin-bottom:2rem;}
+
+.card{background:rgba(12,8,32,.85);border:1px solid rgba(139,92,246,.22);border-radius:20px;padding:2rem 1.8rem;backdrop-filter:blur(10px);}
+
+.order-summary{background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.18);border-radius:12px;padding:.9rem 1.1rem;margin-bottom:1.4rem;}
+.os-lbl{font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.3rem;}
+.os-val{font-family:'Rajdhani',sans-serif;font-size:.95rem;color:#fff;font-weight:600;}
+
+label{display:block;font-family:'Rajdhani',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:.5rem;}
+input[type="text"],textarea,select{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(139,92,246,.22);border-radius:10px;padding:.75rem 1rem;color:#fff;font-family:'Inter',sans-serif;font-size:.92rem;outline:none;transition:all .2s;}
+input:focus,textarea:focus,select:focus{border-color:rgba(139,92,246,.55);background:rgba(139,92,246,.07);}
+textarea{resize:vertical;min-height:120px;font-family:'Inter',sans-serif;}
+.field{margin-bottom:1.2rem;}
+
+.stars{display:flex;gap:.4rem;}
+.star{font-size:2.2rem;cursor:pointer;color:rgba(255,255,255,.18);transition:color .15s,transform .15s;line-height:1;user-select:none;}
+.star:hover{transform:scale(1.1);}
+.star.active{color:#fbbf24;text-shadow:0 0 12px rgba(251,191,36,.5);}
+
+button.submit-btn{width:100%;background:linear-gradient(135deg,#fbbf24,#d97706);color:#fff;border:none;font-family:'Rajdhani',sans-serif;font-size:.92rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:1rem;border-radius:12px;cursor:pointer;transition:all .25s;box-shadow:0 0 14px rgba(251,191,36,.3);margin-top:.5rem;}
+button.submit-btn:hover{transform:translateY(-2px);box-shadow:0 0 22px rgba(251,191,36,.45);}
+button.submit-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+
+.alert{padding:.8rem 1rem;border-radius:10px;font-size:.86rem;margin-top:1.1rem;line-height:1.5;display:none;}
+.alert.show{display:block;}
+.alert.ok{background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.3);color:#34d399;}
+.alert.err{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.28);color:#f87171;}
+
+.state-msg{text-align:center;padding:2.5rem 1rem;}
+.state-msg .icon{font-size:3rem;margin-bottom:1rem;}
+.state-msg .title{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:900;color:#fff;margin-bottom:.6rem;}
+.state-msg .body{color:rgba(255,255,255,.55);font-size:.92rem;line-height:1.6;margin-bottom:1.5rem;}
+.state-msg a.back{display:inline-block;background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff;text-decoration:none;font-family:'Rajdhani',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:.8rem 1.3rem;border-radius:10px;}
+</style>
+</head>
+<body>
+<div class="scan-line"></div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">STAINBOOST</a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/reviews">Reviews</a>
+      <a href="/faq">FAQ</a>
+      <a href="/blog">Blog</a>
+      <a href="/dashboard">Dashboard</a>
+      <a href="https://discord.com/invite/8ak4MSjp" class="nav-discord" target="_blank">Discord</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="page-tag">// Order Complete</div>
+  <h1 class="page-title">LEAVE A REVIEW</h1>
+  <p class="page-sub">A few words go a long way — thanks for boosting with Stain.</p>
+
+  <!-- LOADING / ERROR / FORM / DONE — only one is visible at a time -->
+  <div class="card" id="loadingCard">
+    <div class="state-msg">
+      <div class="title">Checking your order…</div>
+      <div class="body">One second.</div>
+    </div>
+  </div>
+
+  <div class="card" id="errorCard" style="display:none;">
+    <div class="state-msg">
+      <div class="icon">⚠️</div>
+      <div class="title" id="errTitle">Something went wrong</div>
+      <div class="body" id="errBody">—</div>
+      <a href="/dashboard" class="back">Back to Dashboard</a>
+    </div>
+  </div>
+
+  <div class="card" id="doneCard" style="display:none;">
+    <div class="state-msg">
+      <div class="icon">⭐</div>
+      <div class="title">Thanks for the review!</div>
+      <div class="body">It's been posted to the public reviews page. This review link is now closed.</div>
+      <a href="/dashboard" class="back">Back to Dashboard</a>
+    </div>
+  </div>
+
+  <div class="card" id="formCard" style="display:none;">
+    <div class="order-summary">
+      <div class="os-lbl">Reviewing Order</div>
+      <div class="os-val" id="osSummary">—</div>
+    </div>
+
+    <div class="field">
+      <label>Display Name</label>
+      <input type="text" id="fName" maxlength="60" placeholder="How you want to appear on the reviews page">
+    </div>
+
+    <div class="field">
+      <label>Final Rank Reached</label>
+      <select id="fRank">
+        <option value="">— optional —</option>
+        <option>Iron</option>
+        <option>Bronze</option>
+        <option>Silver</option>
+        <option>Gold</option>
+        <option>Platinum</option>
+        <option>Emerald</option>
+        <option>Diamond IV-III</option>
+        <option>Diamond II-I</option>
+        <option>Masters</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Rating</label>
+      <div class="stars" id="stars">
+        <span class="star" data-v="1">★</span>
+        <span class="star" data-v="2">★</span>
+        <span class="star" data-v="3">★</span>
+        <span class="star" data-v="4">★</span>
+        <span class="star" data-v="5">★</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Your Review</label>
+      <textarea id="fText" maxlength="500" placeholder="How was the experience? Communication, speed, anything you'd like other clients to know."></textarea>
+    </div>
+
+    <button class="submit-btn" id="submitBtn">Post My Review</button>
+    <div class="alert err" id="formErr"></div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">STAINBOOST</div>
+    <div class="footer-copy">&copy; 2026 StainBoost</div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+<script>
+(function(){
+  var TOKEN_RE=/^SB-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
+  var token=null, stars=5, currentUser=null;
+
+  function $(id){return document.getElementById(id);}
+  function show(id){
+    ['loadingCard','errorCard','doneCard','formCard'].forEach(function(x){
+      $(x).style.display = x===id ? 'block' : 'none';
+    });
+  }
+  function fail(title, body){
+    $('errTitle').textContent=title;
+    $('errBody').textContent=body;
+    show('errorCard');
+  }
+
+  function getToken(){
+    var p=window.location.pathname.match(/\/review\/(SB-[A-Z0-9]{4}-[A-Z0-9]{4})/i);
+    if(p)return p[1].toUpperCase();
+    return null;
+  }
+
+  // ── Init ──
+  token=getToken();
+  if(!token||!TOKEN_RE.test(token)){
+    fail('Invalid review link','This URL is missing a valid order token. Open the review link from your dashboard after the order is completed.');
+    return;
+  }
+
+  // 1) Auth check
+  fetch('/api/auth/me',{credentials:'same-origin'})
+    .then(function(r){return r.ok?r.json():{user:null};})
+    .then(function(d){
+      if(!d.user){
+        window.location.href='/login?return='+encodeURIComponent(window.location.pathname);
+        return;
+      }
+      currentUser=d.user;
+      // 2) Load the order — checks ownership server-side
+      return fetch('/api/order-tracking/status?token='+encodeURIComponent(token))
+        .then(function(r){return r.json().then(function(j){return {s:r.status,b:j};});});
+    })
+    .then(function(res){
+      if(!res)return;
+      if(res.s===401){window.location.href='/login?return='+encodeURIComponent(window.location.pathname);return;}
+      if(res.s===403){fail('Not your order','This order is not on your account. Sign in with the account you used when buying.');return;}
+      if(res.s===404){fail('Order not found','The order this link points to no longer exists.');return;}
+      if(res.s!==200){fail('Could not load order',res.b.error||'Try again in a moment.');return;}
+
+      var o=res.b;
+      if(o.status!=='completed'){
+        fail('Order is not complete yet','You can leave a review once Stain has marked your order as completed. Track its progress on /track/'+o.token+'.');
+        return;
+      }
+      if(!o.reviewable || o.reviewedAt){
+        show('doneCard');
+        return;
+      }
+
+      // 3) Show form, prefill what we can.
+      $('osSummary').textContent=o.summary||o.token;
+      $('fName').value=currentUser.username||'';
+      if(o.currentRank){
+        var sel=$('fRank');
+        for(var i=0;i<sel.options.length;i++){
+          if(o.currentRank.indexOf(sel.options[i].value)===0){sel.selectedIndex=i;break;}
+        }
+      }
+      setStars(5);
+      show('formCard');
+    })
+    .catch(function(){fail('Network error','Check your connection and try again.');});
+
+  function setStars(v){
+    stars=v;
+    Array.prototype.forEach.call(document.querySelectorAll('#stars .star'),function(el){
+      var n=parseInt(el.getAttribute('data-v'),10);
+      el.classList.toggle('active', n<=v);
+    });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#stars .star'),function(el){
+    el.addEventListener('click',function(){setStars(parseInt(el.getAttribute('data-v'),10));});
+  });
+
+  $('submitBtn').addEventListener('click',function(){
+    var name=$('fName').value.trim();
+    var rank=$('fRank').value;
+    var text=$('fText').value.trim();
+    if(!name){return showErr('Add a display name.');}
+    if(!text){return showErr('Write a few words about the experience.');}
+
+    $('submitBtn').disabled=true;
+    fetch('/api/reviews',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({token:token,name:name,rank:rank,stars:stars,text:text}),
+    })
+      .then(function(r){return r.json().then(function(j){return {s:r.status,b:j};});})
+      .then(function(res){
+        $('submitBtn').disabled=false;
+        if(res.s===200){show('doneCard');}
+        else{showErr(res.b.error||'Submission failed.');}
+      })
+      .catch(function(){
+        $('submitBtn').disabled=false;
+        showErr('Network error.');
+      });
+  });
+
+  function showErr(msg){
+    var el=$('formErr');
+    el.textContent=msg;
+    el.classList.add('show');
+    setTimeout(function(){el.classList.remove('show');},5000);
+  }
+})();
+</script>
+</body>
+</html>

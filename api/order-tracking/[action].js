@@ -25,7 +25,22 @@ function publicShape(o) {
     notes: Array.isArray(o.notes) ? o.notes.slice(-30) : [],
     createdAt: o.createdAt,
     updatedAt: o.updatedAt,
+    reviewedAt: o.reviewedAt || null,
+    reviewable: o.status === 'completed' && !o.reviewedAt,
   };
+}
+
+// Loads an order by token and verifies the caller owns it (or is admin).
+// Returns { order } on success or { error, status } on failure.
+async function loadOwnedOrder(req, kv, token) {
+  const raw = await kv.get(`order:${token}`);
+  if (!raw) return { error: 'Order not found.', status: 404 };
+  const order = typeof raw === 'string' ? JSON.parse(raw) : raw;
+  const user = await getUser(req);
+  if (isAdmin(user)) return { order, user, isAdmin: true };
+  if (!user) return { error: 'Sign in to view this order.', status: 401 };
+  if (!order.userId || order.userId !== user.id) return { error: 'This order is not on your account.', status: 403 };
+  return { order, user, isAdmin: false };
 }
 
 export default async function handler(req, res) {
@@ -51,10 +66,9 @@ async function status(req, res) {
   if (!kv) return res.status(500).json({ error: 'Storage not configured.' });
 
   try {
-    const raw = await kv.get(`order:${token}`);
-    if (!raw) return res.status(404).json({ error: 'Order not found. Check your token.' });
-    const order = typeof raw === 'string' ? JSON.parse(raw) : raw;
-    return res.status(200).json(publicShape(order));
+    const r = await loadOwnedOrder(req, kv, token);
+    if (r.error) return res.status(r.status).json({ error: r.error });
+    return res.status(200).json(publicShape(r.order));
   } catch (e) {
     console.error('status error:', e);
     return res.status(500).json({ error: 'Server error.' });
@@ -134,8 +148,8 @@ async function chat(req, res) {
     if (!TOKEN_RE.test(token)) return res.status(400).json({ error: 'Invalid token.' });
 
     try {
-      const exists = await kv.get(`order:${token}`);
-      if (!exists) return res.status(404).json({ error: 'Order not found.' });
+      const r = await loadOwnedOrder(req, kv, token);
+      if (r.error) return res.status(r.status).json({ error: r.error });
       const raw = await kv.lrange(`chat:${token}`, 0, -1);
       const messages = (raw || []).map(m => {
         try { return typeof m === 'string' ? JSON.parse(m) : m; } catch { return null; }
@@ -159,13 +173,19 @@ async function chat(req, res) {
 
     const ADMIN_KEY = process.env.ADMIN_KEY;
     const keyOk = ADMIN_KEY && (req.headers['x-admin-key'] === ADMIN_KEY || body.adminKey === ADMIN_KEY);
-    const sessionUser = await getUser(req);
-    const sessionOk = isAdmin(sessionUser);
-    const from = (keyOk || sessionOk) ? 'stain' : 'client';
 
     try {
-      const exists = await kv.get(`order:${token}`);
-      if (!exists) return res.status(404).json({ error: 'Order not found.' });
+      let from;
+      if (keyOk) {
+        // Admin key fallback — must still verify the order exists.
+        const exists = await kv.get(`order:${token}`);
+        if (!exists) return res.status(404).json({ error: 'Order not found.' });
+        from = 'stain';
+      } else {
+        const r = await loadOwnedOrder(req, kv, token);
+        if (r.error) return res.status(r.status).json({ error: r.error });
+        from = r.isAdmin ? 'stain' : 'client';
+      }
 
       const msg = { from, text, ts: Date.now() };
       await kv.rpush(`chat:${token}`, JSON.stringify(msg));

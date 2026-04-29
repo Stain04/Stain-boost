@@ -1,4 +1,5 @@
 import { createClient } from '@vercel/kv';
+import { getUser, isAdmin } from '../lib/auth.js';
 
 // Simple sanitizer — strip HTML tags, limit length
 function sanitize(str, maxLen = 200) {
@@ -89,7 +90,21 @@ export default async function handler(req, res) {
       if (!isValid) return res.status(400).json({ error: 'Invalid token.' });
 
       const isUsed = await kv.sismember('used_tokens', formattedToken);
-      if (isUsed) return res.status(400).json({ error: 'Token already used.' });
+      if (isUsed) return res.status(400).json({ error: 'This order has already been reviewed.' });
+
+      // Ownership: require a signed-in user who owns this order, or admin.
+      const orderRaw = await kv.get(`order:${formattedToken}`);
+      const order = orderRaw ? (typeof orderRaw === 'string' ? JSON.parse(orderRaw) : orderRaw) : null;
+      const user = await getUser(req);
+      if (!isAdmin(user)) {
+        if (!user) return res.status(401).json({ error: 'Sign in to leave a review.' });
+        if (!order || !order.userId || order.userId !== user.id) {
+          return res.status(403).json({ error: 'This order is not on your account.' });
+        }
+        if (order.status !== 'completed') {
+          return res.status(400).json({ error: 'You can only review a completed order.' });
+        }
+      }
 
       const newReview = {
         name:  cleanName,
@@ -101,6 +116,12 @@ export default async function handler(req, res) {
 
       await kv.lpush('stain_reviews', newReview);
       await kv.sadd('used_tokens', formattedToken);
+
+      // Stamp the order so the track page knows the review link is consumed.
+      if (order) {
+        order.reviewedAt = Date.now();
+        await kv.set(`order:${formattedToken}`, JSON.stringify(order));
+      }
 
       return res.status(200).json({ ok: true });
     } catch (error) {
