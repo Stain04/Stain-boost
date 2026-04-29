@@ -174,33 +174,50 @@ async function pickOrder(lcu) {
     process.exit(1);
   }
 
-  // Try to match by current League account IGN.
-  if (lcu) {
-    const me = await getCurrentSummonerIgn(lcu);
-    if (me && me.gameName) {
-      const match = findOrderByIgn(active, me);
-      if (match) {
-        log(`Matched current account "${me.full}" → order ${match.token} (${match.summary}).`);
-        return match.token;
-      }
-      log(`Logged in as "${me.full}" but no active order matches that IGN. Falling back to manual pick.`);
-    }
+  const me = await getCurrentSummonerIgn(lcu);
+  if (!me || !me.gameName) {
+    console.error('[fatal] Could not read the League account IGN. Sign in to the League client and try again.');
+    process.exit(1);
   }
 
-  if (active.length === 1) {
-    log(`Auto-selected the only active order: ${active[0].token} (${active[0].summary})`);
-    return active[0].token;
+  const match = findOrderByIgn(active, me);
+  if (!match) {
+    console.error(`\n[fatal] Logged into League as "${me.full}" but no active StainBoost order has that IGN.`);
+    console.error('        Active orders right now:');
+    active.forEach(o => console.error(`          • ${o.token}   ign: ${o.ign}   (${o.summary})`));
+    console.error('        Sign into the correct League account, or fix the order IGN on /admin, then restart.\n');
+    process.exit(1);
   }
-  console.log('\nActive orders:');
-  active.forEach((o, i) => {
-    console.log(`  ${i + 1}) ${o.token}  —  ${o.ign}  —  ${o.summary}`);
-  });
-  while (true) {
-    const ans = await rlPrompt('\nPick an order by number (or paste a token): ');
-    if (/^SB-[A-Z0-9]{4}-[A-Z0-9]{4}$/i.test(ans)) return ans.toUpperCase();
-    const idx = parseInt(ans, 10);
-    if (idx >= 1 && idx <= active.length) return active[idx - 1].token;
-    console.log('Invalid choice.');
+
+  log(`Matched current account "${me.full}" → order ${match.token} (${match.summary}).`);
+  return match;
+}
+
+async function rankCheckDisclaimer(lcu, order) {
+  try {
+    const stats = await lcuRequest(lcu, '/lol-ranked/v1/current-ranked-stats');
+    const solo = stats?.queues?.find(q => q.queueType === 'RANKED_SOLO_5x5');
+    if (!solo) return;
+    const accountRank = formatRank(solo.tier, solo.division);
+    const accountLp = solo.leaguePoints | 0;
+    const siteRank = String(order.currentRank || '').trim();
+    if (!siteRank) {
+      log(`Site has no rank set yet for this order; will push current account rank (${accountRank} ${accountLp} LP) on connect.`);
+      return;
+    }
+    if (siteRank.toLowerCase() !== accountRank.toLowerCase()) {
+      console.log('');
+      console.log('  ⚠  RANK MISMATCH — please verify before continuing.');
+      console.log(`     Site shows:    ${siteRank}${order.currentLp ? ` · ${order.currentLp} LP` : ''}`);
+      console.log(`     This account:  ${accountRank} · ${accountLp} LP`);
+      console.log('     Possible causes: wrong League account, typo in the order IGN, or the rank shifted between sessions.');
+      console.log('     The companion will keep running and push live values from this account.');
+      console.log('');
+    } else {
+      log(`Rank check OK: site and account both show ${accountRank} (${accountLp} LP on the account).`);
+    }
+  } catch (e) {
+    log('[warn] Could not perform rank check:', e.message);
   }
 }
 
@@ -381,17 +398,26 @@ async function main() {
   await loadChampions();
   const lcu = await waitForLcu();
 
-  // Always re-pick on each launch — your active League account decides which
-  // order to attach to, so we should match it fresh. Pass --keep to reuse the
-  // last saved order regardless of who's logged in.
+  // Match the active order to whichever League account is signed in. Pass
+  // --keep to reuse the last saved order without re-matching (e.g. for testing
+  // on a smurf account). Either path runs the rank check before connecting.
+  let order;
   if (process.argv.includes('--keep') && state.orderToken) {
-    log(`Reusing saved order ${state.orderToken}. (--keep specified.)`);
+    const { orders } = await api('/api/order-tracking/list');
+    order = (orders || []).find(o => o.token === state.orderToken);
+    if (!order) {
+      console.error(`[fatal] Saved order ${state.orderToken} not found. Drop --keep to re-match by IGN.`);
+      process.exit(1);
+    }
+    log(`Reusing saved order ${order.token}. (--keep specified.)`);
   } else {
-    state.orderToken = await pickOrder(lcu);
+    order = await pickOrder(lcu);
+    state.orderToken = order.token;
     saveState();
   }
 
-  connectWs(lcu, state.orderToken);
+  await rankCheckDisclaimer(lcu, order);
+  connectWs(lcu, order.token);
 }
 
 main().catch(e => {

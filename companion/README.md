@@ -33,13 +33,18 @@ Double-click `start.bat`. First run installs the `ws` dependency, then
 the script starts.
 
 - It reads the League account you're signed into and matches its IGN
-  against your active orders. If exactly one matches, it attaches
-  automatically.
-- If no IGN match (or multiple match), it falls back to a numbered
-  list — pick one.
-- The order resolves fresh on every launch, so just sign into the right
-  League account and run the script. To force the previously-used order
-  instead (e.g. you're on a smurf), run `node companion.js --keep`.
+  against your active orders.
+- **If no active order matches that IGN, the script exits without
+  connecting.** Sign into the correct League account, or fix the order
+  IGN on `/admin`, then restart. There is no manual fallback.
+- After matching, it compares the order's `currentRank` field to the
+  rank of the live League account. If they don't match (e.g. the order
+  says Gold II but the account is Silver IV), it prints a clear
+  disclaimer before connecting — the companion still runs, but you can
+  verify before any data is pushed.
+- The order resolves fresh on every launch. To force the previously-used
+  order without re-matching (e.g. testing on a smurf), run
+  `node companion.js --keep`. The rank check still runs.
 
 Leave the window open while you're boosting. Each ranked solo/duo game
 that finishes will appear as a logged game on `/track/<token>` within
