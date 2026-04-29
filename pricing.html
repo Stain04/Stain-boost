@@ -1308,6 +1308,20 @@ document.addEventListener('click', function(e){
 });
 
 async function submitOrder(method){
+  // ── REQUIRE LOGIN ──
+  try{
+    const meRes=await fetch('/api/auth/me');
+    const meJson=await meRes.json();
+    if(!meJson.user){
+      showMsg('error','Please sign in to place an order. Redirecting…');
+      setTimeout(function(){window.location.href='/login?return=/pricing';},900);
+      return;
+    }
+  }catch(e){
+    showMsg('error','Could not verify your session. Try again.');
+    return;
+  }
+
   const discord=document.getElementById('fDiscord').value.trim();
   const ign=document.getElementById('fIGN').value.trim();
   if(!discord||!ign){showMsg('error','Please fill in your Discord tag and IGN.');return;}
@@ -1357,10 +1371,16 @@ async function doSubmitOrder(method){
     const res=await fetch('/api/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(orderData)});
     const data=await res.json();
     if(res.ok&&data.ok){
-      showMsg('success',`✅ Order confirmed! Total: $${data.total} — Stain will verify your payment and DM you on Discord shortly.`);
+      const trackLink = data.token ? ` <a href="/track/${encodeURIComponent(data.token)}" style="color:#22d3ee;text-decoration:underline;font-weight:700;">Track it live →</a>` : '';
+      const tokenLine = data.token ? `<br><span style="font-family:'Space Mono',monospace;font-size:.78rem;opacity:.8;">Order token: <strong>${data.token}</strong></span>` : '';
+      showMsg('success',`✅ Order confirmed! Total: $${data.total} — Stain will verify your payment and DM you on Discord shortly.${tokenLine}<br>${trackLink}`);
       document.getElementById('fDiscord').value='';document.getElementById('fIGN').value='';
     }
-    else showMsg('error','Submission failed. Please DM Stain on Discord directly.');
+    else if(res.status===401&&data.requireLogin){
+      showMsg('error','Your session expired. Redirecting to sign in…');
+      setTimeout(function(){window.location.href='/login?return=/pricing';},900);
+    }
+    else showMsg('error',(data.error||'Submission failed.')+' Please DM Stain on Discord directly.');
   }catch(e){showMsg('error','Network error. Please DM Stain on Discord directly.');}
   btn.disabled=false;btn.textContent="✅ I've Sent — Submit Order";
 }

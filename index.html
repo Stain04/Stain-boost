@@ -230,7 +230,17 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .about-avatar-wrap{position:relative;}
 .about-avatar-card{background:var(--bg-card);border:1px solid rgba(124,58,237,.18);border-radius:28px;padding:2rem;text-align:center;position:relative;overflow:hidden;}
 .about-avatar-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(124,58,237,.08),transparent 60%);pointer-events:none;}
-.about-avatar-img{width:110px;height:110px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#06d6f2);display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-size:2.2rem;font-weight:900;color:#fff;margin:0 auto 1rem;border:3px solid rgba(124,58,237,.35);box-shadow:0 0 28px rgba(124,58,237,.25);}
+.about-avatar-img{width:124px;height:124px;border-radius:50%;background:transparent;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;position:relative;box-shadow:0 0 28px rgba(124,58,237,.25);}
+.about-avatar-img::before{content:'';position:absolute;inset:-3px;border-radius:50%;background:conic-gradient(from 0deg,#7c3aed,#c4b5fd,#06d6f2,#7c3aed);animation:ringSpin 4s linear infinite;z-index:0;}
+.about-avatar-img::after{content:'';position:absolute;inset:3px;border-radius:50%;background:#0e0b1a;z-index:1;}
+@keyframes ringSpin{to{transform:rotate(360deg);}}
+.about-avatar-img img{width:100%;height:100%;object-fit:cover;border-radius:50%;position:relative;z-index:2;}
+
+/* ALPHA STRIKE — periodic Q dash across screen */
+.alpha-strike{position:fixed;top:30%;left:-260px;width:240px;height:2px;background:linear-gradient(90deg,transparent,#06d6f2 40%,#fff 50%,#06d6f2 60%,transparent);box-shadow:0 0 18px #06d6f2,0 0 36px rgba(6,214,242,.5);z-index:50;pointer-events:none;opacity:0;border-radius:2px;}
+.alpha-strike.go{animation:alphaDash .55s cubic-bezier(.4,0,.2,1) forwards;}
+@keyframes alphaDash{0%{left:-260px;opacity:0;}10%{opacity:1;}90%{opacity:1;}100%{left:calc(100vw + 60px);opacity:0;}}
+.alpha-strike::before{content:'';position:absolute;top:-3px;left:30%;width:40%;height:8px;background:radial-gradient(ellipse,rgba(6,214,242,.6),transparent 70%);filter:blur(3px);}
 .about-handle{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:900;color:#fff;margin-bottom:.3rem;}
 .about-title-badge{font-family:'Rajdhani',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;}
 .about-stats-mini{display:flex;justify-content:center;gap:1.5rem;border-top:1px solid rgba(255,255,255,.06);padding-top:1.2rem;}
@@ -286,7 +296,8 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
       <a href="/reviews">Reviews</a>
       <a href="/faq">FAQ</a>
       <a href="/blog">Blog</a>
-      <a href=""https://discord.com/invite/8ak4MSjp" class="nav-discord" target="_blank">Discord</a>
+      <a href="/track">Track</a>
+      <a href="https://discord.com/invite/8ak4MSjp" class="nav-discord" target="_blank">Discord</a>
     </div>
     <button class="hamburger" id="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
   </div>
@@ -294,7 +305,8 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
     <a href="/" class="active">Home</a><a href="/pricing">Pricing</a>
     <a href="/reviews">Reviews</a><a href="/faq">FAQ</a>
     <a href="/blog">Blog</a>
-    <a href=""https://discord.com/invite/8ak4MSjp" target="_blank">Discord</a>
+    <a href="/track">Track</a>
+    <a href="https://discord.com/invite/8ak4MSjp" target="_blank">Discord</a>
   </div>
 </nav>
 
@@ -328,6 +340,9 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
   </div>
   <div class="hero-scroll"><span>Scroll</span><div class="scroll-line"></div></div>
 </section>
+
+<!-- ALPHA STRIKE DASH -->
+<div class="alpha-strike" id="alphaStrike"></div>
 
 <!-- STICKY ORDER BUTTON -->
 <a href="/pricing" class="sticky-order" id="stickyOrder">
@@ -464,13 +479,14 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
     <div class="about-inner">
       <div class="about-avatar-wrap reveal">
         <div class="about-avatar-card">
-          <div class="about-avatar-img">S</div>
+          <div class="about-avatar-img">
+            <img src="avatar.jpeg" alt="Stain">
+          </div>
           <div class="about-handle">Stain</div>
           <div class="about-title-badge">⭐ #1 Master Yi · Middle East Server</div>
           <div class="about-stats-mini">
             <div class="about-stat"><div class="about-stat-num">500+</div><div class="about-stat-lbl">Orders</div></div>
             <div class="about-stat"><div class="about-stat-num">5M+</div><div class="about-stat-lbl">Mastery</div></div>
-            <div class="about-stat"><div class="about-stat-num">0</div><div class="about-stat-lbl">Bans</div></div>
           </div>
         </div>
       </div>
@@ -610,6 +626,32 @@ if(counterEl){var target=parseInt(counterEl.dataset.count);var co=new Intersecti
   fetch('/api/slots').then(function(r){return r.json();}).then(function(data){
     if(typeof data.slots==='number')setSlots(data.slots);
   }).catch(function(){});
+})();
+
+// ── Alpha Strike (Q dash) ──
+(function(){
+  var dash=document.getElementById('alphaStrike');
+  if(!dash)return;
+  var lastFired=0;
+  function fire(){
+    if(document.hidden)return;
+    if(Date.now()-lastFired<2500)return;
+    lastFired=Date.now();
+    var y=15+Math.random()*70;
+    dash.style.top=y+'%';
+    dash.classList.remove('go');
+    void dash.offsetWidth;
+    dash.classList.add('go');
+  }
+  setTimeout(fire,7000);
+  setInterval(fire,28000+Math.random()*22000);
+  var lastScroll=window.scrollY,acc=0;
+  window.addEventListener('scroll',function(){
+    var s=window.scrollY;
+    acc+=Math.abs(s-lastScroll);
+    lastScroll=s;
+    if(acc>1800){acc=0;fire();}
+  },{passive:true});
 })();
 
 // ── Social Proof Toast ──

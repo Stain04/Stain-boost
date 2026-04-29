@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>html,body{background:#0b0916;}</style>
+<link rel="stylesheet" href="shared.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Track Your Order – StainBoost</title>
+<meta name="description" content="Live order tracking for StainBoost clients. Watch your boost progress in real time.">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+.wrap{max-width:1100px;margin:0 auto;padding:3rem 1.5rem 5rem;position:relative;z-index:2;}
+.page-tag{font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;color:var(--cyan);opacity:.6;text-align:center;margin-bottom:.6rem;}
+.page-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.6rem,4vw,2.4rem);font-weight:900;letter-spacing:.04em;text-align:center;color:#fff;margin-bottom:.5rem;}
+.page-sub{text-align:center;font-size:.92rem;color:rgba(255,255,255,.4);margin-bottom:2.5rem;}
+
+/* Token entry */
+.gate{max-width:480px;margin:2.5rem auto;background:rgba(12,8,32,.85);border:1px solid rgba(139,92,246,.25);border-radius:22px;padding:2.4rem 2rem;backdrop-filter:blur(12px);}
+.gate-label{font-family:'Rajdhani',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:.6rem;display:block;}
+.gate-input{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(139,92,246,.25);border-radius:12px;padding:.95rem 1.1rem;font-family:'Space Mono',monospace;font-size:1rem;letter-spacing:.08em;color:#fff;text-align:center;text-transform:uppercase;outline:none;transition:all .2s;}
+.gate-input:focus{border-color:rgba(139,92,246,.6);background:rgba(139,92,246,.08);box-shadow:0 0 0 4px rgba(139,92,246,.1);}
+.gate-btn{width:100%;margin-top:1rem;background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff;border:none;font-family:'Rajdhani',sans-serif;font-size:.92rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:1rem;border-radius:12px;cursor:pointer;transition:all .25s;box-shadow:0 0 16px rgba(124,58,237,.25);}
+.gate-btn:hover{transform:translateY(-2px);box-shadow:0 0 24px rgba(124,58,237,.4);}
+.gate-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.gate-hint{font-size:.78rem;color:rgba(255,255,255,.32);margin-top:1.2rem;line-height:1.5;text-align:center;}
+.gate-error{margin-top:1rem;padding:.7rem 1rem;border-radius:10px;background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.25);color:#f87171;font-size:.82rem;text-align:center;display:none;}
+.gate-error.show{display:block;}
+
+/* Dashboard */
+.dash{display:none;}
+.dash.active{display:block;}
+.dash-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:1.4rem;}
+@media(max-width:880px){.dash-grid{grid-template-columns:1fr;}}
+
+.card{background:rgba(12,8,32,.82);border:1px solid rgba(139,92,246,.18);border-radius:20px;padding:1.6rem 1.6rem;backdrop-filter:blur(10px);position:relative;overflow:hidden;}
+.card-title{font-family:'Orbitron',sans-serif;font-size:.78rem;font-weight:900;letter-spacing:.18em;text-transform:uppercase;color:#fff;margin-bottom:1rem;display:flex;align-items:center;gap:.55rem;}
+.card-title::before{content:'';width:3px;height:14px;border-radius:2px;background:linear-gradient(180deg,var(--purple),var(--cyan));}
+
+/* Header with token + status */
+.dash-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:1.6rem;background:rgba(12,8,32,.82);border:1px solid rgba(139,92,246,.2);border-radius:20px;padding:1.4rem 1.6rem;backdrop-filter:blur(10px);}
+.dh-left{display:flex;flex-direction:column;gap:.25rem;}
+.dh-token-label{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.32);}
+.dh-token{font-family:'Space Mono',monospace;font-size:1.15rem;font-weight:700;color:#fff;letter-spacing:.06em;}
+.dh-summary{font-size:.85rem;color:rgba(255,255,255,.55);margin-top:.3rem;}
+.dh-right{display:flex;align-items:center;gap:.7rem;}
+
+.status-pill{display:inline-flex;align-items:center;gap:.55rem;font-family:'Rajdhani',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:.5rem 1rem;border-radius:100px;border:1px solid;}
+.status-pill .dot{width:8px;height:8px;border-radius:50%;animation:pdot 1.6s ease-in-out infinite;}
+.status-queued{color:#fbbf24;border-color:rgba(251,191,36,.4);background:rgba(251,191,36,.08);}
+.status-queued .dot{background:#fbbf24;}
+.status-in_progress{color:#22d3ee;border-color:rgba(34,211,238,.45);background:rgba(34,211,238,.08);}
+.status-in_progress .dot{background:#22d3ee;}
+.status-paused{color:#a78bfa;border-color:rgba(167,139,250,.4);background:rgba(167,139,250,.08);}
+.status-paused .dot{background:#a78bfa;}
+.status-completed{color:#34d399;border-color:rgba(52,211,153,.45);background:rgba(52,211,153,.08);}
+.status-completed .dot{background:#34d399;animation:none;}
+.status-cancelled{color:#f87171;border-color:rgba(248,113,113,.4);background:rgba(248,113,113,.08);}
+.status-cancelled .dot{background:#f87171;animation:none;}
+
+.live-dot{display:inline-flex;align-items:center;gap:.45rem;font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(34,211,238,.7);}
+.live-dot::before{content:'';width:6px;height:6px;border-radius:50%;background:#22d3ee;box-shadow:0 0 8px #22d3ee;animation:pdot 1.4s ease-in-out infinite;}
+
+/* Progress section */
+.progress-block{margin-bottom:1.4rem;}
+.progress-label{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.55rem;}
+.progress-label .lbl{font-family:'Rajdhani',sans-serif;font-size:.74rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.5);}
+.progress-label .val{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:900;color:#fff;}
+.progress-bar{height:14px;background:rgba(255,255,255,.04);border-radius:100px;overflow:hidden;border:1px solid rgba(139,92,246,.15);position:relative;}
+.progress-fill{height:100%;background:linear-gradient(90deg,#7c3aed 0%,#22d3ee 100%);border-radius:100px;width:0%;transition:width .8s cubic-bezier(.4,0,.2,1);box-shadow:0 0 12px rgba(124,58,237,.4);position:relative;}
+.progress-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);background-size:200% 100%;animation:shimmer 2.4s linear infinite;}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+.kv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:1.2rem;}
+.kv-cell{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:.85rem .9rem;}
+.kv-lbl{font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.32);margin-bottom:.3rem;}
+.kv-val{font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;color:#fff;}
+@media(max-width:520px){.kv-grid{grid-template-columns:1fr 1fr;}}
+
+/* Games list */
+.games-list{display:flex;flex-direction:column;gap:.5rem;}
+.game-row{display:flex;align-items:center;gap:.85rem;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.05);border-radius:12px;padding:.7rem .9rem;}
+.game-result{font-family:'Orbitron',sans-serif;font-size:.78rem;font-weight:900;width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.game-result.W{background:rgba(52,211,153,.15);color:#34d399;border:1px solid rgba(52,211,153,.3);}
+.game-result.L{background:rgba(248,113,113,.12);color:#f87171;border:1px solid rgba(248,113,113,.25);}
+.game-info{flex:1;min-width:0;}
+.game-champ{font-family:'Rajdhani',sans-serif;font-size:.92rem;font-weight:700;color:#fff;}
+.game-kda{font-family:'Space Mono',monospace;font-size:.74rem;color:rgba(255,255,255,.4);margin-top:.1rem;}
+.game-lp{font-family:'Orbitron',sans-serif;font-size:.85rem;font-weight:900;flex-shrink:0;}
+.game-lp.up{color:#34d399;}
+.game-lp.dn{color:#f87171;}
+
+.empty{text-align:center;padding:1.4rem;color:rgba(255,255,255,.32);font-size:.85rem;}
+
+/* Notes / activity */
+.notes-list{display:flex;flex-direction:column;gap:.6rem;max-height:320px;overflow-y:auto;padding-right:.4rem;}
+.notes-list::-webkit-scrollbar{width:6px;}
+.notes-list::-webkit-scrollbar-track{background:rgba(255,255,255,.02);border-radius:3px;}
+.notes-list::-webkit-scrollbar-thumb{background:rgba(139,92,246,.25);border-radius:3px;}
+.note{padding:.7rem .9rem;border-radius:10px;border-left:2px solid;}
+.note.system{background:rgba(34,211,238,.05);border-color:rgba(34,211,238,.4);}
+.note.stain{background:rgba(139,92,246,.06);border-color:rgba(139,92,246,.5);}
+.note-from{font-family:'Rajdhani',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:.2rem;}
+.note-text{font-size:.85rem;color:rgba(255,255,255,.75);line-height:1.5;}
+.note-time{font-family:'Space Mono',monospace;font-size:.62rem;color:rgba(255,255,255,.28);margin-top:.3rem;}
+
+/* Chat */
+.chat-card{display:flex;flex-direction:column;}
+.chat-msgs{display:flex;flex-direction:column;gap:.55rem;max-height:380px;overflow-y:auto;padding-right:.4rem;margin-bottom:.9rem;}
+.chat-msgs::-webkit-scrollbar{width:6px;}
+.chat-msgs::-webkit-scrollbar-track{background:rgba(255,255,255,.02);border-radius:3px;}
+.chat-msgs::-webkit-scrollbar-thumb{background:rgba(139,92,246,.25);border-radius:3px;}
+.bubble{max-width:80%;padding:.65rem .9rem;border-radius:14px;font-size:.86rem;line-height:1.45;word-break:break-word;}
+.bubble.client{align-self:flex-end;background:linear-gradient(135deg,rgba(124,58,237,.25),rgba(91,33,182,.18));border:1px solid rgba(139,92,246,.3);color:#fff;border-bottom-right-radius:4px;}
+.bubble.stain{align-self:flex-start;background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.22);color:#fff;border-bottom-left-radius:4px;}
+.bubble-meta{font-family:'Space Mono',monospace;font-size:.6rem;color:rgba(255,255,255,.32);margin-top:.25rem;letter-spacing:.05em;}
+.bubble.stain .bubble-meta::before{content:'STAIN · ';color:var(--cyan);font-weight:700;}
+.bubble.client .bubble-meta::before{content:'YOU · ';color:var(--purple-light);font-weight:700;}
+.chat-input-row{display:flex;gap:.55rem;}
+.chat-input{flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(139,92,246,.2);border-radius:12px;padding:.75rem 1rem;color:#fff;font-family:'Inter',sans-serif;font-size:.88rem;outline:none;transition:all .2s;}
+.chat-input:focus{border-color:rgba(139,92,246,.5);background:rgba(139,92,246,.06);}
+.chat-send{background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff;border:none;font-family:'Rajdhani',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:0 1.4rem;border-radius:12px;cursor:pointer;transition:all .2s;}
+.chat-send:hover{box-shadow:0 0 16px rgba(124,58,237,.4);}
+.chat-send:disabled{opacity:.5;cursor:not-allowed;}
+
+.logout-btn{font-family:'Rajdhani',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;background:transparent;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.42);padding:.45rem .9rem;border-radius:9px;cursor:pointer;transition:all .2s;}
+.logout-btn:hover{color:#fff;border-color:rgba(248,113,113,.4);background:rgba(248,113,113,.05);}
+</style>
+</head>
+<body>
+<div class="scan-line"></div>
+
+<nav class="nav" id="mainNav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">STAINBOOST</a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/reviews">Reviews</a>
+      <a href="/faq">FAQ</a>
+      <a href="/blog">Blog</a>
+      <a href="/track" class="active">Track</a>
+      <a href="https://discord.com/invite/8ak4MSjp" class="nav-discord" target="_blank">Discord</a>
+    </div>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="/">Home</a><a href="/pricing">Pricing</a>
+    <a href="/reviews">Reviews</a><a href="/faq">FAQ</a>
+    <a href="/blog">Blog</a><a href="/track" class="active">Track</a>
+    <a href="https://discord.com/invite/8ak4MSjp" target="_blank">Discord</a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="page-tag">// Live Order Tracking</div>
+  <h1 class="page-title">YOUR BOOST PROGRESS</h1>
+  <p class="page-sub">Real-time updates as Stain climbs the ladder for you</p>
+
+  <!-- TOKEN GATE -->
+  <div class="gate" id="gate">
+    <label class="gate-label" for="tokenInput">Enter Your Order Token</label>
+    <input class="gate-input" id="tokenInput" type="text" placeholder="SB-XXXX-XXXX" maxlength="11" autocomplete="off" spellcheck="false">
+    <button class="gate-btn" id="gateBtn">Open Dashboard</button>
+    <div class="gate-error" id="gateError"></div>
+    <p class="gate-hint">You received this token in your order confirmation email and Discord. Format: <strong style="color:#c4b5fd;">SB-XXXX-XXXX</strong>. Lost it? <a href="https://discord.com/invite/8ak4MSjp" target="_blank" style="color:#22d3ee;">Ask Stain on Discord</a>.</p>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="dash" id="dash">
+    <div class="dash-header">
+      <div class="dh-left">
+        <span class="dh-token-label">// Order Token</span>
+        <span class="dh-token" id="dhToken">—</span>
+        <span class="dh-summary" id="dhSummary">—</span>
+      </div>
+      <div class="dh-right">
+        <span class="live-dot">Live</span>
+        <span class="status-pill" id="statusPill"><span class="dot"></span><span id="statusText">…</span></span>
+        <button class="logout-btn" id="logoutBtn">Sign Out</button>
+      </div>
+    </div>
+
+    <div class="dash-grid">
+      <div>
+        <!-- PROGRESS -->
+        <div class="card" style="margin-bottom:1.4rem;">
+          <div class="card-title">Progress</div>
+          <div class="progress-block">
+            <div class="progress-label">
+              <span class="lbl" id="progLbl">Wins</span>
+              <span class="val" id="progVal">0 / 0</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" id="progFill"></div></div>
+          </div>
+          <div class="kv-grid">
+            <div class="kv-cell"><div class="kv-lbl">Current Rank</div><div class="kv-val" id="kvRank">—</div></div>
+            <div class="kv-cell"><div class="kv-lbl">Current LP</div><div class="kv-val" id="kvLp">—</div></div>
+            <div class="kv-cell"><div class="kv-lbl">ETA</div><div class="kv-val" id="kvEta">—</div></div>
+          </div>
+        </div>
+
+        <!-- RECENT GAMES -->
+        <div class="card" style="margin-bottom:1.4rem;">
+          <div class="card-title">Recent Games</div>
+          <div class="games-list" id="gamesList"><div class="empty">No games played yet.</div></div>
+        </div>
+
+        <!-- ACTIVITY / NOTES -->
+        <div class="card">
+          <div class="card-title">Activity Log</div>
+          <div class="notes-list" id="notesList"></div>
+        </div>
+      </div>
+
+      <!-- CHAT -->
+      <div class="card chat-card">
+        <div class="card-title">Chat with Stain</div>
+        <div class="chat-msgs" id="chatMsgs"><div class="empty">No messages yet — say hi 👋</div></div>
+        <div class="chat-input-row">
+          <input class="chat-input" id="chatInput" type="text" placeholder="Type a message…" maxlength="1000">
+          <button class="chat-send" id="chatSend">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">STAINBOOST</div>
+    <div class="footer-links"><a href="/">Home</a><a href="/pricing">Pricing</a><a href="/reviews">Reviews</a><a href="/faq">FAQ</a><a href="/blog">Blog</a><a href="https://discord.com/invite/8ak4MSjp" target="_blank">Discord</a></div>
+    <div class="footer-copy">&copy; 2026 StainBoost &middot; #1 Trusted Elo Boosting</div>
+  </div>
+</footer>
+
+<script>
+function toggleMenu(){var m=document.getElementById('mobileMenu');m.classList.toggle('open');}
+
+(function(){
+  var TOKEN_RE=/^SB-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
+  var POLL_MS=10000;
+  var pollTimer=null;
+  var lastChatTs=0;
+  var currentToken=null;
+  var statusLabels={queued:'Queued',in_progress:'In Progress',paused:'Paused',completed:'Completed',cancelled:'Cancelled'};
+
+  var gate=document.getElementById('gate');
+  var dash=document.getElementById('dash');
+  var input=document.getElementById('tokenInput');
+  var btn=document.getElementById('gateBtn');
+  var err=document.getElementById('gateError');
+  var logoutBtn=document.getElementById('logoutBtn');
+  var chatMsgs=document.getElementById('chatMsgs');
+  var chatInput=document.getElementById('chatInput');
+  var chatSend=document.getElementById('chatSend');
+
+  function showError(msg){err.textContent=msg;err.classList.add('show');}
+  function clearError(){err.classList.remove('show');}
+
+  function escapeHtml(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+
+  function formatTime(ts){
+    if(!ts)return '';
+    var d=new Date(ts);
+    var diff=Math.floor((Date.now()-ts)/1000);
+    if(diff<60)return 'just now';
+    if(diff<3600)return Math.floor(diff/60)+'m ago';
+    if(diff<86400)return Math.floor(diff/3600)+'h ago';
+    return d.toLocaleString();
+  }
+
+  function getTokenFromUrl(){
+    var p=window.location.pathname.match(/\/track\/(SB-[A-Z0-9]{4}-[A-Z0-9]{4})/i);
+    if(p)return p[1].toUpperCase();
+    var q=new URLSearchParams(window.location.search).get('token');
+    if(q)return q.toUpperCase();
+    return null;
+  }
+
+  input.addEventListener('input',function(){
+    var v=this.value.toUpperCase().replace(/[^A-Z0-9-]/g,'');
+    if(v.length>11)v=v.slice(0,11);
+    this.value=v;
+    clearError();
+  });
+
+  btn.addEventListener('click',submitToken);
+  input.addEventListener('keydown',function(e){if(e.key==='Enter')submitToken();});
+
+  function submitToken(){
+    var t=input.value.toUpperCase().trim();
+    if(!TOKEN_RE.test(t)){showError('Token must look like SB-XXXX-XXXX.');return;}
+    btn.disabled=true;
+    fetch('/api/order-status?token='+encodeURIComponent(t))
+      .then(function(r){return r.json().then(function(j){return {status:r.status,body:j};});})
+      .then(function(res){
+        btn.disabled=false;
+        if(res.status===200){
+          currentToken=t;
+          try{localStorage.setItem('sb_track_token',t);}catch(e){}
+          history.replaceState(null,'','/track?token='+t);
+          openDash(res.body);
+        }else{
+          showError(res.body.error||'Could not load order.');
+        }
+      })
+      .catch(function(){btn.disabled=false;showError('Network error. Try again.');});
+  }
+
+  function openDash(order){
+    gate.style.display='none';
+    dash.classList.add('active');
+    renderOrder(order);
+    fetchChat(true);
+    if(pollTimer)clearInterval(pollTimer);
+    pollTimer=setInterval(function(){
+      if(document.hidden)return;
+      poll();
+    },POLL_MS);
+  }
+
+  function poll(){
+    if(!currentToken)return;
+    fetch('/api/order-status?token='+encodeURIComponent(currentToken))
+      .then(function(r){return r.ok?r.json():null;})
+      .then(function(o){if(o)renderOrder(o);})
+      .catch(function(){});
+    fetchChat(false);
+  }
+
+  function renderOrder(o){
+    document.getElementById('dhToken').textContent=o.token||currentToken;
+    document.getElementById('dhSummary').textContent=o.summary||'';
+
+    var pill=document.getElementById('statusPill');
+    pill.className='status-pill status-'+(o.status||'queued');
+    document.getElementById('statusText').textContent=statusLabels[o.status]||o.status||'…';
+
+    // Progress
+    var done=0,total=1,lbl='Progress',val='—';
+    if(o.meta&&o.meta.kind==='win_boost'){
+      done=o.meta.winsDone||0;total=o.meta.wins||1;lbl='Wins';val=done+' / '+total;
+    }else if(o.meta&&o.meta.kind==='rank_boost'){
+      lbl='Rank';val=(o.currentRank||o.meta.from||'—')+' → '+(o.meta.to||'—');
+      // rough %: completed=100, in_progress=guess from currentRank match
+      total=100;
+      if(o.status==='completed')done=100;
+      else if(o.status==='in_progress')done=40;
+      else if(o.status==='paused')done=30;
+      else done=5;
+    }
+    document.getElementById('progLbl').textContent=lbl;
+    document.getElementById('progVal').textContent=val;
+    var pct=total>0?Math.min(100,Math.max(0,(done/total)*100)):0;
+    if(o.status==='completed')pct=100;
+    document.getElementById('progFill').style.width=pct+'%';
+
+    document.getElementById('kvRank').textContent=o.currentRank||'—';
+    document.getElementById('kvLp').textContent=(o.currentLp!=null&&o.currentLp!==0)?o.currentLp+' LP':(o.currentLp===0&&o.currentRank?'0 LP':'—');
+    document.getElementById('kvEta').textContent=o.eta||'—';
+
+    // Games
+    var gl=document.getElementById('gamesList');
+    if(!o.games||!o.games.length){
+      gl.innerHTML='<div class="empty">No games played yet.</div>';
+    }else{
+      gl.innerHTML=o.games.slice().reverse().map(function(g){
+        var lpStr='';
+        if(g.lp!=null){
+          var sign=g.lp>=0?'+':'';
+          var cls=g.lp>=0?'up':'dn';
+          lpStr='<div class="game-lp '+cls+'">'+sign+g.lp+' LP</div>';
+        }
+        return '<div class="game-row">'
+          +'<div class="game-result '+(g.result==='W'?'W':'L')+'">'+(g.result==='W'?'W':'L')+'</div>'
+          +'<div class="game-info">'
+            +'<div class="game-champ">'+escapeHtml(g.champion||'Unknown')+'</div>'
+            +'<div class="game-kda">'+escapeHtml(g.kda||'')+' · '+formatTime(g.ts)+'</div>'
+          +'</div>'
+          +lpStr
+        +'</div>';
+      }).join('');
+    }
+
+    // Notes
+    var nl=document.getElementById('notesList');
+    if(!o.notes||!o.notes.length){
+      nl.innerHTML='<div class="empty">No activity yet.</div>';
+    }else{
+      nl.innerHTML=o.notes.slice().reverse().map(function(n){
+        return '<div class="note '+(n.from==='stain'?'stain':'system')+'">'
+          +'<div class="note-from">'+(n.from==='stain'?'Stain':'System')+'</div>'
+          +'<div class="note-text">'+escapeHtml(n.text)+'</div>'
+          +'<div class="note-time">'+formatTime(n.ts)+'</div>'
+        +'</div>';
+      }).join('');
+    }
+  }
+
+  function fetchChat(scrollBottom){
+    if(!currentToken)return;
+    fetch('/api/order-chat?token='+encodeURIComponent(currentToken))
+      .then(function(r){return r.ok?r.json():null;})
+      .then(function(d){if(d&&d.messages)renderChat(d.messages,scrollBottom);})
+      .catch(function(){});
+  }
+
+  function renderChat(msgs,scrollBottom){
+    if(!msgs.length){
+      chatMsgs.innerHTML='<div class="empty">No messages yet — say hi 👋</div>';
+      return;
+    }
+    var newestTs=msgs[msgs.length-1].ts||0;
+    chatMsgs.innerHTML=msgs.map(function(m){
+      return '<div class="bubble '+(m.from==='stain'?'stain':'client')+'">'
+        +escapeHtml(m.text)
+        +'<div class="bubble-meta">'+formatTime(m.ts)+'</div>'
+      +'</div>';
+    }).join('');
+    if(scrollBottom||newestTs>lastChatTs){
+      chatMsgs.scrollTop=chatMsgs.scrollHeight;
+    }
+    lastChatTs=newestTs;
+  }
+
+  chatSend.addEventListener('click',sendChat);
+  chatInput.addEventListener('keydown',function(e){if(e.key==='Enter')sendChat();});
+
+  function sendChat(){
+    var text=chatInput.value.trim();
+    if(!text||!currentToken)return;
+    chatSend.disabled=true;
+    fetch('/api/order-chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:currentToken,text:text})})
+      .then(function(r){return r.json();})
+      .then(function(){
+        chatInput.value='';
+        chatSend.disabled=false;
+        fetchChat(true);
+      })
+      .catch(function(){chatSend.disabled=false;});
+  }
+
+  logoutBtn.addEventListener('click',function(){
+    try{localStorage.removeItem('sb_track_token');}catch(e){}
+    if(pollTimer)clearInterval(pollTimer);
+    currentToken=null;
+    dash.classList.remove('active');
+    gate.style.display='block';
+    input.value='';
+    history.replaceState(null,'','/track');
+  });
+
+  // ── Init: check URL → check localStorage ──
+  var urlToken=getTokenFromUrl();
+  var savedToken=null;
+  try{savedToken=localStorage.getItem('sb_track_token');}catch(e){}
+  var initToken=urlToken||savedToken;
+  if(initToken&&TOKEN_RE.test(initToken)){
+    input.value=initToken;
+    submitToken();
+  }
+})();
+</script>
+<script src="main.js"></script>
+</body>
+</html>

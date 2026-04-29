@@ -4,6 +4,7 @@
   "type": "module",
   "dependencies": {
     "@vercel/kv": "^3.0.0",
+    "bcryptjs": "^2.4.3",
     "nodemailer": "^6.9.9"
   }
 }

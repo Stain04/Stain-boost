@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>html,body{background:#0b0916;}</style>
+<link rel="stylesheet" href="shared.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel – StainBoost</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+.wrap{max-width:980px;margin:0 auto;padding:2.5rem 1.5rem 5rem;position:relative;z-index:2;}
+.page-tag{font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;color:#fbbf24;opacity:.8;text-align:center;margin-bottom:.5rem;}
+.page-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.4rem,3.5vw,2rem);font-weight:900;letter-spacing:.05em;text-align:center;color:#fff;margin-bottom:.4rem;}
+.page-sub{text-align:center;font-size:.85rem;color:rgba(255,255,255,.4);margin-bottom:2rem;}
+
+.card{background:rgba(12,8,32,.85);border:1px solid rgba(139,92,246,.2);border-radius:18px;padding:1.5rem;backdrop-filter:blur(10px);margin-bottom:1.2rem;}
+.card-title{font-family:'Orbitron',sans-serif;font-size:.78rem;font-weight:900;letter-spacing:.18em;text-transform:uppercase;color:#fff;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem;}
+.card-title::before{content:'';width:3px;height:14px;border-radius:2px;background:linear-gradient(180deg,#fbbf24,#f59e0b);}
+
+label{display:block;font-family:'Rajdhani',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:.45rem;}
+input,select,textarea{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(139,92,246,.22);border-radius:10px;padding:.7rem .9rem;color:#fff;font-family:'Inter',sans-serif;font-size:.88rem;outline:none;transition:all .2s;}
+input:focus,select:focus,textarea:focus{border-color:rgba(139,92,246,.55);background:rgba(139,92,246,.07);}
+.row{display:grid;gap:.85rem;margin-bottom:.85rem;}
+.row.r2{grid-template-columns:1fr 1fr;}
+.row.r3{grid-template-columns:1fr 1fr 1fr;}
+.row.r4{grid-template-columns:1fr 1fr 1fr 1fr;}
+@media(max-width:600px){.row.r2,.row.r3,.row.r4{grid-template-columns:1fr;}}
+
+button.primary{background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff;border:none;font-family:'Rajdhani',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:.85rem 1.4rem;border-radius:10px;cursor:pointer;transition:all .2s;}
+button.primary:hover{box-shadow:0 0 18px rgba(124,58,237,.4);}
+button.primary:disabled{opacity:.5;cursor:not-allowed;}
+button.gold{background:linear-gradient(135deg,#fbbf24,#d97706);}
+button.danger{background:linear-gradient(135deg,#dc2626,#991b1b);}
+
+.gate{max-width:480px;margin:2.5rem auto;}
+.alert{padding:.7rem .95rem;border-radius:10px;font-size:.82rem;margin-top:.8rem;display:none;}
+.alert.show{display:block;}
+.alert.ok{background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.25);color:#34d399;}
+.alert.err{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.25);color:#f87171;}
+
+.order-meta{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;font-size:.82rem;margin-bottom:1rem;}
+.meta-item{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:.65rem .85rem;}
+.meta-lbl{font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.32);margin-bottom:.2rem;}
+.meta-val{color:#fff;font-weight:600;word-break:break-word;}
+@media(max-width:600px){.order-meta{grid-template-columns:1fr;}}
+
+.tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+@media(max-width:760px){.tools-grid{grid-template-columns:1fr;}}
+
+.chat-msgs{display:flex;flex-direction:column;gap:.5rem;max-height:280px;overflow-y:auto;padding-right:.4rem;margin-bottom:.8rem;}
+.chat-msgs::-webkit-scrollbar{width:6px;}
+.chat-msgs::-webkit-scrollbar-thumb{background:rgba(139,92,246,.25);border-radius:3px;}
+.bubble{max-width:85%;padding:.55rem .8rem;border-radius:12px;font-size:.84rem;line-height:1.45;word-break:break-word;}
+.bubble.client{align-self:flex-start;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);}
+.bubble.stain{align-self:flex-end;background:linear-gradient(135deg,rgba(124,58,237,.25),rgba(91,33,182,.18));border:1px solid rgba(139,92,246,.3);}
+.bubble-meta{font-family:'Space Mono',monospace;font-size:.6rem;color:rgba(255,255,255,.32);margin-top:.2rem;}
+.bubble.stain .bubble-meta::before{content:'STAIN · ';color:var(--cyan);}
+.bubble.client .bubble-meta::before{content:'CLIENT · ';color:#fbbf24;}
+
+.empty{text-align:center;padding:1rem;color:rgba(255,255,255,.32);font-size:.82rem;}
+</style>
+</head>
+<body>
+<div class="scan-line"></div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">STAINBOOST <span style="color:#fbbf24;font-size:.7rem;letter-spacing:.2em;">· ADMIN</span></a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/track">Track (Client)</a>
+      <a href="/admin" class="active">Admin</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="page-tag">// Booster Control Panel</div>
+  <h1 class="page-title">ADMIN DASHBOARD</h1>
+  <p class="page-sub">Update order progress, post notes, and chat with clients</p>
+
+  <!-- AUTH GATE -->
+  <div class="gate" id="gate">
+    <div class="card">
+      <div class="card-title">Authenticate</div>
+      <div class="row">
+        <div>
+          <label for="adminKey">Admin Key</label>
+          <input type="password" id="adminKey" placeholder="••••••••" autocomplete="current-password">
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label for="orderToken">Order Token</label>
+          <input type="text" id="orderToken" placeholder="SB-XXXX-XXXX" maxlength="11" autocomplete="off" spellcheck="false" style="font-family:'Space Mono',monospace;letter-spacing:.06em;">
+        </div>
+      </div>
+      <button class="primary" id="loadBtn" style="width:100%;">Load Order</button>
+      <div class="alert err" id="gateError"></div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="panel" style="display:none;">
+    <div class="card">
+      <div class="card-title">Order Details</div>
+      <div class="order-meta" id="orderMeta"></div>
+      <button class="primary" id="reloadBtn" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);">↻ Refresh</button>
+      <button class="primary" id="signOutBtn" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);margin-left:.4rem;">Sign Out</button>
+    </div>
+
+    <div class="tools-grid">
+      <!-- STATUS + RANK -->
+      <div class="card">
+        <div class="card-title">Status & Progress</div>
+        <div class="row r2">
+          <div>
+            <label>Status</label>
+            <select id="fStatus">
+              <option value="queued">Queued</option>
+              <option value="in_progress">In Progress</option>
+              <option value="paused">Paused</option>
+              <option value="completed">Completed</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+          </div>
+          <div>
+            <label>Wins Done <span style="color:rgba(255,255,255,.3);font-weight:400;">(win boost)</span></label>
+            <input type="number" id="fWinsDone" min="0" placeholder="0">
+          </div>
+        </div>
+        <div class="row r3">
+          <div>
+            <label>Current Rank</label>
+            <input type="text" id="fRank" placeholder="e.g. Gold II" maxlength="40">
+          </div>
+          <div>
+            <label>Current LP</label>
+            <input type="number" id="fLp" min="0" max="9999" placeholder="0">
+          </div>
+          <div>
+            <label>ETA</label>
+            <input type="text" id="fEta" placeholder="e.g. 2 days" maxlength="80">
+          </div>
+        </div>
+        <button class="primary" id="saveBtn">Save Progress</button>
+        <div class="alert ok" id="saveOk">Saved.</div>
+        <div class="alert err" id="saveErr"></div>
+      </div>
+
+      <!-- ADD GAME -->
+      <div class="card">
+        <div class="card-title">Log a Game</div>
+        <div class="row r2">
+          <div>
+            <label>Result</label>
+            <select id="gResult"><option value="W">Win</option><option value="L">Loss</option></select>
+          </div>
+          <div>
+            <label>LP Change</label>
+            <input type="number" id="gLp" placeholder="+18 or -16" min="-99" max="99">
+          </div>
+        </div>
+        <div class="row r2">
+          <div>
+            <label>Champion</label>
+            <input type="text" id="gChamp" placeholder="Master Yi" maxlength="30">
+          </div>
+          <div>
+            <label>KDA</label>
+            <input type="text" id="gKda" placeholder="14/3/8" maxlength="20">
+          </div>
+        </div>
+        <button class="primary gold" id="addGameBtn">Log Game</button>
+        <div class="alert ok" id="gameOk">Game logged.</div>
+        <div class="alert err" id="gameErr"></div>
+      </div>
+
+      <!-- POST NOTE -->
+      <div class="card">
+        <div class="card-title">Post Activity Note</div>
+        <div class="row">
+          <div>
+            <textarea id="fNote" rows="3" placeholder="e.g. Started session, on a 3-game win streak…" maxlength="500"></textarea>
+          </div>
+        </div>
+        <button class="primary" id="addNoteBtn">Post Note</button>
+        <div class="alert ok" id="noteOk">Note posted.</div>
+        <div class="alert err" id="noteErr"></div>
+      </div>
+
+      <!-- CHAT -->
+      <div class="card">
+        <div class="card-title">Chat</div>
+        <div class="chat-msgs" id="chatMsgs"><div class="empty">No messages yet.</div></div>
+        <div class="row" style="margin-bottom:0;">
+          <textarea id="chatText" rows="2" placeholder="Reply to client…" maxlength="1000"></textarea>
+        </div>
+        <button class="primary" id="chatSendBtn" style="margin-top:.6rem;">Send Reply</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">STAINBOOST</div>
+    <div class="footer-copy">&copy; 2026 StainBoost &middot; Admin Panel</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var TOKEN_RE=/^SB-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
+  var adminKey='',orderToken='',currentOrder=null;
+  var gate=document.getElementById('gate');
+  var panel=document.getElementById('panel');
+
+  function $(id){return document.getElementById(id);}
+  function escapeHtml(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function formatTime(ts){if(!ts)return '';var d=Math.floor((Date.now()-ts)/1000);if(d<60)return d+'s ago';if(d<3600)return Math.floor(d/60)+'m ago';if(d<86400)return Math.floor(d/3600)+'h ago';return new Date(ts).toLocaleString();}
+  function showAlert(el,msg){el.textContent=msg||el.textContent;el.classList.add('show');setTimeout(function(){el.classList.remove('show');},3500);}
+
+  $('orderToken').addEventListener('input',function(){this.value=this.value.toUpperCase().replace(/[^A-Z0-9-]/g,'').slice(0,11);});
+
+  $('loadBtn').addEventListener('click',load);
+  $('orderToken').addEventListener('keydown',function(e){if(e.key==='Enter')load();});
+  $('adminKey').addEventListener('keydown',function(e){if(e.key==='Enter')load();});
+
+  function load(){
+    var key=$('adminKey').value.trim();
+    var tok=$('orderToken').value.toUpperCase().trim();
+    if(!key)return showAlert($('gateError'),'Admin key required.');
+    if(!TOKEN_RE.test(tok))return showAlert($('gateError'),'Token must be SB-XXXX-XXXX.');
+    adminKey=key;orderToken=tok;
+    fetch('/api/order-status?token='+encodeURIComponent(tok))
+      .then(function(r){return r.json().then(function(j){return {s:r.status,b:j};});})
+      .then(function(res){
+        if(res.s===200){
+          try{sessionStorage.setItem('sb_admin_key',adminKey);sessionStorage.setItem('sb_admin_token',orderToken);}catch(e){}
+          openPanel(res.b);
+        }else{
+          showAlert($('gateError'),res.b.error||'Could not load order.');
+        }
+      })
+      .catch(function(){showAlert($('gateError'),'Network error.');});
+  }
+
+  function openPanel(o){
+    currentOrder=o;
+    gate.style.display='none';
+    panel.style.display='block';
+    renderOrder(o);
+    fetchChat();
+  }
+
+  function renderOrder(o){
+    var meta='';
+    function row(l,v){return '<div class="meta-item"><div class="meta-lbl">'+l+'</div><div class="meta-val">'+escapeHtml(v||'—')+'</div></div>';}
+    meta+=row('Token',o.token);
+    meta+=row('Status',o.status);
+    meta+=row('Summary',o.summary);
+    meta+=row('IGN',o.ign);
+    meta+=row('Type',o.type);
+    meta+=row('Flash',o.flash);
+    meta+=row('Current Rank',o.currentRank||'—');
+    meta+=row('Current LP',o.currentLp||0);
+    meta+=row('ETA',o.eta||'—');
+    if(o.meta&&o.meta.kind==='win_boost')meta+=row('Wins',(o.meta.winsDone||0)+' / '+(o.meta.wins||0));
+    if(o.meta&&o.meta.kind==='rank_boost')meta+=row('Range',(o.meta.from||'')+' → '+(o.meta.to||''));
+    meta+=row('Updated',formatTime(o.updatedAt));
+    $('orderMeta').innerHTML=meta;
+
+    $('fStatus').value=o.status||'queued';
+    $('fRank').value=o.currentRank||'';
+    $('fLp').value=o.currentLp||'';
+    $('fEta').value=o.eta||'';
+    if(o.meta&&o.meta.kind==='win_boost'){
+      $('fWinsDone').value=o.meta.winsDone||0;
+      $('fWinsDone').disabled=false;
+    }else{
+      $('fWinsDone').disabled=true;
+      $('fWinsDone').value='';
+    }
+  }
+
+  function postUpdate(payload,onOk,onErr){
+    payload.token=orderToken;
+    fetch('/api/order-update',{method:'POST',headers:{'Content-Type':'application/json','x-admin-key':adminKey},body:JSON.stringify(payload)})
+      .then(function(r){return r.json().then(function(j){return {s:r.status,b:j};});})
+      .then(function(res){
+        if(res.s===200){currentOrder=res.b.order;renderOrder(res.b.order);onOk&&onOk();}
+        else onErr&&onErr(res.b.error||'Error.');
+      })
+      .catch(function(){onErr&&onErr('Network error.');});
+  }
+
+  $('saveBtn').addEventListener('click',function(){
+    var payload={status:$('fStatus').value,currentRank:$('fRank').value.trim(),currentLp:parseInt($('fLp').value,10)||0,eta:$('fEta').value.trim()};
+    var w=parseInt($('fWinsDone').value,10);
+    if(!isNaN(w))payload.winsDone=w;
+    postUpdate(payload,function(){showAlert($('saveOk'));},function(e){showAlert($('saveErr'),e);});
+  });
+
+  $('addGameBtn').addEventListener('click',function(){
+    var lpRaw=$('gLp').value.trim();
+    var payload={addGame:{result:$('gResult').value,champion:$('gChamp').value.trim(),kda:$('gKda').value.trim()}};
+    if(lpRaw!=='')payload.addGame.lp=parseInt(lpRaw,10);
+    postUpdate(payload,function(){
+      $('gChamp').value='';$('gKda').value='';$('gLp').value='';
+      showAlert($('gameOk'));
+    },function(e){showAlert($('gameErr'),e);});
+  });
+
+  $('addNoteBtn').addEventListener('click',function(){
+    var n=$('fNote').value.trim();
+    if(!n)return;
+    postUpdate({addNote:n},function(){$('fNote').value='';showAlert($('noteOk'));},function(e){showAlert($('noteErr'),e);});
+  });
+
+  $('reloadBtn').addEventListener('click',function(){
+    fetch('/api/order-status?token='+encodeURIComponent(orderToken))
+      .then(function(r){return r.ok?r.json():null;})
+      .then(function(o){if(o)renderOrder(o);});
+    fetchChat();
+  });
+
+  $('signOutBtn').addEventListener('click',function(){
+    try{sessionStorage.removeItem('sb_admin_key');sessionStorage.removeItem('sb_admin_token');}catch(e){}
+    adminKey='';orderToken='';currentOrder=null;
+    panel.style.display='none';gate.style.display='block';
+    $('adminKey').value='';
+  });
+
+  function fetchChat(){
+    fetch('/api/order-chat?token='+encodeURIComponent(orderToken))
+      .then(function(r){return r.ok?r.json():null;})
+      .then(function(d){if(d&&d.messages)renderChat(d.messages);});
+  }
+
+  function renderChat(msgs){
+    var box=$('chatMsgs');
+    if(!msgs.length){box.innerHTML='<div class="empty">No messages yet.</div>';return;}
+    box.innerHTML=msgs.map(function(m){
+      return '<div class="bubble '+(m.from==='stain'?'stain':'client')+'">'
+        +escapeHtml(m.text)+'<div class="bubble-meta">'+formatTime(m.ts)+'</div></div>';
+    }).join('');
+    box.scrollTop=box.scrollHeight;
+  }
+
+  $('chatSendBtn').addEventListener('click',function(){
+    var t=$('chatText').value.trim();
+    if(!t)return;
+    fetch('/api/order-chat',{method:'POST',headers:{'Content-Type':'application/json','x-admin-key':adminKey},body:JSON.stringify({token:orderToken,text:t})})
+      .then(function(r){return r.json();})
+      .then(function(){$('chatText').value='';fetchChat();});
+  });
+
+  // Auto-poll chat every 12s
+  setInterval(function(){if(orderToken&&!document.hidden)fetchChat();},12000);
+
+  // Restore session
+  try{
+    var k=sessionStorage.getItem('sb_admin_key');
+    var t=sessionStorage.getItem('sb_admin_token');
+    if(k&&t&&TOKEN_RE.test(t)){
+      $('adminKey').value=k;$('orderToken').value=t;
+      load();
+    }
+  }catch(e){}
+})();
+</script>
+</body>
+</html>

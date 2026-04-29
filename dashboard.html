@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>html,body{background:#0b0916;}</style>
+<link rel="stylesheet" href="shared.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard – StainBoost</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+.wrap{max-width:1100px;margin:0 auto;padding:2.5rem 1.5rem 5rem;position:relative;z-index:2;}
+.page-tag{font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;color:var(--cyan);opacity:.6;text-align:center;margin-bottom:.5rem;}
+.page-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.6rem,4vw,2.2rem);font-weight:900;letter-spacing:.04em;text-align:center;color:#fff;margin-bottom:.4rem;}
+.page-sub{text-align:center;font-size:.88rem;color:rgba(255,255,255,.4);margin-bottom:2.4rem;}
+
+.user-card{background:rgba(12,8,32,.85);border:1px solid rgba(139,92,246,.22);border-radius:18px;padding:1.4rem 1.6rem;backdrop-filter:blur(10px);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:1.6rem;}
+.user-info{display:flex;align-items:center;gap:1rem;}
+.user-avatar{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#22d3ee);display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-size:1.2rem;font-weight:900;color:#fff;flex-shrink:0;}
+.user-name{font-family:'Orbitron',sans-serif;font-size:1.05rem;font-weight:900;color:#fff;}
+.user-meta{font-family:'Space Mono',monospace;font-size:.7rem;color:rgba(255,255,255,.42);margin-top:.2rem;}
+.user-meta .type{color:var(--cyan);}
+.user-actions{display:flex;gap:.55rem;flex-wrap:wrap;}
+.btn-sm{font-family:'Rajdhani',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:.55rem 1rem;border-radius:9px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:.4rem;border:1px solid;transition:all .2s;}
+.btn-sm.primary{background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff;border-color:rgba(124,58,237,.5);}
+.btn-sm.primary:hover{box-shadow:0 0 16px rgba(124,58,237,.4);}
+.btn-sm.ghost{background:transparent;color:rgba(255,255,255,.55);border-color:rgba(255,255,255,.12);}
+.btn-sm.ghost:hover{color:#fff;border-color:rgba(255,255,255,.3);}
+
+.section-title{font-family:'Orbitron',sans-serif;font-size:.82rem;font-weight:900;letter-spacing:.18em;text-transform:uppercase;color:#fff;margin-bottom:1rem;display:flex;align-items:center;gap:.55rem;}
+.section-title::before{content:'';width:3px;height:14px;border-radius:2px;background:linear-gradient(180deg,var(--purple),var(--cyan));}
+
+.orders-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1rem;}
+.order-card{background:rgba(12,8,32,.85);border:1px solid rgba(139,92,246,.18);border-radius:18px;padding:1.3rem 1.4rem;backdrop-filter:blur(10px);text-decoration:none;color:inherit;display:block;transition:all .25s;position:relative;overflow:hidden;}
+.order-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--purple),var(--cyan));opacity:0;transition:opacity .25s;}
+.order-card:hover{border-color:rgba(139,92,246,.4);transform:translateY(-3px);box-shadow:0 8px 24px rgba(124,58,237,.1);}
+.order-card:hover::before{opacity:1;}
+
+.order-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.8rem;gap:.8rem;}
+.order-token{font-family:'Space Mono',monospace;font-size:.85rem;font-weight:700;color:#fff;letter-spacing:.04em;}
+.order-token-lbl{font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.32);margin-bottom:.18rem;}
+.order-summary{font-size:.84rem;color:rgba(255,255,255,.55);line-height:1.5;margin-bottom:.9rem;}
+.order-meta{display:flex;justify-content:space-between;align-items:center;font-family:'Space Mono',monospace;font-size:.66rem;color:rgba(255,255,255,.32);letter-spacing:.04em;}
+.order-meta .price{color:var(--gold);font-weight:700;}
+
+.status-pill{display:inline-flex;align-items:center;gap:.4rem;font-family:'Rajdhani',sans-serif;font-size:.66rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:.3rem .65rem;border-radius:100px;border:1px solid;flex-shrink:0;}
+.status-pill .dot{width:6px;height:6px;border-radius:50%;animation:pdot 1.6s ease-in-out infinite;}
+.status-queued{color:#fbbf24;border-color:rgba(251,191,36,.4);background:rgba(251,191,36,.08);}
+.status-queued .dot{background:#fbbf24;}
+.status-in_progress{color:#22d3ee;border-color:rgba(34,211,238,.45);background:rgba(34,211,238,.08);}
+.status-in_progress .dot{background:#22d3ee;}
+.status-paused{color:#a78bfa;border-color:rgba(167,139,250,.4);background:rgba(167,139,250,.08);}
+.status-paused .dot{background:#a78bfa;}
+.status-completed{color:#34d399;border-color:rgba(52,211,153,.45);background:rgba(52,211,153,.08);}
+.status-completed .dot{background:#34d399;animation:none;}
+.status-cancelled{color:#f87171;border-color:rgba(248,113,113,.4);background:rgba(248,113,113,.08);}
+.status-cancelled .dot{background:#f87171;animation:none;}
+
+.empty-card{background:rgba(12,8,32,.85);border:1px solid rgba(139,92,246,.18);border-radius:18px;padding:3rem 2rem;text-align:center;backdrop-filter:blur(10px);}
+.empty-icon{font-size:2.4rem;margin-bottom:.8rem;opacity:.5;}
+.empty-title{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:900;color:#fff;margin-bottom:.5rem;}
+.empty-msg{color:rgba(255,255,255,.4);font-size:.88rem;margin-bottom:1.4rem;}
+
+.skeleton{background:linear-gradient(90deg,rgba(139,92,246,.06),rgba(139,92,246,.12),rgba(139,92,246,.06));background-size:200% 100%;animation:shimmer 1.4s linear infinite;border-radius:14px;height:140px;}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+</style>
+</head>
+<body>
+<div class="scan-line"></div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">STAINBOOST</a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/track">Track</a>
+      <a href="/dashboard" class="active">Dashboard</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="page-tag">// Your Account</div>
+  <h1 class="page-title">YOUR DASHBOARD</h1>
+  <p class="page-sub">All your orders, live updates, in one place</p>
+
+  <div class="user-card" id="userCard" style="display:none;">
+    <div class="user-info">
+      <div class="user-avatar" id="userAvatar">?</div>
+      <div>
+        <div class="user-name" id="userName">—</div>
+        <div class="user-meta"><span class="type" id="userType">—</span> · <span id="userJoined">—</span></div>
+      </div>
+    </div>
+    <div class="user-actions">
+      <a href="/pricing" class="btn-sm primary">+ New Order</a>
+      <button class="btn-sm ghost" id="logoutBtn">Sign Out</button>
+    </div>
+  </div>
+
+  <div class="section-title">Your Orders</div>
+  <div id="ordersWrap">
+    <div class="orders-grid">
+      <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">STAINBOOST</div>
+    <div class="footer-copy">&copy; 2026 StainBoost</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  function $(id){return document.getElementById(id);}
+  function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  var statusLabels={queued:'Queued',in_progress:'In Progress',paused:'Paused',completed:'Completed',cancelled:'Cancelled'};
+
+  function formatDate(ts){
+    if(!ts)return '—';
+    var d=new Date(ts);
+    return d.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});
+  }
+
+  // 1. Check auth
+  fetch('/api/auth/me').then(function(r){return r.json();}).then(function(d){
+    if(!d.user){window.location.href='/login?return=/dashboard';return;}
+    renderUser(d.user);
+    loadOrders();
+  }).catch(function(){window.location.href='/login?return=/dashboard';});
+
+  function renderUser(u){
+    var avatarText=(u.username||'?').slice(0,2).toUpperCase();
+    $('userAvatar').textContent=avatarText;
+    $('userName').textContent=u.username||'—';
+    $('userType').textContent=u.type==='discord'?'Discord':'Email';
+    $('userJoined').textContent='Joined '+formatDate(u.createdAt);
+    $('userCard').style.display='flex';
+  }
+
+  function loadOrders(){
+    fetch('/api/my-orders').then(function(r){return r.json();}).then(function(d){
+      renderOrders(d.orders||[]);
+    }).catch(function(){
+      $('ordersWrap').innerHTML='<div class="empty-card"><div class="empty-icon">⚠️</div><div class="empty-title">Could Not Load Orders</div><div class="empty-msg">Try refreshing the page.</div></div>';
+    });
+  }
+
+  function renderOrders(orders){
+    var box=$('ordersWrap');
+    if(!orders.length){
+      box.innerHTML='<div class="empty-card"><div class="empty-icon">⚔️</div><div class="empty-title">No Orders Yet</div><div class="empty-msg">Place your first boost order to see it here.</div><a href="/pricing" class="btn-sm primary">Place an Order</a></div>';
+      return;
+    }
+    orders.sort(function(a,b){return (b.createdAt||0)-(a.createdAt||0);});
+    box.innerHTML='<div class="orders-grid">'+orders.map(function(o){
+      var status=o.status||'queued';
+      var summary=o.summary||'Order';
+      var price=o.total?'$'+o.total:'';
+      return '<a href="/track/'+encodeURIComponent(o.token)+'" class="order-card">'
+        +'<div class="order-head">'
+          +'<div><div class="order-token-lbl">// Order</div><div class="order-token">'+escapeHtml(o.token)+'</div></div>'
+          +'<span class="status-pill status-'+status+'"><span class="dot"></span>'+escapeHtml(statusLabels[status]||status)+'</span>'
+        +'</div>'
+        +'<div class="order-summary">'+escapeHtml(summary)+'</div>'
+        +'<div class="order-meta"><span>'+formatDate(o.createdAt)+'</span><span class="price">'+escapeHtml(price)+'</span></div>'
+      +'</a>';
+    }).join('')+'</div>';
+  }
+
+  $('logoutBtn').addEventListener('click',function(){
+    fetch('/api/auth/logout',{method:'POST'}).then(function(){
+      window.location.href='/';
+    });
+  });
+})();
+</script>
+</body>
+</html>

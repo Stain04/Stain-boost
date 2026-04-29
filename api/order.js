@@ -1,5 +1,6 @@
 import { createClient } from '@vercel/kv';
 import { randomBytes } from 'crypto';
+import { getUser } from '../lib/auth.js';
 
 // ── Feed helpers ──
 const FEED_BG = [
@@ -105,6 +106,10 @@ export default async function handler(req, res) {
     return res.status(429).json({ error: 'Too many requests. Please wait a minute and try again.' });
   }
 
+  // ── REQUIRE LOGIN ──
+  const authUser = await getUser(req);
+  if (!authUser) return res.status(401).json({ error: 'You must be signed in to place an order.', requireLogin: true });
+
   const { discord, ign, type, flash, orderType } = req.body;
 
   const cleanDiscord = sanitize(discord, 80);
@@ -124,7 +129,7 @@ export default async function handler(req, res) {
   const rawCoupon = sanitize(req.body.couponCode || '', 30).toUpperCase();
   const couponDiscount = COUPONS[rawCoupon] || 0;
 
-  let computedTotal, orderSummary, toastAction;
+  let computedTotal, orderSummary, toastAction, orderMeta;
   const RB_DIVS = ['IV', 'III', 'II', 'I'];
 
   if (orderType === 'rank_boost') {
@@ -153,6 +158,7 @@ export default async function handler(req, res) {
     const couponLabel = couponDiscount > 0 ? ` · ${Math.round(couponDiscount*100)}% coupon` : '';
     orderSummary = `Rank Boost: ${fromName} → ${toName} · ${cleanType}${lpGainLabel}${couponLabel}`;
     toastAction  = `just went from <strong>${fromName} → ${toName}</strong>`;
+    orderMeta    = { kind: 'rank_boost', from: fromName, to: toName, lpGain: cleanLPGain };
 
   } else {
     // win_boost (default)
@@ -175,6 +181,7 @@ export default async function handler(req, res) {
     const couponLabel = couponDiscount > 0 ? ` · ${Math.round(couponDiscount*100)}% coupon` : '';
     orderSummary = `Win Boost: ${cleanRank} · ${cleanWins} wins (+${freeWins} free) · ${cleanType}${couponLabel}`;
     toastAction  = `just ordered <strong>${cleanWins} win boost</strong>`;
+    orderMeta    = { kind: 'win_boost', rank: cleanRank, wins: cleanWins, freeWins, winsDone: 0 };
   }
 
   // ── GENERATE SECURE REVIEW TOKEN ──
@@ -195,6 +202,44 @@ export default async function handler(req, res) {
     try {
       const kv = createClient({ url: dbUrl, token: dbToken });
       await kv.sadd('valid_tokens', reviewToken);
+
+      // ── Save full order record for /track page ──
+      const orderRecord = {
+        token: reviewToken,
+        status: 'queued',
+        meta: orderMeta,
+        summary: orderSummary,
+        total: computedTotal,
+        type: cleanType,
+        flash: cleanFlash,
+        ign: cleanIgn,
+        discord: cleanDiscord,
+        userId: authUser.id,
+        currentRank: '',
+        currentLp: 0,
+        eta: '',
+        games: [],
+        notes: [{ from: 'system', text: 'Order received. Stain will start within a few hours.', ts: Date.now() }],
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      };
+      await kv.set(`order:${reviewToken}`, JSON.stringify(orderRecord));
+      // 90 day TTL
+      await kv.expire(`order:${reviewToken}`, 60 * 60 * 24 * 90);
+
+      // ── Append token to user's order list ──
+      try {
+        const userRaw = await kv.get(`user:${authUser.id}`);
+        if (userRaw) {
+          const userObj = typeof userRaw === 'string' ? JSON.parse(userRaw) : userRaw;
+          userObj.orderTokens = Array.isArray(userObj.orderTokens) ? userObj.orderTokens : [];
+          if (!userObj.orderTokens.includes(reviewToken)) {
+            userObj.orderTokens.unshift(reviewToken);
+            if (userObj.orderTokens.length > 200) userObj.orderTokens = userObj.orderTokens.slice(0, 200);
+            await kv.set(`user:${authUser.id}`, JSON.stringify(userObj));
+          }
+        }
+      } catch (e) { console.error('attach order to user failed', e); }
 
       // ── Push anonymised entry to activity feed ──
       const maskedName = cleanIgn.slice(0, 2) + '***' + cleanIgn.slice(-1);
@@ -292,5 +337,5 @@ export default async function handler(req, res) {
     }
   }
 
-  return res.status(200).json({ ok: true, total: computedTotal });
+  return res.status(200).json({ ok: true, total: computedTotal, token: reviewToken });
 }

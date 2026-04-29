@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>html,body{background:#0b0916;}</style>
+<link rel="stylesheet" href="shared.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign In – StainBoost</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;900&family=Inter:wght@400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+.wrap{max-width:480px;margin:0 auto;padding:3rem 1.5rem 5rem;position:relative;z-index:2;}
+.page-tag{font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;color:var(--cyan);opacity:.6;text-align:center;margin-bottom:.6rem;}
+.page-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.6rem,4vw,2rem);font-weight:900;letter-spacing:.04em;text-align:center;color:#fff;margin-bottom:.5rem;}
+.page-sub{text-align:center;font-size:.88rem;color:rgba(255,255,255,.4);margin-bottom:2rem;}
+
+.card{background:rgba(12,8,32,.85);border:1px solid rgba(139,92,246,.22);border-radius:22px;padding:2rem 1.8rem;backdrop-filter:blur(12px);}
+
+.tabs{display:flex;gap:.4rem;background:rgba(255,255,255,.03);padding:.3rem;border-radius:12px;margin-bottom:1.4rem;}
+.tab{flex:1;padding:.65rem;font-family:'Rajdhani',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.4);background:transparent;border:none;border-radius:9px;cursor:pointer;transition:all .2s;}
+.tab.active{background:linear-gradient(135deg,rgba(124,58,237,.25),rgba(91,33,182,.18));color:#fff;box-shadow:inset 0 0 0 1px rgba(139,92,246,.35);}
+
+.discord-btn{width:100%;background:#5865F2;color:#fff;border:none;font-family:'Rajdhani',sans-serif;font-size:.88rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:.95rem;border-radius:12px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:.6rem;margin-bottom:1.2rem;}
+.discord-btn:hover{background:#4752c4;box-shadow:0 4px 18px rgba(88,101,242,.35);}
+.discord-btn svg{width:20px;height:20px;}
+
+.divider{display:flex;align-items:center;gap:.8rem;margin:1.2rem 0;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.08);}
+.divider span{font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.32);}
+
+label{display:block;font-family:'Rajdhani',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:.4rem;}
+input{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(139,92,246,.22);border-radius:11px;padding:.85rem 1rem;color:#fff;font-family:'Inter',sans-serif;font-size:.92rem;outline:none;transition:all .2s;margin-bottom:1rem;}
+input:focus{border-color:rgba(139,92,246,.55);background:rgba(139,92,246,.07);box-shadow:0 0 0 3px rgba(139,92,246,.1);}
+
+.submit-btn{width:100%;background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff;border:none;font-family:'Rajdhani',sans-serif;font-size:.92rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;padding:1rem;border-radius:12px;cursor:pointer;transition:all .25s;box-shadow:0 0 16px rgba(124,58,237,.25);margin-top:.4rem;}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 0 24px rgba(124,58,237,.4);}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+
+.alert{margin-top:1rem;padding:.75rem .95rem;border-radius:10px;font-size:.82rem;display:none;line-height:1.4;}
+.alert.show{display:block;}
+.alert.err{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.25);color:#f87171;}
+.alert.ok{background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.25);color:#34d399;}
+
+.note{font-size:.78rem;color:rgba(255,255,255,.36);text-align:center;margin-top:1.2rem;line-height:1.55;}
+.note a{color:var(--cyan);text-decoration:none;}
+.note a:hover{text-decoration:underline;}
+
+.form-section{display:none;}
+.form-section.active{display:block;}
+</style>
+</head>
+<body>
+<div class="scan-line"></div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">STAINBOOST</a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/track">Track</a>
+      <a href="/login" class="active">Sign In</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="page-tag">// Account Access</div>
+  <h1 class="page-title">SIGN IN TO STAINBOOST</h1>
+  <p class="page-sub">Track all your orders in one place</p>
+
+  <div class="card">
+    <button class="discord-btn" id="discordBtn">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.331c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.974 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+      Continue with Discord
+    </button>
+
+    <div class="divider"><span>OR</span></div>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="login">Sign In</button>
+      <button class="tab" data-tab="signup">Create Account</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="form-section active" id="loginSection">
+      <label for="loginId">Email or Username</label>
+      <input type="text" id="loginId" autocomplete="username" placeholder="you@example.com">
+      <label for="loginPw">Password</label>
+      <input type="password" id="loginPw" autocomplete="current-password" placeholder="••••••••">
+      <button class="submit-btn" id="loginBtn">Sign In</button>
+    </div>
+
+    <!-- SIGNUP -->
+    <div class="form-section" id="signupSection">
+      <label for="signupEmail">Email</label>
+      <input type="email" id="signupEmail" autocomplete="email" placeholder="you@example.com">
+      <label for="signupUsername">Username</label>
+      <input type="text" id="signupUsername" autocomplete="username" placeholder="your_handle" maxlength="24">
+      <label for="signupPw">Password</label>
+      <input type="password" id="signupPw" autocomplete="new-password" placeholder="At least 8 characters" minlength="8">
+      <button class="submit-btn" id="signupBtn">Create Account</button>
+    </div>
+
+    <div class="alert err" id="alertErr"></div>
+    <div class="alert ok" id="alertOk"></div>
+
+    <p class="note">Already have a token? <a href="/track">Track without an account →</a></p>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">STAINBOOST</div>
+    <div class="footer-copy">&copy; 2026 StainBoost</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  function $(id){return document.getElementById(id);}
+  var alertErr=$('alertErr'), alertOk=$('alertOk');
+  function showErr(msg){alertOk.classList.remove('show');alertErr.textContent=msg;alertErr.classList.add('show');}
+  function showOk(msg){alertErr.classList.remove('show');alertOk.textContent=msg;alertOk.classList.add('show');}
+  function clearAlerts(){alertErr.classList.remove('show');alertOk.classList.remove('show');}
+
+  // Tab switching
+  document.querySelectorAll('.tab').forEach(function(t){
+    t.addEventListener('click',function(){
+      document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active');});
+      t.classList.add('active');
+      document.querySelectorAll('.form-section').forEach(function(x){x.classList.remove('active');});
+      $((t.dataset.tab==='login'?'login':'signup')+'Section').classList.add('active');
+      clearAlerts();
+    });
+  });
+
+  function getReturnUrl(){
+    var q=new URLSearchParams(window.location.search).get('return');
+    if(q&&/^\/[a-zA-Z0-9/_?=&-]*$/.test(q))return q;
+    return '/dashboard';
+  }
+
+  $('discordBtn').addEventListener('click',function(){
+    window.location.href='/api/auth/discord-start';
+  });
+
+  $('loginBtn').addEventListener('click',function(){
+    var btn=this;
+    clearAlerts();
+    var identifier=$('loginId').value.trim();
+    var password=$('loginPw').value;
+    if(!identifier||!password)return showErr('Enter your email/username and password.');
+    btn.disabled=true;
+    fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({identifier,password})})
+      .then(function(r){return r.json().then(function(j){return {s:r.status,b:j};});})
+      .then(function(res){
+        btn.disabled=false;
+        if(res.s===200){showOk('Signed in. Redirecting…');setTimeout(function(){window.location.href=getReturnUrl();},400);}
+        else showErr(res.b.error||'Sign in failed.');
+      })
+      .catch(function(){btn.disabled=false;showErr('Network error.');});
+  });
+
+  $('signupBtn').addEventListener('click',function(){
+    var btn=this;
+    clearAlerts();
+    var email=$('signupEmail').value.trim();
+    var username=$('signupUsername').value.trim();
+    var password=$('signupPw').value;
+    if(!email||!username||!password)return showErr('All fields are required.');
+    if(password.length<8)return showErr('Password must be at least 8 characters.');
+    btn.disabled=true;
+    fetch('/api/auth/signup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,username,password})})
+      .then(function(r){return r.json().then(function(j){return {s:r.status,b:j};});})
+      .then(function(res){
+        btn.disabled=false;
+        if(res.s===200){showOk('Account created! Redirecting…');setTimeout(function(){window.location.href=getReturnUrl();},500);}
+        else showErr(res.b.error||'Signup failed.');
+      })
+      .catch(function(){btn.disabled=false;showErr('Network error.');});
+  });
+
+  $('loginPw').addEventListener('keydown',function(e){if(e.key==='Enter')$('loginBtn').click();});
+  $('signupPw').addEventListener('keydown',function(e){if(e.key==='Enter')$('signupBtn').click();});
+
+  // If already signed in, bounce to dashboard
+  fetch('/api/auth/me').then(function(r){return r.ok?r.json():null;}).then(function(d){
+    if(d&&d.user)window.location.href=getReturnUrl();
+  }).catch(function(){});
+})();
+</script>
+</body>
+</html>

@@ -5,6 +5,107 @@ function toggleMenu() {
   document.getElementById('mobileMenu').classList.toggle('open');
 }
 
+// ── AUTH-AWARE NAV (injects login state into all navs) ──
+(function () {
+  function escapeHtml(s) { return String(s || '').replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+
+  function hasLink(container, href) {
+    return Array.from(container.querySelectorAll('a')).some(function (a) {
+      return a.getAttribute('href') === href && !a.classList.contains('nav-auth-link');
+    });
+  }
+
+  function injectAuthNav(user) {
+    var desktop = document.querySelector('.nav-links');
+    if (desktop) {
+      desktop.querySelectorAll('.nav-auth-link').forEach(function (n) { n.remove(); });
+      var anchor = desktop.querySelector('.nav-discord') || null;
+      var nodes = buildDesktop(user, desktop);
+      nodes.forEach(function (n) { desktop.insertBefore(n, anchor); });
+    }
+    var mobile = document.querySelector('.mobile-menu');
+    if (mobile) {
+      mobile.querySelectorAll('.nav-auth-link').forEach(function (n) { n.remove(); });
+      var manchor = mobile.querySelector('a[target="_blank"]') || null;
+      var mnodes = buildMobile(user, mobile);
+      mnodes.forEach(function (n) { mobile.insertBefore(n, manchor); });
+    }
+  }
+
+  function buildDesktop(user, container) {
+    var out = [];
+    if (user) {
+      if (!hasLink(container, '/dashboard')) {
+        var dash = document.createElement('a');
+        dash.href = '/dashboard'; dash.className = 'nav-auth-link';
+        dash.textContent = 'Dashboard';
+        out.push(dash);
+      }
+
+      var pill = document.createElement('span');
+      pill.className = 'nav-auth-link';
+      pill.style.cssText = 'font-family:Rajdhani,sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.08em;color:#c4b5fd;background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.3);padding:.32rem .8rem;border-radius:8px;margin-left:.4rem;';
+      pill.textContent = '@' + (user.username || 'user');
+      out.push(pill);
+
+      var logout = document.createElement('a');
+      logout.href = '#'; logout.className = 'nav-auth-link';
+      logout.textContent = 'Sign Out';
+      logout.addEventListener('click', function (e) {
+        e.preventDefault();
+        fetch('/api/auth/logout', { method: 'POST' }).then(function () { window.location.href = '/'; });
+      });
+      out.push(logout);
+    } else if (!hasLink(container, '/login')) {
+      var login = document.createElement('a');
+      login.href = '/login'; login.className = 'nav-auth-link';
+      login.textContent = 'Sign In';
+      out.push(login);
+    }
+    return out;
+  }
+
+  function buildMobile(user, container) {
+    var out = [];
+    if (user) {
+      if (!hasLink(container, '/dashboard')) {
+        var dash = document.createElement('a');
+        dash.href = '/dashboard'; dash.className = 'nav-auth-link';
+        dash.textContent = 'Dashboard (@' + escapeHtml(user.username || 'user') + ')';
+        out.push(dash);
+      }
+
+      var logout = document.createElement('a');
+      logout.href = '#'; logout.className = 'nav-auth-link';
+      logout.textContent = 'Sign Out';
+      logout.addEventListener('click', function (e) {
+        e.preventDefault();
+        fetch('/api/auth/logout', { method: 'POST' }).then(function () { window.location.href = '/'; });
+      });
+      out.push(logout);
+    } else if (!hasLink(container, '/login')) {
+      var login = document.createElement('a');
+      login.href = '/login'; login.className = 'nav-auth-link';
+      login.textContent = 'Sign In';
+      out.push(login);
+    }
+    return out;
+  }
+
+  function init() {
+    fetch('/api/auth/me', { credentials: 'same-origin' })
+      .then(function (r) { return r.ok ? r.json() : { user: null }; })
+      .then(function (d) { injectAuthNav(d && d.user ? d.user : null); })
+      .catch(function () { injectAuthNav(null); });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+
 // Close mobile menu when a link is clicked
 document.addEventListener('DOMContentLoaded', function () {
   const menu = document.getElementById('mobileMenu');
