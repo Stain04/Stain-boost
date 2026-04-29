@@ -53,6 +53,7 @@ function toggleMenu() {
       logout.textContent = 'Sign Out';
       logout.addEventListener('click', function (e) {
         e.preventDefault();
+        clearCache();
         fetch('/api/auth/logout', { method: 'POST' }).then(function () { window.location.href = '/'; });
       });
       out.push(logout);
@@ -80,6 +81,7 @@ function toggleMenu() {
       logout.textContent = 'Sign Out';
       logout.addEventListener('click', function (e) {
         e.preventDefault();
+        clearCache();
         fetch('/api/auth/logout', { method: 'POST' }).then(function () { window.location.href = '/'; });
       });
       out.push(logout);
@@ -92,11 +94,45 @@ function toggleMenu() {
     return out;
   }
 
+  // ── Auth cache: avoids nav flicker on page navigation ──
+  var CACHE_KEY = 'sb_auth_cache_v1';
+  var CACHE_TTL = 10 * 60 * 1000; // 10 minutes
+  function readCache() {
+    try {
+      var raw = localStorage.getItem(CACHE_KEY);
+      if (!raw) return undefined;
+      var obj = JSON.parse(raw);
+      if (!obj || typeof obj.ts !== 'number') return undefined;
+      if (Date.now() - obj.ts > CACHE_TTL) return undefined;
+      return obj.user || null;
+    } catch (e) { return undefined; }
+  }
+  function writeCache(user) {
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify({ user: user || null, ts: Date.now() })); } catch (e) {}
+  }
+  function clearCache() {
+    try { localStorage.removeItem(CACHE_KEY); } catch (e) {}
+  }
+  function sameUser(a, b) {
+    if (!a && !b) return true;
+    if (!a || !b) return false;
+    return a.id === b.id && a.username === b.username && a.isAdmin === b.isAdmin;
+  }
+
   function init() {
+    var cached = readCache();
+    if (cached !== undefined) injectAuthNav(cached);
+
     fetch('/api/auth/me', { credentials: 'same-origin' })
       .then(function (r) { return r.ok ? r.json() : { user: null }; })
-      .then(function (d) { injectAuthNav(d && d.user ? d.user : null); })
-      .catch(function () { injectAuthNav(null); });
+      .then(function (d) {
+        var fresh = d && d.user ? d.user : null;
+        writeCache(fresh);
+        if (cached === undefined || !sameUser(cached, fresh)) injectAuthNav(fresh);
+      })
+      .catch(function () {
+        if (cached === undefined) injectAuthNav(null);
+      });
   }
 
   if (document.readyState === 'loading') {

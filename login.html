@@ -157,7 +157,7 @@ input:focus{border-color:rgba(139,92,246,.55);background:rgba(139,92,246,.07);bo
       .then(function(r){return r.json().then(function(j){return {s:r.status,b:j};});})
       .then(function(res){
         btn.disabled=false;
-        if(res.s===200){showOk('Signed in. Redirecting…');setTimeout(function(){window.location.href=getReturnUrl();},400);}
+        if(res.s===200){try{localStorage.removeItem('sb_auth_cache_v1');}catch(e){}showOk('Signed in. Redirecting…');setTimeout(function(){window.location.href=getReturnUrl();},400);}
         else showErr(res.b.error||'Sign in failed.');
       })
       .catch(function(){btn.disabled=false;showErr('Network error.');});
@@ -176,7 +176,7 @@ input:focus{border-color:rgba(139,92,246,.55);background:rgba(139,92,246,.07);bo
       .then(function(r){return r.json().then(function(j){return {s:r.status,b:j};});})
       .then(function(res){
         btn.disabled=false;
-        if(res.s===200){showOk('Account created! Redirecting…');setTimeout(function(){window.location.href=getReturnUrl();},500);}
+        if(res.s===200){try{localStorage.removeItem('sb_auth_cache_v1');}catch(e){}showOk('Account created! Redirecting…');setTimeout(function(){window.location.href=getReturnUrl();},500);}
         else showErr(res.b.error||'Signup failed.');
       })
       .catch(function(){btn.disabled=false;showErr('Network error.');});
