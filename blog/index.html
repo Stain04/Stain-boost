@@ -70,6 +70,15 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .reveal.visible{opacity:1;transform:translateY(0);}
 .reveal-delay-1{transition-delay:.1s;}
 .reveal-delay-2{transition-delay:.2s;}
+
+/* PAGINATION */
+.blog-pagination{display:flex;justify-content:center;align-items:center;gap:.5rem;margin-top:3rem;flex-wrap:wrap;}
+.blog-page-btn{font-family:'Rajdhani',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.05em;padding:.6rem 1rem;min-width:42px;background:var(--bg-card);border:1px solid rgba(124,58,237,.2);border-radius:10px;color:rgba(255,255,255,.65);cursor:pointer;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:.3rem;}
+.blog-page-btn:hover:not(:disabled){border-color:rgba(124,58,237,.55);color:#fff;transform:translateY(-2px);}
+.blog-page-btn.active{background:linear-gradient(135deg,var(--purple),#a855f7);border-color:transparent;color:#fff;box-shadow:0 4px 14px rgba(124,58,237,.4);}
+.blog-page-btn:disabled{opacity:.35;cursor:not-allowed;}
+.blog-page-info{font-family:'Rajdhani',sans-serif;font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.35);text-align:center;margin-top:1rem;}
+.article-card.is-hidden{display:none;}
 </style>
   <script defer src="/_vercel/speed-insights/script.js"></script>
   <script defer src="/_vercel/insights/script.js"></script>
@@ -115,6 +124,168 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
     </div>
 
     <div class="blog-grid">
+
+      <!-- Article 22 -->
+      <div class="article-card reveal">
+        <a href="/blog/best-junglers-tier-list">
+          <div class="article-card-thumb">🌲</div>
+        </a>
+        <div class="article-card-body">
+          <div class="article-card-cat">Champion Guides</div>
+          <a href="/blog/best-junglers-tier-list" style="text-decoration:none;">
+            <div class="article-card-title">Best Junglers in League of Legends 2026 (Tier List for Climbing)</div>
+          </a>
+          <div class="article-card-excerpt">S, A, and B tier jungler picks ranked by climbing power, ease of use, and meta strength on the Middle East server.</div>
+          <div class="article-card-meta">
+            <div class="article-card-read">7 min read</div>
+            <a href="/blog/best-junglers-tier-list" class="article-card-link">Read More <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Article 21 -->
+      <div class="article-card reveal reveal-delay-1">
+        <a href="/blog/how-lp-works">
+          <div class="article-card-thumb">📊</div>
+        </a>
+        <div class="article-card-body">
+          <div class="article-card-cat">ELO Boosting Explained</div>
+          <a href="/blog/how-lp-works" style="text-decoration:none;">
+            <div class="article-card-title">How LP Works in League of Legends (Promotions, Demotions &amp; Decay)</div>
+          </a>
+          <div class="article-card-excerpt">LP explained — how it's calculated, promotion series, demotion shields, decay rules, and exactly what controls your LP gains.</div>
+          <div class="article-card-meta">
+            <div class="article-card-read">7 min read</div>
+            <a href="/blog/how-lp-works" class="article-card-link">Read More <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Article 20 -->
+      <div class="article-card reveal reveal-delay-2">
+        <a href="/blog/how-to-escape-bronze">
+          <div class="article-card-thumb">🥉</div>
+        </a>
+        <div class="article-card-body">
+          <div class="article-card-cat">Rank Guide</div>
+          <a href="/blog/how-to-escape-bronze" style="text-decoration:none;">
+            <div class="article-card-title">How to Escape Bronze in League of Legends (2026 Guide)</div>
+          </a>
+          <div class="article-card-excerpt">Hardstuck Bronze? The exact habits keeping you down — CS, deaths, vision, champion pool — and a step-by-step plan to climb to Silver.</div>
+          <div class="article-card-meta">
+            <div class="article-card-read">7 min read</div>
+            <a href="/blog/how-to-escape-bronze" class="article-card-link">Read More <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Article 19 -->
+      <div class="article-card reveal">
+        <a href="/blog/duo-boost-vs-solo-boost">
+          <div class="article-card-thumb">🤝</div>
+        </a>
+        <div class="article-card-body">
+          <div class="article-card-cat">ELO Boosting Explained</div>
+          <a href="/blog/duo-boost-vs-solo-boost" style="text-decoration:none;">
+            <div class="article-card-title">Duo Boost vs Solo Boost: Which is Faster &amp; Cheaper?</div>
+          </a>
+          <div class="article-card-excerpt">Speed, cost, safety, and learning value — honest comparison of duo and solo boosting on the Middle East server.</div>
+          <div class="article-card-meta">
+            <div class="article-card-read">7 min read</div>
+            <a href="/blog/duo-boost-vs-solo-boost" class="article-card-link">Read More <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Article 18 -->
+      <div class="article-card reveal reveal-delay-1">
+        <a href="/blog/smurfing-detection-risks">
+          <div class="article-card-thumb">🎭</div>
+        </a>
+        <div class="article-card-body">
+          <div class="article-card-cat">Safety &amp; Security</div>
+          <a href="/blog/smurfing-detection-risks" style="text-decoration:none;">
+            <div class="article-card-title">Smurfing in League of Legends: Detection, Risks &amp; Bans</div>
+          </a>
+          <div class="article-card-excerpt">How Riot detects smurfs in 2026, the actual ban risk, and why smurfing damages your main account's MMR.</div>
+          <div class="article-card-meta">
+            <div class="article-card-read">7 min read</div>
+            <a href="/blog/smurfing-detection-risks" class="article-card-link">Read More <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Article 17 -->
+      <div class="article-card reveal reveal-delay-2">
+        <a href="/blog/what-is-a-win-boost">
+          <div class="article-card-thumb">🏆</div>
+        </a>
+        <div class="article-card-body">
+          <div class="article-card-cat">ELO Boosting Explained</div>
+          <a href="/blog/what-is-a-win-boost" style="text-decoration:none;">
+            <div class="article-card-title">What is a Win Boost? (Win Boost vs Division Boost Explained)</div>
+          </a>
+          <div class="article-card-excerpt">Win boost vs division boost — the differences, when to choose each, MMR effects, and which one fits your goal.</div>
+          <div class="article-card-meta">
+            <div class="article-card-read">6 min read</div>
+            <a href="/blog/what-is-a-win-boost" class="article-card-link">Read More <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Article 16 -->
+      <div class="article-card reveal">
+        <a href="/blog/why-lp-gains-are-low">
+          <div class="article-card-thumb">📉</div>
+        </a>
+        <div class="article-card-body">
+          <div class="article-card-cat">Climbing Tips</div>
+          <a href="/blog/why-lp-gains-are-low" style="text-decoration:none;">
+            <div class="article-card-title">Why Your LP Gains Are Low (And How to Fix Bad MMR Fast)</div>
+          </a>
+          <div class="article-card-excerpt">Gaining only 13 LP per win? Here's exactly what causes broken MMR, how to diagnose your situation, and three proven ways to fix it fast.</div>
+          <div class="article-card-meta">
+            <div class="article-card-read">7 min read</div>
+            <a href="/blog/why-lp-gains-are-low" class="article-card-link">Read More <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Article 15 -->
+      <div class="article-card reveal reveal-delay-1">
+        <a href="/blog/coaching-vs-elo-boosting">
+          <div class="article-card-thumb">⚖️</div>
+        </a>
+        <div class="article-card-body">
+          <div class="article-card-cat">ELO Boosting Explained</div>
+          <a href="/blog/coaching-vs-elo-boosting" style="text-decoration:none;">
+            <div class="article-card-title">League of Legends Coaching vs ELO Boosting: Which is Better?</div>
+          </a>
+          <div class="article-card-excerpt">Coaching teaches you to climb. Boosting climbs for you. An honest comparison of cost, time, results, and which one fits your goals.</div>
+          <div class="article-card-meta">
+            <div class="article-card-read">8 min read</div>
+            <a href="/blog/coaching-vs-elo-boosting" class="article-card-link">Read More <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Article 14 -->
+      <div class="article-card reveal reveal-delay-2">
+        <a href="/blog/how-to-reach-master">
+          <div class="article-card-thumb">👑</div>
+        </a>
+        <div class="article-card-body">
+          <div class="article-card-cat">Rank Guide</div>
+          <a href="/blog/how-to-reach-master" style="text-decoration:none;">
+            <div class="article-card-title">How to Reach Master in League of Legends (2026 Guide)</div>
+          </a>
+          <div class="article-card-excerpt">Master is top 0.5% of all players. The exact macro, mental, and champion-pool requirements to break through the Diamond-to-Master wall.</div>
+          <div class="article-card-meta">
+            <div class="article-card-read">9 min read</div>
+            <a href="/blog/how-to-reach-master" class="article-card-link">Read More <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
+          </div>
+        </div>
+      </div>
 
       <!-- Article 11 -->
       <div class="article-card reveal">
@@ -351,6 +522,9 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
       </div>
 
     </div>
+
+    <nav class="blog-pagination" id="blogPagination" aria-label="Blog pagination"></nav>
+    <div class="blog-page-info" id="blogPageInfo"></div>
   </div>
 </section>
 
@@ -370,9 +544,67 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 </footer>
 
 <script>
-var reveals=document.querySelectorAll('.reveal');
-var ro=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');ro.unobserve(e.target);}});},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
-reveals.forEach(function(el){ro.observe(el);});
+(function(){
+  var PER_PAGE=7;
+  var cards=Array.prototype.slice.call(document.querySelectorAll('.blog-grid .article-card'));
+  var pagEl=document.getElementById('blogPagination');
+  var infoEl=document.getElementById('blogPageInfo');
+  var totalPages=Math.max(1,Math.ceil(cards.length/PER_PAGE));
+
+  function getPage(){
+    var m=window.location.search.match(/[?&]page=(\d+)/);
+    var p=m?parseInt(m[1],10):1;
+    if(!p||p<1)p=1;
+    if(p>totalPages)p=totalPages;
+    return p;
+  }
+
+  function render(page,push){
+    var start=(page-1)*PER_PAGE;
+    var end=start+PER_PAGE;
+    cards.forEach(function(c,i){
+      if(i>=start&&i<end){c.classList.remove('is-hidden');}
+      else{c.classList.add('is-hidden');}
+    });
+    pagEl.innerHTML='';
+    function btn(label,target,opts){
+      opts=opts||{};
+      var a=document.createElement(opts.disabled?'span':'a');
+      a.className='blog-page-btn'+(opts.active?' active':'');
+      a.textContent=label;
+      if(opts.disabled){a.setAttribute('aria-disabled','true');a.style.opacity='.35';a.style.cursor='not-allowed';}
+      else{
+        a.href=target===1?'/blog/':'/blog/?page='+target;
+        a.addEventListener('click',function(ev){ev.preventDefault();go(target,true);});
+      }
+      return a;
+    }
+    pagEl.appendChild(btn('‹ Prev',page-1,{disabled:page===1}));
+    for(var i=1;i<=totalPages;i++){pagEl.appendChild(btn(String(i),i,{active:i===page}));}
+    pagEl.appendChild(btn('Next ›',page+1,{disabled:page===totalPages}));
+    infoEl.textContent='Page '+page+' of '+totalPages+' • '+cards.length+' articles';
+    if(push){
+      var url=page===1?'/blog/':'/blog/?page='+page;
+      history.pushState({page:page},'',url);
+      window.scrollTo({top:document.querySelector('.blog-section').offsetTop-80,behavior:'smooth'});
+    }
+  }
+
+  function go(page,push){
+    if(page<1)page=1;
+    if(page>totalPages)page=totalPages;
+    render(page,push);
+    var reveals=document.querySelectorAll('.article-card.reveal:not(.is-hidden)');
+    reveals.forEach(function(el){el.classList.add('visible');});
+  }
+
+  window.addEventListener('popstate',function(){render(getPage(),false);});
+
+  render(getPage(),false);
+
+  var ro=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');ro.unobserve(e.target);}});},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.reveal').forEach(function(el){ro.observe(el);});
+})();
 </script>
 <script src="../main.js"></script>
 </body>
