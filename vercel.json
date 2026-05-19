@@ -1,0 +1,46 @@
+{
+  "cleanUrls": true,
+  "redirects": [
+    { "source": "/index.html",             "destination": "/",                      "permanent": true },
+    { "source": "/:path*",                 "has": [{ "type": "host", "value": "www.stainboost.com" }], "destination": "https://stainboost.com/:path*", "permanent": true }
+  ],
+  "rewrites": [
+    { "source": "/how-to-climb-faster",       "destination": "/blog/how-to-climb-faster" },
+    { "source": "/elo-boosting-safe",          "destination": "/blog/elo-boosting-safe" },
+    { "source": "/best-champions-solo-queue",  "destination": "/blog/best-champions-solo-queue" },
+    { "source": "/what-is-elo-boosting",       "destination": "/blog/what-is-elo-boosting" },
+    { "source": "/how-to-escape-silver",       "destination": "/blog/how-to-escape-silver" },
+    { "source": "/master-yi-build-guide",      "destination": "/blog/master-yi-build-guide" },
+    { "source": "/how-to-reach-diamond",        "destination": "/blog/how-to-reach-diamond" },
+    { "source": "/is-elo-boosting-worth-it",    "destination": "/blog/is-elo-boosting-worth-it" },
+    { "source": "/why-am-i-hardstuck",           "destination": "/blog/why-am-i-hardstuck" },
+    { "source": "/how-to-escape-gold",              "destination": "/blog/how-to-escape-gold" },
+    { "source": "/what-is-mmr-league-of-legends",  "destination": "/blog/what-is-mmr-league-of-legends" },
+    { "source": "/how-to-reach-emerald",            "destination": "/blog/how-to-reach-emerald" },
+    { "source": "/best-times-to-play-ranked",       "destination": "/blog/best-times-to-play-ranked" },
+    { "source": "/track/:token",                    "destination": "/track" },
+    { "source": "/review/:token",                   "destination": "/review" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options",    "value": "nosniff" },
+        { "key": "X-Frame-Options",            "value": "DENY" },
+        { "key": "X-XSS-Protection",           "value": "1; mode=block" },
+        { "key": "Referrer-Policy",            "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy",         "value": "camera=(), microphone=(), geolocation=(), payment=()" },
+        { "key": "Strict-Transport-Security",  "value": "max-age=63072000; includeSubDomains; preload" },
+        { "key": "Content-Security-Policy",    "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://vitals.vercel-insights.com https://va.vercel-scripts.com; frame-ancestors 'none';" }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Robots-Tag",           "value": "noindex" },
+        { "key": "Cache-Control",          "value": "no-store" }
+      ]
+    }
+  ]
+}
