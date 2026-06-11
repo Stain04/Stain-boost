@@ -66,3 +66,42 @@ footer{border-top:1px solid rgba(255,255,255,0.06);padding:2.5rem 2rem;text-alig
 .form-msg{margin-top:0.75rem;padding:0.8rem 1rem;border-radius:10px;font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:600;display:none;line-height:1.5;}
 .form-msg.success{background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.25);color:#34d399;}
 .form-msg.error{background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.25);color:#f87171;}
+
+/* ── VISUAL POLISH (site-wide) ── */
+
+/* custom scrollbar */
+html{scrollbar-width:thin;scrollbar-color:#6d28d9 #0b0916;}
+::-webkit-scrollbar{width:10px;height:10px;}
+::-webkit-scrollbar-track{background:#0b0916;}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#7c3aed,#4c1d95);border-radius:99px;border:2px solid #0b0916;}
+::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#8b5cf6,#6d28d9);}
+
+/* text selection */
+::selection{background:rgba(124,58,237,0.5);color:#fff;}
+
+/* keyboard focus */
+:focus-visible{outline:2px solid rgba(34,211,238,0.75);outline-offset:2px;border-radius:4px;}
+
+/* nav logo glow on hover */
+.nav-logo{transition:filter .3s ease;}
+.nav-logo:hover{filter:drop-shadow(0 0 10px rgba(139,92,246,0.65));}
+
+/* animated gradient underline on nav links */
+.nav-links a{position:relative;}
+.nav-links a::after{content:'';position:absolute;left:0.9rem;right:0.9rem;bottom:1px;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--purple),var(--cyan));opacity:0;transform:scaleX(0.35);transform-origin:center;transition:opacity .25s ease,transform .3s cubic-bezier(.34,1.4,.64,1);}
+.nav-links a:hover::after,.nav-links a.active::after{opacity:1;transform:scaleX(1);}
+.nav-discord::after{display:none;}
+
+/* shine sweep across primary buttons */
+.btn-primary{position:relative;overflow:hidden;}
+.btn-primary::after{content:'';position:absolute;top:0;left:-90%;width:55%;height:100%;background:linear-gradient(105deg,transparent,rgba(255,255,255,0.28),transparent);transform:skewX(-20deg);transition:left .55s ease;pointer-events:none;}
+.btn-primary:hover::after{left:140%;}
+
+/* footer gradient seam */
+footer::before{content:'';position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:min(520px,80%);height:1px;background:linear-gradient(90deg,transparent,rgba(139,92,246,0.55),rgba(34,211,238,0.45),transparent);}
+
+/* honor reduced-motion everywhere */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important;}
+  html{scroll-behavior:auto;}
+}

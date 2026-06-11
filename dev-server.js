@@ -101,8 +101,15 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(200, { 'Content-Type': mime[path.extname(target)] || 'application/octet-stream' });
     res.end(data);
   } catch {
-    res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
-    res.end('Not found');
+    // mirror Vercel: serve the branded 404 page with a 404 status
+    try {
+      const nf = await readFile(path.resolve(root, '404.html'));
+      res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
+      res.end(nf);
+    } catch {
+      res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
+      res.end('Not found');
+    }
   }
 });
 

@@ -49,7 +49,9 @@
 
 // Mobile menu toggle
 function toggleMenu() {
-  document.getElementById('mobileMenu').classList.toggle('open');
+  var open = document.getElementById('mobileMenu').classList.toggle('open');
+  var btn = document.getElementById('hamburger');
+  if (btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
 }
 
 // ── AUTH-AWARE NAV (injects login state into all navs) ──
@@ -205,6 +207,11 @@ document.addEventListener('DOMContentLoaded', function () {
 (function () {
   const canvas = document.getElementById('particles-canvas');
   if (!canvas) return;
+  // respect user motion preferences — skip the animation entirely
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    canvas.remove();
+    return;
+  }
   const ctx = canvas.getContext('2d');
   let W, H, particles = [];
 
@@ -222,7 +229,9 @@ document.addEventListener('DOMContentLoaded', function () {
     'rgba(251,191,36,'
   ];
 
-  for (let i = 0; i < 20; i++) {
+  // fewer particles on small screens to keep mobile smooth
+  const COUNT = window.innerWidth < 768 ? 10 : 20;
+  for (let i = 0; i < COUNT; i++) {
     particles.push({
       x: Math.random() * window.innerWidth,
       y: Math.random() * window.innerHeight,
@@ -236,6 +245,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  let rafId = null;
   function draw() {
     ctx.clearRect(0, 0, W, H);
     particles.forEach(function (p) {
@@ -252,7 +262,23 @@ document.addEventListener('DOMContentLoaded', function () {
       if (p.y < -5) p.y = H + 5;
       if (p.y > H + 5) p.y = -5;
     });
-    requestAnimationFrame(draw);
+    rafId = requestAnimationFrame(draw);
   }
+
+  // pause when the tab is hidden — saves battery, avoids wasted frames
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+      if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
+    } else if (rafId === null) {
+      draw();
+    }
+  });
   draw();
 })();
+
+// ── Service worker (offline support + asset caching) ──
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/sw.js').catch(function () { /* non-fatal */ });
+  });
+}
