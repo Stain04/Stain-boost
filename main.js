@@ -282,3 +282,103 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
     navigator.serviceWorker.register('/sw.js').catch(function () { /* non-fatal */ });
   });
 }
+
+// ── SCROLL REVEAL (IntersectionObserver) ──
+(function () {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var revealed = new Set();
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting && !revealed.has(entry.target)) {
+        revealed.add(entry.target);
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  function observe() {
+    document.querySelectorAll('.reveal').forEach(function (el) {
+      if (!revealed.has(el)) observer.observe(el);
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', observe);
+  } else {
+    observe();
+  }
+})();
+
+// ── ANIMATED STAT COUNTERS ──
+(function () {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var counted = new Set();
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (!entry.isIntersecting || counted.has(entry.target)) return;
+      counted.add(entry.target);
+      var el = entry.target;
+      var target = parseInt(el.getAttribute('data-count'), 10);
+      if (isNaN(target)) return;
+      var suffix = el.getAttribute('data-suffix') || '+';
+      var duration = 1800;
+      var start = performance.now();
+      function tick(now) {
+        var progress = Math.min((now - start) / duration, 1);
+        // ease-out cubic
+        var ease = 1 - Math.pow(1 - progress, 3);
+        var current = Math.floor(ease * target);
+        el.textContent = current.toLocaleString() + (progress >= 1 ? suffix : '');
+        if (progress < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    });
+  }, { threshold: 0.5 });
+
+  function init() {
+    document.querySelectorAll('[data-count]').forEach(function (el) {
+      observer.observe(el);
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+
+// ── CURSOR GLOW on cards ──
+(function () {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.addEventListener('mousemove', function (e) {
+    var cards = document.querySelectorAll('.step, .feat, .review-card, .guarantee-card, .stat-card, .blog-card');
+    cards.forEach(function (card) {
+      var rect = card.getBoundingClientRect();
+      var x = e.clientX - rect.left;
+      var y = e.clientY - rect.top;
+      card.style.setProperty('--mx', x + 'px');
+      card.style.setProperty('--my', y + 'px');
+      card.style.setProperty('--glow-x', x + 'px');
+      card.style.setProperty('--glow-y', y + 'px');
+    });
+  });
+})();
+
+// ── STICKY ORDER BUTTON (show after scrolling past hero) ──
+(function () {
+  var sticky = document.getElementById('stickyOrder');
+  if (!sticky) return;
+  var shown = false;
+  function check() {
+    var scrolled = window.scrollY > window.innerHeight * 0.7;
+    if (scrolled && !shown) {
+      sticky.style.display = 'inline-flex';
+      sticky.style.animation = 'fadeUp .4s ease both';
+      shown = true;
+    } else if (!scrolled && shown) {
+      sticky.style.display = 'none';
+      shown = false;
+    }
+  }
+  window.addEventListener('scroll', check, { passive: true });
+  check();
+})();
