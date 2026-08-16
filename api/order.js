@@ -2,32 +2,19 @@ import { createClient } from '@vercel/kv';
 import { randomBytes } from 'crypto';
 import { getUser } from '../lib/auth.js';
 
-// ── Feed helpers ──
-const FEED_BG = [
-  'linear-gradient(135deg,#7c3aed,#06d6f2)',
-  'linear-gradient(135deg,#34d399,#06d6f2)',
-  'linear-gradient(135deg,#f97316,#f5a623)',
-  'linear-gradient(135deg,#ec4899,#8b5cf6)',
-  'linear-gradient(135deg,#0ea5e9,#22d3ee)',
-  'linear-gradient(135deg,#a3e635,#22d3ee)',
-];
-function strHash(s) {
-  let h = 0;
-  for (let i = 0; i < s.length; i++) h = Math.imul(31, h) + s.charCodeAt(i) | 0;
-  return Math.abs(h);
-}
+
 
 // ── WIN BOOST — server-side price table (client-submitted `total` is ignored) ──
 const WIN_PRICES = {
-  'Iron':          { solo: 1.50, duo: 2.50  },
-  'Bronze':        { solo: 2.00, duo: 3.00  },
-  'Silver':        { solo: 2.50, duo: 3.50  },
-  'Gold':          { solo: 3.50, duo: 5.00  },
-  'Platinum':      { solo: 5.00, duo: 6.50  },
-  'Emerald':       { solo: 5.50, duo: 8.00  },
-  'Diamond IV-III':{ solo: 8.00, duo: 12.00 },
-  'Diamond II-I':  { solo:10.00, duo: 16.00 },
-  'Masters':       { solo:15.00, duo: 20.00 },
+  'Iron':          { solo: 1.50,  duo: 2.50  },
+  'Bronze':        { solo: 2.00,  duo: 3.00  },
+  'Silver':        { solo: 2.50,  duo: 3.50  },
+  'Gold':          { solo: 3.50,  duo: 5.00  },
+  'Platinum':      { solo: 5.00,  duo: 6.50  },
+  'Emerald':       { solo: 5.50,  duo: 8.00  },
+  'Diamond IV-III':{ solo: 8.00,  duo: 12.00 },
+  'Diamond II-I':  { solo: 10.00, duo: 16.00 },
+  'Masters':       { solo: 15.00, duo: 20.00 },
 };
 
 // ── VALID LP GAIN MULTIPLIERS (must match frontend options) ──
@@ -41,14 +28,14 @@ const COUPONS = {
 // ── RANK BOOST — per-division price table ──
 const RB_TIERS = ['Iron','Bronze','Silver','Gold','Platinum','Emerald','Diamond','Masters'];
 const RB_DIV_PRICE = {
-  Iron:     { solo: 7.00,  duo: 11.50 },
-  Bronze:   { solo: 9.00,  duo: 14.00 },
-  Silver:   { solo: 12.00, duo: 17.00 },
-  Gold:     { solo: 16.50, duo: 23.50 },
-  Platinum: { solo: 23.50, duo: 31.00 },
-  Emerald:  { solo: 26.50, duo: 38.00 },
-  DiamondL: { solo: 37.00, duo: 57.00 }, // Diamond IV-III
-  DiamondH: { solo: 47.00, duo: 72.00 }, // Diamond II-I
+  Iron:     { solo: 1.50,  duo: 2.50  },
+  Bronze:   { solo: 2.00,  duo: 3.00  },
+  Silver:   { solo: 2.50,  duo: 3.50  },
+  Gold:     { solo: 3.50,  duo: 5.00  },
+  Platinum: { solo: 5.00,  duo: 6.50  },
+  Emerald:  { solo: 5.50,  duo: 8.00  },
+  DiamondL: { solo: 8.00,  duo: 12.00 }, // Diamond IV-III
+  DiamondH: { solo: 10.00, duo: 16.00 }, // Diamond II-I
 };
 
 function rbDivPrice(tierIdx, divIdx, type) {
@@ -129,7 +116,7 @@ export default async function handler(req, res) {
   const rawCoupon = sanitize(req.body.couponCode || '', 30).toUpperCase();
   const couponDiscount = COUPONS[rawCoupon] || 0;
 
-  let computedTotal, orderSummary, toastAction, orderMeta;
+  let computedTotal, orderSummary, orderMeta;
   const RB_DIVS = ['IV', 'III', 'II', 'I'];
 
   if (orderType === 'rank_boost') {
@@ -157,7 +144,6 @@ export default async function handler(req, res) {
     const lpGainLabel = cleanLPGain === 2.0 ? ' · Very Low LP gain' : cleanLPGain === 1.4 ? ' · Low LP gain' : '';
     const couponLabel = couponDiscount > 0 ? ` · ${Math.round(couponDiscount*100)}% coupon` : '';
     orderSummary = `Rank Boost: ${fromName} → ${toName} · ${cleanType}${lpGainLabel}${couponLabel}`;
-    toastAction  = `just went from <strong>${fromName} → ${toName}</strong>`;
     orderMeta    = { kind: 'rank_boost', from: fromName, to: toName, lpGain: cleanLPGain };
 
   } else {
@@ -180,7 +166,6 @@ export default async function handler(req, res) {
     computedTotal = (baseWinTotal * (1 - couponDiscount)).toFixed(2);
     const couponLabel = couponDiscount > 0 ? ` · ${Math.round(couponDiscount*100)}% coupon` : '';
     orderSummary = `Win Boost: ${cleanRank} · ${cleanWins} wins (+${freeWins} free) · ${cleanType}${couponLabel}`;
-    toastAction  = `just ordered <strong>${cleanWins} win boost</strong>`;
     orderMeta    = { kind: 'win_boost', rank: cleanRank, wins: cleanWins, freeWins, winsDone: 0 };
   }
 
@@ -241,28 +226,7 @@ export default async function handler(req, res) {
         }
       } catch (e) { console.error('attach order to user failed', e); }
 
-      // ── Push anonymised entry to activity feed ──
-      const maskedName = cleanIgn.slice(0, 2) + '***' + cleanIgn.slice(-1);
-      const feedEntry = JSON.stringify({
-        initials: cleanIgn.slice(0, 2).toUpperCase(),
-        bg:       FEED_BG[strHash(cleanIgn) % FEED_BG.length],
-        name:     maskedName,
-        action:   toastAction,
-        ts:       Date.now(),
-      });
-      await kv.lpush('order_feed', feedEntry);
-      await kv.ltrim('order_feed', 0, 19); // keep last 20
 
-      // ── Decrement weekly slots counter ──
-      const currentWeek = Math.floor(Date.now() / (7 * 24 * 60 * 60 * 1000));
-      const storedWeek  = await kv.get('slots_week');
-      if (storedWeek !== currentWeek) {
-        await kv.set('slots_week',  currentWeek);
-        await kv.set('slots_count', Math.max(0, 5 - 1));
-      } else {
-        const current = await kv.get('slots_count') ?? 5;
-        await kv.set('slots_count', Math.max(0, current - 1));
-      }
     } catch (e) {
       console.error('KV Database error:', e);
     }
