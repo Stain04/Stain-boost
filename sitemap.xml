@@ -174,4 +174,17 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://stainboost.com/privacy</loc>
+    <lastmod>2026-08-16</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://stainboost.com/terms</loc>
+    <lastmod>2026-08-16</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
 </urlset>
+
