@@ -1,0 +1,20 @@
+Remaining Tasks for StainBoost Improvements:
+
+1. Update Footer Links
+You need to add the "Privacy" and "Terms" links to the footer of the remaining HTML pages so they match `index.html` and `faq.html`. 
+
+Change the footer links section from:
+<div class="footer-links"><a href="/">Home</a><a href="/pricing">Pricing</a><a href="/reviews">Reviews</a><a href="/faq">FAQ</a><a href="/blog">Blog</a><a href="https://discord.gg/hyhhtbWx" target="_blank">Discord</a></div>
+
+To:
+<div class="footer-links"><a href="/">Home</a><a href="/pricing">Pricing</a><a href="/reviews">Reviews</a><a href="/faq">FAQ</a><a href="/blog">Blog</a><a href="https://discord.gg/hyhhtbWx" target="_blank">Discord</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a></div>
+
+Files that still need this footer update:
+- pricing.html
+- reviews.html
+- track.html
+- All HTML files inside the `blog/` folder (e.g., blog/index.html, blog/how-to-climb-faster.html, etc.)
+
+2. Update Sitemap
+- Open `sitemap.xml`
+- Add two new <url> entries for `https://stainboost.com/privacy` and `https://stainboost.com/terms` to ensure search engines index the new legal pages.
