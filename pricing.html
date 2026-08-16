@@ -113,12 +113,36 @@
 .online-dot-live{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e;animation:pdot 2s ease-in-out infinite;}
 .online-label{font-family:'Rajdhani',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#4ade80;}
 
-/* Type toggle */
-.type-toggle{display:grid;grid-template-columns:1fr 1fr;gap:0;background:rgba(0,0,0,0.35);border-radius:14px;padding:4px;margin-bottom:1.75rem;border:1px solid rgba(255,255,255,0.06);}
-.type-btn{padding:0.75rem;border:none;border-radius:10px;cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;background:transparent;color:rgba(255,255,255,0.28);transition:all 0.25s;display:flex;align-items:center;justify-content:center;gap:0.45rem;}
-.type-btn.active{background:rgba(139,92,246,0.2);color:var(--purple-light);box-shadow:0 0 20px rgba(139,92,246,0.18);}
-.type-btn.active.duo{background:rgba(34,211,238,0.14);color:var(--cyan);box-shadow:0 0 20px rgba(34,211,238,0.15);}
+/* SELECTION CARDS (Modern Radio Replacements) */
+.selection-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;}
+.sel-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:1.25rem;cursor:pointer;transition:all 0.25s;display:flex;align-items:flex-start;gap:1rem;position:relative;overflow:hidden;}
+.sel-card:hover{background:rgba(255,255,255,0.04);border-color:rgba(139,92,246,0.3);transform:translateY(-2px);}
+.sel-card.active{background:rgba(139,92,246,0.08);border-color:var(--purple);box-shadow:0 0 20px rgba(139,92,246,0.15);}
+.sel-card.active.gold-mode{background:rgba(251,191,36,0.08);border-color:var(--gold);box-shadow:0 0 20px rgba(251,191,36,0.15);}
+.sel-card.active.cyan-mode{background:rgba(34,211,238,0.08);border-color:var(--cyan);box-shadow:0 0 20px rgba(34,211,238,0.15);}
+
+.sel-icon{width:44px;height:44px;border-radius:12px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0;color:var(--muted);transition:all 0.25s;}
+.sel-card.active .sel-icon{border-color:var(--purple);background:rgba(139,92,246,0.15);color:var(--purple-light);}
+.sel-card.active.gold-mode .sel-icon{border-color:var(--gold);background:rgba(251,191,36,0.15);color:var(--gold);}
+.sel-card.active.cyan-mode .sel-icon{border-color:var(--cyan);background:rgba(34,211,238,0.15);color:var(--cyan);}
+
+.sel-info{flex:1;padding-right:1rem;}
+.sel-title{font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:0.25rem;display:flex;align-items:center;gap:0.5rem;}
+.sel-desc{font-size:0.75rem;color:var(--muted);line-height:1.45;}
+
+.sel-radio{width:20px;height:20px;border-radius:50%;border:2px solid rgba(255,255,255,0.15);position:absolute;top:1.35rem;right:1.25rem;display:flex;align-items:center;justify-content:center;transition:all 0.25s;}
+.sel-card.active .sel-radio{border-color:var(--purple);}
+.sel-card.active.gold-mode .sel-radio{border-color:var(--gold);}
+.sel-card.active.cyan-mode .sel-radio{border-color:var(--cyan);}
+.sel-card.active .sel-radio::after{content:'';width:10px;height:10px;border-radius:50%;background:var(--purple);}
+.sel-card.active.gold-mode .sel-radio::after{background:var(--gold);}
+.sel-card.active.cyan-mode .sel-radio::after{background:var(--cyan);}
+
 .type-badge{font-size:0.56rem;padding:0.1rem 0.38rem;border-radius:4px;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:0.05em;background:rgba(251,191,36,0.14);color:var(--gold);border:1px solid rgba(251,191,36,0.28);}
+
+@media(max-width: 600px) {
+  .selection-grid{grid-template-columns:1fr;}
+}
 
 /* SMOOTH SLIDER */
 .wins-section{margin-bottom:1.75rem;}
@@ -323,17 +347,13 @@ input[type=range]#winsSlider::-moz-range-track{background:rgba(255,255,255,0.08)
 @media(max-width:600px){.form-row{grid-template-columns:1fr;}.hero{padding:2.5rem 1rem 1.5rem;}.configurator{padding:1.5rem;}.payment-section{padding:0 1.5rem 1.5rem;}.stat-item{padding:0.5rem 1rem;}}
 
 /* Step labels */
-.cfg-step-label{font-family:'Rajdhani',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:rgba(139,92,246,0.55);margin-bottom:0.65rem;margin-top:0.1rem;}
-.cfg-divider{border:none;border-top:1px solid rgba(255,255,255,0.07);margin:1.5rem 0;}
+.step-label{display:flex;align-items:center;gap:0.75rem;font-family:'Orbitron',sans-serif;font-size:1.15rem;font-weight:900;color:#fff;margin-top:2.5rem;margin-bottom:1.25rem;letter-spacing:0.06em;text-transform:uppercase;}
+.step-label span{display:flex;align-items:center;justify-content:center;width:30px;height:30px;background:linear-gradient(135deg,var(--purple),var(--cyan));border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:0.95rem;font-weight:700;color:#fff;box-shadow:0 0 14px rgba(34,211,238,0.35);flex-shrink:0;text-shadow:0 2px 4px rgba(0,0,0,0.25);}
+.step-label:first-of-type{margin-top:0;}
+.cfg-divider{border:none;border-top:1px solid rgba(255,255,255,0.07);margin:2rem 0;}
 
 /* Rank tabs compact (inside card) */
 .rank-tabs{display:flex;flex-wrap:wrap;gap:0.4rem;}
-
-/* MODE TOGGLE */
-.mode-toggle-top{display:grid;grid-template-columns:1fr 1fr;gap:0;background:rgba(0,0,0,0.45);border-radius:16px;padding:4px;margin-bottom:1.75rem;border:1px solid rgba(255,255,255,0.08);}
-.mode-btn{padding:0.78rem 0.5rem;border:none;border-radius:12px;cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;background:transparent;color:rgba(255,255,255,0.3);transition:all 0.25s;display:flex;align-items:center;justify-content:center;gap:0.5rem;}
-.mode-btn.active{background:rgba(139,92,246,0.22);color:var(--purple-light);box-shadow:0 0 20px rgba(139,92,246,0.2);}
-.mode-btn.active.gold-mode{background:rgba(251,191,36,0.13);color:var(--gold);box-shadow:0 0 20px rgba(251,191,36,0.18);}
 
 /* RANK BOOST SECTION */
 .rank-boost-section{display:none;margin-bottom:1.75rem;animation:fadeInRB .3s ease;}
@@ -428,6 +448,9 @@ input[type=range]#winsSlider::-moz-range-track{background:rgba(255,255,255,0.08)
 .region-btn{display:inline-flex;align-items:center;gap:0.38rem;padding:0.36rem 1rem;border-radius:100px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.03);font-family:'Rajdhani',sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.38);cursor:pointer;transition:all 0.2s;}
 .region-btn:hover{border-color:rgba(139,92,246,0.4);color:rgba(255,255,255,0.72);background:rgba(139,92,246,0.07);}
 .region-btn.active{border-color:rgba(139,92,246,0.55);color:var(--purple-light);background:rgba(139,92,246,0.13);box-shadow:0 0 12px rgba(139,92,246,0.15);}
+.region-btn.coming-soon{opacity:0.45;cursor:not-allowed;position:relative;}
+.region-btn.coming-soon:hover{border-color:rgba(255,255,255,0.15);color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.03);}
+.coming-soon-tag{font-size:0.5rem;letter-spacing:0.12em;padding:0.15rem 0.4rem;border-radius:4px;background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.3);color:var(--gold);white-space:nowrap;font-weight:700;}
 .same-pricing-banner{display:flex;align-items:center;justify-content:center;gap:0.5rem;background:rgba(34,211,153,0.05);border:1px solid rgba(34,211,153,0.2);border-radius:12px;padding:0.65rem 1.2rem;margin:0 0 1.5rem;font-family:'Rajdhani',sans-serif;font-size:0.82rem;font-weight:700;color:rgba(52,211,153,0.85);letter-spacing:0.04em;text-align:center;}
 </style>
   <script defer src="/_vercel/speed-insights/script.js"></script>
@@ -500,29 +523,48 @@ input[type=range]#winsSlider::-moz-range-track{background:rgba(255,255,255,0.08)
           <div class="online-status"><div class="online-dot-live"></div><div class="online-label">Online</div></div>
         </div>
 
-        <div class="mode-toggle-top">
-          <button class="mode-btn" id="btnModeWins" onclick="setMode('wins')">
-            ⚔️&nbsp;Win Boost
-          </button>
-          <button class="mode-btn active gold-mode" id="btnModeRank" onclick="setMode('rank')">
-            🏆&nbsp;Rank Boost
-          </button>
+        <div class="step-label"><span>1</span> Choose Service</div>
+        <div class="selection-grid">
+          <div class="sel-card" id="cardModeWins" onclick="setMode('wins')">
+            <div class="sel-icon">⚔️</div>
+            <div class="sel-info">
+              <div class="sel-title">Net Wins</div>
+              <div class="sel-desc">Pay per win. Perfect for fixing MMR or small pushes.</div>
+            </div>
+            <div class="sel-radio"></div>
+          </div>
+          <div class="sel-card active gold-mode" id="cardModeRank" onclick="setMode('rank')">
+            <div class="sel-icon">🏆</div>
+            <div class="sel-info">
+              <div class="sel-title">Rank Boost</div>
+              <div class="sel-desc">Guaranteed rank promotion. We play until you reach it.</div>
+            </div>
+            <div class="sel-radio"></div>
+          </div>
         </div>
 
-        <div class="cfg-step-label">① Solo or Duo?</div>
-        <div class="type-toggle">
-          <button class="type-btn active" id="btnSolo" onclick="setType('solo')">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-            Solo Boost
-          </button>
-          <button class="type-btn" id="btnDuo" onclick="setType('duo')">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><circle cx="17" cy="8" r="3"/><path d="M1 20c0-3.5 3-6 8-6s8 2.5 8 6"/><path d="M17 14c2.5.5 5 2 5 5"/></svg>
-            Duo Boost <span class="type-badge">YOU PLAY</span>
-          </button>
+        <div class="step-label"><span>2</span> Play Style</div>
+        <div class="selection-grid">
+          <div class="sel-card active" id="cardSolo" onclick="setType('solo')">
+            <div class="sel-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+            <div class="sel-info">
+              <div class="sel-title">Solo Boost</div>
+              <div class="sel-desc">Booster logs into your account and plays for you.</div>
+            </div>
+            <div class="sel-radio"></div>
+          </div>
+          <div class="sel-card" id="cardDuo" onclick="setType('duo')">
+            <div class="sel-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="8" r="3.5"/><circle cx="17" cy="8" r="3"/><path d="M1 20c0-3.5 3-6 8-6s8 2.5 8 6"/><path d="M17 14c2.5.5 5 2 5 5"/></svg></div>
+            <div class="sel-info">
+              <div class="sel-title">Duo Boost <span class="type-badge">YOU PLAY</span></div>
+              <div class="sel-desc">Play on your own account alongside the booster.</div>
+            </div>
+            <div class="sel-radio"></div>
+          </div>
         </div>
 
         <div id="winsModeContent" style="display:none;">
-          <div class="cfg-step-label">② Pick your rank</div>
+          <div class="step-label"><span>3</span> Pick Your Rank</div>
           <div class="rank-tabs" id="rankTabs"></div>
 
           <div class="wins-section" style="margin-top:1.25rem;">
@@ -561,7 +603,7 @@ input[type=range]#winsSlider::-moz-range-track{background:rgba(255,255,255,0.08)
         </div>
 
         <div id="rankModeContent">
-          <div class="cfg-step-label">② Select your ranks</div>
+          <div class="step-label"><span>3</span> Select Ranks</div>
           <div class="rb-grid">
             <div class="rb-field">
               <div class="rb-label">📍 Current Rank</div>
@@ -626,14 +668,14 @@ input[type=range]#winsSlider::-moz-range-track{background:rgba(255,255,255,0.08)
 
         <div class="cfg-divider"></div>
 
-        <div class="cfg-step-label" id="stepLabelDetails">③ Your details</div>
+        <div class="step-label" id="stepLabelDetails"><span>4</span> Your Details</div>
         <div class="form-grid">
           <div class="field">
             <label>Server Region</label>
             <div class="region-bar" style="justify-content:flex-start;margin-top:0.25rem;">
               <button class="region-btn active" data-region="me" onclick="setPricingRegion('me')">Middle East</button>
-              <button class="region-btn" data-region="euw" onclick="setPricingRegion('euw')">EUW</button>
-              <button class="region-btn" data-region="eune" onclick="setPricingRegion('eune')">EUNE</button>
+              <button class="region-btn coming-soon" data-region="euw" onclick="setPricingRegion('euw')">EUW <span class="coming-soon-tag">SOON</span></button>
+              <button class="region-btn coming-soon" data-region="eune" onclick="setPricingRegion('eune')">EUNE <span class="coming-soon-tag">SOON</span></button>
             </div>
             <div class="field-hint">Select the server your League of Legends account is on</div>
           </div>
@@ -704,7 +746,7 @@ input[type=range]#winsSlider::-moz-range-track{background:rgba(255,255,255,0.08)
 
       <div class="payment-section">
         <hr class="pay-divider">
-        <div class="pay-title">④ Submit your order</div>
+        <div class="step-label" style="margin-top:0;margin-bottom:1.5rem;"><span>5</span> Submit Order</div>
 
         <div style="background:rgba(34,211,153,0.06);border:1px solid rgba(34,211,153,0.2);border-radius:16px;padding:1.4rem 1.6rem;margin-bottom:1.2rem;">
           <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.8rem;">
@@ -1013,12 +1055,10 @@ function updateRBPath(){
 // Mode switching
 function setMode(mode){
   rbMode=mode;
-  document.getElementById('btnModeWins').classList.toggle('active',mode==='wins');
-  document.getElementById('btnModeRank').classList.toggle('active',mode==='rank');
-  document.getElementById('btnModeRank').classList.toggle('gold-mode',mode==='rank');
+  document.getElementById('cardModeWins').classList.toggle('active',mode==='wins');
+  document.getElementById('cardModeRank').classList.toggle('active',mode==='rank');
   document.getElementById('winsModeContent').style.display = mode==='rank' ? 'none' : '';
   document.getElementById('rankModeContent').style.display = mode==='wins' ? 'none' : '';
-  document.getElementById('stepLabelDetails').textContent = mode==='rank' ? '③ Your details' : '④ Your details';
   if(mode==='rank') document.getElementById('promoStrip').classList.remove('visible');
   updatePrice();
 }
@@ -1053,9 +1093,9 @@ function selectRank(i){
 }
 function setType(t){
   selType=t;
-  document.getElementById('btnSolo').classList.toggle('active',t==='solo');
-  document.getElementById('btnDuo').classList.toggle('active',t==='duo');
-  document.getElementById('btnDuo').classList.toggle('duo',t==='duo');
+  document.getElementById('cardSolo').classList.toggle('active',t==='solo');
+  document.getElementById('cardDuo').classList.toggle('active',t==='duo');
+  document.getElementById('cardDuo').classList.toggle('cyan-mode',t==='duo');
   document.querySelectorAll('.rank-tab').forEach((tab,i)=>{
     tab.querySelector('.tab-price').textContent=`$${(selType==='solo'?ranks[i].solo:ranks[i].duo).toFixed(2)}`;
   });
@@ -1319,6 +1359,15 @@ const PRICING_REGION_DATA = {
 
 function setPricingRegion(code) {
   if (!PRICING_REGION_DATA[code]) return;
+  // Block coming-soon regions
+  if (code === 'euw' || code === 'eune') {
+    const btn = document.querySelector(`.region-btn[data-region="${code}"]`);
+    if (btn) {
+      btn.style.animation = 'cshake 0.3s ease';
+      setTimeout(() => btn.style.animation = '', 350);
+    }
+    return;
+  }
   selRegion = code;
   localStorage.setItem('stainRegion', code);
   const data = PRICING_REGION_DATA[code];
