@@ -104,4 +104,66 @@ footer::before{content:'';position:absolute;top:-1px;left:50%;transform:translat
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important;}
   html{scroll-behavior:auto;}
+  .reveal{opacity:1 !important;transform:none !important;}
 }
+
+/* ── SCROLL REVEAL SYSTEM ── */
+.reveal{opacity:0;transform:translateY(36px);transition:opacity .75s cubic-bezier(.16,1,.3,1),transform .75s cubic-bezier(.16,1,.3,1);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-delay-1{transition-delay:.12s;}
+.reveal-delay-2{transition-delay:.24s;}
+.reveal-delay-3{transition-delay:.36s;}
+
+/* staggered children inside grids */
+.reveal-stagger > *:nth-child(1){transition-delay:0s;}
+.reveal-stagger > *:nth-child(2){transition-delay:.1s;}
+.reveal-stagger > *:nth-child(3){transition-delay:.2s;}
+.reveal-stagger > *:nth-child(4){transition-delay:.28s;}
+.reveal-stagger > *:nth-child(5){transition-delay:.36s;}
+.reveal-stagger > *:nth-child(6){transition-delay:.44s;}
+
+/* ── FLOATING GLOW (cursor-following light on interactive cards) ── */
+.glow-card{position:relative;overflow:hidden;}
+.glow-card::after{content:'';position:absolute;width:280px;height:280px;background:radial-gradient(circle,rgba(139,92,246,0.12) 0%,transparent 70%);border-radius:50%;pointer-events:none;opacity:0;transition:opacity .4s ease;transform:translate(-50%,-50%);left:var(--glow-x,50%);top:var(--glow-y,50%);}
+.glow-card:hover::after{opacity:1;}
+
+/* ── BREATHING BORDER GLOW on CTA ── */
+.cta-banner{animation:ctaGlow 5.5s ease-in-out infinite,ctaBorderPulse 3s ease-in-out infinite alternate;}
+@keyframes ctaBorderPulse{0%{border-color:rgba(124,58,237,.2);}100%{border-color:rgba(34,211,238,.3);}}
+
+/* ── TILT EFFECT for cards on hover ── */
+.tilt-card{transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .35s ease;}
+
+/* ── GRADIENT TEXT SHIMMER (section titles subtle animation) ── */
+.section-title{background:linear-gradient(90deg,#fff 0%,#fff 40%,rgba(196,181,253,.85) 50%,#fff 60%,#fff 100%);background-size:250% 100%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:titleGlimmer 6s ease-in-out infinite;}
+@keyframes titleGlimmer{0%,100%{background-position:100% 50%;}50%{background-position:0% 50%;}}
+
+/* ── STAT NUMBER GLOW PULSE ── */
+.stat-num{transition:text-shadow .3s ease;}
+.stat-card:hover .stat-num.purple{text-shadow:0 0 24px rgba(196,181,253,.4);}
+.stat-card:hover .stat-num.cyan{text-shadow:0 0 24px rgba(34,211,238,.4);}
+.stat-card:hover .stat-num.gold{text-shadow:0 0 24px rgba(251,191,36,.4);}
+
+/* ── HOVER LINE SWEEP on feature cards ── */
+.feat::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--purple),var(--cyan),transparent);transform:scaleX(0);transform-origin:left;transition:transform .5s cubic-bezier(.16,1,.3,1);}
+.feat:hover::after{transform:scaleX(1);}
+
+/* ── STEP CONNECTOR PULSE ── */
+.steps::before{animation:connectorPulse 3s ease-in-out infinite alternate;}
+@keyframes connectorPulse{0%{opacity:.2;}100%{opacity:.55;}}
+
+/* ── BLOG CARD CORNER ACCENT ── */
+.blog-card::after{content:'';position:absolute;bottom:0;right:0;width:60px;height:60px;background:radial-gradient(circle at 100% 100%,rgba(124,58,237,.08),transparent 70%);opacity:0;transition:opacity .4s;}
+.blog-card:hover::after{opacity:1;}
+
+/* ── GUARANTEE CARD GLOW ── */
+.guarantee-card::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:50%;height:1px;background:linear-gradient(90deg,transparent,rgba(52,211,153,.35),transparent);opacity:0;transition:opacity .3s;}
+.guarantee-card:hover::after{opacity:1;}
+
+/* ── SMOOTH ENTRANCE for nav on load ── */
+.nav{animation:navSlideDown .5s cubic-bezier(.16,1,.3,1) both;}
+@keyframes navSlideDown{from{opacity:0;transform:translateY(-100%);}to{opacity:1;transform:translateY(0);}}
+
+/* ── FOOTER LINK hover glow ── */
+.footer-links a{transition:color .2s,text-shadow .3s;}
+.footer-links a:hover{color:rgba(255,255,255,.65);text-shadow:0 0 12px rgba(139,92,246,.3);}
