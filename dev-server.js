@@ -66,8 +66,6 @@ function cleanUrlToFile(pathname) {
 async function handleApi(req, res, url) {
   if (url.pathname === '/api/prices') return sendJson(res, 200, { winPrices, rbDivPrice });
   if (url.pathname === '/api/exchange-rate') return sendJson(res, 200, { rate: 54.6, fallback: true, local: true });
-  if (url.pathname === '/api/slots') return sendJson(res, 200, { slots: 3, local: true });
-  if (url.pathname === '/api/feed') return sendJson(res, 200, []);
   if (url.pathname === '/api/auth/me') return sendJson(res, 200, { user: null });
   if (url.pathname === '/api/reviews' && req.method === 'GET') return sendJson(res, 200, []);
   if (url.pathname === '/api/validate-coupon') return sendJson(res, 200, { valid: false, local: true });
