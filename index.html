@@ -43,7 +43,7 @@
 :root{--bg:#060411;--bg-card:rgba(12,8,32,0.85);--purple:#7c3aed;--purple-light:#c4b5fd;--cyan:#06d6f2;--cyan-glow:rgba(6,214,242,0.4);--gold:#f5a623;--gold-glow:rgba(245,166,35,0.4);--text:#e8e4f0;--muted:rgba(255,255,255,0.35);--glass:rgba(255,255,255,0.03);}
 html{scroll-behavior:smooth;}
 body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");opacity:0.5;z-index:0;pointer-events:none;}
-body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(124,58,237,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,0.03) 1px,transparent 1px);background-size:48px 48px;z-index:0;pointer-events:none;}
+
 .ambient{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
 .blob{position:absolute;border-radius:50%;filter:blur(120px);will-change:transform;}
 .blob-1{width:700px;height:600px;top:-20%;left:-15%;background:rgba(124,58,237,0.18);animation:blobDrift 18s ease-in-out infinite alternate;}
@@ -54,7 +54,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 /* HERO */
 .hero{min-height:calc(100vh - 64px);display:flex;align-items:center;justify-content:center;padding:3.5rem 2rem 8rem;position:relative;overflow:hidden;}
 .hero::before{content:'';position:absolute;top:-15%;left:50%;transform:translateX(-50%);width:min(920px,100vw);height:680px;background:radial-gradient(ellipse 50% 50% at 50% 42%,rgba(124,58,237,.16),rgba(6,214,242,.05) 55%,transparent 72%);pointer-events:none;}
-.hero-grid{position:absolute;inset:0;background:linear-gradient(rgba(124,58,237,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,.06) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse 60% 50% at 50% 50%,black,transparent 70%);-webkit-mask-image:radial-gradient(ellipse 60% 50% at 50% 50%,black,transparent 70%);pointer-events:none;}
+
 .hero-content{position:relative;z-index:2;text-align:center;max-width:880px;}
 .hero-rank-badge{display:inline-flex;align-items:center;gap:.6rem;background:linear-gradient(135deg,rgba(245,166,35,.1),rgba(245,166,35,.03));border:1px solid rgba(245,166,35,.35);border-radius:100px;padding:.5rem 1.4rem .5rem 1rem;font-size:.72rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;animation:fadeDown .6s ease .1s both;position:relative;overflow:hidden;}
 .hero-rank-badge::before{content:'';display:none;}
@@ -78,14 +78,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .scroll-line::after{content:'';position:absolute;top:-100%;left:0;width:1px;height:100%;background:linear-gradient(to bottom,transparent,var(--cyan),transparent);animation:scrollDrop 2s ease-in-out infinite;}
 @keyframes scrollDrop{0%{top:-100%;}100%{top:100%;}}
 
-/* TICKER */
-.ticker{border-top:1px solid rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.04);background:rgba(6,4,17,.6);backdrop-filter:blur(10px);overflow:hidden;position:relative;z-index:2;-webkit-mask-image:linear-gradient(90deg,transparent,black 10%,black 90%,transparent);mask-image:linear-gradient(90deg,transparent,black 10%,black 90%,transparent);}
-.ticker-track{display:flex;animation:tickerScroll 40s linear infinite;width:max-content;}
-.ticker-track:hover{animation-play-state:paused;}
-.ticker-item{display:flex;align-items:center;gap:.6rem;padding:.85rem 2.5rem;white-space:nowrap;font-size:.75rem;font-weight:600;color:rgba(255,255,255,.3);letter-spacing:.06em;}
-.ticker-item .rank-up{color:var(--cyan);font-weight:700;}
-.ticker-item .sep{width:3px;height:3px;border-radius:50%;background:rgba(124,58,237,.4);flex-shrink:0;}
-@keyframes tickerScroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+
 
 /* STATS */
 .stats{padding:4rem 2rem;position:relative;z-index:2;}
@@ -177,29 +170,12 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .hero-trust-row{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;margin-bottom:2rem;animation:fadeUp .7s ease .32s both;}
 .hero-trust-item{display:flex;align-items:center;gap:.4rem;font-size:.78rem;font-weight:600;color:rgba(255,255,255,.55);}
 
-/* URGENCY PILL */
-.urgency-pill{display:inline-flex;align-items:center;gap:.55rem;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);border-radius:100px;padding:.4rem 1.1rem;font-family:'Rajdhani',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#fca5a5;margin-bottom:1.4rem;animation:fadeDown .5s ease .05s both;}
-.urgency-dot{width:6px;height:6px;border-radius:50%;background:#ef4444;box-shadow:0 0 8px #ef4444;flex-shrink:0;animation:urgPulse 1.4s ease-in-out infinite;}
-@keyframes urgPulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(1.5);}}
-
 /* STICKY CTA */
-.sticky-order{position:fixed;bottom:1.8rem;left:1.8rem;z-index:9999;display:none;background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff;text-decoration:none;padding:.82rem 1.5rem;border-radius:50px;font-family:'Rajdhani',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;box-shadow:0 0 32px rgba(124,58,237,.6),0 4px 20px rgba(0,0,0,.5);transition:transform .2s,box-shadow .2s;flex-direction:column;align-items:flex-start;gap:.15rem;}
+.sticky-order{position:fixed;bottom:1.8rem;left:1.8rem;z-index:9999;display:none;background:linear-gradient(135deg,#7c3aed,#5b21b6);color:#fff;text-decoration:none;padding:.82rem 1.5rem;border-radius:50px;font-family:'Rajdhani',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;box-shadow:0 0 32px rgba(124,58,237,.6),0 4px 20px rgba(0,0,0,.5);transition:transform .2s,box-shadow .2s;display:none;align-items:center;gap:.5rem;}
 .sticky-order:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 0 44px rgba(124,58,237,.75),0 6px 24px rgba(0,0,0,.6);}
-.so-top{display:flex;align-items:center;gap:.5rem;}
-.so-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px #4ade80;flex-shrink:0;animation:urgPulse 2s ease-in-out infinite;}
-.so-slots{font-family:'Rajdhani',sans-serif;font-size:.62rem;font-weight:600;letter-spacing:.06em;color:rgba(255,255,255,.45);text-transform:none;}
+.so-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px #4ade80;flex-shrink:0;animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.45;transform:scale(.75);}}
 @media(max-width:480px){.sticky-order{bottom:1rem;left:1rem;padding:.7rem 1.2rem;font-size:.8rem;}}
-
-/* SOCIAL PROOF TOAST */
-.sp-toast{position:fixed;bottom:1.8rem;left:1.8rem;z-index:9998;background:rgba(11,9,22,.96);border:1px solid rgba(124,58,237,.25);border-radius:16px;padding:1rem 1.2rem;display:flex;align-items:center;gap:.85rem;max-width:280px;box-shadow:0 8px 32px rgba(0,0,0,.5);transform:translateX(-120%);transition:transform .45s cubic-bezier(.34,1.56,.64,1);backdrop-filter:blur(16px);}
-.sp-toast.show{transform:translateX(0);}
-.sp-ava{width:38px;height:38px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:.85rem;font-weight:700;color:#fff;}
-.sp-body{}
-.sp-name{font-family:'Rajdhani',sans-serif;font-size:.85rem;font-weight:700;color:#fff;margin-bottom:.1rem;}
-.sp-action{font-size:.72rem;color:rgba(255,255,255,.42);line-height:1.4;}
-.sp-action strong{color:#4ade80;font-weight:600;}
-.sp-time{font-size:.62rem;color:rgba(255,255,255,.22);margin-top:.2rem;}
-@media(max-width:480px){.sp-toast{bottom:1rem;left:1rem;max-width:240px;}}
 
 /* MID-PAGE CTA STRIP */
 .midcta{position:relative;z-index:2;margin:0 2rem;max-width:1060px;margin-left:auto;margin-right:auto;margin-bottom:0;}
@@ -209,21 +185,9 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .midcta-headline{font-family:'Orbitron',sans-serif;font-size:clamp(1.1rem,2.5vw,1.45rem);font-weight:900;color:#fff;line-height:1.2;}
 .midcta-sub{font-size:.83rem;color:rgba(255,255,255,.38);margin-top:.4rem;}
 .midcta-right{display:flex;align-items:center;gap:1rem;flex-shrink:0;flex-wrap:wrap;}
-.midcta-slots{font-family:'Rajdhani',sans-serif;font-size:.75rem;font-weight:700;color:#fca5a5;letter-spacing:.08em;display:flex;align-items:center;gap:.4rem;}
+.midcta-status{font-family:'Rajdhani',sans-serif;font-size:.75rem;font-weight:700;color:#34d399;letter-spacing:.08em;display:flex;align-items:center;gap:.4rem;}
+.midcta-status-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e;flex-shrink:0;}
 @media(max-width:680px){.midcta-inner{flex-direction:column;text-align:center;}.midcta-right{justify-content:center;}}
-
-/* RECENT BOOSTS SECTION */
-.boosts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
-.boost-card{background:var(--bg-card);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:1.2rem 1.4rem;display:flex;align-items:center;gap:1rem;transition:border-color .25s,transform .25s;}
-.boost-card:hover{border-color:rgba(124,58,237,.25);transform:translateY(-3px);}
-.boost-flag{font-size:1.4rem;flex-shrink:0;}
-.boost-info{flex:1;min-width:0;}
-.boost-ranks{font-family:'Rajdhani',sans-serif;font-size:.88rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.boost-ranks .arrow{color:var(--cyan);margin:0 .35rem;}
-.boost-meta{font-size:.68rem;color:rgba(255,255,255,.28);margin-top:.2rem;}
-.boost-badge{flex-shrink:0;font-family:'Rajdhani',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .6rem;border-radius:6px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.2);color:#34d399;}
-@media(max-width:900px){.boosts-grid{grid-template-columns:1fr 1fr;}}
-@media(max-width:560px){.boosts-grid{grid-template-columns:1fr;}}
 
 /* GUARANTEES SECTION */
 .guarantees-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;}
@@ -295,11 +259,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 @keyframes ringSpin{to{transform:rotate(360deg);}}
 .about-avatar-img img{width:100%;height:100%;object-fit:cover;border-radius:50%;position:relative;z-index:2;}
 
-/* ALPHA STRIKE — periodic Q dash across screen */
-.alpha-strike{position:fixed;top:30%;left:-260px;width:240px;height:2px;background:linear-gradient(90deg,transparent,#06d6f2 40%,#fff 50%,#06d6f2 60%,transparent);box-shadow:0 0 18px #06d6f2,0 0 36px rgba(6,214,242,.5);z-index:50;pointer-events:none;opacity:0;border-radius:2px;}
-.alpha-strike.go{animation:alphaDash .55s cubic-bezier(.4,0,.2,1) forwards;}
-@keyframes alphaDash{0%{left:-260px;opacity:0;}10%{opacity:1;}90%{opacity:1;}100%{left:calc(100vw + 60px);opacity:0;}}
-.alpha-strike::before{content:'';position:absolute;top:-3px;left:30%;width:40%;height:8px;background:radial-gradient(ellipse,rgba(6,214,242,.6),transparent 70%);filter:blur(3px);}
+
 .about-handle{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:900;color:#fff;margin-bottom:.3rem;}
 .about-title-badge{font-family:'Rajdhani',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;}
 .about-stats-mini{display:flex;justify-content:center;gap:1.5rem;border-top:1px solid rgba(255,255,255,.06);padding-top:1.2rem;}
@@ -368,12 +328,11 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 </nav>
 
 <section class="hero">
-  <div class="hero-grid"></div>
   <div class="hero-content">
     <div style="display:flex;align-items:center;justify-content:center;gap:.75rem;margin-bottom:1.4rem;flex-wrap:wrap;">
-      <div class="urgency-pill" style="margin-bottom:0;">
-        <div class="urgency-dot"></div>
-        Only <span id="slotsLeft" style="color:#fff;margin:0 .25rem;">3</span> slots open this week
+      <div style="display:inline-flex;align-items:center;gap:.55rem;background:rgba(34,211,153,.08);border:1px solid rgba(34,211,153,.3);border-radius:100px;padding:.5rem 1.2rem;font-size:.72rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#34d399;margin-bottom:0;animation:fadeDown .5s ease .05s both;">
+        <div style="width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e;flex-shrink:0;"></div>
+        Online & Ready
       </div>
       <div class="hero-rank-badge" style="margin-bottom:0;">
         <svg width="12" height="12" viewBox="0 0 16 16"><polygon points="8,1 10,6 15,6 11,9.5 12.5,15 8,12 3.5,15 5,9.5 1,6 6,6" fill="#f5a623"/></svg>
@@ -398,18 +357,14 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
   <div class="hero-scroll"><span>Scroll</span><div class="scroll-line"></div></div>
 </section>
 
-<!-- ALPHA STRIKE DASH -->
-<div class="alpha-strike" id="alphaStrike"></div>
-
 <!-- STICKY ORDER BUTTON -->
 <a href="/pricing" class="sticky-order" id="stickyOrder">
-  <div class="so-top"><div class="so-dot"></div>Get My Rank Now</div>
-  <div class="so-slots" id="stickySlots">3 slots left this week</div>
+  <div class="so-dot"></div>Get My Rank Now
 </a>
 
 
 
-<div class="ticker"><div class="ticker-track" id="tickerTrack"></div></div>
+
 
 <div class="stats">
   <div class="stats-inner">
@@ -426,7 +381,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
     <div class="section-tag">// Simple 3-Step Process</div><h2 class="section-title">UP AND RUNNING IN MINUTES</h2><p class="section-sub">No waiting rooms. No complicated forms. Just pick, pay, and watch your LP climb.</p>
     <div class="steps">
       <div class="step reveal"><div class="step-num">STEP 01</div><div class="step-icon">⚙️</div><div class="step-title">Configure Your Order</div><div class="step-desc">Pick your rank, how many net wins you want, and solo or duo. The price updates live — no hidden fees. Takes 60 seconds.</div></div>
-      <div class="step reveal reveal-delay-1"><div class="step-num">STEP 02</div><div class="step-icon">💳</div><div class="step-title">Pay & Confirm</div><div class="step-desc">Pay via Binance USDT, PayPal, or InstaPay. Screenshot the receipt and DM Stain on Discord. He replies in under 5 minutes — usually less.</div></div>
+      <div class="step reveal reveal-delay-1"><div class="step-num">STEP 02</div><div class="step-icon">💬</div><div class="step-title">Submit & Connect</div><div class="step-desc">Submit your order and add <strong>stain.hs</strong> on Discord to arrange your preferred payment method. Stain replies in under 5 minutes — usually less.</div></div>
       <div class="step reveal reveal-delay-2"><div class="step-num">STEP 03</div><div class="step-icon">🏆</div><div class="step-title">Watch Your LP Climb</div><div class="step-desc">Stain logs in, enables offline mode, and starts immediately. You get updates after every session. Your rank goes up. Simple as that.</div></div>
     </div>
   </div>
@@ -578,13 +533,13 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 <div class="midcta reveal">
   <div class="midcta-inner">
     <div class="midcta-left">
-      <div class="midcta-label">// Limited Availability</div>
-      <div class="midcta-headline">Stain takes orders personally.<br>Slots fill fast.</div>
-      <div class="midcta-sub">Currently <span id="midSlots">3</span> open slots this week — once full, you go on a waitlist.</div>
+      <div class="midcta-label">// Ready When You Are</div>
+      <div class="midcta-headline">Stain handles every order personally.<br>Quality over quantity.</div>
+      <div class="midcta-sub">Currently online and ready to start your boost — submit your order and connect on Discord.</div>
     </div>
     <div class="midcta-right">
-      <div class="midcta-slots"><div class="urgency-dot"></div> <span id="midSlotsLabel">3 slots remaining</span></div>
-      <a href="/pricing" class="btn-primary" style="white-space:nowrap;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Claim My Slot</a>
+      <div class="midcta-status"><div class="midcta-status-dot"></div> Online & Ready</div>
+      <a href="/pricing" class="btn-primary" style="white-space:nowrap;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Get My Rank Now</a>
     </div>
   </div>
 </div>
@@ -657,9 +612,9 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 <div class="cta-banner reveal">
   <div class="cta-banner-bg"></div>
   <div class="cta-inner">
-    <div style="display:inline-flex;align-items:center;gap:.55rem;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.28);border-radius:100px;padding:.35rem 1rem;font-family:'Rajdhani',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#fca5a5;margin-bottom:1.4rem;">
-      <div class="urgency-dot"></div>
-      <span id="ctaSlots">3</span> slots left this week
+    <div style="display:inline-flex;align-items:center;gap:.55rem;background:rgba(34,211,153,.06);border:1px solid rgba(34,211,153,.25);border-radius:100px;padding:.35rem 1rem;font-family:'Rajdhani',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#34d399;margin-bottom:1.4rem;">
+      <div style="width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e;flex-shrink:0;"></div>
+      Online & Ready
     </div>
     <div class="cta-banner-title">STILL THINKING ABOUT IT?</div>
     <div class="cta-banner-sub" style="max-width:520px;margin:0 auto 2rem;">Every hour you wait is LP someone else is gaining. Your rank isn't going to change on its own — but Stain can change it today. Guaranteed.</div>
@@ -674,7 +629,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 <footer>
   <div class="footer-inner">
     <div class="footer-logo">STAINBOOST</div>
-    <div class="footer-links"><a href="/">Home</a><a href="/pricing">Pricing</a><a href="/reviews">Reviews</a><a href="/faq">FAQ</a><a href="/blog">Blog</a><a href="https://discord.gg/hyhhtbWx" target="_blank">Discord</a></div>
+    <div class="footer-links"><a href="/">Home</a><a href="/pricing">Pricing</a><a href="/reviews">Reviews</a><a href="/faq">FAQ</a><a href="/blog">Blog</a><a href="https://discord.gg/hyhhtbWx" target="_blank">Discord</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a></div>
     <div class="footer-copy">&copy; 2026 StainBoost &middot; #1 Trusted Elo Boosting</div>
   </div>
 </footer>
@@ -686,38 +641,6 @@ reveals.forEach(function(el){ro.observe(el);});
 document.querySelectorAll('.step,.review-card').forEach(function(card){card.addEventListener('mousemove',function(e){var r=card.getBoundingClientRect();card.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');card.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');});});
 var counterEl=document.querySelector('[data-count]');
 if(counterEl){var target=parseInt(counterEl.dataset.count);var co=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){var c=0,s=Math.ceil(target/60);var t=setInterval(function(){c+=s;if(c>=target){c=target;clearInterval(t);}counterEl.textContent=c+'+';},20);co.unobserve(e.target);}});},{threshold:0.5});co.observe(counterEl);}
-// ── Ticker ──
-(function(){var boosts=[{f:'Silver III',t:'Gold IV',g:'🇸🇦'},{f:'Gold II',t:'Platinum IV',g:'🇦🇪'},{f:'Bronze I',t:'Silver II',g:'🇪🇬'},{f:'Platinum III',t:'Emerald IV',g:'🇶🇦'},{f:'Iron II',t:'Bronze III',g:'🇯🇴'},{f:'Emerald II',t:'Diamond IV',g:'🇰🇼'},{f:'Silver I',t:'Gold III',g:'🇧🇭'},{f:'Gold IV',t:'Platinum II',g:'🇴🇲'},{f:'Diamond IV',t:'Diamond II',g:'🇱🇧'},{f:'Bronze III',t:'Silver I',g:'🇮🇶'}];var track=document.getElementById('tickerTrack'),h='';for(var r=0;r<4;r++)boosts.forEach(function(b){h+='<div class="ticker-item">'+b.g+' <span class="rank-up">'+b.f+' → '+b.t+'</span> <span class="sep"></span> Boosted by Stain</div>';});track.innerHTML=h;})();
-
-// ── Recent Boosts Grid ──
-(function(){
-  var entries=[
-    {flag:'🇸🇦',from:'Silver II',to:'Gold IV',user:'khalid_sa99',ago:'2h ago'},
-    {flag:'🇦🇪',from:'Gold III',to:'Platinum IV',user:'desert_yi',ago:'5h ago'},
-    {flag:'🇪🇬',from:'Bronze I',to:'Silver III',user:'karimEG',ago:'9h ago'},
-    {flag:'🇶🇦',from:'Platinum II',to:'Emerald IV',user:'q8_beast',ago:'14h ago'},
-    {flag:'🇯🇴',from:'Iron II',to:'Bronze II',user:'jo_ranker',ago:'18h ago'},
-    {flag:'🇰🇼',from:'Emerald I',to:'Diamond IV',user:'xLayla_kw',ago:'23h ago'},
-    {flag:'🇸🇦',from:'Gold I',to:'Platinum II',user:'saud_gg',ago:'1d ago'},
-    {flag:'🇦🇪',from:'Silver IV',to:'Gold III',user:'omar_me',ago:'1d ago'},
-    {flag:'🇴🇲',from:'Bronze III',to:'Silver I',user:'oman_climb',ago:'2d ago'}
-  ];
-  var grid=document.getElementById('recentBoostsGrid');
-  if(!grid)return;
-  var h='';
-  entries.forEach(function(e){
-    h+='<div class="boost-card">'
-      +'<div class="boost-flag">'+e.flag+'</div>'
-      +'<div class="boost-info">'
-        +'<div class="boost-ranks">'+e.from+'<span class="arrow">→</span>'+e.to+'</div>'
-        +'<div class="boost-meta">'+e.user+' · '+e.ago+'</div>'
-      +'</div>'
-      +'<div class="boost-badge">Done ✓</div>'
-    +'</div>';
-  });
-  grid.innerHTML=h;
-})();
-
 // ── Sticky Order Button ──
 (function(){
   var btn=document.getElementById('stickyOrder');
@@ -726,93 +649,6 @@ if(counterEl){var target=parseInt(counterEl.dataset.count);var co=new Intersecti
   window.addEventListener('scroll',function(){
     btn.style.display=window.scrollY>400?'flex':'none';
   },{passive:true});
-})();
-
-// ── Slots counter (live from KV, falls back to day-of-week seed) ──
-(function(){
-  function setSlots(n){
-    document.querySelectorAll('#slotsLeft,#midSlots,#ctaSlots').forEach(function(el){el.textContent=n;});
-    var sLabel=document.getElementById('midSlotsLabel');
-    if(sLabel)sLabel.textContent=n+' slot'+(n!==1?'s':'')+' remaining';
-    var sSticky=document.getElementById('stickySlots');
-    if(sSticky)sSticky.textContent=n+' slot'+(n!==1?'s':'')+' left this week';
-  }
-  // Show fallback immediately while API loads
-  setSlots([3,2,4,3,2,3,4][new Date().getDay()]);
-  fetch('/api/slots').then(function(r){return r.json();}).then(function(data){
-    if(typeof data.slots==='number')setSlots(data.slots);
-  }).catch(function(){});
-})();
-
-// ── Alpha Strike (Q dash) ──
-(function(){
-  var dash=document.getElementById('alphaStrike');
-  if(!dash)return;
-  var lastFired=0;
-  function fire(){
-    if(document.hidden)return;
-    if(Date.now()-lastFired<2500)return;
-    lastFired=Date.now();
-    var y=15+Math.random()*70;
-    dash.style.top=y+'%';
-    dash.classList.remove('go');
-    void dash.offsetWidth;
-    dash.classList.add('go');
-  }
-  setTimeout(fire,7000);
-  setInterval(fire,28000+Math.random()*22000);
-  var lastScroll=window.scrollY,acc=0;
-  window.addEventListener('scroll',function(){
-    var s=window.scrollY;
-    acc+=Math.abs(s-lastScroll);
-    lastScroll=s;
-    if(acc>1800){acc=0;fire();}
-  },{passive:true});
-})();
-
-// ── Social Proof Toast ──
-(function(){
-  var fakeToasts=[
-    {initials:'KS',bg:'linear-gradient(135deg,#7c3aed,#06d6f2)',name:'kh***9',action:'just ordered <strong>5 win boost</strong>',time:'2 minutes ago'},
-    {initials:'XL',bg:'linear-gradient(135deg,#34d399,#06d6f2)',name:'xL***w',action:'just went from <strong>Emerald → Diamond</strong>',time:'11 minutes ago'},
-    {initials:'OA',bg:'linear-gradient(135deg,#f97316,#f5a623)',name:'om***7',action:'just ordered <strong>10 win boost</strong>',time:'28 minutes ago'},
-    {initials:'RQ',bg:'linear-gradient(135deg,#ec4899,#8b5cf6)',name:'Ra***G',action:'boost just <strong>completed</strong> ✓',time:'34 minutes ago'},
-    {initials:'MS',bg:'linear-gradient(135deg,#0ea5e9,#22d3ee)',name:'m_***g',action:'just ordered <strong>rank boost</strong>',time:'47 minutes ago'},
-    {initials:'AJ',bg:'linear-gradient(135deg,#a3e635,#22d3ee)',name:'a_***b',action:'just went from <strong>Silver → Gold</strong>',time:'1 hour ago'},
-  ];
-  var toasts=fakeToasts.slice();
-  var toast=document.getElementById('spToast');
-  if(!toast)return;
-  var i=0;
-
-  function timeAgo(ts){
-    var diff=Math.floor((Date.now()-ts)/1000);
-    if(diff<60)return diff+' seconds ago';
-    if(diff<3600)return Math.floor(diff/60)+' minutes ago';
-    return Math.min(6,Math.floor(diff/3600))+' hours ago';
-  }
-
-  fetch('/api/feed').then(function(r){return r.json();}).then(function(data){
-    if(!Array.isArray(data)||!data.length)return;
-    var sixHours=6*60*60*1000;
-    var recent=data.filter(function(e){return e.ts&&(Date.now()-e.ts)<sixHours;});
-    if(!recent.length)return;
-    toasts=recent.concat(fakeToasts);
-    i=0;
-  }).catch(function(){});
-
-  function show(){
-    var t=toasts[i%toasts.length];i++;
-    document.getElementById('spAva').style.background=t.bg;
-    document.getElementById('spAva').textContent=t.initials;
-    document.getElementById('spName').textContent=t.name;
-    document.getElementById('spAction').innerHTML=t.action;
-    document.getElementById('spTime').textContent=t.ts?timeAgo(t.ts):t.time;
-    toast.classList.add('show');
-    setTimeout(function(){toast.classList.remove('show');},4200);
-    setTimeout(show,Math.random()*18000+12000);
-  }
-  setTimeout(show,5000);
 })();
 
 </script>
