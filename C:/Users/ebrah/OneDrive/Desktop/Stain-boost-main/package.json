@@ -1,0 +1,13 @@
+{
+  "name": "stain-boost",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node dev-server.js"
+  },
+  "dependencies": {
+    "@vercel/kv": "^3.0.0",
+    "bcryptjs": "^2.4.3",
+    "nodemailer": "^6.9.9"
+  }
+}
