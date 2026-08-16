@@ -28,14 +28,14 @@ const COUPONS = {
 // ── RANK BOOST — per-division price table ──
 const RB_TIERS = ['Iron','Bronze','Silver','Gold','Platinum','Emerald','Diamond','Masters'];
 const RB_DIV_PRICE = {
-  Iron:     { solo: 1.50,  duo: 2.50  },
-  Bronze:   { solo: 2.00,  duo: 3.00  },
-  Silver:   { solo: 2.50,  duo: 3.50  },
-  Gold:     { solo: 3.50,  duo: 5.00  },
-  Platinum: { solo: 5.00,  duo: 6.50  },
-  Emerald:  { solo: 5.50,  duo: 8.00  },
-  DiamondL: { solo: 8.00,  duo: 12.00 }, // Diamond IV-III
-  DiamondH: { solo: 10.00, duo: 16.00 }, // Diamond II-I
+  Iron:     { solo: 6.00,  duo: 10.00 }, 
+  Bronze:   { solo: 8.00,  duo: 12.00 },
+  Silver:   { solo: 10.00, duo: 14.00 },
+  Gold:     { solo: 14.00, duo: 20.00 },
+  Platinum: { solo: 20.00, duo: 26.00 },
+  Emerald:  { solo: 22.00, duo: 32.00 },
+  DiamondL: { solo: 32.00, duo: 48.00 }, // Diamond IV-III
+  DiamondH: { solo: 40.00, duo: 64.00 }, // Diamond II-I
 };
 
 function rbDivPrice(tierIdx, divIdx, type) {
