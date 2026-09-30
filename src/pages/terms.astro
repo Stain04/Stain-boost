@@ -1,0 +1,61 @@
+---
+import LegalPage from '../components/LegalPage.astro';
+import { DISCORD, PAYMENT_NAMES } from '../data/site.js';
+import { REFERRAL_RATE, PRIORITY_RATE } from '../data/pricing.js';
+const ref = Math.round(REFERRAL_RATE * 100);
+---
+<LegalPage title="Terms of Service | StainBoost" heading="Terms of service" path="/terms" updated="September 2026"
+  description="The terms for StainBoost orders: eligibility, account access, delivery, payment, refunds, extras, referral credit and liability.">
+  <h2>1. Service</h2>
+  <p>StainBoost provides an ELO boosting service for League of Legends. Every order is played by Stain personally.</p>
+
+  <h2>2. Eligibility</h2>
+  <p>By ordering, you confirm you are the legitimate owner of the League of Legends account being boosted.</p>
+
+  <h2>3. Account access</h2>
+  <p>For a solo boost, you give StainBoost temporary access to your League of Legends account for the length of the boost. For a duo boost, you keep your account and play together with Stain.</p>
+
+  <h2>4. Your responsibilities</h2>
+  <ul>
+    <li>Give accurate account information, including your current LP and your usual LP gain per win.</li>
+    <li>Don't play on your account while a solo boost is active.</li>
+    <li>Keep your account credentials secure before and after the service.</li>
+  </ul>
+
+  <h2>5. Delivery</h2>
+  <p>Boosts usually start within hours of confirmed payment. Total completion time depends on the size of the order. Net wins count wins minus losses: Stain keeps playing until every ordered net win is delivered.</p>
+
+  <h2>6. Offers and extras</h2>
+  <ul>
+    <li><strong>Pay for 5, get 6:</strong> for every 5 net wins you pay for, one extra net win is included free.</li>
+    <li><strong>Priority start (+{Math.round(PRIORITY_RATE * 100)}%):</strong> your order is started before non-priority orders in the queue. It does not guarantee a specific start time.</li>
+    <li><strong>Bonus win:</strong> one extra net win played after your target rank is reached.</li>
+  </ul>
+
+  <h2>7. Payment</h2>
+  <p>Payment is made with {PAYMENT_NAMES}, or another method arranged with Stain on Discord (<strong>{DISCORD.handle}</strong>). Orders start only after payment is confirmed. The price shown when you place the order is the price you pay.</p>
+
+  <h2>8. Refunds</h2>
+  <p>If the boost hasn't started, you get a full refund. For orders in progress, a proportional refund is available based on the progress completed versus the total ordered.</p>
+
+  <h2>9. Referral credit</h2>
+  <p>A friend who uses your referral code on their first order gets {ref}% off it. Once their payment is confirmed, you receive credit worth {ref}% of what they paid. Credit is applied automatically to your next orders, has no cash value and can't be transferred. Credit used on an order that is cancelled is returned to your balance. Credit obtained through abuse (for example self-referrals or fake accounts) may be removed.</p>
+
+  <h2>10. Account safety</h2>
+  <p>StainBoost protects your account with offline mode, a VPN matched to your region and strictly manual gameplay. Boosting is against Riot Games' terms, and StainBoost cannot guarantee against every risk of account sharing or be responsible for actions taken by Riot Games.</p>
+
+  <h2>11. Limitation of liability</h2>
+  <p>The service is provided "as is". StainBoost is not liable for account bans, suspensions or other actions taken by Riot Games.</p>
+
+  <h2>12. Intellectual property</h2>
+  <p>The StainBoost brand and website content belong to StainBoost. League of Legends is a registered trademark of Riot Games, Inc. StainBoost is not affiliated with or endorsed by Riot Games.</p>
+
+  <h2>13. Termination</h2>
+  <p>StainBoost may refuse or stop a service for any reason, including a breach of these terms or abusive behaviour.</p>
+
+  <h2>14. Disputes</h2>
+  <p>Any dispute is resolved through direct communication on Discord.</p>
+
+  <h2>15. Contact</h2>
+  <p>Questions about these terms? Message <strong>{DISCORD.handle}</strong> on Discord.</p>
+</LegalPage>

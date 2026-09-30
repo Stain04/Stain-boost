@@ -1,0 +1,15 @@
+---
+// Real online status (set by Stain in /admin). Hidden until the status is known —
+// nothing is claimed if it can't be checked. `onlineOnly`: stay hidden when offline
+// (used in the hero; the checkout shows both states so expectations are clear).
+interface Props { onlineOnly?: boolean }
+const { onlineOnly = false } = Astro.props;
+---
+<span class="chip status" data-status data-online-only={onlineOnly ? '' : undefined} hidden>
+  <span class="dot dot-pulse" aria-hidden="true"></span>
+  <span data-status-text></span>
+</span>
+<style>
+  .status { color: var(--muted); }
+  .status.chip-green { color: var(--success); }
+</style>

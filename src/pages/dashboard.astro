@@ -1,0 +1,146 @@
+---
+import Base from '../layouts/Base.astro';
+import { REFERRAL_RATE } from '../data/pricing.js';
+const ref = Math.round(REFERRAL_RATE * 100);
+---
+<Base title="Dashboard – StainBoost" description="Your StainBoost orders, live tracking and referral credit." path="/dashboard" noindex minimal>
+  <section class="section-tight">
+    <div class="wrap dash">
+      <div class="dash-head">
+        <div>
+          <p class="eyebrow">Your account</p>
+          <h1>Dashboard</h1>
+        </div>
+        <a class="btn btn-primary" href="/pricing" data-track="cta_click" data-track-location="dashboard">+ New order</a>
+      </div>
+
+      <div class="top">
+        <div class="card me" data-me hidden>
+          <span class="ava" data-ava>?</span>
+          <div>
+            <p class="name" data-name>—</p>
+            <p class="muted" data-meta>—</p>
+          </div>
+          <button type="button" class="btn btn-ghost btn-sm" data-logout>Sign out</button>
+        </div>
+
+        <div class="card refer" data-refer hidden data-loc="referral_card">
+          <p class="eyebrow">Give {ref}%, get {ref}%</p>
+          <p class="r-title">Share your link. Friends get <b>{ref}% off</b> their first order — you get <b>{ref}% of it</b> as credit.</p>
+          <div class="r-row">
+            <code data-ref-link>—</code>
+            <button type="button" class="btn btn-ghost btn-sm" data-copy-ref>Copy link</button>
+          </div>
+          <p class="muted small">Code <strong data-ref-code>—</strong> · Credit <strong class="gold" data-ref-credit>$0.00</strong> (used automatically on your next order) · <span data-ref-count>0</span> friend(s) referred</p>
+        </div>
+      </div>
+
+      <h2 class="h2">Your orders</h2>
+      <div data-orders class="orders">
+        <div class="skeleton"></div><div class="skeleton"></div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { STATUS, esc, date, reorderLinks } from '../scripts/account.js';
+  import { track } from '../scripts/analytics.js';
+  const $ = (s) => document.querySelector(s);
+
+  fetch('/api/auth/me').then((r) => r.json()).then((d) => {
+    if (!d.user) { location.href = '/login?return=/dashboard'; return; }
+    const u = d.user;
+    $('[data-ava]').textContent = (u.username || '?').slice(0, 2).toUpperCase();
+    $('[data-name]').textContent = u.username || '—';
+    $('[data-meta]').textContent = `${u.type === 'discord' ? 'Discord' : 'Email'} account · joined ${date(u.createdAt)}`;
+    $('[data-me]').hidden = false;
+    loadReferral();
+    loadOrders();
+  }).catch(() => { location.href = '/login?return=/dashboard'; });
+
+  $('[data-logout]').addEventListener('click', () => {
+    try { localStorage.removeItem('sb_auth_cache_v1'); } catch {}
+    fetch('/api/auth/logout', { method: 'POST' }).then(() => { location.href = '/'; });
+  });
+
+  function loadReferral() {
+    fetch('/api/referral').then((r) => (r.ok ? r.json() : null)).then((d) => {
+      if (!d) return;
+      $('[data-ref-link]').textContent = d.link;
+      $('[data-ref-code]').textContent = d.code;
+      $('[data-ref-credit]').textContent = '$' + (d.credit || 0).toFixed(2);
+      $('[data-ref-count]').textContent = d.referrals || 0;
+      $('[data-refer]').hidden = false;
+      $('[data-copy-ref]').onclick = async (e) => {
+        try { await navigator.clipboard.writeText(d.link); } catch {}
+        e.target.textContent = 'Copied ✓'; setTimeout(() => { e.target.textContent = 'Copy link'; }, 1500);
+        track('referral_copy', { code: d.code });
+      };
+    }).catch(() => {});
+  }
+
+  function loadOrders() {
+    fetch('/api/order-tracking/mine').then((r) => r.json()).then((d) => render(d.orders || [])).catch(() => {
+      $('[data-orders]').innerHTML = '<div class="card empty"><p>Could not load your orders. Try refreshing.</p></div>';
+    });
+  }
+
+  function render(orders) {
+    const box = $('[data-orders]');
+    if (!orders.length) {
+      box.innerHTML = '<div class="card empty"><p class="e-title">No orders yet</p><p class="muted">Pick your rank and see your price — Stain plays every game himself.</p><a class="btn btn-primary" href="/pricing">Get my price</a></div>';
+      return;
+    }
+    orders.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    box.innerHTML = orders.map((o) => {
+      const actions = [];
+      if (o.status === 'awaiting_payment') actions.push(`<a class="btn btn-gold btn-sm" href="/track/${esc(o.token)}#pay">Pay now</a>`);
+      actions.push(`<a class="btn btn-ghost btn-sm" href="/track/${esc(o.token)}">Track live</a>`);
+      if (o.reviewable) actions.push(`<a class="btn btn-ghost btn-sm" href="/review/${esc(o.token)}">★ Leave a review</a>`);
+      if (['completed', 'cancelled'].includes(o.status) || o.status === 'in_progress') {
+        reorderLinks(o).forEach((l) => actions.push(`<a class="btn btn-primary btn-sm" href="${l.href}" data-reorder="${l.kind}">${esc(l.label)}</a>`));
+      }
+      return `<article class="card order">
+        <div class="o-top"><span class="tok">${esc(o.token)}</span><span class="pill pill-${esc(o.status)}">${esc(STATUS[o.status] || o.status)}</span></div>
+        <p class="o-sum">${esc(o.summary || 'Order')}</p>
+        <div class="o-meta"><span>${date(o.createdAt)}</span><span class="gold">${o.total ? '$' + esc(o.total) : ''}</span></div>
+        <div class="o-actions">${actions.join('')}</div>
+      </article>`;
+    }).join('');
+    box.querySelectorAll('[data-reorder]').forEach((a) => a.addEventListener('click', () => track('reorder_click', { kind: a.dataset.reorder })));
+  }
+</script>
+
+<style is:global>
+  /* global so the markup this page builds in JS is styled too; every rule stays under .dash */
+  .dash { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; } /* minmax(0): the long referral link must not widen the page */
+  .dash .dash-head { display: flex; justify-content: space-between; align-items: end; gap: 16px; flex-wrap: wrap; }
+  .dash .dash-head h1 { font-size: clamp(1.8rem, 3vw + .6rem, 2.6rem); }
+  .dash .top { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 16px; }
+  .dash .me { display: flex; align-items: center; gap: 14px; }
+  .dash .me .ava { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; font-family: var(--font-display); font-weight: 900; color: #fff; background: linear-gradient(135deg, var(--purple), var(--cyan)); flex: none; }
+  .dash .me .name { font-family: var(--font-display); font-weight: 900; color: #fff; }
+  .dash .me .btn { margin-inline-start: auto; }
+  .dash .refer { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; border-color: rgba(245, 166, 35, .4); background: linear-gradient(135deg, rgba(245, 166, 35, .1), var(--card) 55%); }
+  .dash .r-title { color: rgba(255, 255, 255, .85); }
+  .dash .r-title b { color: var(--gold); }
+  .dash .r-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .dash .r-row code { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: ui-monospace, monospace; padding: 8px 10px; border-radius: 10px; background: rgba(0, 0, 0, .3); border: 1px solid rgba(255, 255, 255, .12); color: #fff; }
+  .dash .small { font-size: .88rem; }
+  .dash .small strong { color: #fff; }
+  .dash .h2 { font-size: 1.2rem; margin-block-start: 8px; }
+  .dash .orders { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 14px; }
+  .dash .order { display: grid; gap: 10px; }
+  .dash .o-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .dash .tok { font-family: ui-monospace, monospace; color: #fff; font-weight: 700; }
+  .dash .o-sum { color: rgba(255, 255, 255, .8); }
+  .dash .o-meta { display: flex; justify-content: space-between; font-size: .88rem; color: var(--muted); }
+  .dash .o-meta .gold { font-family: var(--font-ui); font-weight: 700; font-size: 1.05rem; }
+  .dash .o-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+  .dash .empty { display: grid; gap: 10px; justify-items: start; }
+  .dash .e-title { font-family: var(--font-display); font-weight: 900; color: #fff; }
+  .dash .skeleton { height: 160px; border-radius: var(--r-lg); background: linear-gradient(90deg, rgba(124, 58, 237, .06), rgba(124, 58, 237, .14), rgba(124, 58, 237, .06)); background-size: 200% 100%; animation: sh 1.4s linear infinite; }
+  @keyframes sh { to { background-position: -200% 0; } }
+  @media (max-width: 860px) { .dash .top { grid-template-columns: minmax(0, 1fr); } }
+</style>

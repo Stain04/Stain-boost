@@ -1,0 +1,67 @@
+---
+import Base from '../layouts/Base.astro';
+import FaqList from '../components/FaqList.astro';
+import Guarantees from '../components/Guarantees.astro';
+import { FAQ, faqSchema } from '../data/faq.js';
+import { DISCORD } from '../data/site.js';
+import { breadcrumbs } from '../data/schema.js';
+---
+<Base
+  title="ELO Boosting FAQ – Is It Safe? How Does It Work? | StainBoost"
+  description="Straight answers about ELO boosting on the Middle East server: account safety and bans, solo vs duo, payment, refunds, how long it takes and how net wins work."
+  path="/faq"
+  active="/faq"
+  schema={[faqSchema(), breadcrumbs([{ name: 'Home', path: '/' }, { name: 'FAQ', path: '/faq' }])]}
+>
+  <section class="section-tight head" data-loc="faq_head">
+    <div class="wrap-narrow">
+      <p class="eyebrow">Help center</p>
+      <h1>Frequently <span class="grad">asked.</span></h1>
+      <p class="lead">Everything you need to know before you order. Anything else? Message <strong>{DISCORD.handle}</strong> on Discord.</p>
+      <nav class="jump" aria-label="FAQ sections">
+        {FAQ.map((g, i) => <a href={`#g${i}`}>{g.group}</a>)}
+      </nav>
+    </div>
+  </section>
+
+  <section data-loc="faq_list">
+    <div class="wrap-narrow groups">
+      {FAQ.map((g, i) => (
+        <div class="group" id={`g${i}`}>
+          <h2>{g.group}</h2>
+          <FaqList items={g.items} loc={`faq_${i}`} />
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap-narrow">
+      <div class="card end">
+        <div class="end-copy">
+          <h2>Still have a question?</h2>
+          <p class="muted">Message Stain directly — he usually replies within minutes.</p>
+          <div class="row">
+            <a class="btn btn-discord" href={DISCORD.invite} target="_blank" rel="noopener">Open Discord</a>
+            <a class="btn btn-primary" href="/pricing" data-track="cta_click" data-track-location="faq">Get my price</a>
+          </div>
+        </div>
+        <Guarantees />
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .head h1 { font-size: clamp(2rem, 3.6vw + .7rem, 3.3rem); margin-block: 10px 12px; }
+  .head .lead strong { color: #fff; }
+  .jump { display: flex; flex-wrap: wrap; gap: 8px; margin-block-start: 18px; }
+  .jump a { font-family: var(--font-ui); font-weight: 700; font-size: .9rem; letter-spacing: .06em; text-decoration: none; color: var(--text); padding: 7px 14px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, .14); background: rgba(255, 255, 255, .03); }
+  .jump a:hover { border-color: var(--purple-light); }
+  .groups { display: grid; gap: 34px; }
+  .group h2 { font-size: clamp(1.1rem, 1vw + .8rem, 1.4rem); margin-block-end: 14px; color: var(--purple-light); }
+  .end { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; align-items: center; border-color: rgba(139, 92, 246, .35); }
+  .end-copy { display: grid; gap: 12px; }
+  .end h2 { font-size: clamp(1.3rem, 2vw + .6rem, 1.8rem); }
+  @media (max-width: 720px) { .end { grid-template-columns: 1fr; } }
+</style>

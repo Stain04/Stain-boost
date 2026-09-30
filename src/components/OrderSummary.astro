@@ -1,0 +1,113 @@
+---
+import StatusChip from './StatusChip.astro';
+import Guarantees from './Guarantees.astro';
+import FaqList from './FaqList.astro';
+import { TOP_FAQ } from '../data/faq.js';
+import { quoteOrder, rankBoostTotal, formatUSD, LP_OPTIONS, REFERRAL_RATE } from '../data/pricing.js';
+import { PAYMENT_NAMES, DISCORD } from '../data/site.js';
+const def = { mode: 'rank', fromTier: 2, fromDiv: 2, toTier: 3, toDiv: 0, type: 'solo', lp: LP_OPTIONS[0].value, lpGain: 1 };
+const total = formatUSD(quoteOrder(def).total);
+const raw = formatUSD(rankBoostTotal({ ...def, lp: 0 }));
+const fears = TOP_FAQ.filter((f) => /banned|login|refund/i.test(f.q));
+---
+<aside class="summary" data-summary aria-labelledby="sum-route" data-loc="summary">
+  <div class="card sum-card">
+    <p class="eyebrow">Your order</p>
+    <h2 id="sum-route" class="sum-route" data-sum-route>Silver II → Gold IV</h2>
+    <p class="sum-meta" data-sum-meta>Rank boost · 2 divisions · Solo</p>
+
+    <dl class="lines" data-lines>
+      <div><dt>2 divisions · solo</dt><dd>{raw}</dd></div>
+      <div class="credit"><dt>LP you already have ({LP_OPTIONS[0].label})</dt><dd>−{formatUSD(parseFloat(raw.slice(1)) - parseFloat(total.slice(1)))}</dd></div>
+    </dl>
+
+    <div class="total-row">
+      <span class="label">Total</span>
+      <span class="total num" data-total aria-live="polite">{total}</span>
+    </div>
+    <p class="no-fees">Final price · no hidden fees</p>
+
+    <div class="nudge" data-nudge hidden>
+      <button type="button" class="nudge-btn" data-nudge-btn></button>
+    </div>
+
+    <details class="refbox" data-refbox>
+      <summary>Have a referral code? <span class="muted">{Math.round(REFERRAL_RATE * 100)}% off your first order</span></summary>
+      <div class="ref-row">
+        <label class="visually-hidden" for="refCode">Referral code</label>
+        <input id="refCode" class="input" maxlength="20" autocomplete="off" placeholder="SBXXXXXX" />
+        <button type="button" class="btn btn-ghost btn-sm" data-ref-apply>Apply</button>
+      </div>
+      <p class="ref-msg" data-ref-msg aria-live="polite"></p>
+    </details>
+
+    <button class="btn btn-primary btn-block btn-lg submit" type="button" data-submit>
+      <svg class="dc" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-submit-icon><path d="M20.3 4.4A19.8 19.8 0 0 0 15.4 2.9l-.6 1.3a18.3 18.3 0 0 0-5.5 0l-.6-1.3a19.7 19.7 0 0 0-4.9 1.5C.7 9-.3 13.6.1 18.1a19.9 19.9 0 0 0 6 3l1.3-2a13 13 0 0 1-1.9-.9l.4-.3a14.2 14.2 0 0 0 12.1 0l.4.3c-.6.4-1.2.7-1.9.9l1.3 2a19.9 19.9 0 0 0 6-3c.5-5.2-.8-9.7-3.5-13.7ZM8 15.3c-1.2 0-2.2-1.1-2.2-2.4S6.8 10.5 8 10.5s2.2 1.1 2.2 2.4-1 2.4-2.2 2.4Zm8 0c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4Z"/></svg>
+      <span data-submit-label>Order with Discord</span>
+    </button>
+    <p class="submit-note" data-submit-note>One-click Discord sign-in. Your order is saved while you sign in. <a href="/login?return=/pricing%3Fresume%3D1" data-email-link>Use email instead</a></p>
+    <p class="err" data-error role="alert" hidden></p>
+
+    <div class="status-row"><StatusChip /></div>
+    <Guarantees compact />
+    <p class="pay">Pay after ordering: <strong>{PAYMENT_NAMES}</strong>. Prefer another method? Message <strong>{DISCORD.handle}</strong> on Discord.</p>
+  </div>
+
+  <div class="fears">
+    <p class="label fears-title">Before you order</p>
+    <FaqList items={fears} loc="faq_summary" />
+  </div>
+</aside>
+
+<dialog class="confirm" data-lp-confirm aria-labelledby="lpc-title">
+  <form method="dialog">
+    <p class="eyebrow">Quick check</p>
+    <h2 id="lpc-title">Is your LP info right?</h2>
+    <p>The price depends on it. If it doesn't match your account, Stain will ask you to correct it before starting.</p>
+    <dl class="confirm-vals">
+      <div><dt>Current LP</dt><dd data-lpc-lp>0–20 LP</dd></div>
+      <div><dt>LP per win</dt><dd data-lpc-gain>Normal</dd></div>
+    </dl>
+    <div class="row">
+      <button class="btn btn-ghost" value="back">Go back</button>
+      <button class="btn btn-primary" value="ok" data-lpc-ok>Yes, it's right</button>
+    </div>
+  </form>
+</dialog>
+
+<style>
+  .summary { position: sticky; inset-block-start: calc(var(--nav-h) + 16px); display: grid; gap: 16px; }
+  .sum-card { display: grid; gap: 12px; border-color: rgba(139, 92, 246, .38); background: linear-gradient(170deg, rgba(124, 58, 237, .14), var(--card) 40%); box-shadow: 0 30px 80px -34px rgba(124, 58, 237, .6); }
+  .sum-route { font-family: var(--font-ui); font-weight: 700; font-size: 1.45rem; letter-spacing: .04em; line-height: 1.2; }
+  .sum-meta { color: var(--muted); font-size: .92rem; margin-block-start: -6px; }
+  .lines { display: grid; gap: 8px; padding-block: 12px; border-block: 1px solid rgba(255, 255, 255, .08); }
+  .lines :global(div) { display: flex; justify-content: space-between; gap: 12px; font-size: .95rem; }
+  .lines :global(dt) { color: rgba(255, 255, 255, .72); }
+  .lines :global(dd) { margin: 0; font-family: var(--font-ui); font-weight: 700; font-size: 1.05rem; color: #fff; white-space: nowrap; }
+  .lines :global(.free dd), .lines :global(.credit dd) { color: var(--success); }
+  .lines :global(.extra dd) { color: var(--purple-light); }
+  .total-row { display: flex; justify-content: space-between; align-items: baseline; }
+  .total { font-size: clamp(2.2rem, 2vw + 1.5rem, 2.8rem); color: var(--gold); text-shadow: 0 0 26px rgba(245, 166, 35, .35); line-height: 1; }
+  .no-fees { font-size: .8rem; color: var(--muted); text-align: end; margin-block-start: -6px; }
+  .nudge-btn { width: 100%; text-align: start; padding: 10px 12px; border-radius: 12px; border: 1px dashed rgba(245, 166, 35, .55); background: rgba(245, 166, 35, .07); color: var(--text); font-size: .92rem; line-height: 1.4; }
+  .nudge-btn :global(b) { color: var(--gold); }
+  .nudge-btn:hover { background: rgba(245, 166, 35, .12); }
+  .submit .dc { width: 20px; height: 20px; }
+  .submit-note { font-size: .82rem; color: var(--muted); text-align: center; }
+  .err { color: #fecaca; background: rgba(248, 113, 113, .1); border: 1px solid rgba(248, 113, 113, .35); border-radius: 12px; padding: 10px 12px; font-size: .92rem; }
+  .status-row:empty { display: none; }
+  .pay { font-size: .85rem; color: var(--muted); padding-block-start: 10px; border-block-start: 1px solid rgba(255, 255, 255, .07); }
+  .pay strong { color: rgba(255, 255, 255, .85); font-weight: 600; }
+  .fears-title { margin-block-end: 8px; }
+  .confirm { max-width: min(440px, calc(100vw - 32px)); border: 1px solid rgba(139, 92, 246, .45); border-radius: 22px; padding: 26px; background: var(--card-solid); color: var(--text); box-shadow: 0 40px 100px -20px #000; }
+  .confirm::backdrop { background: rgba(3, 2, 10, .72); backdrop-filter: blur(4px); }
+  .confirm form { display: grid; gap: 14px; }
+  .confirm h2 { font-size: 1.35rem; }
+  .confirm p:not(.eyebrow) { color: rgba(255, 255, 255, .75); }
+  .confirm-vals { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .confirm-vals div { padding: 12px; border-radius: 12px; background: rgba(255, 255, 255, .04); border: 1px solid rgba(255, 255, 255, .09); }
+  .confirm-vals dt { font-family: var(--font-ui); font-weight: 700; font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .confirm-vals dd { margin: 0; font-family: var(--font-ui); font-weight: 700; font-size: 1.1rem; color: var(--gold); }
+  .confirm .row { justify-content: flex-end; }
+  @media (max-width: 1000px) { .summary { position: static; } }
+</style>

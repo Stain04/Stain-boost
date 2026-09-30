@@ -1,0 +1,31 @@
+---
+import { GUARANTEES } from '../data/site.js';
+interface Props { compact?: boolean }
+const { compact = false } = Astro.props;
+const icons = [
+  '<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>',
+  '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>',
+  '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>',
+];
+---
+<ul class:list={['guarantees', { compact }]}>
+  {GUARANTEES.map((g, i) => (
+    <li>
+      <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={icons[i]} /></span>
+      <span><strong>{g.title}</strong>{!compact && <span class="t">{g.text}</span>}</span>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .guarantees { list-style: none; padding: 0; display: grid; gap: 14px; }
+  li { display: flex; gap: 12px; align-items: flex-start; }
+  .ic { width: 38px; height: 38px; flex: none; display: grid; place-items: center; border-radius: 11px; color: var(--success); background: rgba(52, 211, 153, .08); border: 1px solid rgba(52, 211, 153, .28); }
+  .ic svg { width: 19px; height: 19px; }
+  strong { display: block; font-family: var(--font-ui); font-size: 1.05rem; letter-spacing: .03em; color: #fff; }
+  .t { display: block; font-size: .9rem; color: var(--muted); line-height: 1.5; }
+  .compact { gap: 10px; }
+  .compact .ic { width: 30px; height: 30px; border-radius: 9px; }
+  .compact .ic svg { width: 16px; height: 16px; }
+  .compact strong { font-size: .98rem; padding-block-start: 3px; }
+</style>

@@ -1,0 +1,150 @@
+.post-scope .champ-hero{position:relative;height:320px;overflow:hidden;margin-bottom:0;margin-top:64px;}
+.post-scope .champ-hero-bg{position:absolute;inset:0;background-image:url('https://ddragon.leagueoflegends.com/cdn/img/champion/splash/MasterYi_0.jpg');background-size:cover;background-position:center 20%;filter:brightness(.55);}
+.post-scope .champ-hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,#060411 100%);}
+.post-scope .champ-hero-content{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;justify-content:flex-end;padding:2rem 2rem 1.8rem;max-width:760px;margin:0 auto;}
+.post-scope .champ-hero-name{font-family:'Orbitron',sans-serif;font-size:clamp(2rem,6vw,3.2rem);font-weight:900;color:#fff;letter-spacing:.04em;line-height:1;margin-bottom:.4rem;text-shadow:0 2px 20px rgba(0,0,0,.8);}
+.post-scope .champ-hero-sub{font-family:'Rajdhani',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);}
+.post-scope .stats-bar{display:flex;gap:0;background:rgba(12,8,32,.95);border-bottom:1px solid rgba(124,58,237,.2);position:relative;z-index:2;}
+.post-scope .stats-bar-inner{display:flex;max-width:760px;margin:0 auto;width:100%;}
+.post-scope .stat-pill{flex:1;text-align:center;padding:.8rem .5rem;border-right:1px solid rgba(255,255,255,.06);}
+.post-scope .stat-pill:last-child{border-right:none;}
+.post-scope .stat-pill-val{font-family:'Orbitron',sans-serif;font-size:.95rem;font-weight:700;color:#fff;display:block;}
+.post-scope .stat-pill-lbl{font-family:'Rajdhani',sans-serif;font-size:.6rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.3);display:block;margin-top:.15rem;}
+.post-scope .stat-pill-val.gold{color:var(--gold);}
+.post-scope .stat-pill-val.green{color:#22c55e;}
+.post-scope .article-divider{height:1px;background:linear-gradient(90deg,rgba(124,58,237,.3),rgba(6,214,242,.15),transparent);margin:1.5rem 0 2rem;}
+.post-scope .visual-section{margin:2.5rem 0;}
+.post-scope .visual-section-title{font-family:'Rajdhani',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:1rem;display:flex;align-items:center;gap:.8rem;}
+.post-scope .visual-section-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(124,58,237,.2),transparent);}
+.post-scope .rune-display{background:rgba(12,8,32,.9);border:1px solid rgba(124,58,237,.15);border-radius:20px;padding:1.4rem 1.4rem 1.2rem;display:grid;grid-template-columns:1fr 1fr 120px;gap:0;}
+@media(max-width:580px){.post-scope .rune-display{grid-template-columns:1fr 1fr;}
+.post-scope .rune-shards-col{grid-column:1/-1;border-left:none;border-top:1px solid rgba(255,255,255,.07);padding-top:1rem;margin-top:.4rem;flex-direction:row;gap:1.5rem;display:flex;}
+}
+@media(max-width:380px){.post-scope .rune-display{grid-template-columns:1fr;}
+}
+.post-scope .rune-col{padding:.1rem .5rem;}
+.post-scope .rune-col:first-child{border-right:1px solid rgba(255,255,255,.07);padding-right:1.1rem;}
+.post-scope .rune-col:nth-child(2){padding-left:1.1rem;padding-right:1.1rem;border-right:1px solid rgba(255,255,255,.07);}
+.post-scope .rune-tree-header{display:flex;align-items:center;gap:.6rem;font-family:'Rajdhani',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.9rem;}
+.post-scope .rune-tree-icon{width:20px;height:20px;border-radius:50%;object-fit:cover;}
+.post-scope .rune-tree-icon.loading{background:rgba(255,255,255,.1);}
+.post-scope .rune-row{display:flex;align-items:center;gap:.5rem;margin-bottom:.7rem;}
+.post-scope .rune-row::before{content:'';width:6px;height:6px;min-width:6px;border-radius:50%;background:rgba(255,255,255,.2);flex-shrink:0;}
+.post-scope .rune-choices{display:flex;justify-content:center;gap:.35rem;flex:1;align-items:flex-start;}
+.post-scope .rune-row-ks .rune-choices{gap:.28rem;}
+.post-scope .rune-row-ks .rune-choice{width:54px;}
+.post-scope .rune-row-ks .rune-icon{width:44px;height:44px;}
+.post-scope .rune-section-sep{border:none;border-top:1px solid rgba(255,255,255,.08);margin:.1rem .5rem .8rem;}
+.post-scope .rune-sec-ks-row{display:flex;justify-content:center;gap:.5rem;padding:.3rem 0 .15rem;}
+.post-scope .rune-sec-ks-row img{width:30px;height:30px;border-radius:50%;object-fit:cover;opacity:.2;background:rgba(255,255,255,.04);}
+.post-scope .rune-choice{display:flex;flex-direction:column;align-items:center;gap:.3rem;opacity:.18;transition:opacity .2s;width:54px;flex-shrink:0;}
+.post-scope .rune-choice.active{opacity:1;}
+.post-scope .rune-icon{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid transparent;background:rgba(255,255,255,.04);flex-shrink:0;cursor:pointer;transition:transform .15s,box-shadow .15s;}
+.post-scope .rune-choice:hover .rune-icon{transform:scale(1.12);box-shadow:0 0 14px rgba(124,58,237,.55);}
+.post-scope .rune-choice.active .rune-icon{border-color:#4a90e2;box-shadow:0 0 0 2px rgba(74,144,226,.3),0 0 14px rgba(74,144,226,.55);}
+.post-scope .rune-choice.active:hover .rune-icon{transform:scale(1.12);box-shadow:0 0 0 2px rgba(74,144,226,.3),0 0 20px rgba(74,144,226,.7);}
+.post-scope .rune-name{font-family:'Rajdhani',sans-serif;font-size:.54rem;font-weight:600;color:rgba(255,255,255,.45);text-align:center;width:100%;line-height:1.2;}
+.post-scope .rune-choice.active .rune-name{color:rgba(255,255,255,.9);}
+.post-scope .rune-shards-col{padding:.1rem 0 .1rem 1.1rem;display:flex;flex-direction:column;align-self:start;}
+.post-scope .rune-shards-header{font-family:'Rajdhani',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.9rem;}
+.post-scope .shard-slot-row{display:flex;align-items:flex-start;gap:.35rem;margin-bottom:.55rem;}
+.post-scope .rune-shard{display:flex;flex-direction:column;align-items:center;gap:.2rem;opacity:.18;transition:opacity .2s;width:36px;flex-shrink:0;}
+.post-scope .rune-shard.active{opacity:1;}
+.post-scope .rune-shard-icon{width:30px;height:30px;border-radius:50%;border:2px solid transparent;background:rgba(255,255,255,.05);object-fit:cover;flex-shrink:0;cursor:pointer;transition:transform .15s,box-shadow .15s;}
+.post-scope .rune-shard:hover .rune-shard-icon{transform:scale(1.12);box-shadow:0 0 12px rgba(124,58,237,.55);}
+.post-scope .rune-shard.active .rune-shard-icon{border-color:rgba(245,166,35,.7);box-shadow:0 0 8px rgba(245,166,35,.35);}
+.post-scope .rune-shard.active:hover .rune-shard-icon{transform:scale(1.12);box-shadow:0 0 14px rgba(245,166,35,.6);}
+.post-scope .rune-shard-name{font-family:'Rajdhani',sans-serif;font-size:.48rem;font-weight:600;color:rgba(255,255,255,.35);text-align:center;max-width:36px;line-height:1.1;}
+.post-scope .rune-shard.active .rune-shard-name{color:rgba(255,255,255,.8);}
+.post-scope .rune-shard.active .rune-shard-name{color:rgba(255,255,255,.85);}
+.post-scope #rune-tooltip{position:fixed;z-index:9999;pointer-events:none;max-width:220px;background:rgba(8,4,22,.97);border:1px solid rgba(124,58,237,.4);border-radius:10px;padding:.65rem .85rem;box-shadow:0 8px 32px rgba(0,0,0,.6);opacity:0;transition:opacity .15s;transform:translateY(4px);}
+.post-scope #rune-tooltip.visible{opacity:1;transform:translateY(0);}
+.post-scope #rune-tooltip .tip-name{font-family:'Rajdhani',sans-serif;font-size:.78rem;font-weight:700;color:#fff;margin-bottom:.3rem;}
+.post-scope #rune-tooltip .tip-desc{font-family:'Inter',sans-serif;font-size:.72rem;color:rgba(255,255,255,.55);line-height:1.5;}
+.post-scope .matchup-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.25rem 0 1.75rem;}
+@media(max-width:580px){.post-scope .matchup-grid{grid-template-columns:1fr;}
+}
+.post-scope .matchup-card{background:rgba(12,8,32,.85);border:1px solid rgba(239,68,68,.18);border-radius:18px;overflow:hidden;position:relative;transition:border-color .2s,transform .2s;}
+.post-scope .matchup-card:hover{border-color:rgba(239,68,68,.45);transform:translateY(-3px);}
+.post-scope .matchup-card-header{position:relative;height:130px;overflow:hidden;flex-shrink:0;}
+.post-scope .matchup-card-splash{width:100%;height:100%;object-fit:cover;object-position:center 20%;filter:brightness(.5);display:block;}
+.post-scope .matchup-card-champ-icon{position:absolute;bottom:10px;left:1rem;width:52px;height:52px;border-radius:50%;border:3px solid rgba(239,68,68,.7);box-shadow:0 0 16px rgba(239,68,68,.5);object-fit:cover;background:rgba(12,8,32,.6);}
+.post-scope .matchup-card-body{padding:1rem 1.1rem 1.1rem;}
+.post-scope .matchup-champ-name{font-family:'Orbitron',sans-serif;font-size:.78rem;font-weight:700;color:#fff;margin-bottom:.25rem;letter-spacing:.04em;}
+.post-scope .matchup-threat{display:inline-block;font-family:'Rajdhani',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#f87171;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:100px;padding:.15rem .6rem;margin-bottom:.7rem;}
+.post-scope .matchup-card-text{font-family:'Inter',sans-serif;font-size:.78rem;color:rgba(255,255,255,.52);line-height:1.65;}
+.post-scope .matchup-tip{margin-top:.7rem;padding:.55rem .7rem;background:rgba(124,58,237,.08);border-left:2px solid var(--purple);border-radius:0 8px 8px 0;font-family:'Inter',sans-serif;font-size:.74rem;color:rgba(255,255,255,.6);line-height:1.5;}
+.post-scope .matchup-tip strong{color:var(--purple-light);}
+.post-scope .gameplay-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.25rem 0 1.75rem;}
+@media(max-width:580px){.post-scope .gameplay-grid{grid-template-columns:1fr;}
+}
+.post-scope .gameplay-card{background:rgba(12,8,32,.8);border:1px solid rgba(139,92,246,.14);border-radius:16px;padding:1.15rem 1.2rem;position:relative;overflow:hidden;}
+.post-scope .gameplay-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--card-accent,var(--purple));border-radius:3px 0 0 3px;}
+.post-scope .gameplay-phase{font-family:'Rajdhani',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--card-accent,var(--purple-light));margin-bottom:.42rem;}
+.post-scope .gameplay-card-icon{font-size:1.25rem;margin-bottom:.38rem;line-height:1;}
+.post-scope .gameplay-card-title{font-family:'Rajdhani',sans-serif;font-size:.95rem;font-weight:700;color:#fff;margin-bottom:.42rem;}
+.post-scope .gameplay-card-body{font-size:.8rem;color:rgba(255,255,255,.52);line-height:1.62;}
+.post-scope .item-build-visual{background:rgba(12,8,32,.9);border:1px solid rgba(124,58,237,.15);border-radius:20px;padding:1.6rem;}
+.post-scope .item-build-label{font-family:'Rajdhani',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:.8rem;}
+.post-scope .item-build-row{display:flex;align-items:flex-start;flex-wrap:wrap;gap:.4rem;margin-bottom:1.2rem;}
+.post-scope .item-slot{display:flex;flex-direction:column;align-items:center;gap:.35rem;width:60px;flex-shrink:0;}
+.post-scope .item-icon{width:52px;height:52px;border-radius:8px;object-fit:cover;border:1px solid rgba(124,58,237,.25);background:rgba(255,255,255,.05);box-shadow:0 2px 8px rgba(0,0,0,.4);cursor:pointer;transition:transform .15s,box-shadow .15s;}
+.post-scope .item-icon:hover{transform:scale(1.08);box-shadow:0 0 16px rgba(124,58,237,.5);}
+.post-scope .item-slot.core .item-icon{border-color:rgba(245,166,35,.4);box-shadow:0 0 10px rgba(245,166,35,.15);}
+.post-scope .item-slot.core .item-icon:hover{box-shadow:0 0 18px rgba(245,166,35,.5);}
+.post-scope .item-icon-name{font-family:'Rajdhani',sans-serif;font-size:.58rem;font-weight:600;color:rgba(255,255,255,.4);text-align:center;width:60px;line-height:1.2;}
+.post-scope .item-arrow{font-size:1rem;color:rgba(255,255,255,.2);flex-shrink:0;align-self:center;margin-bottom:22px;}
+.post-scope .item-build-divider{height:1px;background:rgba(255,255,255,.06);margin:.8rem 0;}
+.post-scope .item-situational-row{display:flex;flex-wrap:wrap;gap:.6rem;align-items:flex-start;}
+.post-scope .ability-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.8rem;}
+@media(max-width:500px){.post-scope .ability-grid{grid-template-columns:repeat(3,1fr);}
+}
+.post-scope .ability-card{background:rgba(12,8,32,.9);border:1px solid rgba(124,58,237,.12);border-radius:14px;padding:.9rem .6rem;display:flex;flex-direction:column;align-items:center;gap:.5rem;transition:border-color .2s;}
+.post-scope .ability-card:hover{border-color:rgba(124,58,237,.35);}
+.post-scope .ability-card.priority-1{border-color:rgba(245,166,35,.4);background:rgba(245,166,35,.04);}
+.post-scope .ability-card.priority-2{border-color:rgba(124,58,237,.4);}
+.post-scope .ability-key{font-family:'Orbitron',sans-serif;font-size:.6rem;font-weight:900;color:rgba(255,255,255,.3);letter-spacing:.1em;}
+.post-scope .ability-icon{width:52px;height:52px;border-radius:8px;object-fit:cover;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);}
+.post-scope .ability-card.priority-1 .ability-icon{border-color:var(--gold);box-shadow:0 0 12px rgba(245,166,35,.3);}
+.post-scope .ability-name{font-family:'Rajdhani',sans-serif;font-size:.68rem;font-weight:700;color:rgba(255,255,255,.6);text-align:center;line-height:1.2;}
+.post-scope .ability-priority{font-family:'Rajdhani',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.1em;color:var(--gold);}
+.post-scope .ability-card.priority-2 .ability-priority{color:var(--purple-light);}
+.post-scope .skill-order-wrap{background:rgba(12,8,32,.9);border:1px solid rgba(124,58,237,.15);border-radius:20px;padding:1.4rem;overflow-x:auto;}
+.post-scope .skill-order-table{display:grid;grid-template-columns:56px repeat(18,1fr);gap:3px;min-width:480px;}
+.post-scope .so-header{font-family:'Rajdhani',sans-serif;font-size:.6rem;font-weight:700;color:rgba(255,255,255,.25);text-align:center;padding:.2rem 0;}
+.post-scope .so-skill-label{display:flex;flex-direction:column;align-items:center;gap:.2rem;padding-right:.3rem;}
+.post-scope .so-skill-icon{width:28px;height:28px;border-radius:6px;object-fit:cover;background:rgba(255,255,255,.05);}
+.post-scope .so-key{font-family:'Orbitron',sans-serif;font-size:.55rem;font-weight:700;color:rgba(255,255,255,.35);}
+.post-scope .so-cell{width:100%;aspect-ratio:1;border-radius:4px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.04);}
+.post-scope .so-cell.q-pick{background:rgba(6,214,242,.25);border-color:rgba(6,214,242,.4);}
+.post-scope .so-cell.w-pick{background:rgba(124,58,237,.25);border-color:rgba(124,58,237,.4);}
+.post-scope .so-cell.e-pick{background:rgba(245,166,35,.3);border-color:rgba(245,166,35,.5);}
+.post-scope .so-cell.r-pick{background:rgba(239,68,68,.35);border-color:rgba(239,68,68,.5);}
+.post-scope .so-legend{display:flex;gap:1rem;margin-top:.8rem;flex-wrap:wrap;}
+.post-scope .so-legend-item{display:flex;align-items:center;gap:.4rem;font-family:'Rajdhani',sans-serif;font-size:.65rem;font-weight:600;color:rgba(255,255,255,.4);}
+.post-scope .so-legend-dot{width:10px;height:10px;border-radius:2px;}
+.post-scope .article-content h2{font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:700;background:linear-gradient(135deg,var(--purple-light),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin:2.5rem 0 .9rem;letter-spacing:.03em;}
+.post-scope .article-content h3{font-family:'Rajdhani',sans-serif;font-size:1.1rem;font-weight:700;color:#fff;margin:1.6rem 0 .5rem;letter-spacing:.05em;}
+.post-scope .article-content p{font-family:'Inter',sans-serif;font-size:.95rem;color:rgba(255,255,255,.65);line-height:1.8;margin-bottom:1.1rem;}
+.post-scope .article-content a{color:#a78bfa;text-decoration:none;border-bottom:1px solid rgba(167,139,250,.2);transition:color .2s,border-color .2s;}
+.post-scope .article-content a:hover{color:var(--cyan);border-color:var(--cyan);}
+.post-scope .article-content ul,.post-scope .article-content ol{padding-left:1.4rem;margin-bottom:1.1rem;}
+.post-scope .article-content li{font-family:'Inter',sans-serif;font-size:.95rem;color:rgba(255,255,255,.65);line-height:1.8;margin-bottom:.4rem;}
+.post-scope .article-content strong{color:rgba(255,255,255,.9);font-weight:600;}
+.post-scope .callout{background:rgba(124,58,237,.07);border:1px solid rgba(124,58,237,.2);border-left:3px solid var(--purple);border-radius:0 12px 12px 0;padding:1.2rem 1.4rem;margin:1.5rem 0;}
+.post-scope .callout p{margin:0;color:rgba(255,255,255,.6);}
+.post-scope .cta-box{background:linear-gradient(135deg,rgba(124,58,237,.15),rgba(6,214,242,.05));border:1px solid rgba(124,58,237,.3);border-radius:20px;padding:2.2rem;text-align:center;margin-top:3rem;}
+.post-scope .cta-box h3{font-family:'Orbitron',sans-serif;font-size:1.2rem;font-weight:900;color:#fff;margin-bottom:.6rem;-webkit-text-fill-color:#fff;}
+.post-scope .cta-box p{font-family:'Inter',sans-serif;font-size:.88rem;color:rgba(255,255,255,.45);margin-bottom:1.4rem;}
+.post-scope .btn-primary{display:inline-flex;align-items:center;gap:.5rem;font-family:'Rajdhani',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;background:linear-gradient(135deg,var(--purple),#5b21b6);color:#fff;text-decoration:none;padding:.9rem 2.2rem;border-radius:12px;border:1px solid rgba(124,58,237,.5);transition:all .25s;box-shadow:0 0 16px rgba(124,58,237,.2);}
+.post-scope .btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 24px rgba(124,58,237,.4);border-color:transparent;}
+/* v2: readable contrast (WCAG AA). Unselected runes dim their icon, not their name. */
+.post-scope .rune-choice,.post-scope .rune-shard{opacity:1;}
+.post-scope .rune-choice:not(.active) .rune-icon,.post-scope .rune-shard:not(.active) .rune-shard-icon{opacity:.22;transition:opacity .2s,transform .15s,box-shadow .15s;}
+.post-scope .rune-choice:not(.active):hover .rune-icon,.post-scope .rune-shard:not(.active):hover .rune-shard-icon{opacity:.6;}
+.post-scope .rune-choice:not(.active) .rune-name,.post-scope .rune-shard:not(.active) .rune-shard-name{color:rgba(255,255,255,.5);}
+.post-scope .visual-section-title,.post-scope .item-build-label{color:rgba(255,255,255,.55);}
+.post-scope .rune-tree-header,.post-scope .rune-shards-header,.post-scope .item-icon-name,.post-scope .so-legend-item{color:rgba(255,255,255,.6);}
+/* v2: the two rune trees only fit side by side from ~560px; one column below that */
+@media(max-width:760px){.post-scope .rune-display{grid-template-columns:1fr 1fr;}}
+@media(max-width:560px){.post-scope .rune-display{grid-template-columns:1fr;}}

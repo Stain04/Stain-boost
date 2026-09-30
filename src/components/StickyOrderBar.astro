@@ -1,0 +1,52 @@
+---
+// Phones only: an order bar that appears once the main CTA scrolls away.
+// Follows the hero quote if the visitor changed it (sb:quote event).
+interface Props { label: string; price: string; href: string; cta?: string; watch?: string }
+const { label, price, href, cta = 'Order', watch = '[data-climb]' } = Astro.props;
+---
+<div class="sticky" data-sticky data-watch={watch} hidden data-loc="sticky_bar">
+  <div class="info">
+    <span class="lbl" data-sticky-label>{label}</span>
+    <span class="price num" data-sticky-price>{price}</span>
+  </div>
+  <a class="btn btn-primary" href={href} data-sticky-cta data-track="cta_click" data-track-location="sticky_bar">{cta}</a>
+</div>
+
+<script>
+  const bar = document.querySelector('[data-sticky]');
+  if (bar) {
+    const target = document.querySelector(bar.getAttribute('data-watch'));
+    const footer = document.querySelector('footer');
+    let heroVisible = true, footerVisible = false;
+    const sync = () => { bar.hidden = heroVisible || footerVisible; };
+    if (target && 'IntersectionObserver' in window) {
+      new IntersectionObserver(([e]) => { heroVisible = e.isIntersecting; sync(); }).observe(target);
+      if (footer) new IntersectionObserver(([e]) => { footerVisible = e.isIntersecting; sync(); }).observe(footer);
+    }
+    document.addEventListener('sb:quote', (e) => {
+      const d = e.detail;
+      bar.querySelector('[data-sticky-label]').textContent = d.label;
+      bar.querySelector('[data-sticky-price]').textContent = '$' + d.total.toFixed(2);
+      bar.querySelector('[data-sticky-cta]').setAttribute('href', d.href);
+    });
+  }
+</script>
+
+<style>
+  .sticky { display: none; }
+  @media (max-width: 760px) {
+    .sticky:not([hidden]) {
+      position: fixed; z-index: 55; inset-inline: 10px; inset-block-end: calc(10px + env(safe-area-inset-bottom));
+      display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 10px 10px 16px;
+      border-radius: 18px; border: 1px solid rgba(139, 92, 246, .45);
+      background: rgba(10, 7, 26, .97);
+      box-shadow: 0 16px 40px -12px rgba(0, 0, 0, .8), 0 0 0 1px rgba(124, 58, 237, .2);
+      animation: up .35s var(--ease);
+    }
+    .info { display: grid; line-height: 1.2; min-width: 0; }
+    .lbl { font-family: var(--font-ui); font-weight: 700; font-size: .85rem; letter-spacing: .05em; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .price { font-size: 1.25rem; color: var(--gold); }
+    .btn { --h: 46px; padding: 0 1.3rem; }
+  }
+  @keyframes up { from { transform: translateY(120%); } }
+</style>
