@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 ---
-<Base title="Admin – StainBoost" description="StainBoost admin." path="/admin" noindex minimal chat={false}>
+<Base title="Admin – StainBoost" description="StainBoost admin." path="/admin" noindex minimal chat={false} promo={false}>
   <section class="section-tight">
     <div class="wrap adm">
       <div class="gate card" data-gate hidden>
@@ -201,7 +201,9 @@ import Base from '../layouts/Base.astro';
       + row('Payment', o.paymentClaim ? `Customer says: ${o.paymentClaim.method}, ${ago(o.paymentClaim.ts)}` : 'No claim yet')
       + row('Referral', o.referral ? `${o.referral.code}${o.referral.credited ? ` · $${o.referral.credited} credited` : ''}` : '—')
       + row('Credit used', o.creditUsed ? '$' + (+o.creditUsed).toFixed(2) : '—')
-      + (o.meta?.kind === 'win_boost' ? row('Net wins', `${o.meta.winsDone || 0} / ${o.meta.wins}`) : row('Range', `${o.meta?.from || ''} → ${o.meta?.to || ''}`))
+      + (o.meta?.kind === 'win_boost' ? row('Net wins', `${o.meta.winsDone || 0} / ${o.meta.wins}`)
+        : o.meta?.kind === 'free_trial' ? row('Free games', `${(o.games || []).length} / ${o.meta.games} (log each game below)`)
+        : row('Range', `${o.meta?.from || ''} → ${o.meta?.to || ''}`))
       + row('Updated', ago(o.updatedAt));
     $('#fStatus').value = o.status;
     $('#fRank').value = o.currentRank || '';

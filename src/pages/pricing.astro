@@ -13,9 +13,11 @@ import { getVerifiedReviews } from '../data/reviews.js';
 import { FAQ, faqSchema } from '../data/faq.js';
 import { tierOfWinRank } from '../data/ranks.js';
 import { boostProduct, breadcrumbs } from '../data/schema.js';
+import { FREE_TRIAL, TRIAL_ENDS_MS } from '../data/promo.js';
 import '../styles/pricing.css';
 
 const reviews = await getVerifiedReviews();
+const trialOn = Date.now() < TRIAL_ENDS_MS;
 const faqItems = FAQ.flatMap((g) => g.items).filter((i) => /pay|refund|start|banned|login|free win|loses/i.test(i.q));
 const divRows = [];
 RB_TIERS.slice(0, MASTERS).forEach((t, i) => {
@@ -44,6 +46,13 @@ const total = formatUSD(rankBoostTotal({ fromTier: 2, fromDiv: 2, toTier: 3, toD
         <span class="chip chip-green">Full refund if not started</span>
         <span class="chip chip-gold">Net wins: pay for 5, get 6</span>
       </div>
+      {trialOn && (
+        <a class="trial-strip" href="/free-trial" data-trial data-track="cta_click" data-track-location="pricing_trial">
+          <span class="ts-text"><b>🎁 First time? Try {FREE_TRIAL.games} games free before you pay.</b> No card, no order — then decide.</span>
+          <span class="ts-count" data-trial-countdown data-end={TRIAL_ENDS_MS}>Ends Fri 2 Oct</span>
+          <span class="ts-go">Claim free games →</span>
+        </a>
+      )}
     </div>
   </section>
 

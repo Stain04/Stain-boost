@@ -125,6 +125,7 @@ import { PAYMENT_METHODS, DISCORD } from '../data/site.js';
     // progress
     let lbl = 'Progress', val = '—', pct = 0;
     if (o.meta?.kind === 'win_boost') { const done = o.meta.winsDone || 0, all = o.meta.wins || 1; lbl = 'Net wins'; val = `${done} / ${all}`; pct = done / all; }
+    else if (o.meta?.kind === 'free_trial') { const done = (o.games || []).length, all = o.meta.games || 2; lbl = 'Free games'; val = `${Math.min(done, all)} / ${all}`; pct = Math.min(1, done / all); }
     else if (o.meta?.kind === 'rank_boost') { lbl = `${o.meta.from} → ${o.meta.to}`; pct = rankProgress(o); val = Math.round(pct * 100) + '%'; }
     if (o.status === 'completed') pct = 1;
     $('[data-plbl]').textContent = lbl;

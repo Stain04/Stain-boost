@@ -249,3 +249,7 @@ h3 { font-size: clamp(1.05rem, .6vw + .9rem, 1.25rem); letter-spacing: .03em; }
 .green { color: var(--success); }
 .flip-rtl { }
 [dir='rtl'] .flip-rtl { transform: scaleX(-1); }
+
+/* Free trial (src/data/promo.js): [data-trial] shows while it runs, [data-trial-over] once it has ended */
+.trial-over [data-trial] { display: none !important; }
+html:not(.trial-over) [data-trial-over] { display: none !important; }

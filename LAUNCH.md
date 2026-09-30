@@ -56,7 +56,21 @@ Next tests:
 - Sticky-bar wording
 - Priority start pre-selected vs. not, judged on revenue per order rather than order count
 
-## 8. Decisions still open
+## 8. Promos (free trial)
+The free trial gives new customers their first 2 games free. It shows as:
+- a bar on every page;
+- a card on the home page;
+- a strip on /pricing;
+- the /free-trial page.
+
+It runs until the end of Friday 2 October (midnight, UTC+3).
+- **To change the end or the number of games:** edit `src/data/promo.js` (one line each) and redeploy.
+- **After the end time:** the bar, card and strip hide themselves, the page says "ended", and the server refuses new claims. You don't need to do anything.
+- **Rules:** new customers only, and one trial per account, Riot ID and Discord name.
+- **What claims look like:** $0 orders marked "🎁 New FREE TRIAL" in Discord and admin. Log each game in admin so the customer's tracker shows "Free games 1 / 2".
+- **Trials and reviews:** trials can't leave reviews (reviews are for buyers). A trial doesn't use up a friend's referral discount.
+
+## 9. Decisions still open
 - **Master Yi guide speed.** It scores 82–91 on mobile. The swing comes from its 191 KB hero image, which loads from Riot's servers. Hosting a compressed ~30 KB copy on stainboost.com would make it a steady 90+, but that means downloading Riot's splash art, so it needs your OK.
 - **Share images.** Every page shares the same `og-image.png`. Per-post images, with each post's title, would make links posted in Discord stand out more. This is optional.
 - **Coupons.** The coupon box was replaced by the referral field. The coupon endpoint still exists, with no active codes.

@@ -20,9 +20,9 @@ export const DISCORD = {
 export const STATS = {
   ordersCompleted: 120,          // "120+"
   bans: 0,
-  rank: 'Challenger',            // Stain's rank (peaked Challenger on ME in S2026; decays while he isn't playing that account)
+  rank: 'Challenger',            // Stain's rank (owner-confirmed; shown as just 'Challenger', no LP)
   masteryPoints: '5M+',          // Master Yi mastery, added up across all his accounts over the years (owner-confirmed)
-  yearsPlaying: 3,               // 3 years of League
+  playingSince: 2015,            // plays League since 2015 (owner-confirmed 1 Oct 2026)
   meServerSince: 2024,           // on the ME server since it opened
 };
 
@@ -38,7 +38,7 @@ export const ACCOUNTS = [
  */
 export const PROOF = {
   checkedOn: 'Sep 2026',
-  peak: { tier: 'Challenger', lp: 731, season: 'S2026', server: 'ME', source: 'https://op.gg/lol/summoners/me/Stain-001' },
+  peak: { tier: 'Challenger', server: 'ME', source: 'https://op.gg/lol/summoners/me/Stain-001' },
 };
 
 /** Servers. Only ME is live; the others collect "notify me" sign-ups. */

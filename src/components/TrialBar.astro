@@ -1,0 +1,55 @@
+---
+// Site-wide free-trial bar. Rendered only while the promo runs (src/data/promo.js);
+// after the deadline the page hides it before first paint (see Base.astro) and the API refuses claims.
+import { FREE_TRIAL, TRIAL_ENDS_MS } from '../data/promo.js';
+---
+<div class="trial-bar" data-trial data-loc="trial_bar">
+  <a class="wrap tb" href="/free-trial" data-track="cta_click" data-track-location="trial_bar">
+    <span class="tb-gift" aria-hidden="true">🎁</span>
+    <span class="tb-text">
+      <b class="tb-long">New here? Your first {FREE_TRIAL.games} games are free.</b>
+      <b class="tb-short">{FREE_TRIAL.games} FREE games</b>
+      <span class="tb-sub"> No payment · 2 days only</span>
+    </span>
+    <span class="tb-count tb-long" data-trial-countdown data-end={TRIAL_ENDS_MS}>Ends Fri 2 Oct</span>
+    <span class="tb-count tb-short" data-trial-countdown data-prefix="⏳ " data-end={TRIAL_ENDS_MS}>⏳ Fri 2 Oct</span>
+    <span class="tb-go">Claim →</span>
+  </a>
+</div>
+
+<style>
+  .trial-bar {
+    position: relative; z-index: 51;
+    background: linear-gradient(90deg, rgba(245, 166, 35, .22), rgba(124, 58, 237, .32) 55%, rgba(6, 214, 242, .18));
+    border-block-end: 1px solid rgba(245, 166, 35, .45);
+  }
+  .tb {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    min-height: 40px; padding-block: 6px; color: #fff; text-decoration: none; font-size: .9rem;
+  }
+  .tb-gift { font-size: 1.05rem; }
+  .tb-text b { font-family: var(--font-ui); font-weight: 700; font-size: 1rem; letter-spacing: .03em; }
+  .tb-sub { color: rgba(255, 255, 255, .78); }
+  .tb-short { display: none; }
+  .tb-text, .tb-count, .tb-go { white-space: nowrap; }
+  .tb-count {
+    display: inline-block; min-width: 15.5ch; text-align: center;
+    font-family: var(--font-ui); font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: .04em;
+    color: var(--gold); padding: 2px 8px; border-radius: 999px; background: rgba(0, 0, 0, .28);
+  }
+  .tb-count.tb-short { display: none; }
+  .tb-go {
+    font-family: var(--font-ui); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; font-size: .8rem;
+    color: #1a1204; background: linear-gradient(135deg, #fbbf24, var(--gold)); padding: 5px 12px; border-radius: 999px;
+  }
+  .tb:hover .tb-go { filter: brightness(1.08); }
+  .tb:focus-visible { outline: 2px solid var(--cyan); outline-offset: -2px; }
+  @media (max-width: 720px) {
+    .tb { gap: 7px; font-size: .82rem; }
+    .tb-long, .tb-sub { display: none; }
+    .tb-short { display: inline; font-size: .92rem; }
+    .tb-count.tb-short { display: inline-block; min-width: 12ch; padding: 2px 6px; }
+    .tb-go { padding: 4px 9px; font-size: .72rem; }
+  }
+  @media (max-width: 360px) { .tb-gift { display: none; } }
+</style>

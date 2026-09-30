@@ -40,7 +40,7 @@ export default async function handler(req, res) {
     if (!owner) return res.status(200).json({ valid: false, reason: "That code doesn't exist." });
     if (user) {
       if (String(owner) === user.id) return res.status(200).json({ valid: false, reason: "You can't use your own code." });
-      if ((user.orderTokens || []).length || user.referredBy) return res.status(200).json({ valid: false, reason: 'Referral codes are for a first order only.' });
+      if (paidOrders(user).length || user.referredBy) return res.status(200).json({ valid: false, reason: 'Referral codes are for a first order only.' });
     }
     return res.status(200).json({ valid: true, rate: REFERRAL_RATE });
   }
@@ -55,10 +55,15 @@ export default async function handler(req, res) {
       credit: Math.max(0, Number(user.credit) || 0),
       referrals: (user.referralEarnings || []).length,
       earned: (user.referralEarnings || []).reduce((a, r) => a + (Number(r.amount) || 0), 0),
-      firstOrder: !(user.orderTokens || []).length && !user.referredBy,
+      firstOrder: !paidOrders(user).length && !user.referredBy,
     });
   } catch (e) {
     console.error('referral error', e);
     return res.status(500).json({ error: 'Server error.' });
   }
+}
+
+/** Orders that count as purchases (a free trial is not one). */
+function paidOrders(user) {
+  return (user.orderTokens || []).filter((t) => t !== user.trialToken);
 }
