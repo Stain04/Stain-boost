@@ -1,0 +1,96 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import { SITE } from '../../data/site.js';
+import { breadcrumbs } from '../../data/schema.js';
+
+const posts = (await getCollection('blog', (p) => !p.data.draft))
+  .sort((a, b) => a.data.order - b.data.order || +b.data.published - +a.data.published);
+const categories = [...new Set(posts.map((p) => p.data.category))].sort();
+const fmt = (d) => d.toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+const blogSchema = {
+  '@context': 'https://schema.org', '@type': 'Blog', name: 'StainBoost Blog', url: SITE.url + '/blog',
+  description: 'League of Legends climbing guides and ELO boosting explained, written by Stain — Challenger, #1 Master Yi on the Middle East server.',
+  publisher: { '@type': 'Organization', name: 'StainBoost', logo: { '@type': 'ImageObject', url: SITE.url + '/icon-512.png' } },
+  blogPost: posts.map((p) => ({ '@type': 'BlogPosting', headline: p.data.h1, url: `${SITE.url}/blog/${p.id}`, datePublished: p.data.published.toISOString().slice(0, 10) })),
+};
+---
+<Base
+  title="StainBoost Blog – League of Legends Climbing Guides & ELO Boosting Explained"
+  description="Free League of Legends guides: how to escape Bronze to Diamond, champion tier lists, LP and MMR explained, and honest ELO boosting advice — from the #1 Master Yi on the Middle East server."
+  path="/blog"
+  active="/blog"
+  schema={[blogSchema, breadcrumbs([{ name: 'Home', path: '/' }, { name: 'Blog', path: '/blog' }])]}
+>
+  <section class="section-tight head" data-loc="blog_head">
+    <div class="wrap">
+      <p class="eyebrow">Knowledge base</p>
+      <h1>Learn to <span class="grad">climb.</span></h1>
+      <p class="lead">Free guides from a Challenger Master Yi — climbing, champions, LP and MMR, and straight talk about boosting.</p>
+      <div class="filters" role="group" aria-label="Filter by category">
+        <button type="button" class="f" aria-pressed="true" data-cat="">All <span>{posts.length}</span></button>
+        {categories.map((c) => <button type="button" class="f" aria-pressed="false" data-cat={c}>{c} <span>{posts.filter((p) => p.data.category === c).length}</span></button>)}
+      </div>
+      <label class="visually-hidden" for="blogSearch">Search guides</label>
+      <input id="blogSearch" class="input search" type="search" placeholder="Search guides…" autocomplete="off" />
+    </div>
+  </section>
+
+  <section class="section-tight" data-loc="blog_list">
+    <div class="wrap grid-3" data-posts>
+      {posts.map((p, i) => (
+        <a class="post card card-glow reveal" style={`--d:${(i % 3) * 0.05}s`} href={`/blog/${p.id}`} data-cat={p.data.category} data-text={(p.data.h1 + ' ' + p.data.excerpt).toLowerCase()}>
+          <span class="post-emoji" aria-hidden="true">{p.data.emoji}</span>
+          <span class="post-cat">{p.data.category}</span>
+          <span class="post-title">{p.data.h1}</span>
+          <span class="post-ex">{p.data.excerpt}</span>
+          <span class="post-meta">{p.data.readTime} · {fmt(p.data.updated ?? p.data.published)}</span>
+        </a>
+      ))}
+      <p class="empty" data-empty hidden>No guides match that search.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="card cta">
+        <div><h2>Rather skip the grind?</h2><p class="muted">Stain plays every game himself — see your price in seconds.</p></div>
+        <a class="btn btn-primary btn-lg" href="/pricing" data-track="cta_click" data-track-location="blog_index">Get my price</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const cards = [...document.querySelectorAll('[data-posts] .post')];
+  const btns = [...document.querySelectorAll('.filters .f')];
+  const search = document.getElementById('blogSearch');
+  const empty = document.querySelector('[data-empty]');
+  let cat = '';
+  function apply() {
+    const q = search.value.trim().toLowerCase();
+    let shown = 0;
+    cards.forEach((c) => { const ok = (!cat || c.dataset.cat === cat) && (!q || c.dataset.text.includes(q)); c.hidden = !ok; if (ok) { shown++; c.classList.add('in'); } });
+    empty.hidden = shown > 0;
+  }
+  btns.forEach((b) => b.addEventListener('click', () => { cat = b.dataset.cat; btns.forEach((x) => x.setAttribute('aria-pressed', String(x === b))); apply(); }));
+  search.addEventListener('input', apply);
+</script>
+
+<style>
+  .head h1 { font-size: clamp(2rem, 3.6vw + .7rem, 3.3rem); margin-block: 10px 12px; }
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-block: 20px 12px; }
+  .f { font-family: var(--font-ui); font-weight: 700; font-size: .9rem; letter-spacing: .05em; color: var(--text); padding: 7px 14px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, .14); background: rgba(255, 255, 255, .03); }
+  .f span { color: var(--muted); margin-inline-start: 4px; }
+  .f[aria-pressed='true'] { border-color: var(--purple-light); background: rgba(124, 58, 237, .18); }
+  .search { max-width: 420px; }
+  .post { display: grid; gap: 8px; text-decoration: none; color: inherit; align-content: start; }
+  .post-emoji { font-size: 1.8rem; }
+  .post-cat { font-family: var(--font-ui); font-weight: 700; font-size: .78rem; letter-spacing: .16em; text-transform: uppercase; color: var(--cyan); }
+  .post-title { font-family: var(--font-ui); font-weight: 700; font-size: 1.2rem; line-height: 1.3; color: #fff; }
+  .post-ex { color: var(--muted); font-size: .95rem; }
+  .post-meta { margin-block-start: 6px; font-family: var(--font-ui); font-weight: 600; font-size: .85rem; color: var(--purple-light); }
+  .empty { color: var(--muted); }
+  .cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px; border-color: rgba(139, 92, 246, .35); background: linear-gradient(135deg, rgba(124, 58, 237, .16), var(--card)); }
+  .cta h2 { font-size: clamp(1.3rem, 2vw + .6rem, 1.8rem); margin-block-end: 4px; }
+</style>

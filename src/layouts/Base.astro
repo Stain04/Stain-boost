@@ -1,0 +1,90 @@
+---
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import ChatLauncher from '../components/ChatLauncher.astro';
+import { SITE } from '../data/site.js';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;              // canonical path, e.g. "/pricing"
+  ogImage?: string;          // absolute path under /public, e.g. "/og/pricing.png"
+  ogType?: 'website' | 'article';
+  noindex?: boolean;
+  schema?: object[];         // JSON-LD blocks
+  active?: string;           // nav item to highlight
+  minimal?: boolean;         // account pages: slimmer chrome
+  chat?: boolean;            // the customer help chat (off on admin)
+}
+const { title, description, path, ogImage = '/og-image.png', ogType = 'website', noindex = false, schema = [], active = '', minimal = false, chat = true } = Astro.props;
+const canonical = SITE.url + (path === '/' ? '/' : path);
+const ogUrl = SITE.url + ogImage;
+---
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  {noindex && <meta name="robots" content="noindex,nofollow" />}
+  <meta name="theme-color" content={SITE.themeColor} />
+  <link rel="icon" href="/favicon.ico" sizes="32x32" />
+  <link rel="icon" href="/favicon-48.png" sizes="48x48" type="image/png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <link rel="preload" href="/fonts/orbitron-var-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/inter-var-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <!-- UI font for buttons and labels: without the preload it lands late and forces a second full-page layout -->
+  <link rel="preload" href="/fonts/rajdhani-700-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <meta property="og:type" content={ogType} />
+  <meta property="og:site_name" content="StainBoost" />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={ogUrl} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogUrl} />
+  {schema.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
+  <script is:inline>document.documentElement.classList.add('js');</script>
+  <!-- Google Analytics: queued immediately, gtag.js loaded once the page is idle (keeps it off the critical path) -->
+  <script is:inline define:vars={{ gaId: SITE.gaId }}>
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { dataLayer.push(arguments); };
+    gtag('js', new Date());
+    gtag('config', gaId);
+    var loadGA = function () {
+      var s = document.createElement('script'); s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
+      document.head.appendChild(s);
+    };
+    // Only the real site reports to GA (local previews never pollute the data).
+    if (/(^|\.)stainboost\.com$/.test(location.hostname)) {
+      addEventListener('load', function () { ('requestIdleCallback' in window) ? requestIdleCallback(loadGA, { timeout: 2500 }) : setTimeout(loadGA, 1200); });
+    }
+  </script>
+  <script is:inline defer src="/_vercel/insights/script.js"></script>
+  <script is:inline defer src="/_vercel/speed-insights/script.js"></script>
+  <slot name="head" />
+</head>
+<body class={minimal ? 'is-minimal' : ''}>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="backdrop" aria-hidden="true"></div>
+  <Nav active={active} />
+  <main id="main">
+    <slot />
+  </main>
+  <Footer />
+  <slot name="after" />
+  {chat && <ChatLauncher />}
+  <script>
+    import '../scripts/common.js';
+  </script>
+</body>
+</html>

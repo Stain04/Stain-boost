@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Page not found · StainBoost" description="This page doesn't exist. Head back home or get an instant boost price." path="/404" noindex>
+  <section class="section">
+    <div class="wrap-narrow center nf">
+      <p class="eyebrow">404</p>
+      <h1>You took a wrong turn in the jungle.</h1>
+      <p class="lead">This page doesn't exist — maybe it got demoted. Your rank is still within reach though.</p>
+      <div class="row row-center">
+        <a class="btn btn-primary" href="/pricing">Get my price</a>
+        <a class="btn btn-ghost" href="/">Back to home</a>
+      </div>
+      <p class="links"><a href="/reviews">Reviews</a> · <a href="/faq">FAQ</a> · <a href="/blog">Blog</a> · <a href="/dashboard">Track my order</a></p>
+    </div>
+  </section>
+</Base>
+<style>
+  .nf { display: grid; gap: 18px; justify-items: center; padding-block: 6vh; }
+  .nf h1 { font-size: clamp(1.8rem, 4vw + .5rem, 3rem); }
+  .links { color: var(--muted); }
+</style>

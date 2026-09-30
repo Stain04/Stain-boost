@@ -1,5 +1,5 @@
 import { createClient } from '@vercel/kv';
-import { getUser, isAdmin } from '../lib/auth.js';
+import { getUser, isAdmin } from './_lib/auth.js';
 
 // Simple sanitizer — strip HTML tags, limit length
 function sanitize(str, maxLen = 200) {

@@ -1,4 +1,5 @@
-import { getKv, getUser, rateLimit, getIp, isAdmin } from '../../lib/auth.js';
+import { getKv, getUser, rateLimit, getIp, isAdmin } from '../_lib/auth.js';
+import { REFERRAL_RATE } from '../../src/data/pricing.js';
 
 const TOKEN_RE = /^SB-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
 const VALID_STATUSES = ['awaiting_payment', 'payment_verified', 'queued', 'in_progress', 'paused', 'completed', 'cancelled'];
@@ -15,9 +16,11 @@ function publicShape(o) {
     status: o.status,
     meta: o.meta,
     summary: o.summary,
+    total: o.total,
     type: o.type,
     flash: o.flash,
     ign: o.ign,
+    paymentClaim: o.paymentClaim || null,
     currentRank: o.currentRank || '',
     currentLp: o.currentLp || 0,
     eta: o.eta || '',
@@ -30,12 +33,44 @@ function publicShape(o) {
   };
 }
 
+const PAID = ['payment_verified', 'queued', 'in_progress', 'paused', 'completed'];
+const parseRec = (raw) => (raw ? (typeof raw === 'string' ? JSON.parse(raw) : raw) : null);
+
+// Referral credit + refunds, run whenever Stain changes an order's status.
+//  • First time an order counts as paid: the referrer earns REFERRAL_RATE of what the friend paid.
+//  • Order cancelled: any credit the customer used goes back to their balance (once).
+async function settleMoney(kv, order) {
+  try {
+    if (PAID.includes(order.status) && order.referral && !order.referral.credited) {
+      const amount = Math.round(parseFloat(order.total) * REFERRAL_RATE * 100) / 100;
+      const ref = parseRec(await kv.get(`user:${order.referral.referrerId}`));
+      if (ref && amount > 0) {
+        ref.credit = Math.round(((Number(ref.credit) || 0) + amount) * 100) / 100;
+        ref.referralEarnings = [...(ref.referralEarnings || []), { token: order.token, amount, ts: Date.now() }].slice(-200);
+        await kv.set(`user:${ref.id}`, JSON.stringify(ref));
+        order.referral.credited = amount;
+        order.notes = [...(order.notes || []), { from: 'system', text: `Referral: $${amount.toFixed(2)} credit added for the referrer.`, ts: Date.now() }];
+      }
+    }
+    if (order.status === 'cancelled' && Number(order.creditUsed) > 0 && !order.creditRefunded) {
+      const buyer = parseRec(await kv.get(`user:${order.userId}`));
+      if (buyer) {
+        buyer.credit = Math.round(((Number(buyer.credit) || 0) + Number(order.creditUsed)) * 100) / 100;
+        await kv.set(`user:${buyer.id}`, JSON.stringify(buyer));
+        order.creditRefunded = true;
+      }
+    }
+  } catch (e) { console.error('settleMoney failed', e); }
+}
+
 // Loads an order by token and verifies the caller owns it (or is admin).
 // Returns { order } on success or { error, status } on failure.
 async function loadOwnedOrder(req, kv, token) {
   const raw = await kv.get(`order:${token}`);
   if (!raw) return { error: 'Order not found.', status: 404 };
   const order = typeof raw === 'string' ? JSON.parse(raw) : raw;
+  const adminKey = process.env.ADMIN_KEY;
+  if (adminKey && req.headers['x-admin-key'] === adminKey) return { order, user: null, isAdmin: true };
   const user = await getUser(req);
   if (isAdmin(user)) return { order, user, isAdmin: true };
   if (!user) return { error: 'Sign in to view this order.', status: 401 };
@@ -51,7 +86,52 @@ export default async function handler(req, res) {
     case 'chat':   return chat(req, res);
     case 'mine':   return mine(req, res);
     case 'list':   return list(req, res);
+    case 'paid':   return paid(req, res);
     default:       return res.status(404).json({ error: 'Not found' });
+  }
+}
+
+// Customer says "I've paid with X" (from the Pay now panel). Status stays
+// awaiting_payment until Stain verifies — this only records the claim and pings him.
+const PAY_METHODS = { binance: 'Binance Pay', paypal: 'PayPal' };
+async function paid(req, res) {
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  if (rateLimit('paid:' + getIp(req), 10, 60_000)) return res.status(429).json({ error: 'Too many requests.' });
+  const token = String(req.body?.token || '').toUpperCase().trim();
+  if (!TOKEN_RE.test(token)) return res.status(400).json({ error: 'Invalid token.' });
+  const method = PAY_METHODS[req.body?.method];
+  if (!method) return res.status(400).json({ error: 'Unknown payment method.' });
+
+  const kv = getKv();
+  if (!kv) return res.status(500).json({ error: 'Storage not configured.' });
+  try {
+    const r = await loadOwnedOrder(req, kv, token);
+    if (r.error) return res.status(r.status).json({ error: r.error });
+    const order = r.order;
+    if (order.status !== 'awaiting_payment') return res.status(200).json({ ok: true, already: true });
+    if (order.paymentClaim && Date.now() - order.paymentClaim.ts < 60_000) return res.status(200).json({ ok: true });
+    order.paymentClaim = { method, ts: Date.now() };
+    order.notes = Array.isArray(order.notes) ? order.notes : [];
+    order.notes.push({ from: 'system', text: `Customer says they paid with ${method}. Waiting for Stain to confirm.`, ts: Date.now() });
+    order.updatedAt = Date.now();
+    await kv.set(`order:${token}`, JSON.stringify(order));
+    if (process.env.DISCORD_WEBHOOK_URL) {
+      try {
+        await fetch(process.env.DISCORD_WEBHOOK_URL, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ embeds: [{ title: '💸 Payment sent (check it)', color: 0xf5a623, fields: [
+            { name: 'Order', value: `\`${token}\` · ${order.summary}`, inline: false },
+            { name: 'Method', value: method, inline: true },
+            { name: 'Total', value: `$${order.total}`, inline: true },
+            { name: 'Discord', value: order.discord || '—', inline: true },
+          ] }] }),
+        });
+      } catch (e) { console.error('paid webhook failed', e); }
+    }
+    return res.status(200).json({ ok: true });
+  } catch (e) {
+    console.error('paid error:', e);
+    return res.status(500).json({ error: 'Server error.' });
   }
 }
 
@@ -99,7 +179,10 @@ async function update(req, res) {
     const order = typeof raw === 'string' ? JSON.parse(raw) : raw;
     const body = req.body || {};
 
-    if (typeof body.status === 'string' && VALID_STATUSES.includes(body.status)) order.status = body.status;
+    if (typeof body.status === 'string' && VALID_STATUSES.includes(body.status)) {
+      order.status = body.status;
+      await settleMoney(kv, order);
+    }
     if (typeof body.currentRank === 'string') order.currentRank = sanitize(body.currentRank, 40);
     if (typeof body.currentLp === 'number') order.currentLp = Math.max(0, Math.min(9999, body.currentLp | 0));
     if (typeof body.eta === 'string') order.eta = sanitize(body.eta, 80);
@@ -235,6 +318,11 @@ async function list(req, res) {
           currentRank: o.currentRank || '',
           currentLp: o.currentLp || 0,
           eta: o.eta || '',
+          type: o.type,
+          paymentClaim: o.paymentClaim || null,
+          referral: o.referral ? { code: o.referral.code, credited: o.referral.credited || 0 } : null,
+          creditUsed: o.creditUsed || 0,
+          reviewable: o.status === 'completed' && !o.reviewedAt,
           createdAt: o.createdAt,
           updatedAt: o.updatedAt,
         };
@@ -273,7 +361,8 @@ async function mine(req, res) {
         const o = typeof r === 'string' ? JSON.parse(r) : r;
         return {
           token: o.token, status: o.status, summary: o.summary,
-          total: o.total, meta: o.meta,
+          total: o.total, meta: o.meta, type: o.type, flash: o.flash,
+          reviewable: o.status === 'completed' && !o.reviewedAt,
           currentRank: o.currentRank || '', eta: o.eta || '',
           createdAt: o.createdAt, updatedAt: o.updatedAt,
         };

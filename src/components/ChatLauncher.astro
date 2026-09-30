@@ -1,0 +1,24 @@
+<button class="chat-launch" type="button" aria-label="Chat with Stain's assistant" aria-haspopup="dialog" data-chat-launch>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.6 8.6 0 0 1-3.8-.9L3 21l1.9-5.2A8.4 8.4 0 1 1 21 11.5Z"/></svg>
+  <span class="chat-launch-label">Ask a question</span>
+</button>
+
+<style>
+  .chat-launch {
+    position: fixed; z-index: 60; inset-inline-end: 18px; inset-block-end: calc(18px + env(safe-area-inset-bottom));
+    display: inline-flex; align-items: center; gap: .55rem; height: 52px; padding: 0 1.1rem 0 .95rem; border-radius: 999px;
+    border: 1px solid rgba(196, 181, 253, .35); color: #fff;
+    background: linear-gradient(135deg, rgba(124, 58, 237, .95), rgba(91, 33, 182, .95));
+    box-shadow: 0 10px 30px -8px rgba(124, 58, 237, .7), 0 0 0 1px rgba(124, 58, 237, .25);
+    font-family: var(--font-ui); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; font-size: .88rem;
+    transition: transform .25s var(--ease), box-shadow .25s;
+  }
+  .chat-launch svg { width: 22px; height: 22px; }
+  @media (hover: hover) { .chat-launch:hover { transform: translateY(-2px); box-shadow: 0 14px 36px -8px rgba(124, 58, 237, .85); } }
+  /* Phones: icon only, sits above the sticky order bar */
+  @media (max-width: 760px) {
+    .chat-launch { width: 52px; padding: 0; justify-content: center; inset-block-end: calc(84px + env(safe-area-inset-bottom)); }
+    .chat-launch-label { display: none; }
+  }
+  :global(body.chat-open) .chat-launch { display: none; }
+</style>

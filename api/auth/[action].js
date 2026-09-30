@@ -3,7 +3,7 @@ import {
   getKv, setSessionCookie, clearSessionCookie, hashPassword, comparePassword,
   newUserId, normEmail, normUsername, validateEmail, validateUsername, validatePassword,
   rateLimit, getIp, publicUser, getUser,
-} from '../../lib/auth.js';
+} from '../_lib/auth.js';
 
 export default async function handler(req, res) {
   const action = req.query.action;
@@ -16,6 +16,14 @@ export default async function handler(req, res) {
     case 'discord-callback': return discordCallback(req, res);
     default:                 return res.status(404).json({ error: 'Not found' });
   }
+}
+
+// Only same-site paths like "/pricing" or "/track/SB-XXXX-XXXX" (same rule as /login).
+// Rejects "//evil.com" and anything that isn't a plain path, so it can't be an open redirect.
+function safeReturnPath(p) {
+  if (typeof p !== 'string') return null;
+  if (!/^\/[a-zA-Z0-9/_?=&-]*$/.test(p) || p.startsWith('//')) return null;
+  return p.slice(0, 200);
 }
 
 async function signup(req, res) {
@@ -123,8 +131,10 @@ async function discordStart(req, res) {
   if (!clientId || !redirectUri) return res.status(500).send('Discord OAuth not configured.');
 
   const state = randomBytes(16).toString('base64url');
+  // Remember where to send the user after Discord (e.g. back to /pricing with their order).
+  const returnTo = safeReturnPath(req.query.return);
   const kv = getKv();
-  if (kv) await kv.set(`oauth_state:${state}`, '1', { ex: 600 });
+  if (kv) await kv.set(`oauth_state:${state}`, returnTo || '1', { ex: 600 });
 
   const params = new URLSearchParams({
     client_id: clientId,
@@ -156,6 +166,7 @@ async function discordCallback(req, res) {
   const stateOk = await kv.get(`oauth_state:${state}`);
   if (!stateOk) return res.status(400).send('Invalid or expired state.');
   await kv.del(`oauth_state:${state}`);
+  const returnTo = safeReturnPath(stateOk) || '/dashboard';
 
   try {
     const tokenRes = await fetch('https://discord.com/api/oauth2/token', {
@@ -217,7 +228,7 @@ async function discordCallback(req, res) {
     }
 
     setSessionCookie(res, { uid: userId });
-    res.writeHead(302, { Location: '/dashboard' });
+    res.writeHead(302, { Location: returnTo });
     return res.end();
   } catch (err) {
     console.error('discord-callback error', err);

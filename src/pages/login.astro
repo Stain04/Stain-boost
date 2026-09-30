@@ -1,0 +1,100 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Sign in – StainBoost" description="Sign in to StainBoost to place orders and track your boost live." path="/login" noindex minimal>
+  <section class="section">
+    <div class="auth wrap-narrow">
+      <div class="head center">
+        <p class="eyebrow">Account</p>
+        <h1>Sign in to StainBoost</h1>
+        <p class="muted">Place orders and follow every game of your boost live.</p>
+      </div>
+      <div class="card box">
+        <button type="button" class="btn btn-discord btn-block btn-lg" data-discord>
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.3 4.4A19.8 19.8 0 0 0 15.4 2.9l-.6 1.3a18.3 18.3 0 0 0-5.5 0l-.6-1.3a19.7 19.7 0 0 0-4.9 1.5C.7 9-.3 13.6.1 18.1a19.9 19.9 0 0 0 6 3l1.3-2a13 13 0 0 1-1.9-.9l.4-.3a14.2 14.2 0 0 0 12.1 0l.4.3c-.6.4-1.2.7-1.9.9l1.3 2a19.9 19.9 0 0 0 6-3c.5-5.2-.8-9.7-3.5-13.7ZM8 15.3c-1.2 0-2.2-1.1-2.2-2.4S6.8 10.5 8 10.5s2.2 1.1 2.2 2.4-1 2.4-2.2 2.4Zm8 0c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4Z"/></svg>
+          Continue with Discord
+        </button>
+        <p class="or"><span>or use email</span></p>
+        <div class="tabs" role="tablist">
+          <button type="button" role="tab" aria-selected="true" data-tab="login">Sign in</button>
+          <button type="button" role="tab" aria-selected="false" data-tab="signup">Create account</button>
+        </div>
+        <form class="fields" data-form="login">
+          <div class="field"><label for="loginId">Email or username</label><input class="input" id="loginId" autocomplete="username" required /></div>
+          <div class="field"><label for="loginPw">Password</label><input class="input" id="loginPw" type="password" autocomplete="current-password" required /></div>
+          <button class="btn btn-primary btn-block" type="submit">Sign in</button>
+        </form>
+        <form class="fields" data-form="signup" hidden>
+          <div class="field"><label for="suEmail">Email</label><input class="input" id="suEmail" type="email" autocomplete="email" required /></div>
+          <div class="field"><label for="suUser">Username</label><input class="input" id="suUser" autocomplete="username" maxlength="24" required /></div>
+          <div class="field"><label for="suPw">Password</label><input class="input" id="suPw" type="password" autocomplete="new-password" minlength="8" required /><p class="hint">At least 8 characters.</p></div>
+          <button class="btn btn-primary btn-block" type="submit">Create account</button>
+        </form>
+        <p class="alert" data-alert role="alert" hidden></p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { track } from '../scripts/analytics.js';
+  const $ = (s) => document.querySelector(s);
+  const alertEl = $('[data-alert]');
+  const show = (msg, ok = false) => { alertEl.textContent = msg; alertEl.hidden = false; alertEl.classList.toggle('ok', ok); };
+  const returnUrl = () => {
+    const q = new URLSearchParams(location.search).get('return');
+    return q && /^\/[a-zA-Z0-9/_?=&-]*$/.test(q) && !q.startsWith('//') ? q : '/dashboard';
+  };
+  $('[data-discord]').addEventListener('click', () => {
+    track('login', { method: 'discord_start' });
+    location.href = '/api/auth/discord-start?return=' + encodeURIComponent(returnUrl());
+  });
+  document.querySelectorAll('[data-tab]').forEach((t) => t.addEventListener('click', () => {
+    document.querySelectorAll('[data-tab]').forEach((x) => x.setAttribute('aria-selected', String(x === t)));
+    document.querySelectorAll('[data-form]').forEach((f) => { f.hidden = f.dataset.form !== t.dataset.tab; });
+    alertEl.hidden = true;
+  }));
+  async function post(url, body, btn, event) {
+    btn.setAttribute('aria-disabled', 'true');
+    try {
+      const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      const d = await r.json().catch(() => ({}));
+      if (r.ok) {
+        try { localStorage.removeItem('sb_auth_cache_v1'); } catch {}
+        track(event, { method: 'email' });
+        show('Signed in. Redirecting…', true);
+        setTimeout(() => { location.href = returnUrl(); }, 300);
+      } else show(d.error || 'Something went wrong.');
+    } catch { show('Network error.'); }
+    finally { btn.removeAttribute('aria-disabled'); }
+  }
+  $('[data-form="login"]').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const identifier = $('#loginId').value.trim(), password = $('#loginPw').value;
+    if (!identifier || !password) return show('Enter your email/username and password.');
+    post('/api/auth/login', { identifier, password }, e.submitter || e.target.querySelector('button'), 'login');
+  });
+  $('[data-form="signup"]').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = $('#suEmail').value.trim(), username = $('#suUser').value.trim(), password = $('#suPw').value;
+    if (!email || !username || !password) return show('All fields are required.');
+    if (password.length < 8) return show('Password must be at least 8 characters.');
+    post('/api/auth/signup', { email, username, password }, e.submitter || e.target.querySelector('button'), 'sign_up');
+  });
+  fetch('/api/auth/me').then((r) => (r.ok ? r.json() : null)).then((d) => { if (d && d.user) location.href = returnUrl(); }).catch(() => {});
+</script>
+
+<style>
+  .auth { display: grid; gap: 22px; max-width: 460px; }
+  .head h1 { font-size: clamp(1.6rem, 3vw + .6rem, 2.2rem); margin-block: 8px; }
+  .box { display: grid; gap: 16px; }
+  .btn-discord svg { width: 22px; height: 22px; }
+  .or { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: .85rem; }
+  .or::before, .or::after { content: ''; flex: 1; height: 1px; background: rgba(255, 255, 255, .1); }
+  .tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 4px; border-radius: 12px; background: rgba(0, 0, 0, .25); }
+  .tabs button { min-height: 42px; border: 0; border-radius: 9px; background: none; color: var(--muted); font-family: var(--font-ui); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+  .tabs [aria-selected='true'] { background: linear-gradient(135deg, var(--purple), var(--purple-dark)); color: #fff; }
+  .fields { display: grid; gap: 14px; }
+  .alert { padding: 10px 12px; border-radius: 12px; font-size: .92rem; color: #fecaca; background: rgba(248, 113, 113, .1); border: 1px solid rgba(248, 113, 113, .35); }
+  .alert.ok { color: #d1fae5; background: rgba(52, 211, 153, .1); border-color: rgba(52, 211, 153, .4); }
+</style>

@@ -1,0 +1,228 @@
+---
+import Base from '../layouts/Base.astro';
+import { PAYMENT_METHODS, DISCORD } from '../data/site.js';
+---
+<Base title="Track your order – StainBoost" description="Live progress of your StainBoost order: every game, rank and LP, notes and chat with Stain." path="/track" noindex minimal>
+  <section class="section-tight">
+    <div class="wrap trk">
+      <div class="gate card" data-gate>
+        <p data-gate-msg>Loading your order…</p>
+        <a class="btn btn-ghost btn-sm" href="/dashboard" data-gate-link hidden>Go to my dashboard</a>
+      </div>
+
+      <div data-dash hidden>
+        <header class="card t-head">
+          <div>
+            <p class="label">Order</p>
+            <p class="tok" data-tok>—</p>
+            <p class="sum" data-sum>—</p>
+          </div>
+          <div class="t-right">
+            <span class="live"><span class="dot dot-pulse"></span>Live</span>
+            <span class="pill" data-pill>—</span>
+            <a class="btn btn-gold btn-sm" data-review hidden>★ Leave a review</a>
+          </div>
+        </header>
+
+        <section class="card pay" id="pay" data-pay hidden aria-labelledby="payT">
+          <h2 id="payT">Pay to start your boost — <span class="gold" data-amount>$0.00</span></h2>
+          <p class="muted" data-claim hidden></p>
+          <div class="pay-grid">
+            {PAYMENT_METHODS.map((m) => (
+              <div class="pm">
+                <p class="pm-name">{m.name}</p>
+                {m.link && <a class="btn btn-primary btn-sm" data-pay-link={m.link} href={m.link.replace('{amount}', '')} target="_blank" rel="noopener">Pay with {m.name} ↗</a>}
+                {!m.link && m.id && <p class="pm-id"><code>{m.id}</code> <button type="button" class="btn btn-ghost btn-sm" data-copy={m.id}>Copy</button></p>}
+                <p class="hint">{m.note}</p>
+                <button type="button" class="btn btn-ghost btn-sm" data-paid={m.key}>I've paid with {m.name}</button>
+              </div>
+            ))}
+          </div>
+          <p class="hint">Another payment method? Message <strong>{DISCORD.handle}</strong> on Discord.</p>
+        </section>
+
+        <div class="grid">
+          <div class="col">
+            <section class="card">
+              <h2 class="c-title">Progress</h2>
+              <div class="p-lbl"><span data-plbl>—</span><span class="num" data-pval>—</span></div>
+              <div class="bar"><div class="fill" data-fill></div></div>
+              <dl class="kv">
+                <div><dt>Current rank</dt><dd data-rank>—</dd></div>
+                <div><dt>Current LP</dt><dd data-lp>—</dd></div>
+                <div><dt>ETA</dt><dd data-eta>—</dd></div>
+              </dl>
+            </section>
+            <section class="card">
+              <h2 class="c-title">Recent games</h2>
+              <ul class="games" data-games><li class="empty">No games played yet.</li></ul>
+            </section>
+            <section class="card">
+              <h2 class="c-title">Activity</h2>
+              <ul class="notes" data-notes></ul>
+            </section>
+          </div>
+          <section class="card chat">
+            <h2 class="c-title">Chat with Stain</h2>
+            <div class="msgs" data-msgs aria-live="polite"><p class="empty">No messages yet — say hi 👋</p></div>
+            <form class="send" data-send>
+              <label class="visually-hidden" for="chatIn">Message</label>
+              <input id="chatIn" class="input" maxlength="1000" placeholder="Type a message…" autocomplete="off" />
+              <button class="btn btn-primary btn-sm" type="submit">Send</button>
+            </form>
+          </section>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { STATUS, esc, ago, rankProgress } from '../scripts/account.js';
+  import { track } from '../scripts/analytics.js';
+  const $ = (s) => document.querySelector(s);
+  const TOKEN_RE = /^SB-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
+  const m = location.pathname.match(/\/track\/(SB-[A-Z0-9]{4}-[A-Z0-9]{4})/i);
+  const token = m ? m[1].toUpperCase() : (new URLSearchParams(location.search).get('token') || '').toUpperCase();
+  let lastChat = 0, timer = 0;
+
+  const gate = (msg) => { $('[data-gate-msg]').textContent = msg; $('[data-gate-link]').hidden = false; };
+  if (!TOKEN_RE.test(token)) gate('No order selected. Open one of your orders from your dashboard.');
+  else fetch('/api/auth/me').then((r) => r.json()).then((d) => {
+    if (!d.user) { location.href = '/login?return=' + encodeURIComponent(location.pathname); return; }
+    load(true);
+  }).catch(() => gate('Network error — try refreshing.'));
+
+  function load(first) {
+    fetch('/api/order-tracking/status?token=' + encodeURIComponent(token)).then((r) => r.json().then((b) => ({ s: r.status, b }))).then(({ s, b }) => {
+      if (s === 200) { render(b); if (first) { $('[data-gate]').hidden = true; $('[data-dash]').hidden = false; chat(true); if (location.hash === '#pay') $('#pay')?.scrollIntoView(); timer = setInterval(() => { if (!document.hidden) { load(false); chat(false); } }, 10000); } }
+      else if (s === 401) location.href = '/login?return=' + encodeURIComponent(location.pathname);
+      else if (first) gate(s === 403 ? 'This order is not on your account. Sign in with the account you ordered with.' : s === 404 ? 'Order not found.' : (b.error || 'Could not load this order.'));
+    }).catch(() => first && gate('Network error — try refreshing.'));
+  }
+
+  function render(o) {
+    $('[data-tok]').textContent = o.token;
+    $('[data-sum]').textContent = o.summary || '';
+    const pill = $('[data-pill]');
+    pill.className = 'pill pill-' + o.status;
+    pill.textContent = STATUS[o.status] || o.status;
+    const rv = $('[data-review]');
+    rv.hidden = !o.reviewable;
+    if (o.reviewable) rv.href = '/review/' + encodeURIComponent(o.token);
+
+    // pay panel
+    const awaiting = o.status === 'awaiting_payment';
+    $('[data-pay]').hidden = !awaiting;
+    if (awaiting && o.total) {
+      $('[data-amount]').textContent = '$' + o.total;
+      document.querySelectorAll('[data-pay-link]').forEach((a) => { a.href = a.dataset.payLink.replace('{amount}', o.total); });
+      const c = $('[data-claim]');
+      c.hidden = !o.paymentClaim;
+      if (o.paymentClaim) c.textContent = `✅ You told Stain you paid with ${o.paymentClaim.method} (${ago(o.paymentClaim.ts)}). He'll confirm it and start.`;
+    }
+
+    // progress
+    let lbl = 'Progress', val = '—', pct = 0;
+    if (o.meta?.kind === 'win_boost') { const done = o.meta.winsDone || 0, all = o.meta.wins || 1; lbl = 'Net wins'; val = `${done} / ${all}`; pct = done / all; }
+    else if (o.meta?.kind === 'rank_boost') { lbl = `${o.meta.from} → ${o.meta.to}`; pct = rankProgress(o); val = Math.round(pct * 100) + '%'; }
+    if (o.status === 'completed') pct = 1;
+    $('[data-plbl]').textContent = lbl;
+    $('[data-pval]').textContent = val;
+    $('[data-fill]').style.transform = `scaleX(${pct})`;
+    $('[data-rank]').textContent = o.currentRank || '—';
+    $('[data-lp]').textContent = o.currentRank ? `${o.currentLp || 0} LP` : '—';
+    $('[data-eta]').textContent = o.eta || '—';
+
+    $('[data-games]').innerHTML = (o.games || []).length ? o.games.slice().reverse().map((g) => {
+      const lp = g.lp != null ? `<b class="${g.lp >= 0 ? 'up' : 'dn'}">${g.lp >= 0 ? '+' : ''}${g.lp} LP</b>` : '';
+      const r = g.result === 'W' ? 'W' : g.result === 'R' ? 'RM' : 'L';
+      return `<li><span class="res res-${r}">${r}</span><span><span class="champ">${esc(g.champion || 'Game')}</span><small>${esc(g.kda || '')} · ${ago(g.ts)}</small></span>${lp}</li>`;
+    }).join('') : '<li class="empty">No games played yet.</li>';
+    $('[data-notes]').innerHTML = (o.notes || []).slice().reverse().map((n) => `<li class="${n.from === 'stain' ? 'stain' : ''}"><span class="n-from">${n.from === 'stain' ? 'Stain' : 'Update'}</span>${esc(n.text)}<small>${ago(n.ts)}</small></li>`).join('') || '<li class="empty">No activity yet.</li>';
+  }
+
+  function chat(scroll) {
+    fetch('/api/order-tracking/chat?token=' + encodeURIComponent(token)).then((r) => (r.ok ? r.json() : null)).then((d) => {
+      if (!d) return;
+      const box = $('[data-msgs]');
+      const msgs = d.messages || [];
+      if (!msgs.length) return;
+      const newest = msgs[msgs.length - 1].ts || 0;
+      box.innerHTML = msgs.map((x) => `<div class="b ${x.from === 'stain' ? 'b-stain' : 'b-me'}">${esc(x.text)}<small>${x.from === 'stain' ? 'Stain' : 'You'} · ${ago(x.ts)}</small></div>`).join('');
+      if (scroll || newest > lastChat) box.scrollTop = box.scrollHeight;
+      lastChat = newest;
+    }).catch(() => {});
+  }
+
+  $('[data-send]').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const inp = $('#chatIn'), text = inp.value.trim();
+    if (!text) return;
+    fetch('/api/order-tracking/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token, text }) })
+      .then(() => { inp.value = ''; chat(true); track('order_chat_send'); }).catch(() => {});
+  });
+
+  document.querySelectorAll('[data-copy]').forEach((b) => b.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(b.dataset.copy); } catch {}
+    b.textContent = 'Copied ✓'; setTimeout(() => { b.textContent = 'Copy'; }, 1500);
+  }));
+  document.querySelectorAll('[data-paid]').forEach((b) => b.addEventListener('click', async () => {
+    const r = await fetch('/api/order-tracking/paid', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token, method: b.dataset.paid }) }).catch(() => null);
+    if (r && r.ok) { track('payment_claimed', { method: b.dataset.paid, location: 'tracker' }); load(false); }
+  }));
+</script>
+
+<style is:global>
+  /* global so the markup this page builds in JS is styled too; every rule stays under .trk */
+  .trk { display: grid; gap: 16px; }
+  .trk .gate { display: grid; gap: 12px; justify-items: start; }
+  .trk .t-head { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-block-end: 16px; }
+  .trk .tok { font-family: ui-monospace, monospace; font-size: 1.2rem; font-weight: 700; color: #fff; }
+  .trk .sum { color: rgba(255, 255, 255, .75); }
+  .trk .t-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .trk .live { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-ui); font-weight: 700; font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; color: var(--cyan); }
+  .trk .pay { display: grid; gap: 14px; border-color: rgba(245, 166, 35, .45); margin-block-end: 16px; }
+  .trk .pay h2 { font-size: 1.2rem; }
+  .trk .pay-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .trk .pm { display: grid; gap: 8px; justify-items: start; padding: 14px; border-radius: 14px; background: rgba(255, 255, 255, .03); border: 1px solid rgba(255, 255, 255, .09); }
+  .trk .pm-name { font-family: var(--font-ui); font-weight: 700; font-size: 1.1rem; color: #fff; }
+  .trk .pm-id { display: flex; gap: 8px; align-items: center; }
+  .trk code { font-family: ui-monospace, monospace; padding: 5px 9px; border-radius: 8px; background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .12); color: #fff; }
+  .trk .grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 16px; align-items: start; }
+  .trk .col { display: grid; gap: 16px; }
+  .trk .c-title { font-size: .95rem; letter-spacing: .12em; margin-block-end: 12px; color: #fff; }
+  .trk .p-lbl { display: flex; justify-content: space-between; gap: 10px; font-family: var(--font-ui); font-weight: 700; color: var(--muted); margin-block-end: 8px; }
+  .trk .p-lbl .num { color: #fff; }
+  .trk .bar { height: 12px; border-radius: 12px; background: rgba(255, 255, 255, .06); overflow: hidden; }
+  .trk .fill { height: 100%; transform-origin: left; transform: scaleX(0); transition: transform .8s var(--ease); background: linear-gradient(90deg, var(--purple), var(--cyan)); box-shadow: 0 0 12px var(--cyan-glow); }
+  .trk .kv { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-block-start: 14px; }
+  .trk .kv div { padding: 10px; border-radius: 12px; background: rgba(255, 255, 255, .03); border: 1px solid rgba(255, 255, 255, .07); }
+  .trk .kv dt { font-family: var(--font-ui); font-weight: 700; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .trk .kv dd { margin: 0; font-family: var(--font-ui); font-weight: 700; font-size: 1.05rem; color: #fff; }
+  .trk .games, .trk .notes { list-style: none; padding: 0; display: grid; gap: 8px; }
+  .trk .games li { display: grid; grid-template-columns: 34px 1fr auto; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 10px; background: rgba(255, 255, 255, .03); border: 1px solid rgba(255, 255, 255, .06); }
+  .trk .games .empty, .trk .notes .empty { display: block; background: none; border: 0; color: var(--muted); }
+  .trk .res { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; font-family: var(--font-display); font-size: .72rem; }
+  .trk .res-W { color: var(--success); background: rgba(52, 211, 153, .14); border: 1px solid rgba(52, 211, 153, .35); }
+  .trk .res-L { color: var(--danger); background: rgba(248, 113, 113, .12); border: 1px solid rgba(248, 113, 113, .3); }
+  .trk .res-RM { color: var(--muted); background: rgba(255, 255, 255, .05); border: 1px solid rgba(255, 255, 255, .15); }
+  .trk .champ { display: block; font-family: var(--font-ui); font-weight: 700; color: #fff; }
+  .trk .games small, .trk .notes small { display: block; font-size: .78rem; color: var(--muted); }
+  .trk .up { color: var(--success); font-family: var(--font-display); font-size: .8rem; }
+  .trk .dn { color: var(--danger); font-family: var(--font-display); font-size: .8rem; }
+  .trk .notes { max-height: 320px; overflow-y: auto; }
+  .trk .notes li { padding: 10px 12px; border-radius: 10px; border-inline-start: 2px solid var(--cyan); background: rgba(6, 214, 242, .04); color: rgba(255, 255, 255, .82); font-size: .95rem; }
+  .trk .notes li.stain { border-color: var(--purple-light); background: rgba(124, 58, 237, .07); }
+  .trk .n-from { display: block; font-family: var(--font-ui); font-weight: 700; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .trk .chat { display: grid; gap: 12px; position: sticky; inset-block-start: calc(var(--nav-h) + 16px); }
+  .trk .msgs { display: flex; flex-direction: column; gap: 8px; max-height: 420px; min-height: 160px; overflow-y: auto; }
+  .trk .msgs .empty { color: var(--muted); }
+  .trk .b { max-width: 85%; padding: 9px 12px; border-radius: 14px; font-size: .95rem; word-break: break-word; }
+  .trk .b small { display: block; font-size: .72rem; color: rgba(255, 255, 255, .55); margin-block-start: 3px; }
+  .trk .b-stain { align-self: flex-start; background: rgba(6, 214, 242, .08); border: 1px solid rgba(6, 214, 242, .25); }
+  .trk .b-me { align-self: flex-end; background: linear-gradient(135deg, var(--purple), var(--purple-dark)); color: #fff; }
+  .trk .send { display: flex; gap: 8px; }
+  @media (max-width: 880px) { .trk .grid { grid-template-columns: 1fr; } .trk .chat { position: static; } .trk .pay-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 480px) { .trk .kv { grid-template-columns: 1fr 1fr; } }
+</style>

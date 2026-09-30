@@ -1,0 +1,252 @@
+---
+import Base from '../layouts/Base.astro';
+import ClimbQuote from '../components/ClimbQuote.astro';
+import StatusChip from '../components/StatusChip.astro';
+import ReviewCard from '../components/ReviewCard.astro';
+import FaqList from '../components/FaqList.astro';
+import Guarantees from '../components/Guarantees.astro';
+import StickyOrderBar from '../components/StickyOrderBar.astro';
+import { getCollection } from 'astro:content';
+import { STATS, ACCOUNTS, PROOF, DISCORD } from '../data/site.js';
+import { lowestWinPrice, formatUSD, rankBoostTotal, LP_OPTIONS } from '../data/pricing.js';
+import { getVerifiedReviews } from '../data/reviews.js';
+import { TOP_FAQ } from '../data/faq.js';
+import { organization, website, boostProduct } from '../data/schema.js';
+import '../styles/home.css';
+
+const reviews = await getVerifiedReviews();
+const posts = await getCollection('blog', (p) => !p.data.draft);
+const teasers = ['elo-boosting-safe', 'duo-boost-vs-solo-boost', 'master-yi-build-guide'].map((id) => posts.find((p) => p.id === id)).filter(Boolean);
+const fromWin = formatUSD(lowestWinPrice());
+const heroPrice = formatUSD(rankBoostTotal({ fromTier: 2, fromDiv: 2, toTier: 3, toDiv: 0, type: 'solo', lp: LP_OPTIONS[0].value }));
+---
+<Base
+  title="StainBoost – #1 ELO Boosting on the Middle East Server"
+  description={`League of Legends ELO boosting on the Middle East server, played personally by Stain — #1 Master Yi on ME. ${STATS.ordersCompleted}+ orders, 0 bans, full refund if not started. Get an instant price.`}
+  path="/"
+  schema={[organization(), website(), boostProduct(reviews)]}
+>
+  <section class="hero" data-loc="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <div class="row hero-chips">
+          <StatusChip onlineOnly />
+          <span class="chip chip-gold"><svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true"><polygon points="8,1 10,6 15,6 11,9.5 12.5,15 8,12 3.5,15 5,9.5 1,6 6,6" fill="currentColor"/></svg>Challenger · #1 Master Yi · ME</span>
+        </div>
+        <h1>YOUR RANK IS <span class="grad grad-animate">WAITING FOR YOU.</span></h1>
+        <p class="lead">Every game is played by <strong>Stain himself</strong> — no pool of random boosters. Offline mode, a VPN matched to your country and your Flash key, on every order.</p>
+        <ul class="proof-strip" aria-label="Why StainBoost">
+          <li><b class="num">{STATS.ordersCompleted}+</b> orders</li>
+          <li><b class="num">{STATS.bans}</b> bans</li>
+          <li><b>Full refund</b> if not started</li>
+        </ul>
+        <p class="wins-link"><a href="/pricing?mode=wins" data-track="cta_click" data-track-location="hero_wins">Or buy net wins from <strong>{fromWin}</strong> per win — pay for 5, get 6 →</a></p>
+      </div>
+      <div class="hero-quote"><ClimbQuote /></div>
+    </div>
+  </section>
+
+  <section class="section-tight" aria-label="StainBoost in numbers">
+    <div class="wrap stats">
+      <div class="stat reveal"><span class="num grad">{STATS.ordersCompleted}+</span><span class="label">Orders completed</span></div>
+      <div class="stat reveal" style="--d:.06s"><span class="num cyan">{STATS.bans}</span><span class="label">Bans, ever</span></div>
+      <div class="stat reveal" style="--d:.12s"><span class="num gold">{STATS.masteryPoints}</span><span class="label">Yi mastery · all accounts</span></div>
+      <a class="stat reveal" style="--d:.18s" href={PROOF.peak.source} target="_blank" rel="noopener" data-track="proof_click" data-track-location="stats">
+        <span class="num peak">{PROOF.peak.tier}</span><span class="label">{PROOF.peak.lp} LP peak · {PROOF.peak.season} ↗</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="section" data-loc="how">
+    <div class="wrap how">
+      <div class="how-copy">
+        <div class="section-head">
+          <p class="eyebrow">How it works</p>
+          <h2>Ordered in two minutes. Tracked every game.</h2>
+          <p>No waiting rooms and no support tickets. You talk to the player on your account.</p>
+        </div>
+        <ol class="steps">
+          <li class="reveal"><span class="step-n">01</span><div><h3>Pick your climb</h3><p>Choose your current and target rank — or a number of net wins — and solo or duo. The price you see is the price you pay.</p></div></li>
+          <li class="reveal" style="--d:.08s"><span class="step-n">02</span><div><h3>Pay &amp; say hi</h3><p>Pay with PayPal or Binance Pay — or message <strong>{DISCORD.handle}</strong> on Discord for another way. Stain usually replies within minutes.</p></div></li>
+          <li class="reveal" style="--d:.16s"><span class="step-n">03</span><div><h3>Watch it climb</h3><p>Your dashboard shows every game live — rank, LP, results, notes and a direct chat with Stain.</p></div></li>
+        </ol>
+        <a href="/pricing" class="btn btn-primary" data-track="cta_click" data-track-location="how">Get my price</a>
+      </div>
+      <div class="preview reveal" aria-label="Example of the live order tracker">
+        <div class="screen card">
+          <div class="screen-bar"><span></span><span></span><span></span><em>Live tracker · example</em></div>
+          <div class="screen-body">
+            <div class="track-head">
+              <div><p class="tok">SB-XXXX-XXXX</p><p class="route">Silver II → Gold IV</p></div>
+              <span class="chip chip-cyan"><span class="dot dot-pulse"></span>In progress</span>
+            </div>
+            <div class="bar-lbl"><span>Rank progress</span><span>Silver I · 62 LP</span></div>
+            <div class="bar"><div class="bar-fill"></div></div>
+            <ul class="games">
+              <li><span class="w">W</span><span>Master Yi<small>13/2/6</small></span><b>+24 LP</b></li>
+              <li><span class="w">W</span><span>Master Yi<small>9/3/11</small></span><b>+23 LP</b></li>
+            </ul>
+            <div class="bubble stain">Starting your next session now 👊</div>
+            <div class="bubble you">Let's go!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" data-loc="compare">
+    <div class="wrap">
+      <div class="section-head center">
+        <p class="eyebrow">Why it's different</p>
+        <h2>One booster. <span class="grad">Not a pool.</span></h2>
+        <p>Most boosting sites hand your account to whoever is free. Here, it's always the same player.</p>
+      </div>
+      <div class="compare reveal">
+        <div class="col them">
+          <p class="col-title">Typical boosting site</p>
+          <ul>
+            <li>A random booster from a pool plays your account</li>
+            <li>You rarely know who is logged in</li>
+            <li>Questions go through a support desk</li>
+          </ul>
+        </div>
+        <div class="col us">
+          <p class="col-title">StainBoost</p>
+          <ul>
+            <li>Every game is played by <strong>Stain</strong> — #1 Master Yi on ME</li>
+            <li>You know exactly who: his accounts are <a href={ACCOUNTS[0].opgg} target="_blank" rel="noopener">public on OP.GG</a></li>
+            <li>Chat with Stain directly on your order page and Discord</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" data-loc="safety">
+    <div class="wrap">
+      <div class="section-head center">
+        <p class="eyebrow">Account safety</p>
+        <h2>Your account, treated like his own.</h2>
+        <p>Boosting is against Riot's rules, so nobody can honestly promise zero risk. This is how Stain keeps it as low as possible — on every order.</p>
+      </div>
+      <div class="grid-3 safety">
+        <div class="card card-glow reveal"><span class="s-ic" aria-hidden="true">👻</span><h3>Invisible</h3><p>Offline mode is on before he logs in. Friends and guild see nothing.</p></div>
+        <div class="card card-glow reveal" style="--d:.06s"><span class="s-ic" aria-hidden="true">🌐</span><h3>VPN matched to you</h3><p>He connects from your country, so your account never "travels".</p></div>
+        <div class="card card-glow reveal" style="--d:.12s"><span class="s-ic" aria-hidden="true">⚡</span><h3>Your Flash key</h3><p>D or F — he plays on yours. Nothing feels different when you're back.</p></div>
+        <div class="card card-glow reveal" style="--d:.18s"><span class="s-ic" aria-hidden="true">🖐️</span><h3>100% hand-played</h3><p>No bots, no scripts, no third-party software. Ever.</p></div>
+      </div>
+      <p class="record reveal"><span class="num">{STATS.bans}</span> bans in <span class="num">{STATS.ordersCompleted}+</span> orders. <a href="/blog/elo-boosting-safe">How detection works →</a></p>
+    </div>
+  </section>
+
+  <section class="section" id="about" data-loc="about">
+    <div class="wrap about">
+      <div class="player card reveal">
+        <picture>
+          <source srcset="/img/stain-160.avif 1x, /img/stain-320.avif 2x" type="image/avif" />
+          <img src="/img/stain-160.webp" srcset="/img/stain-320.webp 2x" width="120" height="120" alt="Stain, the booster behind StainBoost" loading="lazy" decoding="async" />
+        </picture>
+        <p class="p-name">Stain</p>
+        <p class="p-title">Challenger · #1 Master Yi · ME</p>
+        <dl class="p-stats">
+          <div><dt>Rank</dt><dd class="peak">{PROOF.peak.tier} {PROOF.peak.lp} LP</dd></div>
+          <div><dt>Yi mastery</dt><dd>{STATS.masteryPoints}</dd></div>
+          <div><dt>Orders</dt><dd>{STATS.ordersCompleted}+</dd></div>
+        </dl>
+        <ul class="accounts">
+          {ACCOUNTS.map((a) => (
+            <li><a href={a.opgg} target="_blank" rel="noopener" data-track="proof_click" data-track-location="about"><span class="srv">{a.server}</span><span class="rid">{a.riotId}</span><span class="go">OP.GG ↗</span></a></li>
+          ))}
+        </ul>
+        <p class="checked">Rank data from OP.GG, {PROOF.checkedOn}.</p>
+      </div>
+      <div class="story reveal" style="--d:.08s">
+        <p class="eyebrow">The booster</p>
+        <h2>Meet the player on your account.</h2>
+        <p>Stain has played League for <strong>{STATS.yearsPlaying} years</strong> and has been on the Middle East server <strong>since it opened in {STATS.meServerSince}</strong>. He's a <strong>Challenger</strong> Master Yi player: a Yi obsession turned into the <strong>#1 Master Yi spot on ME</strong> and over <strong>5 million mastery points</strong> on the champion across his accounts.</p>
+        <p>After helping friends climb, StainBoost was born — and it stays one person. <strong>No outsourcing, no third-party boosters, no bots.</strong> When you order, Stain himself plays your games.</p>
+        <p>{STATS.ordersCompleted}+ completed orders later, the safety record is still clean: <strong>{STATS.bans} bans</strong>. Check his accounts yourself — they're public.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" data-loc="reviews">
+    <div class="wrap">
+      <div class="section-head center">
+        <p class="eyebrow">Verified reviews</p>
+        <h2>They doubted. Then they ranked.</h2>
+        <p>Only buyers with a completed order can post a review — from their own order page.</p>
+      </div>
+      <div class="grid-3">
+        {reviews.slice(0, 3).map((r, i) => <ReviewCard {...r} delay={i * 0.06} />)}
+      </div>
+      <div class="row row-center reviews-cta">
+        <a class="btn btn-ghost" href="/reviews">Read all verified reviews</a>
+        <span class="muted">Ordered before? Leave yours from your <a href="/dashboard">dashboard</a>.</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight" data-loc="deal">
+    <div class="wrap">
+      <div class="deal reveal">
+        <div>
+          <p class="eyebrow gold-eyebrow">Net wins deal</p>
+          <p class="deal-title display">PAY FOR 5, <span>GET 6</span></p>
+          <p class="deal-sub">Every 5 wins you pay for, Stain plays 1 more — free. Pay for 10, get 12. Pay for 20, get 24.</p>
+        </div>
+        <a class="btn btn-gold btn-lg" href="/pricing?mode=wins" data-track="cta_click" data-track-location="deal">Buy net wins</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" data-loc="faq_home">
+    <div class="wrap fears">
+      <div>
+        <div class="section-head">
+          <p class="eyebrow">Before you order</p>
+          <h2>The questions everyone asks.</h2>
+          <p>Straight answers. Anything else, ask Stain on <a href={DISCORD.invite} target="_blank" rel="noopener">Discord</a>.</p>
+        </div>
+        <Guarantees />
+      </div>
+      <FaqList items={TOP_FAQ} loc="faq_home" />
+    </div>
+  </section>
+
+  <section class="section" data-loc="blog_teaser">
+    <div class="wrap">
+      <div class="section-head center">
+        <p class="eyebrow">Learn to climb</p>
+        <h2>Free guides from the #1 Yi on ME.</h2>
+      </div>
+      <div class="grid-3">
+        {teasers.map((p, i) => (
+          <a class="post card card-glow reveal" style={`--d:${i * 0.06}s`} href={`/blog/${p.id}`}>
+            <span class="post-emoji" aria-hidden="true">{p.data.emoji}</span>
+            <span class="post-cat">{p.data.category}</span>
+            <span class="post-title">{p.data.h1}</span>
+            <span class="post-ex">{p.data.excerpt}</span>
+            <span class="post-more">Read · {p.data.readTime}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" data-loc="final_cta">
+    <div class="wrap">
+      <div class="final reveal">
+        <StatusChip />
+        <h2>Ready when you are.</h2>
+        <p>Pick your rank, see the price, and Stain takes it from there. Full refund if the boost hasn't started.</p>
+        <div class="row row-center">
+          <a class="btn btn-primary btn-lg" href="/pricing" data-track="cta_click" data-track-location="final_cta">Get my price</a>
+          <a class="btn btn-ghost btn-lg" href={DISCORD.invite} target="_blank" rel="noopener">Ask on Discord</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <StickyOrderBar slot="after" watch="[data-climb] [data-cta]" label="Silver II → Gold IV" price={heroPrice} href="/pricing?mode=rank&from=2-2&to=3-0&queue=solo" />
+</Base>

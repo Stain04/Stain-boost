@@ -1,0 +1,115 @@
+---
+import Base from '../layouts/Base.astro';
+import Configurator from '../components/Configurator.astro';
+import OrderSummary from '../components/OrderSummary.astro';
+import OrderSuccess from '../components/OrderSuccess.astro';
+import ReviewCard from '../components/ReviewCard.astro';
+import FaqList from '../components/FaqList.astro';
+import RankEmblem from '../components/RankEmblem.astro';
+import StickyOrderBar from '../components/StickyOrderBar.astro';
+import { WIN_PRICES, RB_TIERS, MASTERS, divisionPrice, formatUSD, rankBoostTotal, lowestWinPrice } from '../data/pricing.js';
+import { STATS } from '../data/site.js';
+import { getVerifiedReviews } from '../data/reviews.js';
+import { FAQ, faqSchema } from '../data/faq.js';
+import { tierOfWinRank } from '../data/ranks.js';
+import { boostProduct, breadcrumbs } from '../data/schema.js';
+import '../styles/pricing.css';
+
+const reviews = await getVerifiedReviews();
+const faqItems = FAQ.flatMap((g) => g.items).filter((i) => /pay|refund|start|banned|login|free win|loses/i.test(i.q));
+const divRows = [];
+RB_TIERS.slice(0, MASTERS).forEach((t, i) => {
+  if (t === 'Diamond') {
+    divRows.push({ tier: t, label: 'Diamond IV–III', solo: divisionPrice(i, 0, 'solo'), duo: divisionPrice(i, 0, 'duo') });
+    divRows.push({ tier: t, label: 'Diamond II–I', solo: divisionPrice(i, 2, 'solo'), duo: divisionPrice(i, 2, 'duo') });
+  } else divRows.push({ tier: t, label: t, solo: divisionPrice(i, 0, 'solo'), duo: divisionPrice(i, 0, 'duo') });
+});
+const total = formatUSD(rankBoostTotal({ fromTier: 2, fromDiv: 2, toTier: 3, toDiv: 0, type: 'solo' }));
+---
+<Base
+  title="ELO Boost Prices – Middle East Server | Rank Boost & Net Wins | StainBoost"
+  description={`Instant League of Legends boost prices for the Middle East server. Rank boost from ${formatUSD(divisionPrice(0, 0, 'solo'))} per division, net wins from ${formatUSD(lowestWinPrice())} — pay for 5, get 6. Played by Stain, #1 Master Yi on ME. Refund if not started.`}
+  path="/pricing"
+  active="/pricing"
+  schema={[boostProduct(reviews), faqSchema(faqItems), breadcrumbs([{ name: 'Home', path: '/' }, { name: 'Pricing', path: '/pricing' }])]}
+>
+  <section class="pr-head" data-loc="pricing_head">
+    <div class="wrap">
+      <p class="eyebrow">Order configurator</p>
+      <h1>Configure your <span class="grad">boost.</span></h1>
+      <p class="lead">The price updates as you choose — it's the final price, no hidden fees. Every game is played by Stain himself.</p>
+      <div class="trust-row">
+        <span class="chip">{STATS.ordersCompleted}+ orders</span>
+        <span class="chip">{STATS.bans} bans</span>
+        <span class="chip chip-green">Full refund if not started</span>
+        <span class="chip chip-gold">Net wins: pay for 5, get 6</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <OrderSuccess />
+    <div class="layout" data-layout>
+      <Configurator />
+      <OrderSummary />
+    </div>
+  </div>
+
+  <section class="section" data-loc="price_tables">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Price list</p>
+        <h2>Every price, up front.</h2>
+        <p>Rank boost is priced per division climbed; net wins per win. Duo means you play together with Stain on your own account.</p>
+      </div>
+      <div class="tables">
+        <div class="card">
+          <table class="ptable">
+            <caption>Rank boost<span class="cap-sub">Price per division</span></caption>
+            <thead><tr><th scope="col">Tier</th><th scope="col">Solo</th><th scope="col">Duo</th></tr></thead>
+            <tbody>
+              {divRows.map((r) => <tr><th scope="row"><RankEmblem tier={r.tier} size={24} />{r.label}</th><td>{formatUSD(r.solo)}</td><td class="duo">{formatUSD(r.duo)}</td></tr>)}
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <table class="ptable">
+            <caption>Net wins<span class="cap-sub">Price per win · pay for 5, get 6</span></caption>
+            <thead><tr><th scope="col">Rank</th><th scope="col">Solo</th><th scope="col">Duo</th></tr></thead>
+            <tbody>
+              {Object.entries(WIN_PRICES).map(([name, p]) => <tr><th scope="row"><RankEmblem tier={tierOfWinRank(name)} size={24} />{name.replace('-', '–')}</th><td>{formatUSD(p.solo)}</td><td class="duo">{formatUSD(p.duo)}</td></tr>)}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" data-loc="pricing_reviews">
+    <div class="wrap">
+      <div class="section-head center">
+        <p class="eyebrow">Verified reviews</p>
+        <h2>From buyers with a completed order.</h2>
+      </div>
+      <div class="grid-3">{reviews.slice(0, 3).map((r, i) => <ReviewCard {...r} delay={i * 0.06} />)}</div>
+      <p class="center" style="margin-top:20px"><a href="/reviews">All verified reviews →</a></p>
+    </div>
+  </section>
+
+  <section class="section" data-loc="faq_pricing">
+    <div class="wrap-narrow">
+      <div class="section-head center">
+        <p class="eyebrow">Questions</p>
+        <h2>Price, payment &amp; safety.</h2>
+      </div>
+      <FaqList items={faqItems} loc="faq_pricing" />
+      <p class="center" style="margin-top:20px"><a href="/faq">All questions →</a></p>
+    </div>
+  </section>
+
+  <StickyOrderBar slot="after" watch="[data-summary] [data-submit]" label="Silver II → Gold IV" price={total} href="#sum-route" cta="Review order" />
+</Base>
+
+<script>
+  import '../scripts/configurator.js';
+</script>
