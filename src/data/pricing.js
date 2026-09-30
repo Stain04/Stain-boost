@@ -1,7 +1,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // PRICES — the single source of truth.
-// Used by the pricing page, the home page quote, the price tables, the order API
-// (api/order.js) and /api/prices. Edit prices here and nowhere else.
+// Used by the pricing page, the home page quote, the price tables and the order API
+// (api/order.js). Edit prices here and nowhere else.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /** Win boost: price per net win, by the rank the account is in. */
