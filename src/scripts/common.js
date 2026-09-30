@@ -110,3 +110,21 @@ if (chatBtn) {
     try { (await import('./chat.js')).openChat(); } finally { chatBtn.disabled = false; }
   });
 }
+
+// ── Free-trial countdown (src/data/promo.js) ────────────────────────────────
+// Every [data-trial-countdown] shows the real time left; at zero the promo hides itself.
+const trialCounters = document.querySelectorAll('[data-trial-countdown]');
+if (trialCounters.length) {
+  const end = Number(trialCounters[0].dataset.end);
+  const pad = (n) => String(n).padStart(2, '0');
+  let timer = 0;
+  const tick = () => {
+    const ms = end - Date.now();
+    if (!(ms > 0)) { document.documentElement.classList.add('trial-over'); clearInterval(timer); return; }
+    const d = Math.floor(ms / 864e5), h = Math.floor(ms / 36e5) % 24, m = Math.floor(ms / 6e4) % 60, s = Math.floor(ms / 1e3) % 60;
+    const left = d > 0 ? `${d}d ${pad(h)}h ${pad(m)}m` : `${pad(h)}h ${pad(m)}m ${pad(s)}s`;
+    trialCounters.forEach((c) => { c.textContent = (c.dataset.prefix ?? 'Ends in ') + left; });
+  };
+  tick();
+  timer = setInterval(tick, 1000);
+}

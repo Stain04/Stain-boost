@@ -95,6 +95,7 @@ export default async function handler(req, res) {
       // Ownership: require a signed-in user who owns this order, or admin.
       const orderRaw = await kv.get(`order:${formattedToken}`);
       const order = orderRaw ? (typeof orderRaw === 'string' ? JSON.parse(orderRaw) : orderRaw) : null;
+      if (order?.meta?.kind === 'free_trial') return res.status(400).json({ error: 'Reviews are for paid orders.' });
       const user = await getUser(req);
       if (!isAdmin(user)) {
         if (!user) return res.status(401).json({ error: 'Sign in to leave a review.' });

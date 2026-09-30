@@ -12,12 +12,14 @@ import { lowestWinPrice, formatUSD, rankBoostTotal, LP_OPTIONS } from '../data/p
 import { getVerifiedReviews } from '../data/reviews.js';
 import { TOP_FAQ } from '../data/faq.js';
 import { organization, website, boostProduct } from '../data/schema.js';
+import { FREE_TRIAL, TRIAL_ENDS_MS } from '../data/promo.js';
 import '../styles/home.css';
 
 const reviews = await getVerifiedReviews();
 const posts = await getCollection('blog', (p) => !p.data.draft);
 const teasers = ['elo-boosting-safe', 'duo-boost-vs-solo-boost', 'master-yi-build-guide'].map((id) => posts.find((p) => p.id === id)).filter(Boolean);
 const fromWin = formatUSD(lowestWinPrice());
+const trialOn = Date.now() < TRIAL_ENDS_MS;
 const heroPrice = formatUSD(rankBoostTotal({ fromTier: 2, fromDiv: 2, toTier: 3, toDiv: 0, type: 'solo', lp: LP_OPTIONS[0].value }));
 ---
 <Base
@@ -43,6 +45,16 @@ const heroPrice = formatUSD(rankBoostTotal({ fromTier: 2, fromDiv: 2, toTier: 3,
         <p class="wins-link"><a href="/pricing?mode=wins" data-track="cta_click" data-track-location="hero_wins">Or buy net wins from <strong>{fromWin}</strong> per win — pay for 5, get 6 →</a></p>
       </div>
       <div class="hero-quote"><ClimbQuote /></div>
+      {trialOn && (
+        <div class="hero-trial" data-trial>
+          <a class="trial-card" href="/free-trial" data-track="cta_click" data-track-location="hero_trial">
+            <span class="tc-top"><span class="tc-tag">🎁 Free trial · 2 days only</span><span class="tc-count" data-trial-countdown data-end={TRIAL_ENDS_MS}>Ends Fri 2 Oct</span></span>
+            <span class="tc-title">Not ready to pay? Your first {FREE_TRIAL.games} games are free.</span>
+            <span class="tc-sub">Stain plays {FREE_TRIAL.games} ranked games — on your account or duo with you. No payment, no card.</span>
+            <span class="tc-go">Claim my {FREE_TRIAL.games} free games →</span>
+          </a>
+        </div>
+      )}
     </div>
   </section>
 
@@ -52,7 +64,7 @@ const heroPrice = formatUSD(rankBoostTotal({ fromTier: 2, fromDiv: 2, toTier: 3,
       <div class="stat reveal" style="--d:.06s"><span class="num cyan">{STATS.bans}</span><span class="label">Bans, ever</span></div>
       <div class="stat reveal" style="--d:.12s"><span class="num gold">{STATS.masteryPoints}</span><span class="label">Yi mastery · all accounts</span></div>
       <a class="stat reveal" style="--d:.18s" href={PROOF.peak.source} target="_blank" rel="noopener" data-track="proof_click" data-track-location="stats">
-        <span class="num peak">{PROOF.peak.tier}</span><span class="label">{PROOF.peak.lp} LP peak · {PROOF.peak.season} ↗</span>
+        <span class="num peak">{PROOF.peak.tier}</span><span class="label">Rank · see OP.GG ↗</span>
       </a>
     </div>
   </section>
@@ -149,7 +161,7 @@ const heroPrice = formatUSD(rankBoostTotal({ fromTier: 2, fromDiv: 2, toTier: 3,
         <p class="p-name">Stain</p>
         <p class="p-title">Challenger · #1 Master Yi · ME</p>
         <dl class="p-stats">
-          <div><dt>Rank</dt><dd class="peak">{PROOF.peak.tier} {PROOF.peak.lp} LP</dd></div>
+          <div><dt>Rank</dt><dd class="peak">{PROOF.peak.tier}</dd></div>
           <div><dt>Yi mastery</dt><dd>{STATS.masteryPoints}</dd></div>
           <div><dt>Orders</dt><dd>{STATS.ordersCompleted}+</dd></div>
         </dl>
@@ -163,7 +175,7 @@ const heroPrice = formatUSD(rankBoostTotal({ fromTier: 2, fromDiv: 2, toTier: 3,
       <div class="story reveal" style="--d:.08s">
         <p class="eyebrow">The booster</p>
         <h2>Meet the player on your account.</h2>
-        <p>Stain has played League for <strong>{STATS.yearsPlaying} years</strong> and has been on the Middle East server <strong>since it opened in {STATS.meServerSince}</strong>. He's a <strong>Challenger</strong> Master Yi player: a Yi obsession turned into the <strong>#1 Master Yi spot on ME</strong> and over <strong>5 million mastery points</strong> on the champion across his accounts.</p>
+        <p>Stain has played League <strong>since {STATS.playingSince}</strong> and has been on the Middle East server <strong>since it opened in {STATS.meServerSince}</strong>. He's a <strong>Challenger</strong> Master Yi player: a Yi obsession turned into the <strong>#1 Master Yi spot on ME</strong> and over <strong>5 million mastery points</strong> on the champion across his accounts.</p>
         <p>After helping friends climb, StainBoost was born — and it stays one person. <strong>No outsourcing, no third-party boosters, no bots.</strong> When you order, Stain himself plays your games.</p>
         <p>{STATS.ordersCompleted}+ completed orders later, the safety record is still clean: <strong>{STATS.bans} bans</strong>. Check his accounts yourself — they're public.</p>
       </div>

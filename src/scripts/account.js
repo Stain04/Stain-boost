@@ -48,6 +48,9 @@ export function reorderLinks(o) {
   if (o.meta?.kind === 'win_boost' && WIN_PRICES[o.meta.rank]) {
     links.push({ label: 'Order again', href: `/pricing?mode=wins&rank=${encodeURIComponent(o.meta.rank)}&wins=${o.meta.paidWins || o.meta.wins || 5}&queue=${q}`, kind: 'reorder' });
   }
+  if (o.meta?.kind === 'free_trial') {
+    links.push({ label: 'Get my full price', href: '/pricing', kind: 'after_trial' });
+  }
   if (o.meta?.kind === 'rank_boost') {
     const to = parseRank(o.meta.to);
     if (to && to.tier < MASTERS) {

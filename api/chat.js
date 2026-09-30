@@ -1,5 +1,6 @@
 // ── /api/chat — AI live chat proxy (keeps GROQ_API_KEY server-side only) ──
 // The widget calls this route; this route calls Groq. The key never reaches the browser.
+import { FREE_TRIAL, trialActive } from '../src/data/promo.js';
 
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
 const MODEL = 'openai/gpt-oss-120b'; // see console.groq.com/docs/models for current options
@@ -93,7 +94,7 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: MODEL,
-        messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...recent],
+        messages: [{ role: 'system', content: systemPrompt() }, ...recent],
         temperature: 0.7,
         max_tokens: 600,
       }),
@@ -119,4 +120,16 @@ export default async function handler(req, res) {
     console.error('Server error:', err);
     return res.status(500).json({ error: 'Server error' });
   }
+}
+
+/** The prompt, plus any promo that is running right now (src/data/promo.js). */
+function systemPrompt() {
+  if (!trialActive()) return SYSTEM_PROMPT;
+  return `${SYSTEM_PROMPT}
+
+LIMITED-TIME FREE TRIAL (mention it to hesitant or first-time visitors):
+- New customers get their first ${FREE_TRIAL.games} ranked games played by Stain for free — no payment, no card, solo or duo.
+- Claim it at https://www.stainboost.com/free-trial (sign in with Discord, add Riot ID and Discord, press Claim).
+- One per account, Riot ID and Discord. Wins aren't guaranteed; it's a trial of the service.
+- It ends ${FREE_TRIAL.endsLabel}. After that it's gone.`;
 }

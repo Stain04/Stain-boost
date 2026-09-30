@@ -3,6 +3,8 @@ import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import ChatLauncher from '../components/ChatLauncher.astro';
+import TrialBar from '../components/TrialBar.astro';
+import { TRIAL_ENDS_MS } from '../data/promo.js';
 import { SITE } from '../data/site.js';
 
 interface Props {
@@ -16,8 +18,11 @@ interface Props {
   active?: string;           // nav item to highlight
   minimal?: boolean;         // account pages: slimmer chrome
   chat?: boolean;            // the customer help chat (off on admin)
+  promo?: boolean;           // the free-trial bar (off on admin and on the trial page itself)
 }
-const { title, description, path, ogImage = '/og-image.png', ogType = 'website', noindex = false, schema = [], active = '', minimal = false, chat = true } = Astro.props;
+const { title, description, path, ogImage = '/og-image.png', ogType = 'website', noindex = false, schema = [], active = '', minimal = false, chat = true, promo = true } = Astro.props;
+// Free trial: only built into pages while it runs; after the deadline the head script hides it.
+const trialOn = Date.now() < TRIAL_ENDS_MS;
 const canonical = SITE.url + (path === '/' ? '/' : path);
 const ogUrl = SITE.url + ogImage;
 ---
@@ -53,6 +58,7 @@ const ogUrl = SITE.url + ogImage;
   <meta name="twitter:image" content={ogUrl} />
   {schema.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
   <script is:inline>document.documentElement.classList.add('js');</script>
+  <script is:inline define:vars={{ trialEnd: TRIAL_ENDS_MS }}>if (Date.now() >= trialEnd) document.documentElement.classList.add('trial-over');</script>
   <!-- Google Analytics: queued immediately, gtag.js loaded once the page is idle (keeps it off the critical path) -->
   <script is:inline define:vars={{ gaId: SITE.gaId }}>
     window.dataLayer = window.dataLayer || [];
@@ -76,6 +82,7 @@ const ogUrl = SITE.url + ogImage;
 <body class={minimal ? 'is-minimal' : ''}>
   <a class="skip-link" href="#main">Skip to content</a>
   <div class="backdrop" aria-hidden="true"></div>
+  {promo && trialOn && <TrialBar />}
   <Nav active={active} />
   <main id="main">
     <slot />

@@ -29,9 +29,12 @@ function publicShape(o) {
     createdAt: o.createdAt,
     updatedAt: o.updatedAt,
     reviewedAt: o.reviewedAt || null,
-    reviewable: o.status === 'completed' && !o.reviewedAt,
+    reviewable: isReviewable(o),
   };
 }
+
+// Reviews are for paying customers, so a free trial never gets a review link.
+const isReviewable = (o) => o.status === 'completed' && !o.reviewedAt && o.meta?.kind !== 'free_trial';
 
 const PAID = ['payment_verified', 'queued', 'in_progress', 'paused', 'completed'];
 const parseRec = (raw) => (raw ? (typeof raw === 'string' ? JSON.parse(raw) : raw) : null);
@@ -322,7 +325,7 @@ async function list(req, res) {
           paymentClaim: o.paymentClaim || null,
           referral: o.referral ? { code: o.referral.code, credited: o.referral.credited || 0 } : null,
           creditUsed: o.creditUsed || 0,
-          reviewable: o.status === 'completed' && !o.reviewedAt,
+          reviewable: isReviewable(o),
           createdAt: o.createdAt,
           updatedAt: o.updatedAt,
         };
@@ -362,7 +365,7 @@ async function mine(req, res) {
         return {
           token: o.token, status: o.status, summary: o.summary,
           total: o.total, meta: o.meta, type: o.type, flash: o.flash,
-          reviewable: o.status === 'completed' && !o.reviewedAt,
+          reviewable: isReviewable(o),
           currentRank: o.currentRank || '', eta: o.eta || '',
           createdAt: o.createdAt, updatedAt: o.updatedAt,
         };
