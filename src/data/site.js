@@ -41,11 +41,11 @@ export const PROOF = {
   peak: { tier: 'Challenger', server: 'ME', source: 'https://op.gg/lol/summoners/me/Stain-001' },
 };
 
-/** Servers. Only ME is live; the others collect "notify me" sign-ups. */
+/** Servers Stain plays on. All three are open for orders (EUW/EUNE opened 2 Oct 2026). */
 export const REGIONS = [
   { code: 'me', name: 'Middle East', live: true },
-  { code: 'euw', name: 'EU West', live: false },
-  { code: 'eune', name: 'EU Nordic & East', live: false },
+  { code: 'euw', name: 'EU West', live: true },
+  { code: 'eune', name: 'EU Nordic & East', live: true },
 ];
 
 /**
