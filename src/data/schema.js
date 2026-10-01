@@ -33,7 +33,7 @@ export function boostProduct(reviews) {
     name: 'StainBoost ELO Boosting — Middle East server',
     description: `League of Legends rank boost and net-win boost on the Middle East server, played by Stain (#1 Master Yi on ME). ${STATS.ordersCompleted}+ completed orders, ${STATS.bans} bans.`,
     brand: { '@type': 'Brand', name: SITE.name },
-    image: SITE.url + '/og-image.png',
+    image: SITE.url + '/og-image.jpg',
     url: SITE.url + '/pricing',
     offers: [
       { '@type': 'AggregateOffer', name: 'Net win boost (price per win)', priceCurrency: 'USD', lowPrice: winLow.toFixed(2), highPrice: winHigh.toFixed(2), availability: 'https://schema.org/InStock', url: SITE.url + '/pricing?mode=wins' },

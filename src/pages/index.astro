@@ -21,101 +21,98 @@ const teasers = ['elo-boosting-safe', 'duo-boost-vs-solo-boost', 'master-yi-buil
 const fromWin = formatUSD(lowestWinPrice());
 const trialOn = Date.now() < TRIAL_ENDS_MS;
 const heroPrice = formatUSD(rankBoostTotal({ fromTier: 2, fromDiv: 2, toTier: 3, toDiv: 0, type: 'solo', lp: LP_OPTIONS[0].value }));
+const arrow = '<path d="M5 12h14M13 6l6 6-6 6"/>';
 ---
 <Base
   title="StainBoost – #1 ELO Boosting on the Middle East Server"
   description={`League of Legends ELO boosting on the Middle East server, played personally by Stain — #1 Master Yi on ME. ${STATS.ordersCompleted}+ orders, 0 bans, full refund if not started. Get an instant price.`}
   path="/"
+  overlay
   schema={[organization(), website(), boostProduct(reviews)]}
 >
-  <section class="hero" data-loc="hero">
-    <div class="wrap hero-grid">
-      <div class="hero-copy">
-        <div class="row hero-chips">
-          <StatusChip onlineOnly />
-          <span class="chip chip-gold"><svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true"><polygon points="8,1 10,6 15,6 11,9.5 12.5,15 8,12 3.5,15 5,9.5 1,6 6,6" fill="currentColor"/></svg>Challenger · #1 Master Yi · ME</span>
-        </div>
-        <h1>YOUR RANK IS <span class="grad grad-animate">WAITING FOR YOU.</span></h1>
-        <p class="lead">Every game is played by <strong>Stain himself</strong> — no pool of random boosters. Offline mode, a VPN matched to your country and your Flash key, on every order.</p>
-        <ul class="proof-strip" aria-label="Why StainBoost">
-          <li><b class="num">{STATS.ordersCompleted}+</b> orders</li>
-          <li><b class="num">{STATS.bans}</b> bans</li>
-          <li><b>Full refund</b> if not started</li>
-        </ul>
-        <p class="wins-link"><a href="/pricing?mode=wins" data-track="cta_click" data-track-location="hero_wins">Or buy net wins from <strong>{fromWin}</strong> per win — pay for 5, get 6 →</a></p>
-      </div>
-      <div class="hero-quote"><ClimbQuote /></div>
-      {trialOn && (
-        <div class="hero-trial" data-trial>
-          <a class="trial-card" href="/free-trial" data-track="cta_click" data-track-location="hero_trial">
-            <span class="tc-top"><span class="tc-tag">🎁 Free trial · 2 days only</span><span class="tc-count" data-trial-countdown data-end={TRIAL_ENDS_MS}>Ends Fri 2 Oct</span></span>
-            <span class="tc-title">Not ready to pay? Your first {FREE_TRIAL.games} games are free.</span>
-            <span class="tc-sub">Stain plays {FREE_TRIAL.games} ranked games — on your account or duo with you. No payment, no card.</span>
-            <span class="tc-go">Claim my {FREE_TRIAL.games} free games →</span>
-          </a>
-        </div>
-      )}
+  <Fragment slot="head">
+    <link rel="preload" as="image" media="(min-width: 761px) and (min-aspect-ratio: 1001/1000)" imagesrcset="/img/scene/lake-1280.avif 1280w, /img/scene/lake-2400.avif 2400w" imagesizes="100vw" type="image/avif" fetchpriority="high" />
+    <link rel="preload" as="image" media="(max-width: 760px), (max-aspect-ratio: 1/1)" imagesrcset="/img/scene/lake-phone-720.avif 720w, /img/scene/lake-phone-1080.avif 1080w" imagesizes="100vw" type="image/avif" fetchpriority="high" />
+  </Fragment>
+
+  <!-- ── The scene ──────────────────────────────────────────────────────── -->
+  <section class="scene" data-scene data-loc="hero">
+    <div class="stage" aria-hidden="true">
+      <picture>
+        <!-- phones and portrait screens get a tall painting of the same scene -->
+        <source media="(max-width: 760px), (max-aspect-ratio: 1/1)" srcset="/img/scene/lake-phone-720.avif 720w, /img/scene/lake-phone-1080.avif 1080w" sizes="100vw" type="image/avif" />
+        <source media="(max-width: 760px), (max-aspect-ratio: 1/1)" srcset="/img/scene/lake-phone-720.webp 720w, /img/scene/lake-phone-1080.webp 1080w" sizes="100vw" type="image/webp" />
+        <source srcset="/img/scene/lake-1280.avif 1280w, /img/scene/lake-2400.avif 2400w" sizes="100vw" type="image/avif" />
+        <img class="photo" src="/img/scene/lake-1280.webp" srcset="/img/scene/lake-1280.webp 1280w, /img/scene/lake-2400.webp 2400w" sizes="100vw" width="2400" height="1340" alt="" fetchpriority="high" decoding="async" data-photo />
+      </picture>
+      <div class="shade"></div>
+      <canvas class="fx" data-fx></canvas>
     </div>
+
+    <div class="copy">
+      <StatusChip onlineOnly />
+      <p class="eyebrow a1">Challenger · #1 Master Yi · <span class="long">Middle East</span><span class="short">ME</span></p>
+      <h1 class="a1"><span class="nowrap">Climb with the</span> <em>#1&nbsp;Master&nbsp;Yi.</em></h1>
+      <p class="lede a2">Every game is played by Stain himself — one Challenger player, never a pool of boosters. Offline mode and a VPN on every order.</p>
+      <div class="act a3">
+        <a class="btn btn-primary btn-lg" href="#price" data-track="cta_click" data-track-location="hero">See my price <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true" set:html={arrow} /></a>
+        {trialOn && (
+          <a class="btn-link more" href="/free-trial" data-trial data-track="cta_click" data-track-location="hero_trial">Try {FREE_TRIAL.games} games free <small data-trial-countdown data-end={TRIAL_ENDS_MS} data-prefix="· ends in ">· 2 days only</small></a>
+        )}
+        <a class="btn-link more" href="/pricing?mode=wins" data-trial-over={trialOn ? '' : undefined} data-track="cta_click" data-track-location="hero_wins">Net wins from {fromWin}</a>
+      </div>
+      <ul class="notes" aria-label="Track record">
+        <li class="note"><small>Orders</small><span>{STATS.ordersCompleted}+ completed</span></li>
+        <li class="note"><small>Bans</small><span>Zero, ever</span></li>
+        <li class="note"><small>Refund</small><span>In full, if not started</span></li>
+      </ul>
+    </div>
+
+    <p class="foot start"><b>Stain</b> &nbsp;Challenger · {STATS.masteryPoints} Yi mastery</p>
+    <span class="scroll-cue" aria-hidden="true"></span>
+    <p class="foot end">Net wins from <b>{fromWin}</b> · pay for 5, get 6</p>
   </section>
 
-  <section class="section-tight" aria-label="StainBoost in numbers">
-    <div class="wrap stats">
-      <div class="stat reveal"><span class="num grad">{STATS.ordersCompleted}+</span><span class="label">Orders completed</span></div>
-      <div class="stat reveal" style="--d:.06s"><span class="num cyan">{STATS.bans}</span><span class="label">Bans, ever</span></div>
-      <div class="stat reveal" style="--d:.12s"><span class="num gold">{STATS.masteryPoints}</span><span class="label">Yi mastery · all accounts</span></div>
-      <a class="stat reveal" style="--d:.18s" href={PROOF.peak.source} target="_blank" rel="noopener" data-track="proof_click" data-track-location="stats">
-        <span class="num peak">{PROOF.peak.tier}</span><span class="label">Rank · see OP.GG ↗</span>
+  <!-- ── Numbers ────────────────────────────────────────────────────────── -->
+  <section class="numbers" aria-label="StainBoost in numbers">
+    <div class="wrap nums">
+      <div class="n reveal"><span class="num">{STATS.ordersCompleted}+</span><span class="label">Orders completed</span></div>
+      <div class="n reveal" style="--d:.08s"><span class="num">{STATS.bans}</span><span class="label">Bans, ever</span></div>
+      <div class="n reveal" style="--d:.16s"><span class="num">{STATS.masteryPoints}</span><span class="label">Yi mastery · all accounts</span></div>
+      <a class="n reveal" style="--d:.24s" href={PROOF.peak.source} target="_blank" rel="noopener" data-track="proof_click" data-track-location="stats">
+        <span class="num"><em>{PROOF.peak.tier}</em></span><span class="label">Rank · see OP.GG ↗</span>
       </a>
     </div>
   </section>
 
-  <section class="section" data-loc="how">
-    <div class="wrap how">
-      <div class="how-copy">
-        <div class="section-head">
-          <p class="eyebrow">How it works</p>
-          <h2>Ordered in two minutes. Tracked every game.</h2>
-          <p>No waiting rooms and no support tickets. You talk to the player on your account.</p>
-        </div>
-        <ol class="steps">
-          <li class="reveal"><span class="step-n">01</span><div><h3>Pick your climb</h3><p>Choose your current and target rank — or a number of net wins — and solo or duo. The price you see is the price you pay.</p></div></li>
-          <li class="reveal" style="--d:.08s"><span class="step-n">02</span><div><h3>Pay &amp; say hi</h3><p>Pay with PayPal or Binance Pay — or message <strong>{DISCORD.handle}</strong> on Discord for another way. Stain usually replies within minutes.</p></div></li>
-          <li class="reveal" style="--d:.16s"><span class="step-n">03</span><div><h3>Watch it climb</h3><p>Your dashboard shows every game live — rank, LP, results, notes and a direct chat with Stain.</p></div></li>
-        </ol>
-        <a href="/pricing" class="btn btn-primary" data-track="cta_click" data-track-location="how">Get my price</a>
+  <!-- ── Instant price ──────────────────────────────────────────────────── -->
+  <section class="section price-sec" id="price" data-loc="price">
+    <div class="wrap split">
+      <div class="reveal">
+        <p class="eyebrow">Instant price</p>
+        <h2>Your rank, <em>priced in seconds.</em></h2>
+        <p class="lead">Pick where you are and where you want to be. The price you see is the price you pay — and it's refunded in full if the boost hasn't started.</p>
+        <ul class="ticks">
+          <li>Pay after ordering, with PayPal or Binance Pay</li>
+          <li>Net wins from {fromWin} — pay for 5, get 6</li>
+          <li>Every game live on your own order page</li>
+        </ul>
       </div>
-      <div class="preview reveal" aria-label="Example of the live order tracker">
-        <div class="screen card">
-          <div class="screen-bar"><span></span><span></span><span></span><em>Live tracker · example</em></div>
-          <div class="screen-body">
-            <div class="track-head">
-              <div><p class="tok">SB-XXXX-XXXX</p><p class="route">Silver II → Gold IV</p></div>
-              <span class="chip chip-cyan"><span class="dot dot-pulse"></span>In progress</span>
-            </div>
-            <div class="bar-lbl"><span>Rank progress</span><span>Silver I · 62 LP</span></div>
-            <div class="bar"><div class="bar-fill"></div></div>
-            <ul class="games">
-              <li><span class="w">W</span><span>Master Yi<small>13/2/6</small></span><b>+24 LP</b></li>
-              <li><span class="w">W</span><span>Master Yi<small>9/3/11</small></span><b>+23 LP</b></li>
-            </ul>
-            <div class="bubble stain">Starting your next session now 👊</div>
-            <div class="bubble you">Let's go!</div>
-          </div>
-        </div>
-      </div>
+      <div class="reveal" style="--d:.1s"><ClimbQuote /></div>
     </div>
   </section>
 
+  <!-- ── One player ─────────────────────────────────────────────────────── -->
   <section class="section" data-loc="compare">
     <div class="wrap">
-      <div class="section-head center">
+      <div class="section-head center reveal">
         <p class="eyebrow">Why it's different</p>
-        <h2>One booster. <span class="grad">Not a pool.</span></h2>
-        <p>Most boosting sites hand your account to whoever is free. Here, it's always the same player.</p>
+        <h2>One player. <em>Not a pool.</em></h2>
+        <p>Most boosting sites hand your account to whoever is free. Here, it's always the same player — and you can look him up.</p>
       </div>
       <div class="compare reveal">
         <div class="col them">
-          <p class="col-title">Typical boosting site</p>
+          <p class="col-title">A typical boosting site</p>
           <ul>
             <li>A random booster from a pool plays your account</li>
             <li>You rarely know who is logged in</li>
@@ -125,32 +122,68 @@ const heroPrice = formatUSD(rankBoostTotal({ fromTier: 2, fromDiv: 2, toTier: 3,
         <div class="col us">
           <p class="col-title">StainBoost</p>
           <ul>
-            <li>Every game is played by <strong>Stain</strong> — #1 Master Yi on ME</li>
+            <li>Every game is played by <strong>Stain</strong>, #1 Master Yi on ME</li>
             <li>You know exactly who: his accounts are <a href={ACCOUNTS[0].opgg} target="_blank" rel="noopener">public on OP.GG</a></li>
-            <li>Chat with Stain directly on your order page and Discord</li>
+            <li>You chat with Stain himself, on your order page and Discord</li>
           </ul>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section" data-loc="safety">
-    <div class="wrap">
-      <div class="section-head center">
-        <p class="eyebrow">Account safety</p>
-        <h2>Your account, treated like his own.</h2>
-        <p>Boosting is against Riot's rules, so nobody can honestly promise zero risk. This is how Stain keeps it as low as possible — on every order.</p>
+  <!-- ── How it works ───────────────────────────────────────────────────── -->
+  <section class="section" data-loc="how">
+    <div class="wrap split how">
+      <div>
+        <div class="section-head reveal">
+          <p class="eyebrow">How it works</p>
+          <h2>Ordered in two minutes. <em>Tracked every game.</em></h2>
+        </div>
+        <ol class="steps">
+          <li class="reveal"><span class="step-n">I</span><div><h3>Pick your climb</h3><p>Your current and target rank — or a number of net wins — solo or duo. The price you see is the price you pay.</p></div></li>
+          <li class="reveal" style="--d:.08s"><span class="step-n">II</span><div><h3>Pay &amp; say hi</h3><p>PayPal or Binance Pay — or message <strong>{DISCORD.handle}</strong> on Discord for another way. He usually replies within minutes.</p></div></li>
+          <li class="reveal" style="--d:.16s"><span class="step-n">III</span><div><h3>Watch it climb</h3><p>Your order page shows every game live — rank, LP, results, notes and a direct chat with Stain.</p></div></li>
+        </ol>
       </div>
-      <div class="grid-3 safety">
-        <div class="card card-glow reveal"><span class="s-ic" aria-hidden="true">👻</span><h3>Invisible</h3><p>Offline mode is on before he logs in. Friends and guild see nothing.</p></div>
-        <div class="card card-glow reveal" style="--d:.06s"><span class="s-ic" aria-hidden="true">🌐</span><h3>VPN matched to you</h3><p>He connects from your country, so your account never "travels".</p></div>
-        <div class="card card-glow reveal" style="--d:.12s"><span class="s-ic" aria-hidden="true">⚡</span><h3>Your Flash key</h3><p>D or F — he plays on yours. Nothing feels different when you're back.</p></div>
-        <div class="card card-glow reveal" style="--d:.18s"><span class="s-ic" aria-hidden="true">🖐️</span><h3>100% hand-played</h3><p>No bots, no scripts, no third-party software. Ever.</p></div>
+      <div class="preview reveal" style="--d:.1s" aria-label="Example of the live order tracker">
+        <div class="screen card">
+          <p class="screen-tag">Live tracker · example</p>
+          <div class="track-head">
+            <div><p class="tok">SB-XXXX-XXXX</p><p class="route">Silver II → Gold IV</p></div>
+            <span class="pill pill-in_progress">In progress</span>
+          </div>
+          <div class="bar-lbl"><span>Rank progress</span><span>Silver I · 62 LP</span></div>
+          <div class="bar"><div class="bar-fill"></div></div>
+          <ul class="games">
+            <li><span class="w">W</span><span>Master Yi<small>13 / 2 / 6</small></span><b>+24 LP</b></li>
+            <li><span class="w">W</span><span>Master Yi<small>9 / 3 / 11</small></span><b>+23 LP</b></li>
+          </ul>
+          <p class="bubble stain">Starting your next session now.</p>
+          <p class="bubble you">Let's go!</p>
+        </div>
       </div>
-      <p class="record reveal"><span class="num">{STATS.bans}</span> bans in <span class="num">{STATS.ordersCompleted}+</span> orders. <a href="/blog/elo-boosting-safe">How detection works →</a></p>
     </div>
   </section>
 
+  <!-- ── Safety ─────────────────────────────────────────────────────────── -->
+  <section class="section" data-loc="safety">
+    <div class="wrap">
+      <div class="section-head center reveal">
+        <p class="eyebrow">Account safety</p>
+        <h2>Your account, <em>treated like his own.</em></h2>
+        <p>Boosting is against Riot's rules, so nobody can honestly promise zero risk. This is how Stain keeps it as low as possible — on every order.</p>
+      </div>
+      <ul class="safety">
+        <li class="reveal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M3 3l18 18M10.6 5.1A9.7 9.7 0 0 1 12 5c5 0 9 4.5 10 7a12 12 0 0 1-3.2 4.3M6.2 6.2C3.9 7.6 2.5 9.8 2 12c1 2.5 5 7 10 7 1.7 0 3.3-.5 4.6-1.3"/></svg><h3>Invisible</h3><p>Offline mode is on before he logs in. Friends and guild see nothing.</p></li>
+        <li class="reveal" style="--d:.06s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><h3>A VPN matched to you</h3><p>He connects from your country, so your account never “travels”.</p></li>
+        <li class="reveal" style="--d:.12s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg><h3>Your Flash key</h3><p>D or F — he plays on yours. Nothing feels different when you're back.</p></li>
+        <li class="reveal" style="--d:.18s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M8 13V5a1.5 1.5 0 0 1 3 0v6M11 11V4a1.5 1.5 0 0 1 3 0v7M14 11V5.5a1.5 1.5 0 0 1 3 0V14a7 7 0 0 1-7 7h-.5A6.5 6.5 0 0 1 4 15.6L2.6 12a1.5 1.5 0 0 1 2.6-1.4L8 14"/></svg><h3>100% hand-played</h3><p>No bots, no scripts, no third-party software. Ever.</p></li>
+      </ul>
+      <p class="record reveal"><span class="num">{STATS.bans}</span> bans in <span class="num">{STATS.ordersCompleted}+</span> orders · <a href="/blog/elo-boosting-safe">How detection works</a></p>
+    </div>
+  </section>
+
+  <!-- ── About ──────────────────────────────────────────────────────────── -->
   <section class="section" id="about" data-loc="about">
     <div class="wrap about">
       <div class="player card reveal">
@@ -161,7 +194,7 @@ const heroPrice = formatUSD(rankBoostTotal({ fromTier: 2, fromDiv: 2, toTier: 3,
         <p class="p-name">Stain</p>
         <p class="p-title">Challenger · #1 Master Yi · ME</p>
         <dl class="p-stats">
-          <div><dt>Rank</dt><dd class="peak">{PROOF.peak.tier}</dd></div>
+          <div><dt>Rank</dt><dd>{PROOF.peak.tier}</dd></div>
           <div><dt>Yi mastery</dt><dd>{STATS.masteryPoints}</dd></div>
           <div><dt>Orders</dt><dd>{STATS.ordersCompleted}+</dd></div>
         </dl>
@@ -174,7 +207,7 @@ const heroPrice = formatUSD(rankBoostTotal({ fromTier: 2, fromDiv: 2, toTier: 3,
       </div>
       <div class="story reveal" style="--d:.08s">
         <p class="eyebrow">The booster</p>
-        <h2>Meet the player on your account.</h2>
+        <h2>Meet the player <em>on your account.</em></h2>
         <p>Stain has played League <strong>since {STATS.playingSince}</strong> and has been on the Middle East server <strong>since it opened in {STATS.meServerSince}</strong>. He's a <strong>Challenger</strong> Master Yi player: a Yi obsession turned into the <strong>#1 Master Yi spot on ME</strong> and over <strong>5 million mastery points</strong> on the champion across his accounts.</p>
         <p>After helping friends climb, StainBoost was born — and it stays one person. <strong>No outsourcing, no third-party boosters, no bots.</strong> When you order, Stain himself plays your games.</p>
         <p>{STATS.ordersCompleted}+ completed orders later, the safety record is still clean: <strong>{STATS.bans} bans</strong>. Check his accounts yourself — they're public.</p>
@@ -182,15 +215,16 @@ const heroPrice = formatUSD(rankBoostTotal({ fromTier: 2, fromDiv: 2, toTier: 3,
     </div>
   </section>
 
+  <!-- ── Reviews ────────────────────────────────────────────────────────── -->
   <section class="section" data-loc="reviews">
     <div class="wrap">
-      <div class="section-head center">
+      <div class="section-head center reveal">
         <p class="eyebrow">Verified reviews</p>
-        <h2>They doubted. Then they ranked.</h2>
+        <h2>They doubted. <em>Then they ranked.</em></h2>
         <p>Only buyers with a completed order can post a review — from their own order page.</p>
       </div>
       <div class="grid-3">
-        {reviews.slice(0, 3).map((r, i) => <ReviewCard {...r} delay={i * 0.06} />)}
+        {reviews.slice(0, 3).map((r, i) => <ReviewCard {...r} delay={i * 0.08} />)}
       </div>
       <div class="row row-center reviews-cta">
         <a class="btn btn-ghost" href="/reviews">Read all verified reviews</a>
@@ -199,25 +233,27 @@ const heroPrice = formatUSD(rankBoostTotal({ fromTier: 2, fromDiv: 2, toTier: 3,
     </div>
   </section>
 
+  <!-- ── Deal ───────────────────────────────────────────────────────────── -->
   <section class="section-tight" data-loc="deal">
     <div class="wrap">
       <div class="deal reveal">
         <div>
-          <p class="eyebrow gold-eyebrow">Net wins deal</p>
-          <p class="deal-title display">PAY FOR 5, <span>GET 6</span></p>
-          <p class="deal-sub">Every 5 wins you pay for, Stain plays 1 more — free. Pay for 10, get 12. Pay for 20, get 24.</p>
+          <p class="eyebrow gold">Net wins</p>
+          <p class="deal-title">Pay for 5, <em>get 6.</em></p>
+          <p class="deal-sub">Every 5 wins you pay for, Stain plays one more — free. Pay for 10, get 12. Pay for 20, get 24.</p>
         </div>
-        <a class="btn btn-gold btn-lg" href="/pricing?mode=wins" data-track="cta_click" data-track-location="deal">Buy net wins</a>
+        <a class="btn btn-gold btn-lg" href="/pricing?mode=wins" data-track="cta_click" data-track-location="deal">Buy net wins <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true" set:html={arrow} /></a>
       </div>
     </div>
   </section>
 
+  <!-- ── Questions ──────────────────────────────────────────────────────── -->
   <section class="section" data-loc="faq_home">
     <div class="wrap fears">
-      <div>
+      <div class="reveal">
         <div class="section-head">
           <p class="eyebrow">Before you order</p>
-          <h2>The questions everyone asks.</h2>
+          <h2>The questions <em>everyone asks.</em></h2>
           <p>Straight answers. Anything else, ask Stain on <a href={DISCORD.invite} target="_blank" rel="noopener">Discord</a>.</p>
         </div>
         <Guarantees />
@@ -226,16 +262,16 @@ const heroPrice = formatUSD(rankBoostTotal({ fromTier: 2, fromDiv: 2, toTier: 3,
     </div>
   </section>
 
+  <!-- ── Guides ─────────────────────────────────────────────────────────── -->
   <section class="section" data-loc="blog_teaser">
     <div class="wrap">
-      <div class="section-head center">
+      <div class="section-head center reveal">
         <p class="eyebrow">Learn to climb</p>
-        <h2>Free guides from the #1 Yi on ME.</h2>
+        <h2>Free guides from <em>the #1 Yi on ME.</em></h2>
       </div>
       <div class="grid-3">
         {teasers.map((p, i) => (
-          <a class="post card card-glow reveal" style={`--d:${i * 0.06}s`} href={`/blog/${p.id}`}>
-            <span class="post-emoji" aria-hidden="true">{p.data.emoji}</span>
+          <a class="post card card-glow reveal" style={`--d:${i * 0.08}s`} href={`/blog/${p.id}`}>
             <span class="post-cat">{p.data.category}</span>
             <span class="post-title">{p.data.h1}</span>
             <span class="post-ex">{p.data.excerpt}</span>
@@ -246,19 +282,26 @@ const heroPrice = formatUSD(rankBoostTotal({ fromTier: 2, fromDiv: 2, toTier: 3,
     </div>
   </section>
 
-  <section class="section" data-loc="final_cta">
-    <div class="wrap">
-      <div class="final reveal">
-        <StatusChip />
-        <h2>Ready when you are.</h2>
-        <p>Pick your rank, see the price, and Stain takes it from there. Full refund if the boost hasn't started.</p>
-        <div class="row row-center">
-          <a class="btn btn-primary btn-lg" href="/pricing" data-track="cta_click" data-track-location="final_cta">Get my price</a>
-          <a class="btn btn-ghost btn-lg" href={DISCORD.invite} target="_blank" rel="noopener">Ask on Discord</a>
-        </div>
+  <!-- ── Closing scene ──────────────────────────────────────────────────── -->
+  <section class="finale" data-loc="final_cta">
+    <picture aria-hidden="true">
+      <source srcset="/img/scene/lake-soft.avif" type="image/avif" />
+      <img class="finale-bg" src="/img/scene/lake-soft.webp" width="720" height="402" alt="" loading="lazy" decoding="async" />
+    </picture>
+    <div class="wrap finale-in reveal">
+      <StatusChip />
+      <h2>Ready when <em>you are.</em></h2>
+      <p>Pick your rank, see the price, and Stain takes it from there. Full refund if the boost hasn't started.</p>
+      <div class="row row-center">
+        <a class="btn btn-primary btn-lg" href="/pricing" data-track="cta_click" data-track-location="final_cta">See my price <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true" set:html={arrow} /></a>
+        <a class="btn btn-ghost btn-lg" href={DISCORD.invite} target="_blank" rel="noopener">Ask on Discord</a>
       </div>
     </div>
   </section>
 
-  <StickyOrderBar slot="after" watch="[data-climb] [data-cta]" label="Silver II → Gold IV" price={heroPrice} href="/pricing?mode=rank&from=2-2&to=3-0&queue=solo" />
+  <StickyOrderBar slot="after" watch="[data-scene], [data-climb] [data-cta]" label="Silver II → Gold IV" price={heroPrice} href="/pricing?mode=rank&from=2-2&to=3-0&queue=solo" />
 </Base>
+
+<script>
+  import '../scripts/scene.js';
+</script>

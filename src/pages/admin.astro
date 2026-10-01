@@ -283,17 +283,17 @@ import Base from '../layouts/Base.astro';
   .adm .keyrow { display: flex; gap: 8px; width: 100%; }
   .adm .err { color: #fecaca; }
   .adm .bar { display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap; margin-block-end: 14px; }
-  .adm .who { font-family: var(--font-ui); font-weight: 700; color: #fff; }
+  .adm .who { font-family: var(--font-ui); font-weight: 500; color: var(--text-strong); }
   .adm .online { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .adm .select.sm { width: auto; min-height: 40px; }
   .adm .tabs { display: flex; gap: 6px; margin-block-end: 14px; flex-wrap: wrap; }
-  .adm .tabs button { padding: 8px 16px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, .14); background: rgba(255, 255, 255, .03); color: var(--text); font-family: var(--font-ui); font-weight: 700; letter-spacing: .06em; }
-  .adm .tabs [aria-selected='true'] { border-color: var(--purple-light); background: rgba(124, 58, 237, .2); }
+  .adm .tabs button { padding: 8px 16px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, .14); background: rgba(255, 255, 255, .03); color: var(--text); font-family: var(--font-ui); font-weight: 500; letter-spacing: .06em; }
+  .adm .tabs [aria-selected='true'] { border-color: var(--purple-light); background: rgba(196, 181, 253, .2); }
   .adm .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-block-end: 12px; }
   .adm .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-  .adm .fchip { padding: 6px 12px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, .14); background: rgba(255, 255, 255, .03); color: var(--text); font-family: var(--font-ui); font-weight: 700; font-size: .85rem; }
+  .adm .fchip { padding: 6px 12px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, .14); background: rgba(255, 255, 255, .03); color: var(--text); font-family: var(--font-ui); font-weight: 500; font-size: .85rem; }
   .adm .fchip span { color: var(--muted); }
-  .adm .fchip[aria-pressed='true'] { border-color: var(--purple-light); background: rgba(124, 58, 237, .2); }
+  .adm .fchip[aria-pressed='true'] { border-color: var(--purple-light); background: rgba(196, 181, 253, .2); }
   .adm .search { max-width: 280px; min-height: 40px; }
   .adm .list { display: grid; gap: 8px; }
   .adm .row-o { display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center; text-align: start; color: inherit; padding: 14px 16px; }
@@ -301,8 +301,8 @@ import Base from '../layouts/Base.astro';
   .adm .o-side { text-align: end; }
   .adm .claim { font-style: normal; color: var(--gold); font-weight: 600; }
   .adm .meta { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
-  .adm .meta dt { font-family: var(--font-ui); font-weight: 700; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
-  .adm .meta dd { margin: 0; color: #fff; word-break: break-word; }
+  .adm .meta dt { font-family: var(--font-ui); font-weight: 400; font-size: .68rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+  .adm .meta dd { margin: 0; color: var(--text-strong); word-break: break-word; }
   .adm .tools { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-block-start: 14px; }
   .adm .tool { display: grid; gap: 12px; align-content: start; }
   .adm .tool h2 { font-size: .95rem; letter-spacing: .1em; }
@@ -311,8 +311,8 @@ import Base from '../layouts/Base.astro';
   .adm .msgs { display: flex; flex-direction: column; gap: 8px; max-height: 300px; overflow-y: auto; }
   .adm .b { max-width: 85%; padding: 8px 12px; border-radius: 12px; font-size: .92rem; }
   .adm .b small { display: block; font-size: .72rem; opacity: .7; }
-  .adm .b-me { align-self: flex-end; background: linear-gradient(135deg, var(--purple), var(--purple-dark)); color: #fff; }
-  .adm .b-them { align-self: flex-start; background: rgba(6, 214, 242, .08); border: 1px solid rgba(6, 214, 242, .25); }
+  .adm .b-me { align-self: flex-end; background: rgba(196, 181, 253, .14); color: var(--text-strong); }
+  .adm .b-them { align-self: flex-start; background: rgba(143, 227, 245, .08); border: 1px solid rgba(143, 227, 245, .25); }
   .adm .send { display: flex; gap: 8px; }
   .adm .toast { position: fixed; inset-inline-end: 20px; inset-block-end: 90px; padding: 10px 16px; border-radius: 12px; background: var(--card-solid); border: 1px solid rgba(52, 211, 153, .5); color: #d1fae5; z-index: 90; }
   .adm .row-r { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }

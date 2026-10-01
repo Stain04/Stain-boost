@@ -90,35 +90,35 @@ const r = ratingSummary(reviews);
 </script>
 
 <style>
-  .head h1 { font-size: clamp(2rem, 3.6vw + .7rem, 3.3rem); margin-block: 10px 12px; }
-  .summary { display: grid; grid-template-columns: auto 1fr; gap: clamp(18px, 4vw, 44px); align-items: center; margin-block-end: 22px; }
-  .big { display: grid; justify-items: center; gap: 4px; padding-inline: 10px; }
-  .avg { font-size: 3.4rem; line-height: 1; color: var(--gold); text-shadow: 0 0 26px rgba(245, 166, 35, .35); }
-  .big .stars { color: var(--gold); letter-spacing: 3px; font-size: 1.1rem; }
-  .count { font-family: var(--font-ui); font-weight: 700; color: var(--muted); letter-spacing: .06em; }
-  .bars { list-style: none; padding: 0; display: grid; gap: 8px; }
-  .bars li { display: grid; grid-template-columns: 34px 1fr 28px; gap: 10px; align-items: center; font-family: var(--font-ui); font-weight: 700; color: var(--muted); }
-  .track { height: 8px; border-radius: 8px; background: rgba(255, 255, 255, .07); overflow: hidden; }
-  .fill { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--gold), #fbd38d); }
+  .head h1 { font-size: clamp(2.8rem, 4vw + 1rem, 4.6rem); margin-block: 14px 16px; }
+  .summary { display: grid; grid-template-columns: auto 1fr; gap: clamp(22px, 4vw, 56px); align-items: center; margin-block-end: 24px; }
+  .big { display: grid; justify-items: center; gap: 6px; padding-inline: 10px; }
+  .avg { font-size: 4.2rem; line-height: 1; color: var(--text-strong); }
+  .big .stars { color: var(--gold); letter-spacing: 3px; font-size: 1rem; }
+  .count { color: var(--muted); letter-spacing: .04em; font-size: .92rem; }
+  .bars { list-style: none; padding: 0; display: grid; gap: 10px; }
+  .bars li { display: grid; grid-template-columns: 34px 1fr 28px; gap: 12px; align-items: center; color: var(--muted); font-size: .9rem; font-variant-numeric: tabular-nums; }
+  .track { height: 3px; border-radius: 3px; background: rgba(246, 242, 255, .08); overflow: hidden; }
+  .fill { display: block; height: 100%; border-radius: inherit; background: var(--gold); }
   .n { text-align: end; }
-  .note { grid-column: 1 / -1; font-size: .9rem; color: var(--muted); border-block-start: 1px solid rgba(255, 255, 255, .08); padding-block-start: 12px; }
-  .list { margin-block-end: 28px; }
-  .placeholder { display: grid; gap: 10px; align-content: center; justify-items: start; border-style: dashed; border-color: rgba(139, 92, 246, .35); background: rgba(124, 58, 237, .05); }
-  .ph-title { font-family: var(--font-ui); font-weight: 700; font-size: 1.2rem; color: #fff; }
-  .placeholder strong { color: #fff; }
-  .cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px; border-color: rgba(139, 92, 246, .35); background: linear-gradient(135deg, rgba(124, 58, 237, .16), var(--card)); }
-  .cta h2 { font-size: clamp(1.3rem, 2vw + .6rem, 1.8rem); margin-block-end: 4px; }
-  /* cards injected by the live refresh use ReviewCard's look */
-  .list :global(.review) { display: flex; flex-direction: column; gap: 12px; }
+  .note { grid-column: 1 / -1; font-size: .9rem; color: var(--muted); box-shadow: inset 0 1px 0 rgba(246, 242, 255, .08); padding-block-start: 14px; }
+  .list { margin-block-end: 32px; }
+  .placeholder { display: grid; gap: 12px; align-content: center; justify-items: start; background: transparent; box-shadow: inset 0 0 0 1px rgba(196, 181, 253, .3); }
+  .ph-title { font-family: var(--font-display); font-size: 1.6rem; line-height: 1.15; color: var(--text-strong); }
+  .placeholder strong { color: var(--text-strong); font-weight: 400; }
+  .cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px; box-shadow: inset 0 0 0 1px rgba(196, 181, 253, .22); }
+  .cta h2 { font-size: clamp(2rem, 2vw + 1.2rem, 2.8rem); margin-block-end: 6px; }
+  /* cards (and the ones the live refresh injects) match ReviewCard */
+  .list :global(.review) { display: flex; flex-direction: column; gap: 16px; }
   .list :global(.review .top) { display: flex; justify-content: space-between; align-items: center; }
-  .list :global(.review .stars) { color: var(--gold); letter-spacing: 2px; }
-  .list :global(.review .dim) { color: rgba(255, 255, 255, .15); }
-  .list :global(.review .date) { font-family: var(--font-ui); font-weight: 600; font-size: .8rem; color: var(--muted); }
-  .list :global(.review .rank) { align-self: start; font-family: var(--font-ui); font-weight: 700; font-size: .8rem; color: var(--purple-light); background: rgba(124, 58, 237, .12); border: 1px solid rgba(139, 92, 246, .3); border-radius: 8px; padding: .2rem .6rem; }
-  .list :global(.review blockquote) { flex: 1; color: rgba(255, 255, 255, .82); line-height: 1.6; }
-  .list :global(.review figcaption) { display: flex; align-items: center; gap: 10px; }
-  .list :global(.review .ava) { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font-family: var(--font-ui); font-weight: 700; color: #fff; background: linear-gradient(135deg, var(--purple), var(--cyan)); }
-  .list :global(.review .name) { display: block; font-family: var(--font-ui); font-weight: 700; color: #fff; }
-  .list :global(.review .verified) { display: block; font-size: .78rem; color: var(--success); font-weight: 600; }
+  .list :global(.review .stars) { color: var(--gold); letter-spacing: 3px; font-size: .9rem; }
+  .list :global(.review .dim) { color: rgba(246, 242, 255, .15); }
+  .list :global(.review .date) { font-size: .74rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .list :global(.review .rank) { font-size: .72rem; letter-spacing: .18em; text-transform: uppercase; color: var(--lav); }
+  .list :global(.review blockquote) { flex: 1; font-family: var(--font-display); font-style: italic; font-size: 1.42rem; line-height: 1.35; color: var(--text-strong); }
+  .list :global(.review figcaption) { display: flex; align-items: center; gap: 12px; padding-block-start: 14px; box-shadow: inset 0 1px 0 rgba(246, 242, 255, .07); }
+  .list :global(.review .ava) { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-size: .8rem; color: var(--lav-hi); box-shadow: inset 0 0 0 1px rgba(196, 181, 253, .4); }
+  .list :global(.review .name) { display: block; color: var(--text-strong); }
+  .list :global(.review .verified) { display: block; font-size: .78rem; color: var(--success); }
   @media (max-width: 640px) { .summary { grid-template-columns: 1fr; } }
 </style>

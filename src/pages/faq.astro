@@ -54,13 +54,13 @@ import { breadcrumbs } from '../data/schema.js';
 
 <style>
   .head h1 { font-size: clamp(2rem, 3.6vw + .7rem, 3.3rem); margin-block: 10px 12px; }
-  .head .lead strong { color: #fff; }
+  .head .lead strong { color: var(--text-strong); }
   .jump { display: flex; flex-wrap: wrap; gap: 8px; margin-block-start: 18px; }
-  .jump a { font-family: var(--font-ui); font-weight: 700; font-size: .9rem; letter-spacing: .06em; text-decoration: none; color: var(--text); padding: 7px 14px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, .14); background: rgba(255, 255, 255, .03); }
+  .jump a { font-family: var(--font-ui); font-weight: 500; font-size: .9rem; letter-spacing: .06em; text-decoration: none; color: var(--text); padding: 7px 14px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, .14); background: rgba(255, 255, 255, .03); }
   .jump a:hover { border-color: var(--purple-light); }
   .groups { display: grid; gap: 34px; }
   .group h2 { font-size: clamp(1.1rem, 1vw + .8rem, 1.4rem); margin-block-end: 14px; color: var(--purple-light); }
-  .end { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; align-items: center; border-color: rgba(139, 92, 246, .35); }
+  .end { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; align-items: center; border-color: rgba(196, 181, 253, .35); }
   .end-copy { display: grid; gap: 12px; }
   .end h2 { font-size: clamp(1.3rem, 2vw + .6rem, 1.8rem); }
   @media (max-width: 720px) { .end { grid-template-columns: 1fr; } }

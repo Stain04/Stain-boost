@@ -15,6 +15,13 @@ try {
   }
 } catch {}
 
+// ── Floating nav turns to glass once the page scrolls ─────────────────────
+if (document.querySelector('.nav.overlay')) {
+  const onScroll = () => document.documentElement.classList.toggle('nav-scrolled', scrollY > 24);
+  addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+}
+
 // ── Mobile menu ──────────────────────────────────────────────────────────────
 const burger = document.querySelector('[data-burger]');
 const menu = document.querySelector('[data-menu]');
@@ -22,7 +29,10 @@ if (burger && menu) {
   const setOpen = (open) => {
     burger.setAttribute('aria-expanded', String(open));
     burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    // the menu opens right under the header (whose height depends on the promo bar)
+    if (open) menu.style.top = Math.round(document.querySelector('[data-nav]').getBoundingClientRect().bottom) + 'px';
     menu.hidden = !open;
+    document.documentElement.classList.toggle('menu-open', open);
   };
   burger.addEventListener('click', () => setOpen(menu.hidden));
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menu.hidden) { setOpen(false); burger.focus(); } });

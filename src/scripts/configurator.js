@@ -185,9 +185,6 @@ function init() {
       $$('[data-wins]', form).forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.wins === s.wins)));
     }
     $$('[data-win-price]', form).forEach((el) => { el.textContent = formatUSD(WIN_PRICES[el.dataset.winPrice][s.type]) + '/win'; });
-    const live = s.region === 'me';
-    $('[data-notify]', form).hidden = live;
-    if (!live) $('[data-notify-region]', form).textContent = s.region.toUpperCase();
     const price = formatUSD(q.total);
     $('[data-submit-label]', summary).textContent = user ? `Place order · ${price}` : `Order with Discord · ${price}`;
     $('[data-submit-icon]', summary).style.display = user ? 'none' : '';
@@ -259,7 +256,7 @@ function init() {
   document.addEventListener('sb:user', (e) => { user = e.detail; loadAccount(); });
 
   // ── EU waitlist ───────────────────────────────────────────────────────────
-  $('[data-notify-send]', form).addEventListener('click', async () => {
+  $('[data-notify-send]', form)?.addEventListener('click', async () => {
     const contact = $('#notifyContact').value.trim();
     const msg = $('[data-notify-msg]', form);
     if (contact.length < 3) { msg.textContent = 'Add your Discord username or email.'; return; }
@@ -347,7 +344,6 @@ function init() {
       if (!ok) bad.push(id);
     });
     if (bad.length) { showError('Add your Discord username and your League Riot ID so Stain can reach you.'); $('#' + bad[0]).focus(); return false; }
-    if (s.region !== 'me') { showError(`${s.region.toUpperCase()} isn't open yet — choose ME, or join the list to hear when it opens.`); return false; }
     return true;
   }
 

@@ -208,26 +208,26 @@ const g = FREE_TRIAL.games;
   .ft-copy { grid-area: copy; display: grid; gap: 16px; }
   .ft-side { grid-area: side; }
   .ft-head h1 { font-size: clamp(2rem, 3.8vw + .6rem, 3.4rem); }
-  .ft-count { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; font-family: var(--font-ui); font-weight: 700; font-size: 1.15rem; color: var(--gold); }
+  .ft-count { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; font-family: var(--font-ui); font-weight: 500; font-size: 1.15rem; color: var(--gold); }
   .ft-count [data-trial-countdown] { font-variant-numeric: tabular-nums; min-width: 17ch; padding: 4px 12px; border-radius: 999px; background: rgba(245, 166, 35, .12); border: 1px solid rgba(245, 166, 35, .45); }
   .ft-count small { font-family: var(--font-body); font-weight: 400; font-size: .85rem; color: var(--muted); }
   .ft-steps { display: grid; gap: 10px; padding-inline-start: 1.3rem; color: rgba(255, 255, 255, .8); }
-  .ft-steps b { color: #fff; }
+  .ft-steps b { color: var(--text-strong); }
   .ft-rules ul { display: grid; gap: 6px; margin-block-start: 8px; padding-inline-start: 1.1rem; color: var(--muted); font-size: .92rem; }
   .ft-side { display: grid; gap: 14px; position: sticky; inset-block-start: calc(var(--nav-h) + 16px); }
   .ft-form { display: grid; gap: 14px; border-color: rgba(245, 166, 35, .45); }
-  .ft-form-title { font-family: var(--font-display); font-weight: 900; font-size: 1.2rem; color: #fff; }
+  .ft-form-title { font-family: var(--font-display); font-weight: 400; font-size: 1.2rem; color: var(--text-strong); }
   .ft-seg { display: flex; gap: 6px; padding: 4px; border-radius: 14px; background: rgba(0, 0, 0, .25); border: 1px solid rgba(255, 255, 255, .08); width: fit-content; max-width: 100%; }
   .ft-seg label { position: relative; flex: 1 1 auto; }
   .ft-seg input { position: absolute; opacity: 0; inset: 0; }
-  .ft-seg span { display: grid; place-items: center; min-width: 52px; min-height: 42px; padding: 6px 14px; border-radius: 10px; font-family: var(--font-ui); font-weight: 700; letter-spacing: .04em; color: rgba(255, 255, 255, .72); cursor: pointer; text-align: center; }
+  .ft-seg span { display: grid; place-items: center; min-width: 52px; min-height: 42px; padding: 6px 14px; border-radius: 10px; font-family: var(--font-ui); font-weight: 500; letter-spacing: .04em; color: rgba(255, 255, 255, .72); cursor: pointer; text-align: center; }
   .ft-seg small { display: block; font-size: .72rem; letter-spacing: 0; color: var(--muted); }
-  .ft-seg input:checked + span { background: linear-gradient(135deg, var(--purple), var(--purple-dark)); color: #fff; }
+  .ft-seg input:checked + span { background: rgba(196, 181, 253, .14); color: var(--text-strong); }
   .ft-seg input:checked + span small { color: #e9d5ff; }
   .ft-seg input:focus-visible + span { outline: 2px solid var(--cyan); outline-offset: 2px; }
   .ft-note { font-size: .85rem; color: var(--muted); text-align: center; }
   .ft-state { display: grid; gap: 10px; justify-items: start; }
-  .ft-state :global(.t) { font-family: var(--font-display); font-weight: 900; color: #fff; font-size: 1.15rem; }
+  .ft-state :global(.t) { font-family: var(--font-display); font-weight: 400; color: var(--text-strong); font-size: 1.15rem; }
   .ft-state :global(.tok) { font-family: ui-monospace, monospace; }
   .ft-state :global(.row) { display: flex; flex-wrap: wrap; gap: 8px; }
   .err { color: #fecaca; background: rgba(248, 113, 113, .1); border: 1px solid rgba(248, 113, 113, .35); border-radius: 12px; padding: 10px 12px; }

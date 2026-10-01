@@ -50,6 +50,7 @@ export default async function handler(req, res) {
   const cleanIgn     = sanitize(body.ign, 60);
   const cleanType    = body.type === 'duo' ? 'duo' : 'solo';
   const cleanFlash   = body.flash === 'F' ? 'F' : 'D';
+  const cleanRegion  = ['me', 'euw', 'eune'].includes(body.region) ? body.region : 'me';
   if (!cleanDiscord || !cleanIgn) return res.status(400).json({ error: 'Missing Discord tag or IGN.' });
 
   const kv = getKv();
@@ -110,6 +111,7 @@ export default async function handler(req, res) {
     orderMeta = { kind: 'win_boost', rank: cleanRank, wins: totalWins, paidWins: cleanWins, freeWins, winsDone: 0 };
   }
 
+  orderSummary += ` · ${cleanRegion.toUpperCase()} server`;
   if (extras.priority) orderSummary += ' · ⚡ PRIORITY';
   if (referral) orderSummary += ` · ${Math.round(REFERRAL_RATE * 100)}% referral (${referral.code})`;
   if (q.credit > 0) orderSummary += ` · $${q.credit.toFixed(2)} credit used`;
@@ -136,6 +138,7 @@ export default async function handler(req, res) {
         total: computedTotal,
         type: cleanType,
         flash: cleanFlash,
+        region: cleanRegion,
         ign: cleanIgn,
         discord: cleanDiscord,
         userId: authUser.id,

@@ -179,28 +179,28 @@ import { PAYMENT_METHODS, DISCORD } from '../data/site.js';
   .trk { display: grid; gap: 16px; }
   .trk .gate { display: grid; gap: 12px; justify-items: start; }
   .trk .t-head { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-block-end: 16px; }
-  .trk .tok { font-family: ui-monospace, monospace; font-size: 1.2rem; font-weight: 700; color: #fff; }
+  .trk .tok { font-family: ui-monospace, monospace; font-size: 1.2rem; font-weight: 500; color: var(--text-strong); }
   .trk .sum { color: rgba(255, 255, 255, .75); }
   .trk .t-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-  .trk .live { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-ui); font-weight: 700; font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; color: var(--cyan); }
+  .trk .live { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-ui); font-weight: 500; font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; color: var(--cyan); }
   .trk .pay { display: grid; gap: 14px; border-color: rgba(245, 166, 35, .45); margin-block-end: 16px; }
-  .trk .pay h2 { font-size: 1.2rem; }
+  .trk .pay h2 { font-size: 1.8rem; }
   .trk .pay-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .trk .pm { display: grid; gap: 8px; justify-items: start; padding: 14px; border-radius: 14px; background: rgba(255, 255, 255, .03); border: 1px solid rgba(255, 255, 255, .09); }
-  .trk .pm-name { font-family: var(--font-ui); font-weight: 700; font-size: 1.1rem; color: #fff; }
+  .trk .pm-name { font-family: var(--font-display); font-size: 1.4rem; color: var(--text-strong); }
   .trk .pm-id { display: flex; gap: 8px; align-items: center; }
-  .trk code { font-family: ui-monospace, monospace; padding: 5px 9px; border-radius: 8px; background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .12); color: #fff; }
+  .trk code { font-family: ui-monospace, monospace; padding: 5px 9px; border-radius: 8px; background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .12); color: var(--text-strong); }
   .trk .grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 16px; align-items: start; }
   .trk .col { display: grid; gap: 16px; }
-  .trk .c-title { font-size: .95rem; letter-spacing: .12em; margin-block-end: 12px; color: #fff; }
-  .trk .p-lbl { display: flex; justify-content: space-between; gap: 10px; font-family: var(--font-ui); font-weight: 700; color: var(--muted); margin-block-end: 8px; }
-  .trk .p-lbl .num { color: #fff; }
+  .trk .c-title { font-size: 1.6rem; letter-spacing: 0; margin-block-end: 14px; color: var(--text-strong); }
+  .trk .p-lbl { display: flex; justify-content: space-between; gap: 10px; font-family: var(--font-ui); font-weight: 500; color: var(--muted); margin-block-end: 8px; }
+  .trk .p-lbl .num { color: var(--text-strong); }
   .trk .bar { height: 12px; border-radius: 12px; background: rgba(255, 255, 255, .06); overflow: hidden; }
   .trk .fill { height: 100%; transform-origin: left; transform: scaleX(0); transition: transform .8s var(--ease); background: linear-gradient(90deg, var(--purple), var(--cyan)); box-shadow: 0 0 12px var(--cyan-glow); }
   .trk .kv { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-block-start: 14px; }
   .trk .kv div { padding: 10px; border-radius: 12px; background: rgba(255, 255, 255, .03); border: 1px solid rgba(255, 255, 255, .07); }
-  .trk .kv dt { font-family: var(--font-ui); font-weight: 700; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
-  .trk .kv dd { margin: 0; font-family: var(--font-ui); font-weight: 700; font-size: 1.05rem; color: #fff; }
+  .trk .kv dt { font-family: var(--font-ui); font-weight: 400; font-size: .68rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+  .trk .kv dd { margin: 0; font-family: var(--font-ui); font-weight: 500; font-size: 1.05rem; color: var(--text-strong); }
   .trk .games, .trk .notes { list-style: none; padding: 0; display: grid; gap: 8px; }
   .trk .games li { display: grid; grid-template-columns: 34px 1fr auto; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 10px; background: rgba(255, 255, 255, .03); border: 1px solid rgba(255, 255, 255, .06); }
   .trk .games .empty, .trk .notes .empty { display: block; background: none; border: 0; color: var(--muted); }
@@ -208,21 +208,21 @@ import { PAYMENT_METHODS, DISCORD } from '../data/site.js';
   .trk .res-W { color: var(--success); background: rgba(52, 211, 153, .14); border: 1px solid rgba(52, 211, 153, .35); }
   .trk .res-L { color: var(--danger); background: rgba(248, 113, 113, .12); border: 1px solid rgba(248, 113, 113, .3); }
   .trk .res-RM { color: var(--muted); background: rgba(255, 255, 255, .05); border: 1px solid rgba(255, 255, 255, .15); }
-  .trk .champ { display: block; font-family: var(--font-ui); font-weight: 700; color: #fff; }
+  .trk .champ { display: block; font-family: var(--font-ui); font-weight: 500; color: var(--text-strong); }
   .trk .games small, .trk .notes small { display: block; font-size: .78rem; color: var(--muted); }
   .trk .up { color: var(--success); font-family: var(--font-display); font-size: .8rem; }
   .trk .dn { color: var(--danger); font-family: var(--font-display); font-size: .8rem; }
   .trk .notes { max-height: 320px; overflow-y: auto; }
-  .trk .notes li { padding: 10px 12px; border-radius: 10px; border-inline-start: 2px solid var(--cyan); background: rgba(6, 214, 242, .04); color: rgba(255, 255, 255, .82); font-size: .95rem; }
-  .trk .notes li.stain { border-color: var(--purple-light); background: rgba(124, 58, 237, .07); }
-  .trk .n-from { display: block; font-family: var(--font-ui); font-weight: 700; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .trk .notes li { padding: 10px 12px; border-radius: 10px; border-inline-start: 2px solid var(--cyan); background: rgba(143, 227, 245, .04); color: rgba(255, 255, 255, .82); font-size: .95rem; }
+  .trk .notes li.stain { border-color: var(--purple-light); background: rgba(196, 181, 253, .07); }
+  .trk .n-from { display: block; font-family: var(--font-ui); font-weight: 400; font-size: .68rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
   .trk .chat { display: grid; gap: 12px; position: sticky; inset-block-start: calc(var(--nav-h) + 16px); }
   .trk .msgs { display: flex; flex-direction: column; gap: 8px; max-height: 420px; min-height: 160px; overflow-y: auto; }
   .trk .msgs .empty { color: var(--muted); }
   .trk .b { max-width: 85%; padding: 9px 12px; border-radius: 14px; font-size: .95rem; word-break: break-word; }
   .trk .b small { display: block; font-size: .72rem; color: rgba(255, 255, 255, .55); margin-block-start: 3px; }
-  .trk .b-stain { align-self: flex-start; background: rgba(6, 214, 242, .08); border: 1px solid rgba(6, 214, 242, .25); }
-  .trk .b-me { align-self: flex-end; background: linear-gradient(135deg, var(--purple), var(--purple-dark)); color: #fff; }
+  .trk .b-stain { align-self: flex-start; background: rgba(143, 227, 245, .08); border: 1px solid rgba(143, 227, 245, .25); }
+  .trk .b-me { align-self: flex-end; background: rgba(196, 181, 253, .14); color: var(--text-strong); }
   .trk .send { display: flex; gap: 8px; }
   @media (max-width: 880px) { .trk .grid { grid-template-columns: 1fr; } .trk .chat { position: static; } .trk .pay-grid { grid-template-columns: 1fr; } }
   @media (max-width: 480px) { .trk .kv { grid-template-columns: 1fr 1fr; } }

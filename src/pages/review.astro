@@ -74,14 +74,14 @@ import Base from '../layouts/Base.astro';
   .rv { display: grid; gap: 14px; }
   .rv h1 { font-size: clamp(1.8rem, 3vw + .6rem, 2.5rem); }
   .state { display: grid; gap: 10px; justify-items: start; }
-  .state :global(.t) { font-family: var(--font-display); font-weight: 900; color: #fff; font-size: 1.15rem; }
+  .state :global(.t) { font-family: var(--font-display); font-weight: 400; color: var(--text-strong); font-size: 1.15rem; }
   .form { display: grid; gap: 14px; }
-  .for { display: grid; gap: 2px; color: #fff; }
+  .for { display: grid; gap: 2px; color: var(--text-strong); }
   .stars-f { border: 0; padding: 0; }
   .stars { display: flex; flex-direction: row-reverse; justify-content: flex-end; gap: 4px; }
   .stars label { position: relative; font-size: 2.2rem; line-height: 1; color: rgba(255, 255, 255, .18); cursor: pointer; }
   .stars input { position: absolute; opacity: 0; inset: 0; }
-  .stars label:has(input:checked), .stars label:has(input:checked) ~ label { color: var(--gold); text-shadow: 0 0 12px rgba(245, 166, 35, .5); }
+  .stars label:has(input:checked), .stars label:has(input:checked) ~ label { color: var(--gold); }
   .stars label:has(input:focus-visible) { outline: 2px solid var(--cyan); border-radius: 6px; }
   textarea.input { resize: vertical; min-height: 120px; }
   .err { color: #fecaca; background: rgba(248, 113, 113, .1); border: 1px solid rgba(248, 113, 113, .35); border-radius: 12px; padding: 10px 12px; }
