@@ -1,4 +1,4 @@
-// The home scene: drifting spirit lights + Spirit Blossom petals on a canvas, and a little
+// The home scene: drifting spirit lights + cherry petals on a canvas, and a little
 // depth on desktop (the scene follows the pointer). Starts after the page has loaded so it
 // never competes with the first paint, pauses off-screen and in background tabs, and stays
 // still for people who prefer reduced motion.

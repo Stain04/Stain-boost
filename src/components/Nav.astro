@@ -71,7 +71,8 @@ const { active = '', overlay = false } = Astro.props;
     .mark { font-size: 1.32rem; letter-spacing: .24em; padding-inline-start: .24em; }
     .nav-cta { padding: 7px 15px; font-size: .78rem; }
   }
-  @media (max-width: 359px) { .mark { letter-spacing: .16em; font-size: 1.2rem; } }
+  @media (max-width: 400px) { .mark { letter-spacing: .2em; padding-inline-start: .2em; font-size: 1.2rem; } }
+  @media (max-width: 359px) { .mark { letter-spacing: .14em; padding-inline-start: .14em; font-size: 1.1rem; } }
   :global(.is-minimal) .nav-cta { display: none; }
   :global(.menu-open) .nav { background: rgba(8, 6, 26, .97); }
   :global(.menu-open) body { overflow: hidden; }
