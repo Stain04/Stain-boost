@@ -148,3 +148,4 @@
 /* v2: the two rune trees only fit side by side from ~560px; one column below that */
 @media(max-width:760px){.post-scope .rune-display{grid-template-columns:1fr 1fr;}}
 @media(max-width:560px){.post-scope .rune-display{grid-template-columns:1fr;}}
+.post-scope .stat-pill-lbl{color:rgba(255,255,255,.58);}

@@ -96,7 +96,7 @@ function init(root) {
     q('[data-route]').textContent = `${fromName} → ${toName}`;
     q('[data-meta]').textContent = `${divs} division${divs !== 1 ? 's' : ''} · ${s.type}`;
     q('[data-cta-to]').textContent = toName;
-    q('[data-dest-tag]').textContent = toName;
+    const tag = q('[data-dest-tag]'); if (tag) tag.textContent = toName; // the rank ladder is optional
     const cta = q('[data-cta]');
     cta.href = `/pricing?mode=rank&from=${s.fromTier}-${s.fromDiv}&to=${s.toTier}-${s.toDiv}&queue=${s.type}`;
     cta.dataset.value = total.toFixed(2);

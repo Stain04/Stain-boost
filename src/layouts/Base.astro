@@ -19,8 +19,9 @@ interface Props {
   minimal?: boolean;         // account pages: slimmer chrome
   chat?: boolean;            // the customer help chat (off on admin)
   promo?: boolean;           // the free-trial bar (off on admin and on the trial page itself)
+  overlay?: boolean;         // nav floats over a full-screen scene (home)
 }
-const { title, description, path, ogImage = '/og-image.png', ogType = 'website', noindex = false, schema = [], active = '', minimal = false, chat = true, promo = true } = Astro.props;
+const { title, description, path, ogImage = '/og-image.jpg', ogType = 'website', noindex = false, schema = [], active = '', minimal = false, chat = true, promo = true, overlay = false } = Astro.props;
 // Free trial: only built into pages while it runs; after the deadline the head script hides it.
 const trialOn = Date.now() < TRIAL_ENDS_MS;
 const canonical = SITE.url + (path === '/' ? '/' : path);
@@ -40,10 +41,10 @@ const ogUrl = SITE.url + ogImage;
   <link rel="icon" href="/favicon-48.png" sizes="48x48" type="image/png" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/site.webmanifest" />
-  <link rel="preload" href="/fonts/orbitron-var-latin.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="preload" href="/fonts/inter-var-latin.woff2" as="font" type="font/woff2" crossorigin />
-  <!-- UI font for buttons and labels: without the preload it lands late and forces a second full-page layout -->
-  <link rel="preload" href="/fonts/rajdhani-700-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <!-- All three faces appear above the fold (italic: the accent words in headlines) -->
+  <link rel="preload" href="/fonts/cormorant-var-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/cormorant-italic-var-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/jost-var-latin.woff2" as="font" type="font/woff2" crossorigin />
   <meta property="og:type" content={ogType} />
   <meta property="og:site_name" content="StainBoost" />
   <meta property="og:url" content={canonical} />
@@ -82,8 +83,17 @@ const ogUrl = SITE.url + ogImage;
 <body class={minimal ? 'is-minimal' : ''}>
   <a class="skip-link" href="#main">Skip to content</a>
   <div class="backdrop" aria-hidden="true"></div>
-  {promo && trialOn && <TrialBar />}
-  <Nav active={active} />
+  {overlay ? (
+    <div class="chrome-overlay">
+      {promo && trialOn && <TrialBar />}
+      <Nav active={active} overlay />
+    </div>
+  ) : (
+    <>
+      {promo && trialOn && <TrialBar />}
+      <Nav active={active} />
+    </>
+  )}
   <main id="main">
     <slot />
   </main>

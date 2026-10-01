@@ -1,24 +1,23 @@
 <button class="chat-launch" type="button" aria-label="Chat with Stain's assistant" aria-haspopup="dialog" data-chat-launch>
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.6 8.6 0 0 1-3.8-.9L3 21l1.9-5.2A8.4 8.4 0 1 1 21 11.5Z"/></svg>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.6 8.6 0 0 1-3.8-.9L3 21l1.9-5.2A8.4 8.4 0 1 1 21 11.5Z"/></svg>
   <span class="chat-launch-label">Ask a question</span>
-</button>
-
-<style>
+</button><style>
   .chat-launch {
-    position: fixed; z-index: 60; inset-inline-end: 18px; inset-block-end: calc(18px + env(safe-area-inset-bottom));
-    display: inline-flex; align-items: center; gap: .55rem; height: 52px; padding: 0 1.1rem 0 .95rem; border-radius: 999px;
-    border: 1px solid rgba(196, 181, 253, .35); color: #fff;
-    background: linear-gradient(135deg, rgba(124, 58, 237, .95), rgba(91, 33, 182, .95));
-    box-shadow: 0 10px 30px -8px rgba(124, 58, 237, .7), 0 0 0 1px rgba(124, 58, 237, .25);
-    font-family: var(--font-ui); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; font-size: .88rem;
-    transition: transform .25s var(--ease), box-shadow .25s;
+    position: fixed; z-index: 60; inset-inline-end: 20px; inset-block-end: calc(20px + env(safe-area-inset-bottom));
+    display: inline-flex; align-items: center; gap: .55rem; height: 48px; padding: 0 1.2rem 0 1rem; border-radius: 999px; border: 0;
+    color: var(--text-strong); background: rgba(16, 12, 36, .88);
+    box-shadow: inset 0 0 0 1px rgba(246, 242, 255, .16), 0 18px 40px -16px rgba(0, 0, 0, .9);
+    font-family: var(--font-ui); font-weight: 400; letter-spacing: .02em; font-size: .92rem;
+    transition: transform .45s var(--ease), box-shadow .3s, opacity .4s, visibility .4s;
   }
-  .chat-launch svg { width: 22px; height: 22px; }
-  @media (hover: hover) { .chat-launch:hover { transform: translateY(-2px); box-shadow: 0 14px 36px -8px rgba(124, 58, 237, .85); } }
+  .chat-launch svg { width: 20px; height: 20px; color: var(--lav); }
+  @media (hover: hover) { .chat-launch:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1px rgba(196, 181, 253, .5), 0 18px 40px -16px rgba(0, 0, 0, .9); } }
   /* Phones: icon only, sits above the sticky order bar */
   @media (max-width: 760px) {
-    .chat-launch { width: 52px; padding: 0; justify-content: center; inset-block-end: calc(84px + env(safe-area-inset-bottom)); }
+    .chat-launch { width: 48px; padding: 0; justify-content: center; inset-block-end: calc(84px + env(safe-area-inset-bottom)); }
     .chat-launch-label { display: none; }
   }
+  /* the home scene stays clean: the button appears once you scroll past it */
+  :global(.scene-in-view) .chat-launch { opacity: 0; visibility: hidden; transform: translateY(10px); }
   :global(body.chat-open) .chat-launch { display: none; }
 </style>

@@ -119,28 +119,28 @@ const ref = Math.round(REFERRAL_RATE * 100);
   .dash .dash-head h1 { font-size: clamp(1.8rem, 3vw + .6rem, 2.6rem); }
   .dash .top { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 16px; }
   .dash .me { display: flex; align-items: center; gap: 14px; }
-  .dash .me .ava { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; font-family: var(--font-display); font-weight: 900; color: #fff; background: linear-gradient(135deg, var(--purple), var(--cyan)); flex: none; }
-  .dash .me .name { font-family: var(--font-display); font-weight: 900; color: #fff; }
+  .dash .me .ava { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; font-family: var(--font-display); font-weight: 400; color: var(--text-strong); background: rgba(196, 181, 253, .14); flex: none; }
+  .dash .me .name { font-family: var(--font-display); font-weight: 400; color: var(--text-strong); }
   .dash .me .btn { margin-inline-start: auto; }
   .dash .refer { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; border-color: rgba(245, 166, 35, .4); background: linear-gradient(135deg, rgba(245, 166, 35, .1), var(--card) 55%); }
   .dash .r-title { color: rgba(255, 255, 255, .85); }
   .dash .r-title b { color: var(--gold); }
   .dash .r-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-  .dash .r-row code { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: ui-monospace, monospace; padding: 8px 10px; border-radius: 10px; background: rgba(0, 0, 0, .3); border: 1px solid rgba(255, 255, 255, .12); color: #fff; }
+  .dash .r-row code { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: ui-monospace, monospace; padding: 8px 10px; border-radius: 10px; background: rgba(0, 0, 0, .3); border: 1px solid rgba(255, 255, 255, .12); color: var(--text-strong); }
   .dash .small { font-size: .88rem; }
-  .dash .small strong { color: #fff; }
+  .dash .small strong { color: var(--text-strong); }
   .dash .h2 { font-size: 1.2rem; margin-block-start: 8px; }
   .dash .orders { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 14px; }
   .dash .order { display: grid; gap: 10px; }
   .dash .o-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-  .dash .tok { font-family: ui-monospace, monospace; color: #fff; font-weight: 700; }
+  .dash .tok { font-family: ui-monospace, monospace; color: var(--text-strong); font-weight: 500; }
   .dash .o-sum { color: rgba(255, 255, 255, .8); }
   .dash .o-meta { display: flex; justify-content: space-between; font-size: .88rem; color: var(--muted); }
-  .dash .o-meta .gold { font-family: var(--font-ui); font-weight: 700; font-size: 1.05rem; }
+  .dash .o-meta .gold { font-family: var(--font-ui); font-weight: 500; font-size: 1.05rem; }
   .dash .o-actions { display: flex; flex-wrap: wrap; gap: 8px; }
   .dash .empty { display: grid; gap: 10px; justify-items: start; }
-  .dash .e-title { font-family: var(--font-display); font-weight: 900; color: #fff; }
-  .dash .skeleton { height: 160px; border-radius: var(--r-lg); background: linear-gradient(90deg, rgba(124, 58, 237, .06), rgba(124, 58, 237, .14), rgba(124, 58, 237, .06)); background-size: 200% 100%; animation: sh 1.4s linear infinite; }
+  .dash .e-title { font-family: var(--font-display); font-weight: 400; color: var(--text-strong); }
+  .dash .skeleton { height: 160px; border-radius: var(--r-lg); background: linear-gradient(90deg, rgba(196, 181, 253, .06), rgba(196, 181, 253, .14), rgba(196, 181, 253, .06)); background-size: 200% 100%; animation: sh 1.4s linear infinite; }
   @keyframes sh { to { background-position: -200% 0; } }
   @media (max-width: 860px) { .dash .top { grid-template-columns: minmax(0, 1fr); } }
 </style>

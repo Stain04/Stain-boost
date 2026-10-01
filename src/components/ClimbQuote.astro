@@ -1,26 +1,17 @@
 ---
 // "The Climb" — hero quote. Server-rendered in its final state (works without JS);
 // src/scripts/climb.js animates the climb and keeps the price live.
-import RankEmblem from './RankEmblem.astro';
 import { RB_TIERS, MASTERS, LP_OPTIONS, rankName, rankPosition, rankBoostTotal, formatUSD } from '../data/pricing.js';
 
 const def = { fromTier: 2, fromDiv: 2, toTier: 3, toDiv: 0, type: 'solo' };
 const price = rankBoostTotal({ ...def, lp: LP_OPTIONS[0].value, lpGain: 1 });
-const a = (rankPosition(def.fromTier, def.fromDiv) / 28) * 100;
-const b = (rankPosition(def.toTier, def.toDiv) / 28) * 100;
 const divs = rankPosition(def.toTier, def.toDiv) - rankPosition(def.fromTier, def.fromDiv);
 
 const groups = RB_TIERS.slice(0, MASTERS).map((tier, t) => ({ tier, opts: [0, 1, 2, 3].map((d) => ({ value: `${t}-${d}`, label: rankName(t, d), pos: t * 4 + d })) }));
 const fromPos = rankPosition(def.fromTier, def.fromDiv);
-const nodePos = (i) => (i === MASTERS ? 100 : ((i * 4) / 28) * 100);
 const href = `/pricing?mode=rank&from=${def.fromTier}-${def.fromDiv}&to=${def.toTier}-${def.toDiv}&queue=${def.type}`;
 ---
-<div class="climb card glass" data-climb data-loc="hero_quote" style={`--a:${a};--b:${b}`}>
-  <div class="climb-top">
-    <p class="eyebrow">Instant quote</p>
-    <p class="climb-kind">Rank boost · ME server</p>
-  </div>
-
+<div class="climb card" data-climb data-loc="hero_quote">
   <div class="pickers">
     <div class="field">
       <label for="q-from">I'm in</label>
@@ -32,7 +23,7 @@ const href = `/pricing?mode=rank&from=${def.fromTier}-${def.fromDiv}&to=${def.to
         ))}
       </select>
     </div>
-    <svg class="pick-arrow flip-rtl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    <svg class="pick-arrow flip-rtl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
     <div class="field">
       <label for="q-to">I want</label>
       <select id="q-to" class="select" data-to>
@@ -48,24 +39,9 @@ const href = `/pricing?mode=rank&from=${def.fromTier}-${def.fromDiv}&to=${def.to
 
   <fieldset class="queue">
     <legend class="visually-hidden">How do you want to play?</legend>
-    <label><input type="radio" name="q-queue" value="solo" checked /><span><b>Solo</b> Stain plays for you</span></label>
+    <label><input type="radio" name="q-queue" value="solo" checked /><span><b>Solo</b> Stain plays</span></label>
     <label><input type="radio" name="q-queue" value="duo" /><span><b>Duo</b> You play with him</span></label>
   </fieldset>
-
-  <div class="ladder" aria-hidden="true">
-    <div class="track">
-      <div class="fill"></div>
-      <div class="orb-wrap"><div class="orb"></div></div>
-    </div>
-    <ol class="nodes">
-      {RB_TIERS.map((t, i) => (
-        <li class:list={['node', { on: i >= def.fromTier && i <= def.toTier, dest: i === def.toTier, 'is-from': i === def.fromTier }]} data-tier={i} style={`--p:${nodePos(i)}`}>
-          <RankEmblem tier={t} size={30} />
-        </li>
-      ))}
-    </ol>
-    <p class="dest-tag" data-dest-tag>{rankName(def.toTier, def.toDiv)}</p>
-  </div>
 
   <div class="result">
     <div>
@@ -77,9 +53,9 @@ const href = `/pricing?mode=rank&from=${def.fromTier}-${def.fromDiv}&to=${def.to
 
   <a class="btn btn-primary btn-block btn-lg" data-cta href={href}>
     Boost me to <span data-cta-to>{rankName(def.toTier, def.toDiv)}</span>
-    <svg class="flip-rtl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    <svg class="flip-rtl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
   </a>
-  <p class="fine">For 0–20 LP and normal LP gains. You can change both on the next step.</p>
+  <p class="fine">For 0–20 LP and normal LP gains — you can change both on the next step.</p>
   <p class="visually-hidden" aria-live="polite" data-announce></p>
 </div>
 
@@ -88,72 +64,24 @@ const href = `/pricing?mode=rank&from=${def.fromTier}-${def.fromDiv}&to=${def.to
 </script>
 
 <style>
-  .climb { display: grid; gap: 16px; padding: clamp(18px, 2.6vw, 26px); border-color: rgba(139, 92, 246, .35); box-shadow: 0 30px 80px -30px rgba(124, 58, 237, .55), inset 0 1px 0 rgba(255, 255, 255, .06); }
-  .climb::before { content: ''; position: absolute; inset: -1px; border-radius: inherit; padding: 1px; pointer-events: none;
-    background: linear-gradient(140deg, rgba(196, 181, 253, .55), rgba(6, 214, 242, .25) 40%, transparent 60%, rgba(245, 166, 35, .35));
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
-  .climb-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-  .climb-kind { font-family: var(--font-ui); font-weight: 700; font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
-  .pickers { display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 10px; }
-  .pick-arrow { width: 20px; height: 20px; color: var(--purple-light); margin-block-end: 14px; }
-  .queue { border: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .climb { display: grid; gap: 20px; }
+  .pickers { display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 12px; }
+  .pick-arrow { width: 20px; height: 20px; color: var(--muted); margin-block-end: 16px; }
+  .queue { border: 0; padding: 5px; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; border-radius: 18px; background: rgba(0, 0, 0, .26); box-shadow: inset 0 0 0 1px rgba(246, 242, 255, .08); }
   .queue label { position: relative; }
   .queue input { position: absolute; opacity: 0; inset: 0; margin: 0; }
-  .queue span { display: grid; gap: 1px; padding: 10px 12px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, .12); background: rgba(255, 255, 255, .03); font-size: .82rem; color: var(--muted); cursor: pointer; transition: border-color .2s, background-color .2s, color .2s; }
-  .queue b { font-family: var(--font-ui); font-size: 1rem; letter-spacing: .08em; text-transform: uppercase; color: var(--text); }
-  .queue input:checked + span { border-color: var(--purple-light); background: rgba(124, 58, 237, .16); color: var(--text); box-shadow: 0 0 0 1px rgba(196, 181, 253, .35) inset; }
-  .queue input:focus-visible + span { outline: 2px solid var(--cyan); outline-offset: 2px; }
-
-  /* Ladder */
-  .ladder { position: relative; height: 76px; margin-inline: 15px; }
-  [dir='rtl'] .ladder { transform: scaleX(-1); }
-  .track { position: absolute; inset-inline: 0; inset-block-start: 26px; height: 6px; border-radius: 6px; background: rgba(255, 255, 255, .07); }
-  .fill { position: absolute; inset: 0; border-radius: 6px; transform-origin: left center;
-    background: linear-gradient(90deg, var(--purple), var(--cyan) 60%, var(--gold));
-    box-shadow: 0 0 14px rgba(6, 214, 242, .55);
-    transform: translateX(calc(var(--a) * 1%)) scaleX(calc((var(--b) - var(--a)) / 100)); }
-  /* zero-width rail positioned at --b (a full-width sliding layer would overflow the page) */
-  .orb-wrap { position: absolute; inset-block: 0; inset-inline-start: calc(var(--b) * 1%); width: 0; }
-  .orb { position: absolute; inset-block-start: 50%; inset-inline-start: 0; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 4px rgba(245, 166, 35, .35), 0 0 18px var(--gold), 0 0 34px var(--purple); }
-  .nodes { list-style: none; padding: 0; position: absolute; inset: 0; }
-  .node { position: absolute; inset-block-start: 14px; inset-inline-start: calc(var(--p) * 1%); transform: translateX(-50%); opacity: .3; transition: opacity .35s var(--ease), transform .35s var(--ease); transition-delay: var(--delay, 0s); }
-  .node :global(svg) { background: var(--bg); border-radius: 50%; }
-  .node.on { opacity: 1; }
-  .node.dest { transform: translateX(-50%) scale(1.25); }
-  .node.dest :global(svg) { filter: drop-shadow(0 0 8px var(--gold-glow)) drop-shadow(0 0 16px rgba(245, 166, 35, .35)); }
-  .dest-tag { position: absolute; inset-block-start: 56px; inset-inline-start: calc(var(--b) * 1%); transform: translateX(-50%); white-space: nowrap;
-    font-family: var(--font-ui); font-weight: 700; font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
-  [dir='rtl'] .dest-tag { transform: translateX(-50%) scaleX(-1); }
-
-  .result { display: flex; align-items: end; justify-content: space-between; gap: 12px; padding-block-start: 4px; border-block-start: 1px solid rgba(255, 255, 255, .07); padding-block-start: 14px; }
-  .route { font-family: var(--font-ui); font-weight: 700; font-size: 1.08rem; letter-spacing: .06em; color: var(--text); }
-  .meta { font-size: .85rem; color: var(--muted); }
-  .price { font-size: clamp(2rem, 3vw + 1rem, 2.6rem); line-height: 1; color: var(--gold); text-shadow: 0 0 24px rgba(245, 166, 35, .35); }
-  .fine { font-size: .8rem; color: var(--muted); text-align: center; }
-
-  /* Motion. No-JS shows the final state. With JS, the start frame shows until `.played`. */
-  :global(.js) .climb:not(.played) .fill { transform: translateX(calc(var(--a) * 1%)) scaleX(0); }
-  :global(.js) .climb:not(.played) .orb-wrap { inset-inline-start: calc(var(--a) * 1%); }
-  :global(.js) .climb:not(.played) .node:not(.is-from) { opacity: .3; transform: translateX(-50%); }
-  :global(.js) .climb:not(.pop) .dest-tag { opacity: 0; }
-  :global(.js) .climb.animating .fill { transition: transform 1.05s cubic-bezier(.65, 0, .25, 1); }
-  :global(.js) .climb.animating .orb-wrap { transition: inset-inline-start 1.05s cubic-bezier(.65, 0, .25, 1); }
-  .climb.pop .dest-tag { animation: pop .45s var(--ease); }
-  .climb.pop .node.dest { animation: ignite .6s var(--ease); }
-  @keyframes pop { 0% { opacity: 0; transform: translateX(-50%) translateY(6px) scale(.9); } 100% { opacity: 1; transform: translateX(-50%); } }
-  @keyframes ignite { 0% { transform: translateX(-50%) scale(1); } 55% { transform: translateX(-50%) scale(1.45); } 100% { transform: translateX(-50%) scale(1.25); } }
-  @media (prefers-reduced-motion: reduce) { .climb * { transition: none !important; animation: none !important; } }
-
-  @media (min-width: 981px) {
-    .ladder { height: 92px; margin-inline: 20px; }
-    .track { inset-block-start: 31px; }
-    .node :global(svg) { width: 38px; height: 38px; }
-    .dest-tag { inset-block-start: 66px; }
-  }
+  .queue span { display: block; padding: 12px; border-radius: 14px; text-align: center; font-size: .94rem; color: var(--muted); cursor: pointer; transition: background-color .3s, color .3s, box-shadow .3s; }
+  .queue b { font-weight: 400; color: var(--text-strong); }
+  .queue input:checked + span { background: rgba(196, 181, 253, .14); color: var(--text); box-shadow: inset 0 0 0 1px rgba(196, 181, 253, .45); }
+  .queue input:focus-visible + span { outline: 1.5px solid var(--lav); outline-offset: 2px; }
+  .result { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; padding-block-start: 22px; box-shadow: inset 0 1px 0 rgba(246, 242, 255, .08); }
+  .route { font-size: 1.02rem; color: var(--text-strong); }
+  .meta { font-size: .86rem; color: var(--muted); }
+  .price { font-size: clamp(2.8rem, 3vw + 1.6rem, 3.6rem); line-height: .9; font-weight: 400; color: var(--text-strong); }
+  .fine { font-size: .84rem; color: var(--muted); text-align: center; }
   @media (max-width: 420px) {
     .pickers { grid-template-columns: 1fr 1fr; }
     .pick-arrow { display: none; }
-    .ladder { margin-inline: 12px; }
-    .climb-kind { display: none; }
+    .queue span { font-size: .88rem; padding: 11px 6px; }
   }
 </style>
