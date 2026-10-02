@@ -169,6 +169,11 @@ const article = {
   .native :global(.cta-box p) { color: var(--muted); margin-block-end: 1.4rem; }
   .native :global(.cta-box .btn-primary) { display: inline-flex; align-items: center; gap: .55rem; padding: 14px 28px; border-radius: 999px; background: var(--lav); color: var(--lav-ink); text-decoration: none; border: 0; font-family: var(--font-ui); font-size: 1rem; letter-spacing: .02em; box-shadow: 0 16px 34px -18px rgba(0, 0, 0, .75); }
   .native :global(.cta-box .btn-primary svg) { width: 16px; height: 16px; flex: none; }
+  .native :global(.table-wrap) { overflow-x: auto; margin-block: 1.4rem; border-radius: 16px; box-shadow: inset 0 0 0 1px rgba(246, 242, 255, .1); }
+  .native :global(.table-wrap table) { width: 100%; border-collapse: collapse; font-size: .96rem; font-variant-numeric: tabular-nums; }
+  .native :global(:is(.table-wrap th, .table-wrap td)) { text-align: start; padding: .75rem 1rem; white-space: nowrap; }
+  .native :global(.table-wrap td) { border-top: 1px solid rgba(246, 242, 255, .07); }
+  @media (max-width: 480px) { .native :global(:is(.table-wrap th, .table-wrap td)) { padding: .65rem .7rem; } }
   /* the old posts' shared elements, in the current style (doubled class: beats their own CSS) */
   .post-scope.post-scope :global(.article-content h2) { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.9rem, 1vw + 1.5rem, 2.4rem); line-height: 1.12; letter-spacing: -.005em; text-transform: none; background: none; -webkit-text-fill-color: currentColor; color: var(--text-strong); margin-block: 2.6rem .9rem; scroll-margin-top: 100px; }
   .post-scope.post-scope :global(.article-content h3) { font-family: var(--font-display); font-weight: 500; font-size: 1.5rem; letter-spacing: 0; text-transform: none; color: var(--text-strong); }
