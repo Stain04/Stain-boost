@@ -44,7 +44,7 @@ const AUTH_KEY = 'sb_auth_cache_v1';
 function applyAuth(user) {
   document.querySelectorAll('[data-auth-link]').forEach((a) => {
     a.href = user ? '/dashboard' : '/login';
-    a.textContent = user ? 'Dashboard' : 'Sign in';
+    a.textContent = user ? (a.dataset.dash || 'Dashboard') : (a.dataset.signin || 'Sign in');
   });
   document.documentElement.classList.toggle('signed-in', !!user);
   window.__sbUser = user || null;

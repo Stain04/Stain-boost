@@ -1,0 +1,8 @@
+---
+// /ar/boost/<slug> — the Arabic version of each climb page
+import ClimbPage from '../../../components/ClimbPage.astro';
+import { CLIMBS } from '../../../data/climbs.js';
+export function getStaticPaths() { return CLIMBS.map((climb) => ({ params: { slug: climb.slug }, props: { climb } })); }
+const { climb } = Astro.props;
+---
+<ClimbPage climb={climb} lang="ar" />

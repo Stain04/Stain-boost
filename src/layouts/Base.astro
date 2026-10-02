@@ -20,21 +20,28 @@ interface Props {
   chat?: boolean;            // the customer help chat (off on admin)
   promo?: boolean;           // the free-trial bar (off on admin and on the trial page itself)
   overlay?: boolean;         // nav floats over a full-screen scene (home)
+  lang?: 'en' | 'ar';        // page language (Arabic pages are right-to-left)
+  alternates?: { en?: string; ar?: string }; // the same page in the other language (paths)
 }
-const { title, description, path, ogImage = '/og-image.jpg', ogType = 'website', noindex = false, schema = [], active = '', minimal = false, chat = true, promo = true, overlay = false } = Astro.props;
+const { title, description, path, ogImage = '/og-image.jpg', ogType = 'website', noindex = false, schema = [], active = '', minimal = false, chat = true, promo = true, overlay = false, lang = 'en', alternates = {} } = Astro.props;
 // Free trial: only built into pages while it runs; after the deadline the head script hides it.
 const trialOn = Date.now() < TRIAL_ENDS_MS;
 const canonical = SITE.url + (path === '/' ? '/' : path);
 const ogUrl = SITE.url + ogImage;
+// hreflang: every page lists itself and its translation; x-default is the English page
+const alt = { ...alternates, [lang]: path };
+const hreflang = Object.entries(alt).filter(([, p]) => p).map(([l, p]) => ({ l, href: SITE.url + (p === '/' ? '/' : p) }));
 ---
 <!doctype html>
-<html lang="en" dir="ltr">
+<html lang={lang} dir={lang === 'ar' ? 'rtl' : 'ltr'}>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{title}</title>
   <meta name="description" content={description} />
   <link rel="canonical" href={canonical} />
+  {hreflang.length > 1 && hreflang.map((h) => <link rel="alternate" hreflang={h.l} href={h.href} />)}
+  {hreflang.length > 1 && <link rel="alternate" hreflang="x-default" href={(hreflang.find((h) => h.l === 'en') || hreflang[0]).href} />}
   {noindex && <meta name="robots" content="noindex,nofollow" />}
   <meta name="theme-color" content={SITE.themeColor} />
   <link rel="icon" href="/favicon.ico" sizes="32x32" />
@@ -46,6 +53,7 @@ const ogUrl = SITE.url + ogImage;
   <link rel="preload" href="/fonts/cormorant-italic-var-latin.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/fonts/jost-var-latin.woff2" as="font" type="font/woff2" crossorigin />
   <meta property="og:type" content={ogType} />
+  <meta property="og:locale" content={lang === 'ar' ? 'ar_AR' : 'en_US'} />
   <meta property="og:site_name" content="StainBoost" />
   <meta property="og:url" content={canonical} />
   <meta property="og:title" content={title} />
@@ -86,20 +94,20 @@ const ogUrl = SITE.url + ogImage;
   {overlay ? (
     <div class="chrome-overlay">
       {promo && trialOn && <TrialBar />}
-      <Nav active={active} overlay />
+      <Nav active={active} overlay lang={lang} alternates={alternates} />
     </div>
   ) : (
     <>
       {promo && trialOn && <TrialBar />}
-      <Nav active={active} />
+      <Nav active={active} lang={lang} alternates={alternates} />
     </>
   )}
   <main id="main">
     <slot />
   </main>
-  <Footer />
+  <Footer lang={lang} />
   <slot name="after" />
-  {chat && <ChatLauncher />}
+  {chat && <ChatLauncher lang={lang} />}
   <script>
     import '../scripts/common.js';
   </script>

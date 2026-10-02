@@ -230,3 +230,19 @@ html:not(.trial-over) [data-trial-over] { display: none !important; }
 
 /* Home: promo bar + nav float together over the full-screen scene */
 .chrome-overlay { position: fixed; inset: 0 0 auto; z-index: 50; }
+
+/* ── Arabic pages (html lang="ar" dir="rtl") ─────────────────────────────────
+   Latin text (prices, the wordmark) keeps the site fonts; Arabic letters fall through to the
+   device's Arabic UI font. Letter-spacing and italics break Arabic script, so both are off. */
+:root:lang(ar) {
+  --font-display: 'Cormorant Garamond', 'Segoe UI', 'Geeza Pro', 'Noto Sans Arabic', 'Noto Naskh Arabic', Tahoma, serif;
+  --font-ui: 'Jost', 'Segoe UI', 'Geeza Pro', 'Noto Sans Arabic', Tahoma, sans-serif;
+  --font-body: 'Jost', 'Segoe UI', 'Geeza Pro', 'Noto Sans Arabic', Tahoma, sans-serif;
+}
+:lang(ar) { letter-spacing: 0 !important; }
+:lang(ar) :is(h1, h2, h3, .display) { font-weight: 600; line-height: 1.3; }
+:lang(ar) :is(em, i, .grad) { font-style: normal; }
+:lang(ar) body { line-height: 1.8; }
+
+/* a price or Latin snippet inside right-to-left text keeps its own order ("$40", not "40$") */
+.ltr { unicode-bidi: isolate; direction: ltr; }

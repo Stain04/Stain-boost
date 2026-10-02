@@ -1,0 +1,52 @@
+---
+// /boost — every popular climb on one page, with live prices (links to the climb pages).
+import Base from '../../layouts/Base.astro';
+import RankEmblem from '../../components/RankEmblem.astro';
+import { CLIMBS } from '../../data/climbs.js';
+import { RB_TIERS, rankBoostTotal, rankPosition, formatUSD } from '../../data/pricing.js';
+import { TIER_NAMES } from '../../i18n/ui.js';
+import { breadcrumbs } from '../../data/schema.js';
+const T = TIER_NAMES.en;
+const items = CLIMBS.map((c) => ({
+  ...c,
+  name: `${T[RB_TIERS[c.from[0]]]} to ${T[RB_TIERS[c.to[0]]]}`,
+  divs: rankPosition(c.to[0], c.to[1]) - rankPosition(c.from[0], c.from[1]),
+  solo: rankBoostTotal({ fromTier: c.from[0], fromDiv: c.from[1], toTier: c.to[0], toDiv: c.to[1], type: 'solo', lp: 0 }),
+}));
+---
+<Base
+  title="LoL ELO Boost by Rank – Prices for Every Climb | StainBoost"
+  description="League of Legends boosts by rank: Iron to Bronze, Silver to Gold, Gold to Platinum, Emerald to Diamond and more, with live prices. Played by Stain, Challenger and #1 Master Yi on ME."
+  path="/boost"
+  schema={[breadcrumbs([{ name: 'Home', path: '/' }, { name: 'Boosts', path: '/boost' }])]}
+  promo={false}
+>
+  <section class="wrap hub">
+    <p class="eyebrow">LoL rank boost · ME, EUW &amp; EUNE</p>
+    <h1>League of Legends boosts by rank</h1>
+    <p class="lead">Pick your climb to see what it costs and what to expect. Every game is played by Stain himself — Challenger, #1 Master Yi on ME. Need a different climb? Choose any two ranks on the <a href="/pricing">order page</a>.</p>
+    <div class="grid">
+      {items.map((c) => (
+        <a class="climb" href={`/boost/${c.slug}`}>
+          <span class="em"><RankEmblem tier={RB_TIERS[c.from[0]]} size={60} loading="eager" /><span class="ar" aria-hidden="true">→</span><RankEmblem tier={RB_TIERS[c.to[0]]} size={60} loading="eager" /></span>
+          <b>{c.name} boost</b>
+          <span class="meta">{c.divs} divisions · from <strong>{formatUSD(c.solo)}</strong></span>
+        </a>
+      ))}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hub { padding-block: clamp(24px, 3.4vw, 48px) 0; display: grid; gap: 14px; }
+  .hub h1 { font-family: var(--font-ui); font-weight: 600; font-size: clamp(2rem, 2vw + 1.3rem, 3rem); line-height: 1.1; letter-spacing: -.01em; }
+  .hub .lead { max-width: 70ch; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; margin-block-start: 16px; }
+  .climb { display: grid; justify-items: center; gap: 8px; padding: 20px 16px; border-radius: 18px; text-align: center; text-decoration: none; background: #110d26; box-shadow: inset 0 0 0 1px rgba(246, 242, 255, .08); transition: box-shadow .25s, transform .25s var(--ease); }
+  .climb:hover { box-shadow: inset 0 0 0 1.5px #7353fb; transform: translateY(-2px); }
+  .em { display: flex; align-items: center; gap: 8px; }
+  .ar { color: var(--lav); }
+  .climb b { font-family: var(--font-ui); font-weight: 600; font-size: 1.12rem; color: var(--text-strong); }
+  .meta { font-size: .86rem; color: var(--muted); }
+  .meta strong { color: var(--gold); font-weight: 600; }
+</style>

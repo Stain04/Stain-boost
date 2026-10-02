@@ -1,0 +1,8 @@
+---
+// /boost/<slug> — one page per popular climb (see src/data/climbs.js)
+import ClimbPage from '../../components/ClimbPage.astro';
+import { CLIMBS } from '../../data/climbs.js';
+export function getStaticPaths() { return CLIMBS.map((climb) => ({ params: { slug: climb.slug }, props: { climb } })); }
+const { climb } = Astro.props;
+---
+<ClimbPage climb={climb} lang="en" />
