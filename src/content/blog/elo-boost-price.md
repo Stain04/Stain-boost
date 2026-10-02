@@ -38,7 +38,7 @@ order: 27
 </div>
 
 <h3>What a Full Tier Costs</h3>
-<p>Climbing one full tier means four divisions. With normal LP gains and starting from 0 LP:</p>
+<p>Climbing one full tier means four divisions. Starting from 0 LP:</p>
 <div class="table-wrap">
 <table>
 <thead><tr><th>Boost</th><th>Solo</th><th>Duo</th></tr></thead>
@@ -80,8 +80,8 @@ order: 27
 <h3>Solo or Duo</h3>
 <p>Solo (the booster plays on your account) is the cheaper option. Duo (you play together, on your own account) costs more because it takes two players and you never share your login. <a href="/blog/duo-boost-vs-solo-boost">Duo vs solo</a> compares them in full.</p>
 
-<h3>Your LP Gains</h3>
-<p>If your account gains only a few LP per win, every division takes more games. The price reflects that: <strong>low LP gains (16–22 per win) cost 1.4×</strong> and <strong>very low LP gains (8–15 per win) cost 2×</strong>. Silver IV to Gold IV, for example, costs $40 with normal gains, $56 with low gains and $80 with very low gains. If your gains are low, <a href="/blog/why-lp-gains-are-low">here's why it happens</a>.</p>
+<h3>Your LP Gains Don't Change the Price</h3>
+<p>Some services charge more when your account gains only a few LP per win, because each division takes more games. StainBoost doesn't: <strong>a division costs the same whatever your LP gains are</strong>. If your gains are low, <a href="/blog/why-lp-gains-are-low">here's why it happens</a>.</p>
 
 <h3>LP You Already Have</h3>
 <p>If you're partway through your current division, you only pay for the part that's left: the first division is discounted by the LP you already have.</p>

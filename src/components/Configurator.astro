@@ -1,105 +1,65 @@
 ---
-// Order configurator. Server-rendered with the default order (Silver II → Gold IV, solo);
-// src/scripts/configurator.js makes it live. All prices come from src/data/pricing.js.
+// Price calculator (left side of /pricing). Server-rendered with the default order
+// (Silver II → Gold IV, solo, ME); src/scripts/configurator.js makes it live.
+// The checkout box on the right is OrderSummary.astro. All prices come from src/data/pricing.js.
 import RankEmblem from './RankEmblem.astro';
-import {
-  WIN_PRICES, RB_TIERS, RB_DIVS, MASTERS, LP_OPTIONS, LP_GAIN_OPTIONS, MAX_WINS, PRIORITY_RATE, BONUS_WIN_PRICE,
-  divisionPrice, formatUSD, lowestWinPrice,
-} from '../data/pricing.js';
+import { WIN_PRICES, RB_TIERS, RB_DIVS, MASTERS, LP_OPTIONS, MAX_WINS, divisionPrice, formatUSD } from '../data/pricing.js';
 import { REGIONS } from '../data/site.js';
 import { tierOfWinRank } from '../data/ranks.js';
 
-const def = { fromTier: 2, fromDiv: 2, toTier: 3, toDiv: 0, type: 'solo' };
+const def = { fromTier: 2, fromDiv: 2, toTier: 3, toDiv: 0 };
 const defLp = LP_OPTIONS[0].value;
 const winRanks = Object.keys(WIN_PRICES);
 const minDiv = divisionPrice(0, 0, 'solo');
+const servers = REGIONS.filter((r) => r.live);
 ---
-<form class="cfg" data-cfg novalidate data-loc="configurator">
-  <!-- 1 · SERVICE -->
-  <fieldset class="step">
-    <legend><span class="n">1</span>What do you want?</legend>
-    <div class="modes">
-      <label class="mode">
-        <input type="radio" name="mode" value="rank" checked />
-        <span class="mode-card">
-          <span class="mode-title">Rank Boost <span class="tag">Most popular</span></span>
-          <span class="mode-text">Pick a target rank. Stain plays until you're there.</span>
-          <span class="mode-from">from {formatUSD(minDiv)} / division</span>
-        </span>
-      </label>
-      <label class="mode">
-        <input type="radio" name="mode" value="wins" />
-        <span class="mode-card">
-          <span class="mode-title">Net Wins <span class="tag tag-gold">Pay 5, get 6</span></span>
-          <span class="mode-text">Pay per win. Great for fixing MMR or a small push.</span>
-          <span class="mode-from">from {formatUSD(lowestWinPrice())} / win</span>
-        </span>
-      </label>
-    </div>
-  </fieldset>
+<form class="cfg calc card" data-cfg novalidate data-loc="configurator">
+  <div class="tabs" role="radiogroup" aria-label="Type of boost">
+    <label class="tab"><input type="radio" name="mode" value="rank" checked /><span><b>Rank boost</b><small>From {formatUSD(minDiv)} per division</small></span></label>
+    <label class="tab"><input type="radio" name="mode" value="wins" /><span><b>Net wins</b><small>Pay for 5, get 6</small></span></label>
+  </div>
 
-  <!-- RANK BOOST -->
-  <div data-show="rank">
-    <fieldset class="step">
-      <legend><span class="n">2</span>Your current rank</legend>
+  <!-- RANK BOOST: from → to -->
+  <div class="ranks" data-show="rank">
+    <fieldset class="pick">
+      <legend class="pick-title">Current rank</legend>
       <div class="tiers" role="radiogroup" aria-label="Current tier">
         {RB_TIERS.slice(0, MASTERS).map((t, i) => (
-          <label class="tier"><input type="radio" name="fromTier" value={i} checked={i === def.fromTier} /><span><RankEmblem tier={t} size={34} /><b>{t}</b></span></label>
+          <label class="tier"><input type="radio" name="fromTier" value={i} checked={i === def.fromTier} /><span><RankEmblem tier={t} size={30} /><b>{t}</b></span></label>
         ))}
       </div>
-      <div class="sub">
-        <p class="sub-label" id="fromDivL">Division</p>
-        <div class="seg" role="radiogroup" aria-labelledby="fromDivL">
-          {RB_DIVS.map((d, i) => <label><input type="radio" name="fromDiv" value={i} checked={i === def.fromDiv} /><span>{d}</span></label>)}
-        </div>
-      </div>
-      <div class="sub">
-        <p class="sub-label" id="lpL">LP in this division <span class="hint-inline">— you only pay for the part left</span></p>
-        <div class="seg seg-wrap" role="radiogroup" aria-labelledby="lpL">
-          {LP_OPTIONS.map((o) => <label><input type="radio" name="lp" value={o.value} checked={o.value === defLp} /><span>{o.label}<small data-lp-save={o.value}></small></span></label>)}
-        </div>
+      <div class="seg divs" role="radiogroup" aria-label="Current division">
+        {RB_DIVS.map((d, i) => <label><input type="radio" name="fromDiv" value={i} checked={i === def.fromDiv} /><span>{d}</span></label>)}
       </div>
     </fieldset>
 
-    <fieldset class="step">
-      <legend><span class="n">3</span>Your target rank</legend>
-      <div class="tiers" role="radiogroup" aria-label="Target tier">
+    <span class="to-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6" /></svg></span>
+
+    <fieldset class="pick">
+      <legend class="pick-title">Desired rank</legend>
+      <div class="tiers" role="radiogroup" aria-label="Desired tier">
         {RB_TIERS.map((t, i) => (
-          <label class="tier"><input type="radio" name="toTier" value={i} checked={i === def.toTier} disabled={i < def.fromTier} /><span><RankEmblem tier={t} size={34} /><b>{t}</b></span></label>
+          <label class="tier"><input type="radio" name="toTier" value={i} checked={i === def.toTier} disabled={i < def.fromTier} /><span><RankEmblem tier={t} size={30} /><b>{t}</b></span></label>
         ))}
       </div>
-      <div class="sub" data-to-div>
-        <p class="sub-label" id="toDivL">Division</p>
-        <div class="seg" role="radiogroup" aria-labelledby="toDivL">
-          {RB_DIVS.map((d, i) => <label><input type="radio" name="toDiv" value={i} checked={i === def.toDiv} /><span>{d}</span></label>)}
-        </div>
+      <div class="seg divs" role="radiogroup" aria-label="Desired division" data-to-div>
+        {RB_DIVS.map((d, i) => <label><input type="radio" name="toDiv" value={i} checked={i === def.toDiv} /><span>{d}</span></label>)}
       </div>
-      <p class="route-line" data-route-line>Silver II → Gold IV · 2 divisions</p>
-    </fieldset>
-
-    <fieldset class="step">
-      <legend><span class="n">4</span>LP you gain per win</legend>
-      <div class="seg seg-cards" role="radiogroup">
-        {LP_GAIN_OPTIONS.map((o) => (
-          <label><input type="radio" name="lpGain" value={o.value} checked={o.value === 1} /><span><b>{o.label}</b><small>{o.detail}</small>{o.value > 1 && <em>+{Math.round((o.value - 1) * 100)}%</em>}</span></label>
-        ))}
-      </div>
-      <p class="hint">Fewer LP per win means more games to climb. Not sure? Check the LP you got for your last few wins.</p>
     </fieldset>
   </div>
 
-  <!-- NET WINS -->
-  <div data-show="wins" hidden>
-    <fieldset class="step">
-      <legend><span class="n">2</span>Your current rank</legend>
+  <!-- NET WINS: rank + number of wins -->
+  <div class="winsbox" data-show="wins" hidden>
+    <fieldset class="pick">
+      <legend class="pick-title">Your current rank</legend>
       <div class="wranks" role="radiogroup" aria-label="Current rank">
         {winRanks.map((r, i) => (
-          <label class="wrank"><input type="radio" name="winRank" value={i} checked={r === 'Gold'} /><span><RankEmblem tier={tierOfWinRank(r)} size={30} /><b>{r}</b><small data-win-price={r}>{formatUSD(WIN_PRICES[r].solo)}/win</small></span></label>
+          <label class="wrank"><input type="radio" name="winRank" value={i} checked={r === 'Gold'} /><span><RankEmblem tier={tierOfWinRank(r)} size={28} /><b>{r.replace('-', '–')}</b><small data-win-price={r}>{formatUSD(WIN_PRICES[r].solo)}/win</small></span></label>
         ))}
       </div>
     </fieldset>
-    <fieldset class="step">
-      <legend><span class="n">3</span>Net wins you pay for</legend>
+    <fieldset class="pick">
+      <legend class="pick-title">Net wins you pay for</legend>
       <div class="wins">
         <button type="button" class="wbtn" data-wins-step="-1" aria-label="One win less">−</button>
         <label class="visually-hidden" for="wins">Net wins</label>
@@ -110,82 +70,37 @@ const minDiv = divisionPrice(0, 0, 'solo');
       <div class="chips" data-wins-chips>
         {[3, 5, 10, 15, 20].map((n) => <button type="button" class="wchip" data-wins={n}>{n}{n >= 5 && <span class="free">+{Math.floor(n / 5)} free</span>}</button>)}
       </div>
-      <p class="hint">Net wins = wins minus losses. Only the difference counts, so Stain plays until every win is in.</p>
+      <p class="hint">Only net wins count (wins minus losses), so Stain plays until every win is in.</p>
     </fieldset>
   </div>
 
-  <!-- 5 · QUEUE -->
-  <fieldset class="step">
-    <legend><span class="n" data-step-n="queue">5</span>How do you want to play?</legend>
-    <div class="modes">
-      <label class="mode">
-        <input type="radio" name="type" value="solo" checked />
-        <span class="mode-card">
-          <span class="mode-title">Solo</span>
-          <span class="mode-text">Stain logs in and plays for you. Offline mode + VPN matched to your country.</span>
-        </span>
-      </label>
-      <label class="mode">
-        <input type="radio" name="type" value="duo" />
-        <span class="mode-card">
-          <span class="mode-title">Duo <span class="tag tag-cyan">No password shared</span></span>
-          <span class="mode-text">You play your own account, queued with Stain. A bit more, but you stay in control.</span>
-        </span>
-      </label>
+  <!-- QUEUE + SERVER -->
+  <div class="opts">
+    <div class="opt">
+      <span class="opt-label" id="queueL">Queue</span>
+      <div class="seg" role="radiogroup" aria-labelledby="queueL">
+        <label><input type="radio" name="type" value="solo" checked /><span>Solo</span></label>
+        <label><input type="radio" name="type" value="duo" /><span>Duo</span></label>
+      </div>
+      <p class="opt-hint" data-queue-hint>Stain plays on your account, in offline mode with a VPN matched to your country.</p>
     </div>
-  </fieldset>
-
-  <!-- EXTRAS (optional) -->
-  <fieldset class="step">
-    <legend><span class="n" data-step-n="extras">6</span>Extras <span class="optional">optional</span></legend>
-    <div class="extras">
-      <label class="extra">
-        <input type="checkbox" name="priority" value="1" />
-        <span>
-          <span class="x-top"><b>⚡ Priority start</b><em data-extra-price="priority">+{Math.round(PRIORITY_RATE * 100)}%</em></span>
-          <small>Your order goes to the front of Stain's queue, so he starts it before orders placed earlier.</small>
-        </span>
-      </label>
-      <label class="extra" data-bonus-extra>
-        <input type="checkbox" name="bonusWin" value="1" />
-        <span>
-          <span class="x-top"><b>🏆 Bonus win</b><em data-extra-price="bonus">+{formatUSD(BONUS_WIN_PRICE.Gold)}</em></span>
-          <small>One extra net win after you reach your target rank — a little LP buffer so one loss doesn't drop you back.</small>
-        </span>
-      </label>
+    <div class="opt">
+      <span class="opt-label" id="serverL">Server</span>
+      <div class="seg" role="radiogroup" aria-labelledby="serverL">
+        {servers.map((r) => <label><input type="radio" name="region" value={r.code} checked={r.code === 'me'} /><span>{r.code.toUpperCase()}</span></label>)}
+      </div>
+      <p class="opt-hint">Same price on every server.</p>
     </div>
-  </fieldset>
+  </div>
 
-  <!-- DETAILS -->
-  <fieldset class="step">
-    <legend><span class="n" data-step-n="details">7</span>Your details</legend>
-    <div class="details">
-      <div class="field">
-        <label for="discord">Discord username</label>
-        <input id="discord" name="discord" class="input" autocomplete="off" maxlength="80" placeholder="e.g. yourname" required />
-        <p class="hint">Stain messages you here.</p>
-      </div>
-      <div class="field">
-        <label for="ign">League Riot ID</label>
-        <input id="ign" name="ign" class="input" autocomplete="off" maxlength="60" placeholder="Name#ME1" required />
-        <p class="hint">The account being boosted.</p>
-      </div>
-      <div class="field">
-        <span class="field-label" id="flashL">Flash key</span>
-        <div class="seg" role="radiogroup" aria-labelledby="flashL">
-          <label><input type="radio" name="flash" value="D" checked /><span>D</span></label>
-          <label><input type="radio" name="flash" value="F" /><span>F</span></label>
-        </div>
-      </div>
-      <div class="field">
-        <span class="field-label" id="regionL">Server</span>
-        <div class="seg seg-wrap" role="radiogroup" aria-labelledby="regionL">
-          {REGIONS.map((r) => (
-            <label class:list={[{ soon: !r.live }]}><input type="radio" name="region" value={r.code} checked={r.code === 'me'} /><span>{r.code.toUpperCase()}{!r.live && <small>soon</small>}</span></label>
-          ))}
-        </div>
+  <!-- rarely needed: LP already earned in the current division -->
+  <details class="more" data-show="rank">
+    <summary>More options</summary>
+    <div class="more-body">
+      <p class="opt-label" id="lpL">LP in your current division <span class="hint-inline">— you only pay for the part left</span></p>
+      <div class="seg seg-wrap" role="radiogroup" aria-labelledby="lpL">
+        {LP_OPTIONS.map((o) => <label><input type="radio" name="lp" value={o.value} checked={o.value === defLp} /><span>{o.label}<small data-lp-save={o.value}></small></span></label>)}
       </div>
     </div>
-  </fieldset>
-
+  </details>
 </form>

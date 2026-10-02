@@ -38,7 +38,7 @@ order: 29
 <p>Duo costs more because two players are involved. <a href="/blog/duo-boost-vs-solo-boost">Duo vs solo</a> compares them side by side.</p>
 
 <h2 id="prices">EUNE Prices</h2>
-<p>EUNE uses the same prices as ME and EUW. A rank boost starts at $6 per division in Iron (solo), and net wins start at $1.50 per win. As an example, Silver IV to Gold IV costs $40 solo with normal LP gains. The <a href="/blog/elo-boost-price">ELO boost price guide</a> has the full table for every tier, and the <a href="/pricing">pricing page</a> shows your exact total, with no extra fees.</p>
+<p>EUNE uses the same prices as ME and EUW. A rank boost starts at $6 per division in Iron (solo), and net wins start at $1.50 per win. As an example, Silver IV to Gold IV costs $40 solo. The <a href="/blog/elo-boost-price">ELO boost price guide</a> has the full table for every tier, and the <a href="/pricing">pricing page</a> shows your exact total, with no extra fees.</p>
 
 <h2 id="safety">Keeping Your EUNE Account Safe</h2>
 <p>Boosting breaks Riot's Terms of Service, so any honest service will tell you there's some risk. StainBoost keeps it as low as possible:</p>
@@ -68,8 +68,8 @@ order: 29
 
 <div class="cta-box">
 <h3>Start Your EUNE Boost</h3>
-<p>Choose EUNE and see your exact price in seconds. One Challenger player, full refund if the boost hasn't started.</p>
-<a href="/pricing" class="btn-primary">
+<p>See your exact price in seconds. One Challenger player, full refund if the boost hasn't started.</p>
+<a href="/pricing?server=eune" class="btn-primary">
 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
 See My EUNE Price
 </a>

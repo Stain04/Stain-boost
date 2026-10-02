@@ -1,35 +1,57 @@
 ---
+// Checkout box (right side of /pricing): the order, the total, add-ons, the Riot ID and the
+// order button. Driven by src/scripts/configurator.js.
 import StatusChip from './StatusChip.astro';
 import Guarantees from './Guarantees.astro';
-import FaqList from './FaqList.astro';
-import { TOP_FAQ } from '../data/faq.js';
-import { quoteOrder, rankBoostTotal, formatUSD, LP_OPTIONS, REFERRAL_RATE } from '../data/pricing.js';
+import { quoteOrder, formatUSD, LP_OPTIONS, REFERRAL_RATE, BONUS_WIN_PRICE } from '../data/pricing.js';
 import { PAYMENT_NAMES, DISCORD } from '../data/site.js';
-const def = { mode: 'rank', fromTier: 2, fromDiv: 2, toTier: 3, toDiv: 0, type: 'solo', lp: LP_OPTIONS[0].value, lpGain: 1 };
+const def = { mode: 'rank', fromTier: 2, fromDiv: 2, toTier: 3, toDiv: 0, type: 'solo', lp: LP_OPTIONS[0].value };
 const total = formatUSD(quoteOrder(def).total);
-const raw = formatUSD(rankBoostTotal({ ...def, lp: 0 }));
-const fears = TOP_FAQ.filter((f) => /banned|login|refund/i.test(f.q));
+const priority = formatUSD(quoteOrder({ ...def, priority: true }).priority);
 ---
 <aside class="summary" data-summary aria-labelledby="sum-route" data-loc="summary">
   <div class="card sum-card">
     <p class="eyebrow">Your order</p>
     <h2 id="sum-route" class="sum-route" data-sum-route>Silver II → Gold IV</h2>
-    <p class="sum-meta" data-sum-meta>Rank boost · 2 divisions · Solo</p>
-
-    <dl class="lines" data-lines>
-      <div><dt>2 divisions · solo</dt><dd>{raw}</dd></div>
-      <div class="credit"><dt>LP you already have ({LP_OPTIONS[0].label})</dt><dd>−{formatUSD(parseFloat(raw.slice(1)) - parseFloat(total.slice(1)))}</dd></div>
-    </dl>
+    <p class="sum-meta" data-sum-meta>2 divisions · Solo · ME</p>
 
     <div class="total-row">
-      <span class="label">Total</span>
       <span class="total num" data-total aria-live="polite">{total}</span>
+      <span class="no-fees">Final price<br />no hidden fees</span>
     </div>
-    <p class="no-fees">Final price · no hidden fees</p>
+    <dl class="lines" data-lines hidden></dl>
 
-    <div class="nudge" data-nudge hidden>
-      <button type="button" class="nudge-btn" data-nudge-btn></button>
+    <div class="addons" role="group" aria-label="Optional add-ons">
+      <label class="addon">
+        <input type="checkbox" name="priority" value="1" />
+        <span><b>Priority start</b><em data-extra-price="priority">+{priority}</em><small>Jump to the front of Stain's queue</small></span>
+      </label>
+      <label class="addon" data-bonus-extra>
+        <input type="checkbox" name="bonusWin" value="1" />
+        <span><b>Bonus win</b><em data-extra-price="bonus">+{formatUSD(BONUS_WIN_PRICE.Gold)}</em><small>One more win after your target, as a buffer</small></span>
+      </label>
     </div>
+
+    <div class="field">
+      <label for="ign">Riot ID</label>
+      <input id="ign" name="ign" class="input" autocomplete="off" maxlength="60" placeholder="Name#ME1" required aria-describedby="ignHint" />
+      <p class="hint" id="ignHint">The League account being boosted.</p>
+    </div>
+    <div class="field" data-discord-field hidden>
+      <label for="discord">Discord username</label>
+      <input id="discord" name="discord" class="input" autocomplete="off" maxlength="80" placeholder="e.g. yourname" aria-describedby="discordHint" />
+      <p class="hint" id="discordHint">Stain messages you here.</p>
+    </div>
+
+    <button class="btn btn-primary btn-block btn-lg submit" type="button" data-submit>
+      <svg class="dc" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-submit-icon><path d="M20.3 4.4A19.8 19.8 0 0 0 15.4 2.9l-.6 1.3a18.3 18.3 0 0 0-5.5 0l-.6-1.3a19.7 19.7 0 0 0-4.9 1.5C.7 9-.3 13.6.1 18.1a19.9 19.9 0 0 0 6 3l1.3-2a13 13 0 0 1-1.9-.9l.4-.3a14.2 14.2 0 0 0 12.1 0l.4.3c-.6.4-1.2.7-1.9.9l1.3 2a19.9 19.9 0 0 0 6-3c.5-5.2-.8-9.7-3.5-13.7ZM8 15.3c-1.2 0-2.2-1.1-2.2-2.4S6.8 10.5 8 10.5s2.2 1.1 2.2 2.4-1 2.4-2.2 2.4Zm8 0c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4Z"/></svg>
+      <span data-submit-label>Order with Discord · {total}</span>
+    </button>
+    <p class="submit-note" data-submit-note>One-click Discord sign-in — your order is kept while you sign in. <a href="/login?return=/pricing%3Fresume%3D1" data-email-link>Use email instead</a></p>
+    <p class="err" data-error role="alert" hidden></p>
+
+    <Guarantees compact />
+    <p class="pay">Pay after ordering with <strong>{PAYMENT_NAMES}</strong>. Another method? Message <strong>{DISCORD.handle}</strong> on Discord.</p>
 
     <details class="refbox" data-refbox>
       <summary>Have a referral code? <span class="muted">{Math.round(REFERRAL_RATE * 100)}% off your first order</span></summary>
@@ -40,76 +62,46 @@ const fears = TOP_FAQ.filter((f) => /banned|login|refund/i.test(f.q));
       </div>
       <p class="ref-msg" data-ref-msg aria-live="polite"></p>
     </details>
-
-    <button class="btn btn-primary btn-block btn-lg submit" type="button" data-submit>
-      <svg class="dc" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-submit-icon><path d="M20.3 4.4A19.8 19.8 0 0 0 15.4 2.9l-.6 1.3a18.3 18.3 0 0 0-5.5 0l-.6-1.3a19.7 19.7 0 0 0-4.9 1.5C.7 9-.3 13.6.1 18.1a19.9 19.9 0 0 0 6 3l1.3-2a13 13 0 0 1-1.9-.9l.4-.3a14.2 14.2 0 0 0 12.1 0l.4.3c-.6.4-1.2.7-1.9.9l1.3 2a19.9 19.9 0 0 0 6-3c.5-5.2-.8-9.7-3.5-13.7ZM8 15.3c-1.2 0-2.2-1.1-2.2-2.4S6.8 10.5 8 10.5s2.2 1.1 2.2 2.4-1 2.4-2.2 2.4Zm8 0c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4Z"/></svg>
-      <span data-submit-label>Order with Discord</span>
-    </button>
-    <p class="submit-note" data-submit-note>One-click Discord sign-in. Your order is saved while you sign in. <a href="/login?return=/pricing%3Fresume%3D1" data-email-link>Use email instead</a></p>
-    <p class="err" data-error role="alert" hidden></p>
-
     <div class="status-row"><StatusChip /></div>
-    <Guarantees compact />
-    <p class="pay">Pay after ordering: <strong>{PAYMENT_NAMES}</strong>. Prefer another method? Message <strong>{DISCORD.handle}</strong> on Discord.</p>
-  </div>
-
-  <div class="fears">
-    <p class="label fears-title">Before you order</p>
-    <FaqList items={fears} loc="faq_summary" />
   </div>
 </aside>
 
-<dialog class="confirm" data-lp-confirm aria-labelledby="lpc-title">
-  <form method="dialog">
-    <p class="eyebrow">Quick check</p>
-    <h2 id="lpc-title">Is your LP info right?</h2>
-    <p>The price depends on it. If it doesn't match your account, Stain will ask you to correct it before starting.</p>
-    <dl class="confirm-vals">
-      <div><dt>Current LP</dt><dd data-lpc-lp>0–20 LP</dd></div>
-      <div><dt>LP per win</dt><dd data-lpc-gain>Normal</dd></div>
-    </dl>
-    <div class="row">
-      <button class="btn btn-ghost" value="back">Go back</button>
-      <button class="btn btn-primary" value="ok" data-lpc-ok>Yes, it's right</button>
-    </div>
-  </form>
-</dialog>
-
 <style>
-.summary { position: sticky; inset-block-start: calc(var(--nav-h) + 20px); display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .summary { position: sticky; inset-block-start: calc(var(--nav-h) + 20px); display: grid; grid-template-columns: minmax(0, 1fr); }
   .sum-card { display: grid; gap: 14px; background: radial-gradient(120% 80% at 100% 0%, rgba(196, 181, 253, .1), transparent 60%), linear-gradient(180deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .018)); box-shadow: inset 0 0 0 1px rgba(196, 181, 253, .22), 0 40px 80px -50px rgba(0, 0, 0, .9); }
-  .sum-route { font-family: var(--font-display); font-weight: 400; font-size: 1.85rem; line-height: 1.1; color: var(--text-strong); }
-  .sum-meta { color: var(--muted); font-size: .92rem; margin-block-start: -6px; }
-  .lines { display: grid; gap: 10px; padding-block: 16px; box-shadow: inset 0 1px 0 rgba(246, 242, 255, .08), inset 0 -1px 0 rgba(246, 242, 255, .08); }
-  .lines :global(div) { display: flex; justify-content: space-between; gap: 12px; font-size: .96rem; }
-  .lines :global(dt) { color: var(--text); }
-  .lines :global(dd) { margin: 0; font-variant-numeric: tabular-nums; color: var(--text-strong); white-space: nowrap; }
-  .lines :global(.free dd), .lines :global(.credit dd) { color: var(--success); }
-  .lines :global(.extra dd) { color: var(--lav); }
-  .total-row { display: flex; justify-content: space-between; align-items: baseline; }
+  .sum-route { font-family: var(--font-display); font-weight: 400; font-size: 1.85rem; line-height: 1.1; color: var(--text-strong); margin-block-start: -6px; }
+  .sum-meta { color: var(--muted); font-size: .92rem; margin-block-start: -10px; }
+  .total-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-block: 10px; box-shadow: inset 0 1px 0 rgba(246, 242, 255, .08), inset 0 -1px 0 rgba(246, 242, 255, .08); }
   .total { font-size: clamp(2.8rem, 2vw + 2rem, 3.4rem); font-weight: 400; color: var(--text-strong); line-height: 1; }
-  .no-fees { font-size: .8rem; color: var(--muted); text-align: end; margin-block-start: -8px; }
-  .nudge-btn { width: 100%; text-align: start; padding: 12px 14px; border-radius: 14px; border: 0; box-shadow: inset 0 0 0 1px rgba(245, 198, 106, .4); background: rgba(245, 198, 106, .05); color: var(--text); font-size: .92rem; line-height: 1.45; transition: background-color .3s; }
-  .nudge-btn :global(b) { color: var(--gold); font-weight: 500; }
-  .nudge-btn:hover { background: rgba(245, 198, 106, .1); }
+  .no-fees { font-size: .78rem; color: var(--muted); text-align: end; line-height: 1.35; }
+  .lines { display: grid; gap: 8px; margin-block-start: -4px; }
+  .lines :global(div) { display: flex; justify-content: space-between; gap: 12px; font-size: .9rem; }
+  .lines :global(dt) { color: var(--muted); }
+  .lines :global(dd) { margin: 0; font-variant-numeric: tabular-nums; color: var(--text); white-space: nowrap; }
+  .lines :global(.credit dd) { color: var(--success); }
+  .lines :global(.extra dd) { color: var(--gold); }
+  .addons { display: grid; gap: 8px; }
+  .addon { position: relative; }
+  .addon input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  .addon > span { display: grid; grid-template-columns: 1fr auto; gap: 0 10px; padding: 10px 14px 10px 44px; border-radius: 14px; cursor: pointer; position: relative; background: rgba(255, 255, 255, .02); box-shadow: inset 0 0 0 1px rgba(246, 242, 255, .1); transition: box-shadow .3s, background-color .3s; }
+  .addon > span::before { content: ''; position: absolute; inset-inline-start: 14px; inset-block-start: 50%; translate: 0 -50%; width: 18px; height: 18px; border-radius: 6px; box-shadow: inset 0 0 0 1px rgba(246, 242, 255, .4); background: center/11px no-repeat; transition: background-color .25s, box-shadow .25s; }
+  .addon b { font-weight: 400; color: var(--text-strong); }
+  .addon em { font-style: normal; color: var(--gold); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .addon small { grid-column: 1 / -1; font-size: .8rem; color: var(--muted); line-height: 1.4; }
+  .addon input:checked + span { background: rgba(245, 198, 106, .07); box-shadow: inset 0 0 0 1px rgba(245, 198, 106, .55); }
+  .addon input:checked + span::before { box-shadow: none; background-color: var(--gold); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231d1405' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 12 5 5 9-10'/%3E%3C/svg%3E"); }
+  .addon input:focus-visible + span { outline: 1.5px solid var(--lav); outline-offset: 3px; }
+  @media (hover: hover) { .addon > span:hover { box-shadow: inset 0 0 0 1px rgba(246, 242, 255, .28); } }
+  .field { display: grid; gap: 8px; }
+  .field { gap: 6px; }
+  .field .hint { font-size: .8rem; color: var(--muted); }
   .submit .dc { width: 20px; height: 20px; }
   /* "Order with Discord · $123.45" must fit a 320px phone: tighter sides, and wrap rather than overflow */
   @media (max-width: 420px) { .submit { padding-inline: 1.1rem; white-space: normal; text-align: center; line-height: 1.25; } }
-  .submit-note { font-size: .82rem; color: var(--muted); text-align: center; }
+  .submit-note { font-size: .82rem; color: var(--muted); text-align: center; margin-block-start: -6px; }
   .err { color: #fecaca; background: rgba(252, 165, 165, .08); box-shadow: inset 0 0 0 1px rgba(252, 165, 165, .35); border-radius: 14px; padding: 10px 14px; font-size: .92rem; }
   .status-row:empty { display: none; }
-  .pay { font-size: .86rem; color: var(--muted); padding-block-start: 12px; box-shadow: inset 0 1px 0 rgba(246, 242, 255, .07); }
+  .pay { font-size: .84rem; color: var(--muted); }
   .pay strong { color: var(--text); font-weight: 400; }
-  .fears-title { margin-block-end: 8px; }
-  .confirm { max-width: min(460px, calc(100vw - 32px)); border: 0; border-radius: 26px; padding: 30px; background: #110d26; color: var(--text); box-shadow: inset 0 0 0 1px rgba(196, 181, 253, .3), 0 40px 100px -20px #000; }
-  .confirm::backdrop { background: rgba(4, 3, 12, .75); backdrop-filter: blur(4px); }
-  .confirm form { display: grid; gap: 16px; }
-  .confirm h2 { font-size: 1.9rem; }
-  .confirm p:not(.eyebrow) { color: var(--text); }
-  .confirm-vals { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .confirm-vals div { padding: 14px; border-radius: 14px; background: rgba(0, 0, 0, .22); box-shadow: inset 0 0 0 1px rgba(246, 242, 255, .09); }
-  .confirm-vals dt { font-size: .68rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
-  .confirm-vals dd { margin: 4px 0 0; font-family: var(--font-display); font-size: 1.4rem; color: var(--text-strong); }
-  .confirm .row { justify-content: flex-end; }
   @media (max-width: 1000px) { .summary { position: static; } }
 </style>

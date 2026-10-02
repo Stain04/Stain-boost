@@ -8,16 +8,13 @@ import FaqList from '../components/FaqList.astro';
 import RankEmblem from '../components/RankEmblem.astro';
 import StickyOrderBar from '../components/StickyOrderBar.astro';
 import { WIN_PRICES, RB_TIERS, MASTERS, divisionPrice, formatUSD, rankBoostTotal, lowestWinPrice } from '../data/pricing.js';
-import { STATS } from '../data/site.js';
 import { getVerifiedReviews } from '../data/reviews.js';
 import { FAQ, faqSchema } from '../data/faq.js';
 import { tierOfWinRank } from '../data/ranks.js';
 import { boostProduct, breadcrumbs } from '../data/schema.js';
-import { FREE_TRIAL, TRIAL_ENDS_MS } from '../data/promo.js';
 import '../styles/pricing.css';
 
 const reviews = await getVerifiedReviews();
-const trialOn = Date.now() < TRIAL_ENDS_MS;
 const faqItems = FAQ.flatMap((g) => g.items).filter((i) => /pay|refund|start|banned|login|free win|loses/i.test(i.q));
 const divRows = [];
 RB_TIERS.slice(0, MASTERS).forEach((t, i) => {
@@ -35,42 +32,28 @@ const total = formatUSD(rankBoostTotal({ fromTier: 2, fromDiv: 2, toTier: 3, toD
   active="/pricing"
   schema={[boostProduct(reviews), faqSchema(faqItems), breadcrumbs([{ name: 'Home', path: '/' }, { name: 'Pricing', path: '/pricing' }])]}
 >
-  <section class="pr-head" data-loc="pricing_head">
-    <div class="wrap">
-      <p class="eyebrow">Order configurator</p>
-      <h1>Configure your <span class="grad">boost.</span></h1>
-      <p class="lead">The price updates as you choose — it's the final price, no hidden fees. Every game is played by Stain himself.</p>
-      <div class="trust-row">
-        <span class="chip">{STATS.ordersCompleted}+ orders</span>
-        <span class="chip">{STATS.bans} bans</span>
-        <span class="chip chip-green">Full refund if not started</span>
-        <span class="chip chip-gold">Net wins: pay for 5, get 6</span>
-      </div>
-      {trialOn && (
-        <a class="trial-strip" href="/free-trial" data-trial data-track="cta_click" data-track-location="pricing_trial">
-          <span class="ts-text"><b>🎁 First time? Try {FREE_TRIAL.games} games free before you pay.</b> No card, no order — then decide.</span>
-          <span class="ts-count" data-trial-countdown data-end={TRIAL_ENDS_MS}>Ends Fri 2 Oct</span>
-          <span class="ts-go">Claim free games →</span>
-        </a>
-      )}
-    </div>
-  </section>
-
-  <div class="wrap">
+  <div class="wrap pr-top">
     <OrderSuccess />
     <div class="layout" data-layout>
-      <Configurator />
+      <div class="cfg-col">
+        <header class="pr-head" data-loc="pricing_head">
+          <p class="eyebrow">ELO boost · ME, EUW &amp; EUNE</p>
+          <h1>Your boost, <span class="grad">priced instantly.</span></h1>
+          <p class="lead">Pick where you are and where you want to be. The price you see is the price you pay, and every game is played by Stain himself.</p>
+        </header>
+        <Configurator />
+      </div>
       <OrderSummary />
     </div>
   </div>
 
-  <section class="section" data-loc="price_tables">
+  <section class="section prices" data-loc="price_tables">
     <div class="wrap">
-      <div class="section-head">
-        <p class="eyebrow">Price list</p>
-        <h2>Every price, up front.</h2>
-        <p>Rank boost is priced per division climbed; net wins per win. Duo means you play together with Stain on your own account.</p>
-      </div>
+      <details class="all-prices">
+        <summary>
+          <span><span class="eyebrow">Price list</span><span class="ap-title">See every price, up front</span><span class="ap-sub">Rank boost per division · net wins per win · solo and duo</span></span>
+          <span class="ap-plus" aria-hidden="true"></span>
+        </summary>
       <div class="tables">
         <div class="card">
           <table class="ptable">
@@ -91,6 +74,7 @@ const total = formatUSD(rankBoostTotal({ fromTier: 2, fromDiv: 2, toTier: 3, toD
           </table>
         </div>
       </div>
+      </details>
     </div>
   </section>
 
@@ -116,7 +100,7 @@ const total = formatUSD(rankBoostTotal({ fromTier: 2, fromDiv: 2, toTier: 3, toD
     </div>
   </section>
 
-  <StickyOrderBar slot="after" watch="[data-summary] [data-submit]" label="Silver II → Gold IV" price={total} href="#sum-route" cta="Review order" />
+  <StickyOrderBar slot="after" watch="[data-summary] [data-submit]" label="Silver II → Gold IV" price={total} href="#sum-route" cta="Continue" />
 </Base>
 
 <script>

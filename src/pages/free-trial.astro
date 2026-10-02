@@ -69,13 +69,6 @@ const g = FREE_TRIAL.games;
                 <label><input type="radio" name="type" value="duo" /><span>Duo<small>With you</small></span></label>
               </div>
             </div>
-            <div class="field">
-              <span class="field-label" id="ftFlashL">Flash key</span>
-              <div class="ft-seg" role="radiogroup" aria-labelledby="ftFlashL">
-                <label><input type="radio" name="flash" value="D" checked /><span>D</span></label>
-                <label><input type="radio" name="flash" value="F" /><span>F</span></label>
-              </div>
-            </div>
             <button class="btn btn-gold btn-block btn-lg" type="submit" data-submit>Claim my {g} free games</button>
             <p class="ft-note">No payment · ME, EUW or EUNE · <a href={`/login?return=${encodeURIComponent('/free-trial?resume=1')}`} data-email-login>sign in with email instead</a></p>
             <p class="err" data-err role="alert" hidden></p>
@@ -111,7 +104,7 @@ const g = FREE_TRIAL.games;
   }
   const read = () => ({
     ign: form.ign.value.trim(), discord: form.discord.value.trim(),
-    type: form.querySelector('input[name="type"]:checked').value, flash: form.querySelector('input[name="flash"]:checked').value,
+    type: form.querySelector('input[name="type"]:checked').value,
     region: form.querySelector('input[name="region"]:checked').value,
   });
   const save = () => { try { localStorage.setItem(SAVED, JSON.stringify({ ...read(), ts: Date.now() })); } catch {} };
@@ -121,7 +114,6 @@ const g = FREE_TRIAL.games;
       if (!s || Date.now() - s.ts > 3 * 3600e3) return false;
       form.ign.value = s.ign || ''; form.discord.value = s.discord || '';
       form.querySelector(`input[name="type"][value="${s.type === 'duo' ? 'duo' : 'solo'}"]`).checked = true;
-      form.querySelector(`input[name="flash"][value="${s.flash === 'F' ? 'F' : 'D'}"]`).checked = true;
       if (['me', 'euw', 'eune'].includes(s.region)) form.querySelector(`input[name="region"][value="${s.region}"]`).checked = true;
       return true;
     } catch { return false; }

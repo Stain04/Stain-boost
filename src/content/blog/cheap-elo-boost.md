@@ -66,8 +66,8 @@ order: 31
 
 <div class="tip-card">
 <div class="tip-number">Way 06</div>
-<h3>Fix Your LP Gains First</h3>
-<p>Boosts cost more when your account gains few LP per win, because each division takes more games. A few net wins first can bring your gains back up before a bigger rank boost. <a href="/blog/what-is-mmr-league-of-legends">How MMR works</a> explains why.</p>
+<h3>Pay Only for the Divisions You Need</h3>
+<p>Every division is priced on its own, so you never pay for a full tier you don't need. Silver II to Gold IV is just two Silver divisions — $20 solo. And low LP gains don't cost extra: the price per division is the same either way.</p>
 </div>
 
 <div class="tip-card">
@@ -77,7 +77,7 @@ order: 31
 </div>
 
 <h2 id="price-examples">What a Fair Boost Costs</h2>
-<p>For reference, these are StainBoost's solo prices as of October 2026 with normal LP gains:</p>
+<p>For reference, these are StainBoost's solo prices as of October 2026:</p>
 <div class="table-wrap">
 <table>
 <thead><tr><th>Boost</th><th>Solo price</th></tr></thead>

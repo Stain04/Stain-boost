@@ -1,7 +1,7 @@
 import { randomBytes } from 'crypto';
 import { getUser, getKv } from './_lib/auth.js';
 import {
-  WIN_PRICES, VALID_LP_GAIN, VALID_CURRENT_LP, LP_OPTIONS, MAX_WINS, REFERRAL_RATE,
+  WIN_PRICES, VALID_CURRENT_LP, LP_OPTIONS, MAX_WINS, REFERRAL_RATE,
   rankPosition, rankName, freeWins as freeWinsFor, quoteOrder, bonusWinPrice,
 } from '../src/data/pricing.js';
 import { FREE_TRIAL, trialActive } from '../src/data/promo.js';
@@ -46,10 +46,11 @@ export default async function handler(req, res) {
   if (!authUser) return res.status(401).json({ error: 'You must be signed in to place an order.', requireLogin: true });
 
   const body = req.body || {};
-  const cleanDiscord = sanitize(body.discord, 80);
+  // Discord sign-ins don't type their Discord name: it comes from their account.
+  const cleanDiscord = sanitize(body.discord, 80) || sanitize(authUser.discordUsername || '', 80);
   const cleanIgn     = sanitize(body.ign, 60);
   const cleanType    = body.type === 'duo' ? 'duo' : 'solo';
-  const cleanFlash   = body.flash === 'F' ? 'F' : 'D';
+  const cleanFlash   = ['D', 'F'].includes(body.flash) ? body.flash : ''; // '' = Stain asks on Discord
   const cleanRegion  = ['me', 'euw', 'eune'].includes(body.region) ? body.region : 'me';
   if (!cleanDiscord || !cleanIgn) return res.status(400).json({ error: 'Missing Discord tag or IGN.' });
 
@@ -86,16 +87,13 @@ export default async function handler(req, res) {
     if (rankPosition(tt, td) <= rankPosition(ft, fd)) return res.status(400).json({ error: 'Destination rank must be higher than current rank.' });
     const rawLP = parseInt(body.currentLP, 10);
     const cleanLP = VALID_CURRENT_LP.includes(rawLP) ? rawLP : 0;
-    const rawGain = parseFloat(body.lpGainMultiplier);
-    const cleanLPGain = VALID_LP_GAIN.includes(rawGain) ? rawGain : 1.0;
     if (extras.bonusWin && bonusWinPrice(tt) === null) extras.bonusWin = false; // not offered for Masters
 
-    q = quoteOrder({ mode: 'rank', type: cleanType, fromTier: ft, fromDiv: fd, toTier: tt, toDiv: td, lp: cleanLP, lpGain: cleanLPGain, ...extras, referral: !!referral, credit: availableCredit });
+    q = quoteOrder({ mode: 'rank', type: cleanType, fromTier: ft, fromDiv: fd, toTier: tt, toDiv: td, lp: cleanLP, ...extras, referral: !!referral, credit: availableCredit });
     const fromName = rankName(ft, fd), toName = rankName(tt, td);
-    const lpGainLabel = cleanLPGain === 2.0 ? ' · Very Low LP gain' : cleanLPGain === 1.4 ? ' · Low LP gain' : '';
     const lpText = cleanLP > 0 ? ` (${lpLabel(cleanLP)})` : '';
-    orderSummary = `Rank Boost: ${fromName}${lpText} → ${toName}${extras.bonusWin ? ' + 1 bonus win' : ''} · ${cleanType}${lpGainLabel}`;
-    orderMeta = { kind: 'rank_boost', from: fromName, to: toName, lpGain: cleanLPGain, currentLP: cleanLP };
+    orderSummary = `Rank Boost: ${fromName}${lpText} → ${toName}${extras.bonusWin ? ' + 1 bonus win' : ''} · ${cleanType}`;
+    orderMeta = { kind: 'rank_boost', from: fromName, to: toName, currentLP: cleanLP };
   } else {
     const cleanRank = sanitize(body.rank, 40);
     const cleanWins = Math.max(1, Math.min(MAX_WINS, parseInt(body.wins, 10) || 0));
@@ -268,7 +266,7 @@ async function notifyStain({ title, color, subject, discord, ign, type, flash, s
       { name: '🎮 LoL IGN',      value: ign,                                          inline: true  },
       { name: '⚔️ Type',         value: type.charAt(0).toUpperCase() + type.slice(1), inline: true  },
       { name: '💰 Total',        value: `$${total}`,                                  inline: true  },
-      { name: '⚡ Flash Key',    value: flash,                                        inline: true  },
+      { name: '⚡ Flash Key',    value: flash || 'Ask on Discord',                    inline: true  },
       { name: '📋 Order',        value: summary,                                      inline: false },
       { name: '🔑 Review Token', value: `\`${token}\``,                               inline: false },
     ];
@@ -301,7 +299,7 @@ async function notifyStain({ title, color, subject, discord, ign, type, flash, s
             </div>
             <div style="padding:24px;">
               <table style="width:100%;border-collapse:collapse;">
-                ${row('Discord', discord)}${row('LoL IGN', ign)}${row('Type', type)}${row('Order', summary)}${row('Flash Key', flash)}${row('Review Token', token, 'color:#fbbf24;')}
+                ${row('Discord', discord)}${row('LoL IGN', ign)}${row('Type', type)}${row('Order', summary)}${row('Flash Key', flash || 'Ask on Discord')}${row('Review Token', token, 'color:#fbbf24;')}
                 <tr style="border-top:1px solid rgba(255,255,255,0.1);">
                   <td style="padding:12px 0 0;color:rgba(255,255,255,0.45);font-size:13px;">Total (Server-Calc)</td>
                   <td style="padding:12px 0 0;font-weight:700;font-size:20px;color:#fbbf24;">$${total}</td>

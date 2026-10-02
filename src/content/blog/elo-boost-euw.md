@@ -58,8 +58,8 @@ order: 28
 
 <div class="cta-box">
 <h3>Start Your EUW Boost</h3>
-<p>Choose EUW, pick your rank or wins, and see the exact price. One Challenger player, offline mode and a VPN on every order.</p>
-<a href="/pricing" class="btn-primary">
+<p>Pick your rank or wins and see the exact price. One Challenger player, offline mode and a VPN on every order.</p>
+<a href="/pricing?server=euw" class="btn-primary">
 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
 See My EUW Price
 </a>
