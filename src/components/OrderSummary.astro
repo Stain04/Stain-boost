@@ -1,110 +1,173 @@
 ---
-// Checkout (step 5 of /pricing): the order, the total, add-ons, the Riot ID and the order
-// button. Driven by src/scripts/configurator.js.
+// "Your order" box (right side of /pricing): rank → rank, solo/duo, extras as switches,
+// the total and the buy button. Driven by src/scripts/configurator.js.
 import StatusChip from './StatusChip.astro';
 import Guarantees from './Guarantees.astro';
-import { quoteOrder, formatUSD, LP_OPTIONS, REFERRAL_RATE, BONUS_WIN_PRICE } from '../data/pricing.js';
-import { PAYMENT_NAMES, DISCORD } from '../data/site.js';
+import RankEmblem from './RankEmblem.astro';
+import { quoteOrder, formatUSD, LP_OPTIONS, BONUS_WIN_PRICE, PRIORITY_RATE, RB_TIERS } from '../data/pricing.js';
+import { PAYMENT_METHODS } from '../data/site.js';
 const def = { mode: 'rank', fromTier: 2, fromDiv: 2, toTier: 3, toDiv: 0, type: 'solo', lp: LP_OPTIONS[0].value };
 const total = formatUSD(quoteOrder(def).total);
 const priority = formatUSD(quoteOrder({ ...def, priority: true }).priority);
 ---
-<section class="summary wstep" data-summary data-step="5" aria-labelledby="sum-route" data-loc="summary" hidden>
-  <div class="card sum-card">
-    <p class="eyebrow">Your order</p>
-    <h2 id="sum-route" class="sum-route" data-sum-route tabindex="-1">Silver II → Gold IV</h2>
-    <p class="sum-meta" data-sum-meta>2 divisions · Solo · ME</p>
-    <p class="sum-edit"><button type="button" data-goto="2">Change rank</button><button type="button" data-goto="4">Change queue or server</button></p>
-
-    <div class="total-row">
-      <span class="total num" data-total aria-live="polite">{total}</span>
-      <span class="no-fees">Final price<br />no hidden fees</span>
+<aside class="summary" data-summary aria-labelledby="sum-title" data-loc="summary">
+  <div class="sum-card">
+    <div class="sum-top">
+      <h2 id="sum-title" class="sum-title">Your order</h2>
+      <StatusChip />
     </div>
+
+    <div class="route">
+      <span class="rt-side">
+        <span class="rt-emb">{RB_TIERS.map((t, i) => <span data-rt-emblem-from={i} hidden={i !== def.fromTier}><RankEmblem tier={t} size={34} /></span>)}</span>
+        <span class="rt-txt"><small data-rt-from-label>Current</small><b data-rt-from>Silver II</b></span>
+      </span>
+      <span class="rt-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg></span>
+      <span class="rt-side rt-to">
+        <span class="rt-txt"><small data-rt-to-label>Target</small><b data-rt-to>Gold IV</b></span>
+        <span class="rt-emb">{RB_TIERS.map((t, i) => <span data-rt-emblem-to={i} hidden={i !== def.toTier}><RankEmblem tier={t} size={34} /></span>)}</span>
+      </span>
+    </div>
+    <p class="sum-meta"><span id="sum-route" data-sum-route hidden>Silver II → Gold IV</span><span data-sum-meta>2 divisions · Solo · ME</span></p>
+
+    <div class="queue" role="radiogroup" aria-label="How Stain plays">
+      <label class="q-opt"><input type="radio" name="type" value="solo" checked /><span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" /></svg>
+        <b>Solo</b><small>Stain plays</small></span></label>
+      <label class="q-opt"><input type="radio" name="type" value="duo" /><span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5" /><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6" /><circle cx="17" cy="9" r="2.8" /><path d="M16 14.2c3 .2 5.5 2.4 5.5 5.8" /></svg>
+        <b>Duo</b><small>You play with Stain</small></span></label>
+    </div>
+
+    <ul class="toggles" aria-label="Extras">
+      <li class="tg tg-on">
+        <span class="tg-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg></span>
+        <span class="tg-name">Appear offline + VPN <span class="tg-sub">On every order, in your country</span></span><span class="badge badge-free">Free</span><span class="sw sw-locked" aria-hidden="true"></span>
+      </li>
+      <li>
+        <label class="tg">
+          <span class="tg-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z" /></svg></span>
+          <span class="tg-name">Priority start <span class="tg-sub">Front of the queue</span></span><span class="badge" data-extra-price="priority">+{priority}</span>
+          <input type="checkbox" name="priority" value="1" role="switch" aria-label={`Priority start, plus ${Math.round(PRIORITY_RATE * 100)} percent`} /><span class="sw" aria-hidden="true"></span>
+        </label>
+      </li>
+      <li data-bonus-extra>
+        <label class="tg">
+          <span class="tg-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4Z" /></svg></span>
+          <span class="tg-name">+1 bonus win <span class="tg-sub">An extra win after your target</span></span><span class="badge" data-extra-price="bonus">+{formatUSD(BONUS_WIN_PRICE.Gold)}</span>
+          <input type="checkbox" name="bonusWin" value="1" role="switch" aria-label="One bonus win" /><span class="sw" aria-hidden="true"></span>
+        </label>
+      </li>
+    </ul>
+
     <dl class="lines" data-lines hidden></dl>
-
-    <div class="addons" role="group" aria-label="Optional add-ons">
-      <label class="addon">
-        <input type="checkbox" name="priority" value="1" />
-        <span><b>Priority start</b><em data-extra-price="priority">+{priority}</em><small>Jump to the front of Stain's queue</small></span>
-      </label>
-      <label class="addon" data-bonus-extra>
-        <input type="checkbox" name="bonusWin" value="1" />
-        <span><b>Bonus win</b><em data-extra-price="bonus">+{formatUSD(BONUS_WIN_PRICE.Gold)}</em><small>One more win after your target, as a buffer</small></span>
-      </label>
+    <div class="total-row">
+      <span class="tl">Total</span>
+      <span class="total num" data-total aria-live="polite">{total}</span>
     </div>
+    <p class="sum-facts"><span>No hidden fees</span><span>Usually starts within a few hours</span></p>
 
     <div class="field">
-      <label for="ign">Riot ID</label>
-      <input id="ign" name="ign" class="input" autocomplete="off" maxlength="60" placeholder="Name#ME1" required aria-describedby="ignHint" />
-      <p class="hint" id="ignHint">The League account being boosted.</p>
+      <label for="ign">Your Riot ID</label>
+      <input id="ign" name="ign" class="input" autocomplete="off" maxlength="60" placeholder="Name#ME1" required />
     </div>
     <div class="field" data-discord-field hidden>
-      <label for="discord">Discord username</label>
-      <input id="discord" name="discord" class="input" autocomplete="off" maxlength="80" placeholder="e.g. yourname" aria-describedby="discordHint" />
-      <p class="hint" id="discordHint">Stain messages you here.</p>
+      <label for="discord">Your Discord username</label>
+      <input id="discord" name="discord" class="input" autocomplete="off" maxlength="80" placeholder="yourname" />
     </div>
 
-    <button class="btn btn-primary btn-block btn-lg submit" type="button" data-submit>
-      <svg class="dc" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-submit-icon><path d="M20.3 4.4A19.8 19.8 0 0 0 15.4 2.9l-.6 1.3a18.3 18.3 0 0 0-5.5 0l-.6-1.3a19.7 19.7 0 0 0-4.9 1.5C.7 9-.3 13.6.1 18.1a19.9 19.9 0 0 0 6 3l1.3-2a13 13 0 0 1-1.9-.9l.4-.3a14.2 14.2 0 0 0 12.1 0l.4.3c-.6.4-1.2.7-1.9.9l1.3 2a19.9 19.9 0 0 0 6-3c.5-5.2-.8-9.7-3.5-13.7ZM8 15.3c-1.2 0-2.2-1.1-2.2-2.4S6.8 10.5 8 10.5s2.2 1.1 2.2 2.4-1 2.4-2.2 2.4Zm8 0c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4Z"/></svg>
-      <span data-submit-label>Order with Discord · {total}</span>
+    <button class="buy submit" type="button" data-submit>
+      <span data-submit-label>Boost my rank · {total}</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
     </button>
-    <p class="submit-note" data-submit-note>One-click Discord sign-in — your order is kept while you sign in. <a href="/login?return=/pricing%3Fresume%3D1" data-email-link>Use email instead</a></p>
+    <p class="submit-note" data-submit-note>Next you sign in with Discord in one click; your order is kept. <a href="/login?return=/pricing%3Fresume%3D1" data-email-link>Use email instead</a></p>
     <p class="err" data-error role="alert" hidden></p>
-
-    <Guarantees compact />
-    <p class="pay">Pay after ordering with <strong>{PAYMENT_NAMES}</strong>. Another method? Message <strong>{DISCORD.handle}</strong> on Discord.</p>
-
     <details class="refbox" data-refbox>
-      <summary>Have a referral code? <span class="muted">{Math.round(REFERRAL_RATE * 100)}% off your first order</span></summary>
-      <div class="ref-row">
+      <summary>Have a referral code? <span>20% off your first order</span></summary>
+      <div class="ref">
         <label class="visually-hidden" for="refCode">Referral code</label>
         <input id="refCode" class="input" maxlength="20" autocomplete="off" placeholder="SBXXXXXX" />
         <button type="button" class="btn btn-ghost btn-sm" data-ref-apply>Apply</button>
       </div>
       <p class="ref-msg" data-ref-msg aria-live="polite"></p>
     </details>
-    <div class="status-row"><StatusChip /></div>
+
+    <div class="pay-row"><span>Pay after ordering</span>{PAYMENT_METHODS.map((m) => <span class="pay-pill">{m.name}</span>)}</div>
+    <Guarantees compact />
   </div>
-</section>
+</aside>
 
 <style>
-  .summary { display: grid; grid-template-columns: minmax(0, 1fr); width: min(100%, 560px); margin-inline: auto; }
-  .sum-card { display: grid; gap: 14px; background: radial-gradient(120% 80% at 100% 0%, rgba(196, 181, 253, .1), transparent 60%), linear-gradient(180deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .018)); box-shadow: inset 0 0 0 1px rgba(196, 181, 253, .22), 0 40px 80px -50px rgba(0, 0, 0, .9); }
-  .sum-route { font-family: var(--font-display); font-weight: 400; font-size: 1.85rem; line-height: 1.1; color: var(--text-strong); margin-block-start: -6px; outline: none; }
-  .sum-meta { color: var(--muted); font-size: .92rem; margin-block-start: -10px; }
-  .sum-edit { display: flex; flex-wrap: wrap; gap: 4px 18px; margin-block-start: -8px; }
-  .sum-edit button { padding: 0; border: 0; background: none; font-size: .86rem; color: var(--lav); text-decoration: underline; text-decoration-color: rgba(196, 181, 253, .4); text-underline-offset: 4px; cursor: pointer; }
-  .sum-edit button:hover { text-decoration-color: var(--lav); }
-  .total-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-block: 10px; box-shadow: inset 0 1px 0 rgba(246, 242, 255, .08), inset 0 -1px 0 rgba(246, 242, 255, .08); }
-  .total { font-size: clamp(2.8rem, 2vw + 2rem, 3.4rem); font-weight: 400; color: var(--text-strong); line-height: 1; }
-  .no-fees { font-size: .78rem; color: var(--muted); text-align: end; line-height: 1.35; }
-  .lines { display: grid; gap: 8px; margin-block-start: -4px; }
-  .lines :global(div) { display: flex; justify-content: space-between; gap: 12px; font-size: .9rem; }
+  .summary { position: sticky; inset-block-start: calc(var(--nav-h) + 16px); }
+  .sum-card { display: grid; gap: 12px; padding: 20px; border-radius: 22px; background: #110d26; box-shadow: inset 0 0 0 1px rgba(196, 181, 253, .18), 0 40px 80px -50px rgba(0, 0, 0, .9); }
+  .sum-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .sum-title { font-family: var(--font-ui); font-weight: 600; font-size: 1.3rem; letter-spacing: 0; color: var(--text-strong); }
+  .route { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; padding: 12px; border-radius: 16px; background: rgba(0, 0, 0, .28); box-shadow: inset 0 0 0 1px rgba(246, 242, 255, .07); }
+  .rt-side { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .rt-to { justify-content: flex-end; text-align: end; }
+  .rt-emb { flex: none; display: grid; }
+  .rt-txt { display: grid; min-width: 0; }
+  .rt-txt small { font-size: .66rem; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+  .rt-txt b { font-family: var(--font-ui); font-weight: 600; font-size: 1rem; color: var(--text-strong); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rt-arrow { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; color: var(--lav); box-shadow: inset 0 0 0 1px rgba(196, 181, 253, .3); }
+  .rt-arrow svg { width: 15px; height: 15px; }
+  .sum-meta { font-size: .8rem; color: var(--muted); margin-block-start: -6px; text-align: center; }
+  .queue { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; border-radius: 14px; background: rgba(0, 0, 0, .28); }
+  .q-opt { position: relative; }
+  .q-opt input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  .q-opt span { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: 8px; padding: 7px 12px; border-radius: 11px; cursor: pointer; color: var(--muted); transition: background-color .25s, color .25s, box-shadow .25s; }
+  .q-opt svg { grid-row: span 2; width: 20px; height: 20px; }
+  .q-opt b { font-family: var(--font-ui); font-weight: 600; font-size: .95rem; }
+  .q-opt small { font-size: .74rem; }
+  .q-opt input:checked + span { background: rgba(196, 181, 253, .16); color: var(--text-strong); box-shadow: inset 0 0 0 1px rgba(196, 181, 253, .55); }
+  .q-opt input:focus-visible + span { outline: 1.5px solid var(--lav); outline-offset: 2px; }
+  .toggles { list-style: none; padding: 0; margin: 0; display: grid; }
+  .toggles > li + li { border-top: 1px solid rgba(246, 242, 255, .06); }
+  .tg { position: relative; display: flex; align-items: center; gap: 10px; padding: 6px 2px; }
+  label.tg { cursor: pointer; }
+  .tg input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  .tg-ic { flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 9px; color: var(--lav); background: rgba(196, 181, 253, .08); }
+  .tg-ic svg { width: 16px; height: 16px; }
+  .tg-name { flex: 1 1 auto; display: grid; font-size: .92rem; color: var(--text-strong); line-height: 1.25; }
+  .tg-sub { font-size: .76rem; color: var(--muted); }
+  .badge { flex: none; padding: 3px 8px; border-radius: 999px; font-size: .74rem; font-variant-numeric: tabular-nums; color: var(--gold); background: rgba(245, 198, 106, .1); }
+  .badge-free { color: var(--success); background: rgba(52, 211, 153, .12); }
+  .sw { flex: none; position: relative; width: 38px; height: 22px; border-radius: 999px; background: rgba(246, 242, 255, .16); transition: background-color .25s; }
+  .sw::after { content: ''; position: absolute; inset-block-start: 3px; inset-inline-start: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: transform .25s var(--ease); }
+  .tg input:checked ~ .sw, .sw-locked { background: #7353fb; }
+  .tg input:checked ~ .sw::after, .sw-locked::after { transform: translateX(16px); }
+  .sw-locked { opacity: .55; }
+  .tg input:focus-visible ~ .sw { outline: 1.5px solid var(--lav); outline-offset: 2px; }
+  .refbox summary { cursor: pointer; list-style: none; text-align: center; font-size: .84rem; color: var(--lav); }
+  .refbox summary::-webkit-details-marker { display: none; }
+  .refbox summary span { color: var(--muted); }
+  .refbox[open] summary { margin-block-end: 8px; }
+  .ref { display: flex; gap: 8px; }
+  .ref .input { min-height: 42px; font-size: .9rem; text-transform: uppercase; }
+  .ref .input::placeholder { text-transform: none; }
+  .ref-msg { font-size: .84rem; margin-block-start: 6px; }
+  .ref-msg:empty { display: none; }
+  .lines { display: grid; gap: 6px; }
+  .lines :global(div) { display: flex; justify-content: space-between; gap: 12px; font-size: .86rem; }
   .lines :global(dt) { color: var(--muted); }
   .lines :global(dd) { margin: 0; font-variant-numeric: tabular-nums; color: var(--text); white-space: nowrap; }
   .lines :global(.credit dd) { color: var(--success); }
   .lines :global(.extra dd) { color: var(--gold); }
-  .addons { display: grid; gap: 8px; }
-  .addon { position: relative; }
-  .addon input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
-  .addon > span { display: grid; grid-template-columns: 1fr auto; gap: 0 10px; padding: 10px 14px 10px 44px; border-radius: 14px; cursor: pointer; position: relative; background: rgba(255, 255, 255, .02); box-shadow: inset 0 0 0 1px rgba(246, 242, 255, .1); transition: box-shadow .3s, background-color .3s; }
-  .addon > span::before { content: ''; position: absolute; inset-inline-start: 14px; inset-block-start: 50%; translate: 0 -50%; width: 18px; height: 18px; border-radius: 6px; box-shadow: inset 0 0 0 1px rgba(246, 242, 255, .4); background: center/11px no-repeat; transition: background-color .25s, box-shadow .25s; }
-  .addon b { font-weight: 400; color: var(--text-strong); }
-  .addon em { font-style: normal; color: var(--gold); font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .addon small { grid-column: 1 / -1; font-size: .8rem; color: var(--muted); line-height: 1.4; }
-  .addon input:checked + span { background: rgba(245, 198, 106, .07); box-shadow: inset 0 0 0 1px rgba(245, 198, 106, .55); }
-  .addon input:checked + span::before { box-shadow: none; background-color: var(--gold); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231d1405' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 12 5 5 9-10'/%3E%3C/svg%3E"); }
-  .addon input:focus-visible + span { outline: 1.5px solid var(--lav); outline-offset: 3px; }
-  @media (hover: hover) { .addon > span:hover { box-shadow: inset 0 0 0 1px rgba(246, 242, 255, .28); } }
-  .field { display: grid; gap: 8px; }
-  .field { gap: 6px; }
-  .field .hint { font-size: .8rem; color: var(--muted); }
-  .submit .dc { width: 20px; height: 20px; }
-  /* "Order with Discord · $123.45" must fit a 320px phone: tighter sides, and wrap rather than overflow */
-  @media (max-width: 420px) { .submit { padding-inline: 1.1rem; white-space: normal; text-align: center; line-height: 1.25; } }
-  .submit-note { font-size: .82rem; color: var(--muted); text-align: center; margin-block-start: -6px; }
-  .err { color: #fecaca; background: rgba(252, 165, 165, .08); box-shadow: inset 0 0 0 1px rgba(252, 165, 165, .35); border-radius: 14px; padding: 10px 14px; font-size: .92rem; }
-  .status-row:empty { display: none; }
-  .pay { font-size: .84rem; color: var(--muted); }
-  .pay strong { color: var(--text); font-weight: 400; }
+  .total-row { display: flex; justify-content: space-between; align-items: baseline; padding-block-start: 10px; border-top: 1px solid rgba(246, 242, 255, .08); }
+  .tl { font-family: var(--font-ui); font-weight: 500; font-size: 1rem; color: var(--text); }
+  .total { font-family: var(--font-ui); font-weight: 600; font-size: 2.1rem; line-height: 1; color: var(--text-strong); letter-spacing: -.01em; }
+  .sum-facts { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; font-size: .78rem; color: var(--muted); margin-block-start: -8px; }
+  .sum-facts span:last-child { color: var(--success); }
+  .field { display: grid; gap: 6px; }
+  .field label { font-size: .84rem; color: var(--text); letter-spacing: 0; text-transform: none; font-family: var(--font-ui); }
+  .buy { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; min-height: 56px; padding: 0 20px; border: 0; border-radius: 14px; background: #7353fb; color: #fff; font-family: var(--font-ui); font-weight: 600; font-size: 1.08rem; letter-spacing: .01em; cursor: pointer; box-shadow: 0 14px 30px -14px rgba(124, 92, 255, .9); transition: background-color .25s, transform .25s var(--ease); }
+  .buy:hover { background: #7f62ff; transform: translateY(-1px); }
+  .buy svg { width: 18px; height: 18px; flex: none; }
+  .buy[aria-disabled='true'] { opacity: .7; cursor: wait; }
+  .submit-note { font-size: .78rem; color: var(--muted); text-align: center; margin-block-start: -6px; }
+  .err { color: #fecaca; background: rgba(252, 165, 165, .08); box-shadow: inset 0 0 0 1px rgba(252, 165, 165, .35); border-radius: 12px; padding: 10px 14px; font-size: .9rem; }
+  .pay-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 8px; font-size: .78rem; color: var(--muted); }
+  .pay-pill { padding: 3px 10px; border-radius: 999px; color: var(--text); background: rgba(246, 242, 255, .06); }
+  @media (max-width: 1000px) { .summary { position: static; } }
+  @media (max-width: 400px) { .sum-card { padding: 16px; } .route { padding: 10px; } .rt-emb :global(svg) { width: 28px; height: 28px; } .q-opt span { padding: 8px; } }
 </style>

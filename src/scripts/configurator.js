@@ -1,4 +1,4 @@
-// /pricing — step-by-step order (4 questions + checkout), live price and post-order panel.
+// /pricing — order settings, the live "Your order" box, checkout and post-order panel.
 // Every price comes from quoteOrder() in src/data/pricing.js — the same function the
 // order API uses — and the page sends the total it showed, which the API must match.
 import {
@@ -29,9 +29,13 @@ function init() {
   // money state that isn't part of the form
   const acct = { referral: '', credit: 0, firstOrder: true };
 
-  const val = (name) => root.querySelector(`input[name="${name}"]:checked`)?.value;
+  const val = (name) => { const sel = root.querySelector(`select[name="${name}"]`); return sel ? sel.value : root.querySelector(`input[name="${name}"]:checked`)?.value; };
   const on = (name) => !!root.querySelector(`input[name="${name}"]`)?.checked;
-  const setRadio = (name, v) => { const el = root.querySelector(`input[name="${name}"][value="${v}"]`); if (el && !el.disabled) el.checked = true; };
+  const setRadio = (name, v) => {
+    const sel = root.querySelector(`select[name="${name}"]`);
+    if (sel) { if ([...sel.options].some((o) => o.value === String(v))) sel.value = String(v); return; }
+    const el = root.querySelector(`input[name="${name}"][value="${v}"]`); if (el && !el.disabled) el.checked = true;
+  };
   // Discord sign-ins already have a Discord name (the order API uses it); only email accounts type one.
   const needsDiscord = () => !!user && !user.discordUsername;
   const clampWins = (n) => Math.max(1, Math.min(MAX_WINS, Math.round(n) || 1));
@@ -141,9 +145,9 @@ function init() {
     tick(q.total);
     if (s.mode === 'rank') {
       const raw = rankBoostBase(s.fromTier, s.fromDiv, s.toTier, s.toDiv, s.type, 0);
-      $$('[data-lp-save]', form).forEach((el) => {
-        const v = +el.dataset.lpSave;
-        el.textContent = v > 0 ? '−' + formatUSD(raw - rankBoostBase(s.fromTier, s.fromDiv, s.toTier, s.toDiv, s.type, v)) : '';
+      [...$('[data-lp-select]', form).options].forEach((opt) => {
+        const v = +opt.value, o = LP_OPTIONS.find((x) => x.value === v);
+        opt.textContent = o.label + (v > 0 ? ` (−${formatUSD(raw - rankBoostBase(s.fromTier, s.fromDiv, s.toTier, s.toDiv, s.type, v))})` : '');
       });
     } else {
       const free = freeWins(s.wins);
@@ -152,14 +156,29 @@ function init() {
     }
     $$('[data-win-price]', form).forEach((el) => { el.textContent = formatUSD(WIN_PRICES[el.dataset.winPrice][s.type]) + '/win'; });
     $('[data-discord-field]', summary).hidden = !needsDiscord();
-    $('[data-wb-route]', root).textContent = q.route + (q.bonus ? ' + 1 win' : '');
-    $('[data-wb-price]', root).textContent = formatUSD(q.total);
-    $('[data-step-label="3"] .lbl', root).textContent = s.mode === 'wins' ? 'Wins' : 'Goal';
+    // rank headers and the route at the top of the order box
+    const shown = (attr, idx) => $$(`[${attr}]`, root).forEach((el) => { el.hidden = +el.getAttribute(attr) !== idx; });
+    if (s.mode === 'rank') {
+      $('[data-from-name]', form).textContent = rankName(s.fromTier, s.fromDiv);
+      $('[data-to-name]', form).textContent = rankName(s.toTier, s.toDiv);
+      shown('data-from-emblem', s.fromTier); shown('data-to-emblem', s.toTier);
+      shown('data-rt-emblem-from', s.fromTier); shown('data-rt-emblem-to', s.toTier);
+      $('[data-rt-from]', summary).textContent = rankName(s.fromTier, s.fromDiv);
+      $('[data-rt-from-label]', summary).textContent = LP_OPTIONS.find((o) => o.value === s.lp)?.label || 'Current';
+      $('[data-rt-to]', summary).textContent = rankName(s.toTier, s.toDiv) + (q.bonus ? ' + 1 win' : '');
+      $('[data-rt-to-label]', summary).textContent = 'Target';
+    } else {
+      const rank = WIN_RANKS[s.winRank], tier = Math.min(rank.startsWith('Diamond') ? 6 : WIN_RANKS.indexOf(rank), MASTERS);
+      shown('data-rt-emblem-from', tier); shown('data-rt-emblem-to', tier);
+      $('[data-rt-from]', summary).textContent = rank.replace('-', '–');
+      $('[data-rt-from-label]', summary).textContent = 'Your rank';
+      $('[data-rt-to]', summary).textContent = `${s.wins + freeWins(s.wins)} net wins`;
+      $('[data-rt-to-label]', summary).textContent = freeWins(s.wins) ? `${freeWins(s.wins)} free` : 'Wins';
+    }
     const price = formatUSD(q.total);
-    $('[data-submit-label]', summary).textContent = user ? `Place order · ${price}` : `Order with Discord · ${price}`;
-    $('[data-submit-icon]', summary).style.display = user ? 'none' : '';
+    $('[data-submit-label]', summary).textContent = `Boost my rank · ${price}`;
     $('[data-submit-note]', summary).hidden = !!user;
-    document.dispatchEvent(new CustomEvent('sb:quote', { detail: { total: q.total, label: q.route, href: '#sum-route' } }));
+    document.dispatchEvent(new CustomEvent('sb:quote', { detail: { total: q.total, label: q.route, href: '#sum-title' } }));
     return { s, q };
   }
 
@@ -276,8 +295,6 @@ function init() {
   }
   constrain();
   render();
-  const fromLink = !resumed ? fromUrl() : {};
-  wizard(resumed ? 5 : Number.isInteger(fromLink.toTier) || Number.isInteger(fromLink.winRank) ? 4 : fromLink.mode === 'wins' ? 2 : 1);
   // referral code: from a pending order, or from a ?ref= link (saved by common.js)
   let storedRef = '';
   try { storedRef = (JSON.parse(localStorage.getItem('sb_ref') || 'null') || {}).code || ''; } catch {}
@@ -286,70 +303,7 @@ function init() {
   if (user) loadAccount();
   if (resumed) {
     showError('✅ Welcome back — your order is ready. Check it and press the button to place it.', true);
-  }
-
-  // ── Steps ─────────────────────────────────────────────────────────────────
-  // One question per screen. Picking an answer that settles the step moves on by itself;
-  // the browser's back button walks back through the steps.
-  function wizard(start) {
-    const NAMES = { 1: 'boost', 2: 'now', 3: 'goal', 4: 'play', 5: 'order' };
-    const sections = $$('.wstep[data-step]', root);
-    const head = $('[data-wiz-head]', root), bar = $('[data-wiz-bar]', root), next = $('[data-wiz-next]', root);
-    const navH = () => (document.querySelector('.nav')?.getBoundingClientRect().bottom || 0) + 28;
-    let step = 0, reached = start, timer = 0, pushed = 0; // pushed = our own entries in the browser history
-
-    function go(n, { push = true, scroll = true } = {}) {
-      n = Math.max(1, Math.min(5, n));
-      clearTimeout(timer);
-      if (n === step) return;
-      step = n;
-      reached = Math.max(reached, n);
-      root.dataset.stepNow = n;
-      sections.forEach((el) => {
-        const on = +el.dataset.step === n;
-        el.hidden = !on;
-        if (on && !reduce) el.animate?.([{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'none' }], { duration: 420, easing: 'cubic-bezier(.16,1,.3,1)' });
-      });
-      head.hidden = n !== 1;
-      bar.hidden = n === 1 || n === 5;
-      next.innerHTML = (n === 4 ? 'See my order' : 'Next') + ' <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>';
-      $$('[data-step-label]', root).forEach((b) => {
-        const k = +b.dataset.stepLabel;
-        b.disabled = k > reached;
-        b.classList.toggle('done', k < n);
-        if (k === n) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
-      });
-      if (push) { history.pushState({ sbStep: n }, '', location.pathname + location.search + '#' + NAMES[n]); pushed++; }
-      if (scroll) {
-        const top = root.getBoundingClientRect().top + scrollY - navH();
-        if (Math.abs(scrollY - top) > 4) scrollTo({ top: Math.max(0, top), behavior: reduce ? 'auto' : 'smooth' });
-      }
-      const shown = sections.find((el) => !el.hidden);
-      [...(shown?.querySelectorAll('.q, .sum-route') || [])].find((h) => h.offsetParent !== null)?.focus({ preventScroll: true });
-      track('wizard_step', { step: n, name: NAMES[n], mode: val('mode') });
-    }
-    const later = (n) => { clearTimeout(timer); timer = setTimeout(() => go(n), reduce ? 0 : 280); };
-
-    // a tap on an answer that completes the step moves on — even when it was already selected
-    root.addEventListener('click', (e) => {
-      const input = e.target.closest?.('input[type="radio"]');
-      if (!input || input.disabled) return;
-      const name = input.name;
-      if (step === 1 && name === 'mode') later(2);
-      else if (step === 2 && (name === 'fromDiv' || name === 'winRank')) later(3);
-      else if (step === 3 && (name === 'toDiv' || (name === 'toTier' && +input.value === MASTERS))) later(4);
-    });
-    next.addEventListener('click', () => go(step + 1));
-    // Back = the browser's back while we have steps in its history; otherwise just the previous step
-    $('[data-wiz-back]', root).addEventListener('click', () => {
-      if (pushed > 0) history.back();
-      else { go(step - 1, { push: false }); history.replaceState({ sbStep: step }, '', location.pathname + location.search + '#' + NAMES[step]); }
-    });
-    $$('[data-goto]', root).forEach((b) => b.addEventListener('click', () => go(+b.dataset.goto)));
-    addEventListener('popstate', (e) => { pushed = Math.max(0, pushed - 1); go(e.state?.sbStep || 1, { push: false }); });
-
-    history.replaceState({ sbStep: start }, '', location.pathname + location.search + (start > 1 ? '#' + NAMES[start] : ''));
-    go(start, { push: false, scroll: start > 1 });
+    summary.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
   }
 
   // ── Checkout ──────────────────────────────────────────────────────────────

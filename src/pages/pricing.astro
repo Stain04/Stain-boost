@@ -6,7 +6,9 @@ import OrderSuccess from '../components/OrderSuccess.astro';
 import ReviewCard from '../components/ReviewCard.astro';
 import FaqList from '../components/FaqList.astro';
 import RankEmblem from '../components/RankEmblem.astro';
+import StickyOrderBar from '../components/StickyOrderBar.astro';
 import { WIN_PRICES, RB_TIERS, MASTERS, divisionPrice, formatUSD, rankBoostTotal, lowestWinPrice } from '../data/pricing.js';
+import { STATS } from '../data/site.js';
 import { getVerifiedReviews } from '../data/reviews.js';
 import { FAQ, faqSchema } from '../data/faq.js';
 import { tierOfWinRank } from '../data/ranks.js';
@@ -33,30 +35,21 @@ const total = formatUSD(rankBoostTotal({ fromTier: 2, fromDiv: 2, toTier: 3, toD
 >
   <div class="wrap pr-top">
     <OrderSuccess />
-    <div class="wiz" data-layout data-step-now="1">
-      <header class="pr-head" data-loc="pricing_head" data-wiz-head>
-        <p class="eyebrow">ELO boost · ME, EUW &amp; EUNE</p>
-        <h1>Your boost, <span class="grad">priced instantly.</span></h1>
-        <p class="lead">Four quick questions, then your exact price. Every game is played by Stain himself.</p>
-      </header>
-
-      <ol class="wiz-steps" aria-label="Order steps" data-wiz-steps>
-        {['Boost', 'Now', 'Goal', 'Play', 'Order'].map((label, i) => (
-          <li><button type="button" data-goto={i + 1} data-step-label={i + 1} aria-current={i === 0 ? 'step' : undefined} disabled={i > 0}><span class="bar" aria-hidden="true"></span><span class="lbl">{label}</span></button></li>
-        ))}
-      </ol>
-
-      <Configurator />
-      <OrderSummary />
-
-      <div class="wiz-bar" data-wiz-bar hidden>
-        <button type="button" class="wb-back" data-wiz-back aria-label="Back to the previous question"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" /></svg></button>
-        <div class="wb-info">
-          <span class="wb-route" data-wb-route>Silver II → Gold IV</span>
-          <span class="wb-price num" data-wb-price>{total}</span>
-        </div>
-        <button type="button" class="btn btn-primary wb-next" data-wiz-next>Next <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg></button>
+    <div class="layout" data-layout>
+      <div class="cfg-col">
+        <header class="pr-head" data-loc="pricing_head">
+          <h1>League of Legends <span class="grad">ELO boost</span></h1>
+          <p class="lead">Pick your rank, see the price instantly. Every game is played by Stain himself — Challenger, #1 Master Yi on ME.</p>
+          <ul class="pr-trust">
+            <li>{STATS.ordersCompleted}+ orders</li>
+            <li>{STATS.bans} bans</li>
+            <li>Full refund if not started</li>
+            <li><a href="/reviews">Verified reviews</a></li>
+          </ul>
+        </header>
+        <Configurator />
       </div>
+      <OrderSummary />
     </div>
   </div>
 
@@ -113,6 +106,7 @@ const total = formatUSD(rankBoostTotal({ fromTier: 2, fromDiv: 2, toTier: 3, toD
     </div>
   </section>
 
+  <StickyOrderBar slot="after" watch="[data-summary] [data-submit]" label="Silver II → Gold IV" price={total} href="#sum-title" cta="Boost my rank" />
 </Base>
 
 <script>
