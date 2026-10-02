@@ -1,7 +1,7 @@
 ---
-// Site-wide free-trial bar. Rendered only while the promo runs (src/data/promo.js);
-// after the deadline the page hides it before first paint (see Base.astro) and the API refuses claims.
-import { FREE_TRIAL, TRIAL_ENDS_MS } from '../data/promo.js';
+// Site-wide free-trial bar. Shown only while the trial runs (timer set in /admin, read from /api/status
+// by scripts/common.js); the API refuses claims outside that window.
+import { FREE_TRIAL } from '../data/promo.js';
 ---
 <div class="trial-bar" data-trial data-loc="trial_bar">
   <a class="wrap tb" href="/free-trial" data-track="cta_click" data-track-location="trial_bar">
@@ -9,10 +9,10 @@ import { FREE_TRIAL, TRIAL_ENDS_MS } from '../data/promo.js';
     <span class="tb-text">
       <b class="tb-long">New here? Your first {FREE_TRIAL.games} games are free.</b>
       <b class="tb-short">{FREE_TRIAL.games} FREE games</b>
-      <span class="tb-sub"> No payment · 2 days only</span>
+      <span class="tb-sub"> No payment · limited time</span>
     </span>
-    <span class="tb-count tb-long" data-trial-countdown data-end={TRIAL_ENDS_MS}>Ends Fri 2 Oct</span>
-    <span class="tb-count tb-short" data-trial-countdown data-prefix="⏳ " data-end={TRIAL_ENDS_MS}>⏳ Fri 2 Oct</span>
+    <span class="tb-count tb-long" data-trial-countdown>Limited time</span>
+    <span class="tb-count tb-short" data-trial-countdown data-prefix="⏳ ">⏳</span>
     <span class="tb-go">Claim →</span>
   </a>
 </div>

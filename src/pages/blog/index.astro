@@ -4,8 +4,11 @@ import { getCollection } from 'astro:content';
 import { SITE } from '../../data/site.js';
 import { breadcrumbs } from '../../data/schema.js';
 
+// newest first; posts from the same day keep the order they were added in (higher `order` = newer)
 const posts = (await getCollection('blog', (p) => !p.data.draft))
-  .sort((a, b) => a.data.order - b.data.order || +b.data.published - +a.data.published);
+  .sort((a, b) => +b.data.published - +a.data.published || b.data.order - a.data.order);
+const PER_PAGE = 8;
+const pageCount = Math.ceil(posts.length / PER_PAGE);
 const categories = [...new Set(posts.map((p) => p.data.category))].sort();
 const fmt = (d) => d.toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
 const blogSchema = {
@@ -39,7 +42,7 @@ const blogSchema = {
   <section class="section-tight" data-loc="blog_list">
     <div class="wrap grid-3" data-posts>
       {posts.map((p, i) => (
-        <a class="post card card-glow reveal" style={`--d:${(i % 3) * 0.05}s`} href={`/blog/${p.id}`} data-cat={p.data.category} data-text={(p.data.h1 + ' ' + p.data.excerpt).toLowerCase()}>
+        <a class="post card card-glow reveal" style={`--d:${(i % 3) * 0.05}s`} hidden={i >= PER_PAGE} href={`/blog/${p.id}`} data-cat={p.data.category} data-text={(p.data.h1 + ' ' + p.data.excerpt).toLowerCase()}>
           <span class="post-cat">{p.data.category}</span>
           <span class="post-title">{p.data.h1}</span>
           <span class="post-ex">{p.data.excerpt}</span>
@@ -48,6 +51,11 @@ const blogSchema = {
       ))}
       <p class="empty" data-empty hidden>No guides match that search.</p>
     </div>
+    <nav class="wrap pager" aria-label="Blog pages" data-pager data-per-page={PER_PAGE}>
+      <button type="button" class="pg pg-step" data-page-step="-1" disabled aria-label="Previous page">‹</button>
+      {Array.from({ length: pageCount }, (_, i) => <button type="button" class="pg" data-page={i + 1} aria-current={i === 0 ? 'page' : undefined}>{i + 1}</button>)}
+      <button type="button" class="pg pg-step" data-page-step="1" disabled={pageCount < 2} aria-label="Next page">›</button>
+    </nav>
   </section>
 
   <section class="section">
@@ -61,22 +69,61 @@ const blogSchema = {
 </Base>
 
 <script>
+  // Filter by category, search, and show 8 guides per page (newest first). ?page=N is kept in the address.
   const cards = [...document.querySelectorAll('[data-posts] .post')];
   const btns = [...document.querySelectorAll('.filters .f')];
   const search = document.getElementById('blogSearch');
   const empty = document.querySelector('[data-empty]');
-  let cat = '';
-  function apply() {
-    const q = search.value.trim().toLowerCase();
-    let shown = 0;
-    cards.forEach((c) => { const ok = (!cat || c.dataset.cat === cat) && (!q || c.dataset.text.includes(q)); c.hidden = !ok; if (ok) { shown++; c.classList.add('in'); } });
-    empty.hidden = shown > 0;
+  const pager = document.querySelector('[data-pager]');
+  const PER = Number(pager.dataset.perPage) || 8;
+  let cat = '', page = Math.max(1, parseInt(new URLSearchParams(location.search).get('page'), 10) || 1);
+
+  function renderPager(pages) {
+    pager.hidden = pages < 2;
+    pager.querySelectorAll('[data-page]').forEach((b) => b.remove());
+    const next = pager.querySelector('[data-page-step="1"]');
+    for (let i = 1; i <= pages; i++) {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'pg'; b.dataset.page = String(i); b.textContent = String(i);
+      if (i === page) b.setAttribute('aria-current', 'page');
+      pager.insertBefore(b, next);
+    }
+    pager.querySelector('[data-page-step="-1"]').disabled = page <= 1;
+    next.disabled = page >= pages;
   }
-  btns.forEach((b) => b.addEventListener('click', () => { cat = b.dataset.cat; btns.forEach((x) => x.setAttribute('aria-pressed', String(x === b))); apply(); }));
-  search.addEventListener('input', apply);
+  function apply(scroll = false) {
+    const q = search.value.trim().toLowerCase();
+    const match = cards.filter((c) => (!cat || c.dataset.cat === cat) && (!q || c.dataset.text.includes(q)));
+    const pages = Math.max(1, Math.ceil(match.length / PER));
+    page = Math.min(page, pages);
+    const shown = new Set(match.slice((page - 1) * PER, page * PER));
+    cards.forEach((c) => { const on = shown.has(c); c.hidden = !on; if (on) c.classList.add('in'); });
+    empty.hidden = match.length > 0;
+    renderPager(pages);
+    const url = new URL(location.href);
+    if (page > 1) url.searchParams.set('page', String(page)); else url.searchParams.delete('page');
+    history.replaceState(null, '', url);
+    if (scroll) document.querySelector('[data-posts]').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  pager.addEventListener('click', (e) => {
+    const b = e.target.closest('button');
+    if (!b || b.disabled) return;
+    page = b.dataset.page ? Number(b.dataset.page) : page + Number(b.dataset.pageStep);
+    apply(true);
+  });
+  btns.forEach((b) => b.addEventListener('click', () => { cat = b.dataset.cat; page = 1; btns.forEach((x) => x.setAttribute('aria-pressed', String(x === b))); apply(); }));
+  search.addEventListener('input', () => { page = 1; apply(); });
+  if (page > 1) apply();
 </script>
 
 <style>
+  .pager { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-block-start: 28px; }
+  .pager[hidden] { display: none; }
+  .pg { min-width: 44px; height: 44px; padding: 0 12px; border: 0; border-radius: 12px; background: rgba(255, 255, 255, .03); box-shadow: inset 0 0 0 1px rgba(246, 242, 255, .12); color: var(--text); font: inherit; cursor: pointer; transition: box-shadow .2s, background-color .2s; }
+  .pg:hover:not(:disabled) { box-shadow: inset 0 0 0 1px var(--lav); }
+  .pg[aria-current='page'] { background: rgba(196, 181, 253, .16); box-shadow: inset 0 0 0 1px rgba(196, 181, 253, .6); color: var(--text-strong); }
+  .pg:disabled { opacity: .35; cursor: default; }
+  .pg-step { font-size: 1.2rem; }
   .head h1 { font-size: clamp(2.8rem, 4vw + 1rem, 4.6rem); margin-block: 14px 16px; }
   .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-block: 28px 14px; }
   .f { font-size: .88rem; letter-spacing: .02em; color: var(--text); padding: 8px 16px; border-radius: 999px; border: 0; box-shadow: inset 0 0 0 1px rgba(246, 242, 255, .14); background: transparent; transition: box-shadow .3s, background-color .3s; }

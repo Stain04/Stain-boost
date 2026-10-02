@@ -224,9 +224,10 @@ h1 em, h2 em, h3 em, .grad { font-style: italic; font-weight: 300; color: var(--
 .flip-rtl { }
 [dir='rtl'] .flip-rtl { transform: scaleX(-1); }
 
-/* Free trial (src/data/promo.js): [data-trial] shows while it runs, [data-trial-over] once it has ended */
-.trial-over [data-trial] { display: none !important; }
-html:not(.trial-over) [data-trial-over] { display: none !important; }
+/* Free trial (timer set in /admin): [data-trial] shows while it runs, [data-trial-over] when it doesn't.
+   html.trial-on comes from the last known state before first paint, then /api/status confirms it (scripts/common.js). */
+html:not(.trial-on) [data-trial] { display: none !important; }
+html.trial-on [data-trial-over] { display: none !important; }
 
 /* Home: promo bar + nav float together over the full-screen scene */
 .chrome-overlay { position: fixed; inset: 0 0 auto; z-index: 50; }

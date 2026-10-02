@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import { FREE_TRIAL } from '../data/promo.js';
 ---
 <Base title="Admin – StainBoost" description="StainBoost admin." path="/admin" noindex minimal chat={false} promo={false}>
   <section class="section-tight">
@@ -25,9 +26,26 @@ import Base from '../layouts/Base.astro';
           <div class="online">
             <span class="chip" data-online-chip>Status: —</span>
             <label class="visually-hidden" for="onHours">Online for</label>
-            <select id="onHours" class="select sm"><option value="2">2 h</option><option value="4" selected>4 h</option><option value="8">8 h</option><option value="12">12 h</option></select>
+            <select id="onHours" class="select sm"><option value="2">2 h</option><option value="4" selected>4 h</option><option value="8">8 h</option><option value="12">12 h</option><option value="forever">No timer</option></select>
             <button class="btn btn-primary btn-sm" type="button" data-go-online>I'm online</button>
             <button class="btn btn-ghost btn-sm" type="button" data-go-offline>Go offline</button>
+          </div>
+        </div>
+
+        <div class="trialbox card">
+          <div>
+            <p class="eyebrow">Free trial · {FREE_TRIAL.games} free games for new customers</p>
+            <p class="trial-state" data-trial-state>—</p>
+          </div>
+          <div class="trial-ctl">
+            <label class="visually-hidden" for="trialEnd">Free trial ends at (your time)</label>
+            <input id="trialEnd" type="datetime-local" class="input sm" />
+            <button class="btn btn-primary btn-sm" type="button" data-trial-save>Run until then</button>
+            <span class="muted sm-label">or run for</span>
+            <button class="btn btn-ghost btn-sm" type="button" data-trial-days="1">1 day</button>
+            <button class="btn btn-ghost btn-sm" type="button" data-trial-days="2">2 days</button>
+            <button class="btn btn-ghost btn-sm" type="button" data-trial-days="7">7 days</button>
+            <button class="btn btn-ghost btn-sm" type="button" data-trial-end>End now</button>
           </div>
         </div>
 
@@ -139,19 +157,40 @@ import Base from '../layouts/Base.astro';
     setInterval(() => { if (!document.hidden && !$('[data-view="orders"]').hidden) loadList(); }, 20000);
   }
 
-  // ── Online switch ──
+  // ── Online switch + free trial timer (both live in /api/status) ──
+  const when = (ms) => new Date(ms).toLocaleString([], { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+  const toLocalInput = (ms) => { const d = new Date(ms); d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); return d.toISOString().slice(0, 16); };
   function loadStatus() {
-    fetch('/api/status').then((r) => r.json()).then((s) => {
+    // ?t= skips the 20-second public cache, so a change shows here at once
+    fetch('/api/status?t=' + Date.now()).then((r) => r.json()).then((s) => {
       const c = $('[data-online-chip]');
       c.className = 'chip ' + (s.online ? 'chip-green' : '');
-      c.textContent = s.online ? `Online until ${new Date(s.until).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : (s.known ? 'Offline' : 'Status never set');
+      c.textContent = s.online ? (s.forever ? 'Online (no timer)' : `Online until ${new Date(s.until).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`) : (s.known ? 'Offline' : 'Status never set');
+      const t = s.trial, el = $('[data-trial-state]');
+      el.className = 'trial-state' + (t && t.active ? ' on' : '');
+      el.textContent = t && t.active ? `Running — ends ${when(t.endsAt)} (your time)` : 'Off — not shown on the site';
+      if (t && t.active) $('#trialEnd').value = toLocalInput(t.endsAt);
     });
   }
   const setOnline = async (online) => {
-    const r = await api('/api/status', { method: 'POST', body: JSON.stringify({ online, hours: +$('#onHours').value }) });
-    toast(r.s === 200 ? (online ? 'You show as online.' : 'You show as offline.') : (r.b.error || 'Failed.'));
+    const v = $('#onHours').value;
+    const body = online && v === 'forever' ? { online: true, forever: true } : { online, hours: +v };
+    const r = await api('/api/status', { method: 'POST', body: JSON.stringify(body) });
+    toast(r.s === 200 ? (online ? (body.forever ? 'You show as online until you go offline.' : 'You show as online.') : 'You show as offline.') : (r.b.error || 'Failed.'));
     loadStatus();
   };
+  const setTrialEnd = async (endsAt) => {
+    const r = await api('/api/status', { method: 'POST', body: JSON.stringify({ trial: { endsAt } }) });
+    toast(r.s === 200 ? (endsAt ? `Free trial runs until ${when(endsAt)}.` : 'Free trial ended.') : (r.b.error || 'Failed.'));
+    loadStatus();
+  };
+  $('[data-trial-save]').addEventListener('click', () => {
+    const v = $('#trialEnd').value;
+    if (!v) return toast('Pick an end date and time first.');
+    setTrialEnd(new Date(v).getTime());
+  });
+  document.querySelectorAll('[data-trial-days]').forEach((b) => b.addEventListener('click', () => setTrialEnd(Date.now() + +b.dataset.trialDays * 864e5)));
+  $('[data-trial-end]').addEventListener('click', () => { if (confirm('End the free trial now? It disappears from the site.')) setTrialEnd(0); });
   $('[data-go-online]').addEventListener('click', () => setOnline(true));
   $('[data-go-offline]').addEventListener('click', () => setOnline(false));
 
@@ -285,6 +324,12 @@ import Base from '../layouts/Base.astro';
   .adm .bar { display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap; margin-block-end: 14px; }
   .adm .who { font-family: var(--font-ui); font-weight: 500; color: var(--text-strong); }
   .adm .online { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .adm .trialbox { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; }
+  .adm .trial-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .adm .trial-ctl .input { width: auto; min-height: 36px; }
+  .adm .trial-state { color: var(--muted); }
+  .adm .trial-state.on { color: var(--success); }
+  .adm .sm-label { font-size: .84rem; }
   .adm .select.sm { width: auto; min-height: 40px; }
   .adm .tabs { display: flex; gap: 6px; margin-block-end: 14px; flex-wrap: wrap; }
   .adm .tabs button { padding: 8px 16px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, .14); background: rgba(255, 255, 255, .03); color: var(--text); font-family: var(--font-ui); font-weight: 500; letter-spacing: .06em; }

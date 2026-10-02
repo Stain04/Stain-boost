@@ -4,7 +4,7 @@ import {
   WIN_PRICES, VALID_CURRENT_LP, LP_OPTIONS, MAX_WINS, REFERRAL_RATE,
   rankPosition, rankName, freeWins as freeWinsFor, quoteOrder, bonusWinPrice,
 } from '../src/data/pricing.js';
-import { FREE_TRIAL, trialActive } from '../src/data/promo.js';
+import { getTrial } from './_lib/promo.js';
 
 // Prices and price math live in src/data/pricing.js (shared with the pricing page).
 // The client-submitted total is never trusted: the total is computed here. If the page
@@ -176,9 +176,10 @@ export default async function handler(req, res) {
   return res.status(200).json({ ok: true, total: computedTotal, token: reviewToken, price: q });
 }
 
-// ── Free trial: a new customer's first games are free (src/data/promo.js) ──
+// ── Free trial: a new customer's first games are free (timer set in /admin, see api/_lib/promo.js) ──
 async function freeTrial(res, { kv, authUser, userRecord, cleanDiscord, cleanIgn, cleanType, cleanFlash, cleanRegion }) {
-  if (!trialActive()) return res.status(410).json({ error: 'The free trial has ended.', trialOver: true });
+  const trial = await getTrial(kv);
+  if (!trial.active) return res.status(410).json({ error: 'The free trial has ended.', trialOver: true });
   if (!kv || !userRecord) return res.status(500).json({ error: 'Storage not configured.' });
   if (userRecord.trialToken) {
     return res.status(403).json({ error: `You already claimed your free games (order ${userRecord.trialToken}).`, trialUsed: true, token: userRecord.trialToken });
@@ -194,7 +195,7 @@ async function freeTrial(res, { kv, authUser, userRecord, cleanDiscord, cleanIgn
   }
 
   const token = newToken();
-  const games = FREE_TRIAL.games;
+  const games = trial.games;
   const summary = `Free trial: ${games} games · ${cleanType} · ${cleanRegion.toUpperCase()} server`;
   const order = {
     token,

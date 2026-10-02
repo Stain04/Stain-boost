@@ -4,7 +4,6 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import ChatLauncher from '../components/ChatLauncher.astro';
 import TrialBar from '../components/TrialBar.astro';
-import { TRIAL_ENDS_MS } from '../data/promo.js';
 import { SITE } from '../data/site.js';
 
 interface Props {
@@ -24,8 +23,6 @@ interface Props {
   alternates?: { en?: string; ar?: string }; // the same page in the other language (paths)
 }
 const { title, description, path, ogImage = '/og-image.jpg', ogType = 'website', noindex = false, schema = [], active = '', minimal = false, chat = true, promo = true, overlay = false, lang = 'en', alternates = {} } = Astro.props;
-// Free trial: only built into pages while it runs; after the deadline the head script hides it.
-const trialOn = Date.now() < TRIAL_ENDS_MS;
 const canonical = SITE.url + (path === '/' ? '/' : path);
 const ogUrl = SITE.url + ogImage;
 // hreflang: every page lists itself and its translation; x-default is the English page
@@ -67,7 +64,8 @@ const hreflang = Object.entries(alt).filter(([, p]) => p).map(([l, p]) => ({ l, 
   <meta name="twitter:image" content={ogUrl} />
   {schema.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
   <script is:inline>document.documentElement.classList.add('js');</script>
-  <script is:inline define:vars={{ trialEnd: TRIAL_ENDS_MS }}>if (Date.now() >= trialEnd) document.documentElement.classList.add('trial-over');</script>
+  <!-- free trial (timer set in /admin): show it before first paint if it was running last time; /api/status confirms -->
+  <script is:inline>try { var t = JSON.parse(localStorage.getItem('sb_trial_v1') || 'null'); if (t && t.endsAt > Date.now()) document.documentElement.classList.add('trial-on'); } catch (e) {}</script>
   <!-- Google Analytics: queued immediately, gtag.js loaded once the page is idle (keeps it off the critical path) -->
   <script is:inline define:vars={{ gaId: SITE.gaId }}>
     window.dataLayer = window.dataLayer || [];
@@ -93,12 +91,12 @@ const hreflang = Object.entries(alt).filter(([, p]) => p).map(([l, p]) => ({ l, 
   <div class="backdrop" aria-hidden="true"></div>
   {overlay ? (
     <div class="chrome-overlay">
-      {promo && trialOn && <TrialBar />}
+      {promo && <TrialBar />}
       <Nav active={active} overlay lang={lang} alternates={alternates} />
     </div>
   ) : (
     <>
-      {promo && trialOn && <TrialBar />}
+      {promo && <TrialBar />}
       <Nav active={active} lang={lang} alternates={alternates} />
     </>
   )}

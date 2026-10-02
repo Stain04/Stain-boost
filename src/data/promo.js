@@ -1,6 +1,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// PROMOS — time-limited offers. The dates are exact moments (with a timezone)
-// and the server enforces them, so a promo really ends when the site says it does.
+// PROMOS — time-limited offers. The free trial's timer is set by Stain in /admin (stored in KV,
+// read through api/_lib/promo.js); the dates below only apply until he has set it once.
+// The server enforces the window, so a promo really ends when the site says it does.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /** Free trial: a new customer's first 2 games are free — no payment, no order. */
