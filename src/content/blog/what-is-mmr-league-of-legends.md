@@ -67,7 +67,7 @@ order: 9
 <p>For most players, a targeted win boost is both faster and cheaper than the time investment of leveling a new account and re-earning your collection. You can read more about how boosting interacts with your account in our <a href="/blog/is-elo-boosting-worth-it">ELO boosting worth it guide</a>.</p>
 <div class="cta-box">
 <h3>Fix Your MMR With a Win Boost</h3>
-<p>Repair your LP gains and start climbing again. Select your rank, number of wins, and LP gain tier — instant price calculated.</p>
+<p>Repair your LP gains and start climbing again. Select your rank and number of wins — instant price calculated.</p>
 <a href="/pricing" class="btn-primary">
 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
 See Pricing

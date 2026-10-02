@@ -28,18 +28,18 @@ const TYPES = ['solo', 'duo'];
 function* rankCombos() {
   for (let ft = 0; ft < 8; ft++) for (let fd = 0; fd < 4; fd++) for (let tt = 0; tt < 8; tt++) for (let td = 0; td < 4; td++) {
     if (P.rankPosition(tt, td) <= P.rankPosition(ft, fd)) continue;
-    for (const type of TYPES) for (const lp of P.VALID_CURRENT_LP) for (const lpGain of P.VALID_LP_GAIN) yield { fromTier: ft, fromDiv: fd, toTier: tt, toDiv: td, type, lp, lpGain };
+    for (const type of TYPES) for (const lp of P.VALID_CURRENT_LP) yield { fromTier: ft, fromDiv: fd, toTier: tt, toDiv: td, type, lp };
   }
 }
 
 test('rank boost: v2 totals equal the live page for every combination', () => {
   let n = 0;
   for (const c of rankCombos()) {
-    const old = (oldRank(c.fromTier, c.fromDiv, c.toTier, c.toDiv, c.type, c.lp) * c.lpGain).toFixed(2);
+    const old = oldRank(c.fromTier, c.fromDiv, c.toTier, c.toDiv, c.type, c.lp).toFixed(2);
     assert.equal(P.rankBoostTotal(c).toFixed(2), old, JSON.stringify(c));
     n++;
   }
-  assert.ok(n > 15000);
+  assert.ok(n > 5000);
 });
 
 test('win boost: v2 totals equal the live page (pay for 5, get 6) for every rank, queue and 1–30 wins', () => {
@@ -67,8 +67,13 @@ test('order API charges exactly the page total', async () => {
   let n = 0;
   for (const c of rankCombos()) {
     if (n++ % 7) continue; // a large, even sample keeps the test fast
-    const r = await call(order, { discord: 'd', ign: 'x#1', orderType: 'rank_boost', fromTier: c.fromTier, fromDiv: c.fromDiv, toTier: c.toTier, toDiv: c.toDiv, type: c.type, currentLP: c.lp, lpGainMultiplier: c.lpGain }, {}, cookie);
+    const r = await call(order, { discord: 'd', ign: 'x#1', orderType: 'rank_boost', fromTier: c.fromTier, fromDiv: c.fromDiv, toTier: c.toTier, toDiv: c.toDiv, type: c.type, currentLP: c.lp }, {}, cookie);
     assert.equal(r.body.total, P.rankBoostTotal(c).toFixed(2), JSON.stringify(c));
+  }
+  // One price for everyone: an old page that still sends an LP-gain multiplier is charged the normal price.
+  for (const lpGainMultiplier of [1.4, 2]) {
+    const r = await call(order, { discord: 'd', ign: 'x#1', orderType: 'rank_boost', fromTier: 2, fromDiv: 2, toTier: 3, toDiv: 0, type: 'solo', currentLP: 10, lpGainMultiplier }, {}, cookie);
+    assert.equal(r.body.total, P.rankBoostTotal({ fromTier: 2, fromDiv: 2, toTier: 3, toDiv: 0, type: 'solo', lp: 10 }).toFixed(2));
   }
   for (const rank of Object.keys(P.WIN_PRICES)) for (const type of TYPES) for (const wins of [1, 4, 5, 9, 10, 30]) {
     const r = await call(order, { discord: 'd', ign: 'x#1', orderType: 'win_boost', rank, type, wins }, {}, cookie);

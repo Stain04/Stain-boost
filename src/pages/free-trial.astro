@@ -2,14 +2,14 @@
 // Time-limited free trial (settings in src/data/promo.js). Temporary page: noindex, not in the sitemap.
 import Base from '../layouts/Base.astro';
 import { FREE_TRIAL, TRIAL_ENDS_MS } from '../data/promo.js';
-import { DISCORD, STATS } from '../data/site.js';
+import { DISCORD, STATS, REGIONS } from '../data/site.js';
 
 const trialOn = Date.now() < TRIAL_ENDS_MS;
 const g = FREE_TRIAL.games;
 ---
 <Base
   title={`Free trial: your first ${g} games free – StainBoost`}
-  description={`New to StainBoost? Stain plays your first ${g} ranked games on the Middle East server for free — no payment, no card. Limited time.`}
+  description={`New to StainBoost? Stain plays your first ${g} ranked games on ME, EUW or EUNE for free — no payment, no card. Limited time.`}
   path="/free-trial"
   noindex
   promo={false}
@@ -34,7 +34,7 @@ const g = FREE_TRIAL.games;
           <p class="label">The small print</p>
           <ul>
             <li>New customers only — one free trial per account, Riot ID and Discord.</li>
-            <li>{g} ranked games on the Middle East server. It's a trial of the service, so wins aren't guaranteed.</li>
+            <li>{g} ranked games on your server: ME, EUW or EUNE. It's a trial of the service, so wins aren't guaranteed.</li>
             <li>Same safety as every order: offline mode, a VPN matched to your country, your Flash key. {STATS.bans} bans in {STATS.ordersCompleted}+ orders.</li>
             <li>Nothing to cancel, nothing charged. After the {g} games you order only if you want to.</li>
             <li>Claims close {FREE_TRIAL.endsLabel}.</li>
@@ -57,21 +57,20 @@ const g = FREE_TRIAL.games;
               <p class="hint">Stain messages you here to agree on a time.</p>
             </div>
             <div class="field">
+              <span class="field-label" id="ftServerL">Server</span>
+              <div class="ft-seg" role="radiogroup" aria-labelledby="ftServerL">
+                {REGIONS.filter((r) => r.live).map((r) => <label><input type="radio" name="region" value={r.code} checked={r.code === 'me'} /><span>{r.code.toUpperCase()}</span></label>)}
+              </div>
+            </div>
+            <div class="field">
               <span class="field-label" id="ftQueueL">How should Stain play?</span>
               <div class="ft-seg" role="radiogroup" aria-labelledby="ftQueueL">
                 <label><input type="radio" name="type" value="solo" checked /><span>Solo<small>On your account</small></span></label>
                 <label><input type="radio" name="type" value="duo" /><span>Duo<small>With you</small></span></label>
               </div>
             </div>
-            <div class="field">
-              <span class="field-label" id="ftFlashL">Flash key</span>
-              <div class="ft-seg" role="radiogroup" aria-labelledby="ftFlashL">
-                <label><input type="radio" name="flash" value="D" checked /><span>D</span></label>
-                <label><input type="radio" name="flash" value="F" /><span>F</span></label>
-              </div>
-            </div>
             <button class="btn btn-gold btn-block btn-lg" type="submit" data-submit>Claim my {g} free games</button>
-            <p class="ft-note">No payment · Middle East server · <a href={`/login?return=${encodeURIComponent('/free-trial?resume=1')}`} data-email-login>sign in with email instead</a></p>
+            <p class="ft-note">No payment · ME, EUW or EUNE · <a href={`/login?return=${encodeURIComponent('/free-trial?resume=1')}`} data-email-login>sign in with email instead</a></p>
             <p class="err" data-err role="alert" hidden></p>
           </form>
         )}
@@ -105,7 +104,8 @@ const g = FREE_TRIAL.games;
   }
   const read = () => ({
     ign: form.ign.value.trim(), discord: form.discord.value.trim(),
-    type: form.querySelector('input[name="type"]:checked').value, flash: form.querySelector('input[name="flash"]:checked').value,
+    type: form.querySelector('input[name="type"]:checked').value,
+    region: form.querySelector('input[name="region"]:checked').value,
   });
   const save = () => { try { localStorage.setItem(SAVED, JSON.stringify({ ...read(), ts: Date.now() })); } catch {} };
   function restore() {
@@ -114,7 +114,7 @@ const g = FREE_TRIAL.games;
       if (!s || Date.now() - s.ts > 3 * 3600e3) return false;
       form.ign.value = s.ign || ''; form.discord.value = s.discord || '';
       form.querySelector(`input[name="type"][value="${s.type === 'duo' ? 'duo' : 'solo'}"]`).checked = true;
-      form.querySelector(`input[name="flash"][value="${s.flash === 'F' ? 'F' : 'D'}"]`).checked = true;
+      if (['me', 'euw', 'eune'].includes(s.region)) form.querySelector(`input[name="region"][value="${s.region}"]`).checked = true;
       return true;
     } catch { return false; }
   }
@@ -181,7 +181,7 @@ const g = FREE_TRIAL.games;
       if (r.status === 401 && b.requireLogin) return goSignIn('discord');
       if (r.ok) {
         try { localStorage.removeItem(SAVED); } catch {}
-        track('trial_claim', { queue: d.type });
+        track('trial_claim', { queue: d.type, region: d.region });
         track('generate_lead', { value: 0, currency: 'USD' });
         return show(booked(b.token, d.type));
       }

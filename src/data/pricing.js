@@ -52,13 +52,7 @@ export const LP_OPTIONS = [
 /** Every LP value the order API accepts (10 = "0-20 LP" as sent by the old pricing page). */
 export const VALID_CURRENT_LP = [0, 10, 30, 50, 70, 90];
 
-/** Average LP gained per win. Fewer LP per win means more games, so a higher price. */
-export const LP_GAIN_OPTIONS = [
-  { value: 1.0, label: 'Normal', detail: '23+ LP per win' },
-  { value: 1.4, label: 'Low', detail: '16–22 LP per win' },
-  { value: 2.0, label: 'Very low', detail: '8–15 LP per win' },
-];
-export const VALID_LP_GAIN = LP_GAIN_OPTIONS.map(o => o.value);
+// LP gained per win no longer changes the price (owner decision, 2 Oct 2026): one price for everyone.
 
 // ── Extras & discounts ───────────────────────────────────────────────────────
 // Priced just under the cheapest competitor found (Sep 2026):
@@ -114,8 +108,8 @@ export function rankBoostBase(fromTier, fromDiv, toTier, toDiv, type, lp) {
 }
 
 /** Full rank boost price (unrounded). */
-export function rankBoostTotal({ fromTier, fromDiv, toTier, toDiv, type, lp = 0, lpGain = 1.0 }) {
-  return rankBoostBase(fromTier, fromDiv, toTier, toDiv, type, lp) * lpGain;
+export function rankBoostTotal({ fromTier, fromDiv, toTier, toDiv, type, lp = 0 }) {
+  return rankBoostBase(fromTier, fromDiv, toTier, toDiv, type, lp);
 }
 
 /** Number of free wins for a number of paid wins (pay for 5, get 6). */
@@ -152,7 +146,7 @@ const cents = (usd) => Math.round(Number(usd.toFixed(2)) * 100);
  * Everything is computed in whole cents so the page, the summary lines and the
  * server always agree to the cent. With no extras, total === the base price.
  *
- * o = { mode: 'rank'|'wins', type, fromTier, fromDiv, toTier, toDiv, lp, lpGain,
+ * o = { mode: 'rank'|'wins', type, fromTier, fromDiv, toTier, toDiv, lp,
  *       rank, wins, priority, bonusWin, referral, credit }
  */
 export function quoteOrder(o) {

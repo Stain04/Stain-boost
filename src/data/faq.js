@@ -48,6 +48,10 @@ export const FAQ = [
         a: 'Go to <a href="/pricing">Pricing</a>, choose Rank Boost or Net Wins, pick Solo or Duo, and add your Discord name and in-game name. Sign in with Discord (one click) and place the order. You then see how to pay, and your order appears in your dashboard.',
       },
       {
+        q: 'Which servers do you boost on?',
+        a: 'Middle East (<strong>ME</strong>), EU West (<strong>EUW</strong>) and EU Nordic & East (<strong>EUNE</strong>). Pick your server on the <a href="/pricing">Pricing</a> page. Prices are the same on all three.',
+      },
+      {
         q: 'How fast does the boost start?', top: true,
         a: 'Most orders begin <strong>within a few hours</strong> of payment being confirmed. Stain usually replies on Discord within minutes and gives you an exact start time.',
       },

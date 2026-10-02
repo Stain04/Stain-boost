@@ -13,11 +13,9 @@ import { getVerifiedReviews } from '../data/reviews.js';
 import { FAQ, faqSchema } from '../data/faq.js';
 import { tierOfWinRank } from '../data/ranks.js';
 import { boostProduct, breadcrumbs } from '../data/schema.js';
-import { FREE_TRIAL, TRIAL_ENDS_MS } from '../data/promo.js';
 import '../styles/pricing.css';
 
 const reviews = await getVerifiedReviews();
-const trialOn = Date.now() < TRIAL_ENDS_MS;
 const faqItems = FAQ.flatMap((g) => g.items).filter((i) => /pay|refund|start|banned|login|free win|loses/i.test(i.q));
 const divRows = [];
 RB_TIERS.slice(0, MASTERS).forEach((t, i) => {
@@ -26,7 +24,7 @@ RB_TIERS.slice(0, MASTERS).forEach((t, i) => {
     divRows.push({ tier: t, label: 'Diamond II–I', solo: divisionPrice(i, 2, 'solo'), duo: divisionPrice(i, 2, 'duo') });
   } else divRows.push({ tier: t, label: t, solo: divisionPrice(i, 0, 'solo'), duo: divisionPrice(i, 0, 'duo') });
 });
-const total = formatUSD(rankBoostTotal({ fromTier: 2, fromDiv: 2, toTier: 3, toDiv: 0, type: 'solo' }));
+const total = formatUSD(rankBoostTotal({ fromTier: 2, fromDiv: 2, toTier: 3, toDiv: 0, type: 'solo', lp: 10 }));
 ---
 <Base
   title="ELO Boost Prices – Middle East Server | Rank Boost & Net Wins | StainBoost"
@@ -35,49 +33,40 @@ const total = formatUSD(rankBoostTotal({ fromTier: 2, fromDiv: 2, toTier: 3, toD
   active="/pricing"
   schema={[boostProduct(reviews), faqSchema(faqItems), breadcrumbs([{ name: 'Home', path: '/' }, { name: 'Pricing', path: '/pricing' }])]}
 >
-  <section class="pr-head" data-loc="pricing_head">
-    <div class="wrap">
-      <p class="eyebrow">Order configurator</p>
-      <h1>Configure your <span class="grad">boost.</span></h1>
-      <p class="lead">The price updates as you choose — it's the final price, no hidden fees. Every game is played by Stain himself.</p>
-      <div class="trust-row">
-        <span class="chip">{STATS.ordersCompleted}+ orders</span>
-        <span class="chip">{STATS.bans} bans</span>
-        <span class="chip chip-green">Full refund if not started</span>
-        <span class="chip chip-gold">Net wins: pay for 5, get 6</span>
-      </div>
-      {trialOn && (
-        <a class="trial-strip" href="/free-trial" data-trial data-track="cta_click" data-track-location="pricing_trial">
-          <span class="ts-text"><b>🎁 First time? Try {FREE_TRIAL.games} games free before you pay.</b> No card, no order — then decide.</span>
-          <span class="ts-count" data-trial-countdown data-end={TRIAL_ENDS_MS}>Ends Fri 2 Oct</span>
-          <span class="ts-go">Claim free games →</span>
-        </a>
-      )}
-    </div>
-  </section>
-
-  <div class="wrap">
+  <div class="wrap pr-top">
     <OrderSuccess />
     <div class="layout" data-layout>
-      <Configurator />
+      <div class="cfg-col">
+        <header class="pr-head" data-loc="pricing_head">
+          <h1>League of Legends <span class="grad">ELO boost</span></h1>
+          <p class="lead">Pick your rank, see the price instantly. Every game is played by Stain himself — Challenger, #1 Master Yi on ME.</p>
+          <ul class="pr-trust">
+            <li>{STATS.ordersCompleted}+ orders</li>
+            <li>{STATS.bans} bans</li>
+            <li>Full refund if not started</li>
+            <li><a href="/reviews">Verified reviews</a></li>
+          </ul>
+        </header>
+        <Configurator />
+      </div>
       <OrderSummary />
     </div>
   </div>
 
-  <section class="section" data-loc="price_tables">
+  <section class="section prices" data-loc="price_tables">
     <div class="wrap">
-      <div class="section-head">
-        <p class="eyebrow">Price list</p>
-        <h2>Every price, up front.</h2>
-        <p>Rank boost is priced per division climbed; net wins per win. Duo means you play together with Stain on your own account.</p>
-      </div>
+      <details class="all-prices">
+        <summary>
+          <span><span class="eyebrow">Price list</span><span class="ap-title">See every price, up front</span><span class="ap-sub">Rank boost per division · net wins per win · solo and duo</span></span>
+          <span class="ap-plus" aria-hidden="true"></span>
+        </summary>
       <div class="tables">
         <div class="card">
           <table class="ptable">
             <caption>Rank boost<span class="cap-sub">Price per division</span></caption>
             <thead><tr><th scope="col">Tier</th><th scope="col">Solo</th><th scope="col">Duo</th></tr></thead>
             <tbody>
-              {divRows.map((r) => <tr><th scope="row"><RankEmblem tier={r.tier} size={24} />{r.label}</th><td>{formatUSD(r.solo)}</td><td class="duo">{formatUSD(r.duo)}</td></tr>)}
+              {divRows.map((r) => <tr><th scope="row"><RankEmblem tier={r.tier} size={34} />{r.label}</th><td>{formatUSD(r.solo)}</td><td class="duo">{formatUSD(r.duo)}</td></tr>)}
             </tbody>
           </table>
         </div>
@@ -86,11 +75,12 @@ const total = formatUSD(rankBoostTotal({ fromTier: 2, fromDiv: 2, toTier: 3, toD
             <caption>Net wins<span class="cap-sub">Price per win · pay for 5, get 6</span></caption>
             <thead><tr><th scope="col">Rank</th><th scope="col">Solo</th><th scope="col">Duo</th></tr></thead>
             <tbody>
-              {Object.entries(WIN_PRICES).map(([name, p]) => <tr><th scope="row"><RankEmblem tier={tierOfWinRank(name)} size={24} />{name.replace('-', '–')}</th><td>{formatUSD(p.solo)}</td><td class="duo">{formatUSD(p.duo)}</td></tr>)}
+              {Object.entries(WIN_PRICES).map(([name, p]) => <tr><th scope="row"><RankEmblem tier={tierOfWinRank(name)} size={34} />{name.replace('-', '–')}</th><td>{formatUSD(p.solo)}</td><td class="duo">{formatUSD(p.duo)}</td></tr>)}
             </tbody>
           </table>
         </div>
       </div>
+      </details>
     </div>
   </section>
 
@@ -116,7 +106,7 @@ const total = formatUSD(rankBoostTotal({ fromTier: 2, fromDiv: 2, toTier: 3, toD
     </div>
   </section>
 
-  <StickyOrderBar slot="after" watch="[data-summary] [data-submit]" label="Silver II → Gold IV" price={total} href="#sum-route" cta="Review order" />
+  <StickyOrderBar slot="after" watch="[data-summary] [data-submit]" label="Silver II → Gold IV" price={total} href="#sum-title" cta="Boost my rank" />
 </Base>
 
 <script>
