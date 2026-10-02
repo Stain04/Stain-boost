@@ -123,9 +123,6 @@
 .details { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 @media (max-width: 640px) { .details { grid-template-columns: 1fr; } }
 .input[aria-invalid='true'] { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(252, 165, 165, .16); }
-.notify { display: grid; gap: 10px; padding: 16px; border-radius: 16px; box-shadow: inset 0 0 0 1px rgba(245, 198, 106, .35); background: rgba(245, 198, 106, .04); }
-.notify-row { display: flex; gap: 8px; flex-wrap: wrap; }
-.notify-row .input { flex: 1 1 220px; }
 
 /* tables */
 .tables { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }

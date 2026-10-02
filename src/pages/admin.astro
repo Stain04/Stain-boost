@@ -197,7 +197,7 @@ import Base from '../layouts/Base.astro';
     const o = current;
     const row = (k, v) => `<div><dt>${k}</dt><dd>${esc(v ?? '—')}</dd></div>`;
     $('[data-meta]').innerHTML = row('Token', o.token) + row('Status', STATUS[o.status] || o.status) + row('Order', o.summary) + row('Total', o.total ? '$' + o.total : '—')
-      + row('IGN', o.ign) + row('Discord', o.discord) + row('Queue', o.type) + row('Flash', o.flash)
+      + row('IGN', o.ign) + row('Discord', o.discord) + row('Server', (o.region || 'me').toUpperCase()) + row('Queue', o.type) + row('Flash', o.flash)
       + row('Payment', o.paymentClaim ? `Customer says: ${o.paymentClaim.method}, ${ago(o.paymentClaim.ts)}` : 'No claim yet')
       + row('Referral', o.referral ? `${o.referral.code}${o.referral.credited ? ` · $${o.referral.credited} credited` : ''}` : '—')
       + row('Credit used', o.creditUsed ? '$' + (+o.creditUsed).toFixed(2) : '—')

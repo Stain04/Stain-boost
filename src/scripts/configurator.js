@@ -255,19 +255,6 @@ function init() {
   }
   document.addEventListener('sb:user', (e) => { user = e.detail; loadAccount(); });
 
-  // ── EU waitlist ───────────────────────────────────────────────────────────
-  $('[data-notify-send]', form)?.addEventListener('click', async () => {
-    const contact = $('#notifyContact').value.trim();
-    const msg = $('[data-notify-msg]', form);
-    if (contact.length < 3) { msg.textContent = 'Add your Discord username or email.'; return; }
-    try {
-      const r = await fetch('/api/notify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ region: val('region'), contact }) });
-      const d = await r.json().catch(() => ({}));
-      msg.textContent = r.ok ? `You're on the list — we'll message you when ${val('region').toUpperCase()} opens.` : (d.error || 'Something went wrong. Try again.');
-      if (r.ok) track('notify_signup', { region: val('region') });
-    } catch { msg.textContent = 'Network error. Try again.'; }
-  });
-
   // ── Pending order (kept through sign-in) ──────────────────────────────────
   function savePending(s) {
     try { localStorage.setItem(PENDING, JSON.stringify({ ...s, referral: acct.referral, ts: Date.now(), lpConfirmedKey })); } catch {}
@@ -276,6 +263,7 @@ function init() {
     setRadio('mode', o.mode === 'wins' ? 'wins' : 'rank');
     setRadio('type', o.type === 'duo' ? 'duo' : 'solo');
     setRadio('flash', o.flash === 'F' ? 'F' : 'D');
+    if (['me', 'euw', 'eune'].includes(o.region)) setRadio('region', o.region);
     if (Number.isInteger(o.fromTier)) setRadio('fromTier', o.fromTier);
     if (Number.isInteger(o.fromDiv)) setRadio('fromDiv', o.fromDiv);
     constrain();

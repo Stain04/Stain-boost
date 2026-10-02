@@ -57,7 +57,7 @@ export default async function handler(req, res) {
   const userRecord = kv ? parseRecord(await kv.get(`user:${authUser.id}`)) : null;
 
   if (body.orderType === 'free_trial') {
-    return freeTrial(res, { kv, authUser, userRecord, cleanDiscord, cleanIgn, cleanType, cleanFlash });
+    return freeTrial(res, { kv, authUser, userRecord, cleanDiscord, cleanIgn, cleanType, cleanFlash, cleanRegion });
   }
 
   // ── What is being ordered ──
@@ -179,7 +179,7 @@ export default async function handler(req, res) {
 }
 
 // ── Free trial: a new customer's first games are free (src/data/promo.js) ──
-async function freeTrial(res, { kv, authUser, userRecord, cleanDiscord, cleanIgn, cleanType, cleanFlash }) {
+async function freeTrial(res, { kv, authUser, userRecord, cleanDiscord, cleanIgn, cleanType, cleanFlash, cleanRegion }) {
   if (!trialActive()) return res.status(410).json({ error: 'The free trial has ended.', trialOver: true });
   if (!kv || !userRecord) return res.status(500).json({ error: 'Storage not configured.' });
   if (userRecord.trialToken) {
@@ -197,7 +197,7 @@ async function freeTrial(res, { kv, authUser, userRecord, cleanDiscord, cleanIgn
 
   const token = newToken();
   const games = FREE_TRIAL.games;
-  const summary = `Free trial: ${games} games · ${cleanType}`;
+  const summary = `Free trial: ${games} games · ${cleanType} · ${cleanRegion.toUpperCase()} server`;
   const order = {
     token,
     status: 'queued',
@@ -206,6 +206,7 @@ async function freeTrial(res, { kv, authUser, userRecord, cleanDiscord, cleanIgn
     total: '0.00',
     type: cleanType,
     flash: cleanFlash,
+    region: cleanRegion,
     ign: cleanIgn,
     discord: cleanDiscord,
     userId: authUser.id,
@@ -236,7 +237,7 @@ async function freeTrial(res, { kv, authUser, userRecord, cleanDiscord, cleanIgn
   await notifyStain({
     title: `🎁 New FREE TRIAL (${games} games)`,
     color: 0x34d399,
-    subject: `🎁 Free trial — ${cleanIgn} (${games} games, ${cleanType})`,
+    subject: `🎁 Free trial — ${cleanIgn} (${games} games, ${cleanType}, ${cleanRegion.toUpperCase()})`,
     discord: cleanDiscord, ign: cleanIgn, type: cleanType, flash: cleanFlash, summary, total: '0.00', token,
   });
   return res.status(200).json({ ok: true, trial: true, total: '0.00', token });
