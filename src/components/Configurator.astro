@@ -24,12 +24,12 @@ const divName = (t, d) => (t === MASTERS ? 'Master' : `${RB_TIERS[t]} ${RB_DIVS[
     <fieldset class="rank-box">
       <legend class="visually-hidden">Current rank</legend>
       <div class="rb-head">
-        <span class="rb-emblem">{RB_TIERS.map((t, i) => <span data-from-emblem={i} hidden={i !== def.fromTier}><RankEmblem tier={t} size={52} /></span>)}</span>
+        <span class="rb-emblem">{RB_TIERS.map((t, i) => <span data-from-emblem={i} hidden={i !== def.fromTier}><RankEmblem tier={t} size={76} loading="eager" /></span>)}</span>
         <span class="rb-title"><small>Current rank</small><b data-from-name>{divName(def.fromTier, def.fromDiv)}</b></span>
       </div>
       <div class="tiers" role="radiogroup" aria-label="Current tier">
         {RB_TIERS.slice(0, MASTERS).map((t, i) => (
-          <label class="tier" title={t}><input type="radio" name="fromTier" value={i} checked={i === def.fromTier} /><span><RankEmblem tier={t} size={30} /><b>{t}</b></span></label>
+          <label class="tier" title={t}><input type="radio" name="fromTier" value={i} checked={i === def.fromTier} /><span><RankEmblem tier={t} size={46} loading="eager" /><b>{t}</b></span></label>
         ))}
       </div>
       <div class="seg divs" role="radiogroup" aria-label="Current division">
@@ -48,12 +48,12 @@ const divName = (t, d) => (t === MASTERS ? 'Master' : `${RB_TIERS[t]} ${RB_DIVS[
     <fieldset class="rank-box">
       <legend class="visually-hidden">Desired rank</legend>
       <div class="rb-head">
-        <span class="rb-emblem">{RB_TIERS.map((t, i) => <span data-to-emblem={i} hidden={i !== def.toTier}><RankEmblem tier={t} size={52} /></span>)}</span>
+        <span class="rb-emblem">{RB_TIERS.map((t, i) => <span data-to-emblem={i} hidden={i !== def.toTier}><RankEmblem tier={t} size={76} loading="eager" /></span>)}</span>
         <span class="rb-title"><small>Desired rank</small><b data-to-name>{divName(def.toTier, def.toDiv)}</b></span>
       </div>
       <div class="tiers" role="radiogroup" aria-label="Desired tier">
         {RB_TIERS.map((t, i) => (
-          <label class="tier" title={t}><input type="radio" name="toTier" value={i} checked={i === def.toTier} disabled={i < def.fromTier} /><span><RankEmblem tier={t} size={30} /><b>{t}</b></span></label>
+          <label class="tier" title={t}><input type="radio" name="toTier" value={i} checked={i === def.toTier} disabled={i < def.fromTier} /><span><RankEmblem tier={t} size={46} loading="eager" /><b>{t}</b></span></label>
         ))}
       </div>
       <div class="seg divs" role="radiogroup" aria-label="Desired division" data-to-div>
@@ -68,7 +68,7 @@ const divName = (t, d) => (t === MASTERS ? 'Master' : `${RB_TIERS[t]} ${RB_DIVS[
       <legend class="rb-label">Your current rank</legend>
       <div class="wranks" role="radiogroup" aria-label="Current rank">
         {winRanks.map((r, i) => (
-          <label class="wrank"><input type="radio" name="winRank" value={i} checked={r === 'Gold'} /><span><RankEmblem tier={tierOfWinRank(r)} size={30} /><b>{r.replace('-', '–')}</b><small data-win-price={r}>{formatUSD(WIN_PRICES[r].solo)}/win</small></span></label>
+          <label class="wrank"><input type="radio" name="winRank" value={i} checked={r === 'Gold'} /><span><RankEmblem tier={tierOfWinRank(r)} size={46} loading="eager" /><b>{r.replace('-', '–')}</b><small data-win-price={r}>{formatUSD(WIN_PRICES[r].solo)}/win</small></span></label>
         ))}
       </div>
     </fieldset>

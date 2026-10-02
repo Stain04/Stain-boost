@@ -1,11 +1,9 @@
 ---
-import { TIER_STYLE } from '../data/ranks.js';
-interface Props { tier: string; size?: number; class?: string }
-const { tier, size = 40, class: cls = '' } = Astro.props;
-const t = TIER_STYLE[tier] ?? TIER_STYLE.Iron;
+// A League rank emblem (public/img/ranks/, 4:3). `size` is the width in CSS px.
+// Above-the-fold pickers pass loading="eager" so a newly picked rank never shows a gap.
+import { RANK_IMAGES } from '../data/ranks.js';
+interface Props { tier: string; size?: number; class?: string; loading?: 'lazy' | 'eager' }
+const { tier, size = 40, class: cls = '', loading = 'lazy' } = Astro.props;
+const file = RANK_IMAGES[tier] ?? 'iron';
 ---
-<svg class={`emblem ${cls}`} viewBox="0 0 48 48" width={size} height={size} style={`color:${t.color}`} aria-hidden="true">
-  <polygon points={t.shape} fill="currentColor" fill-opacity=".14" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
-  <polygon points={t.shape} transform="translate(24 24) scale(.52) translate(-24 -24)" fill="currentColor" fill-opacity=".6" />
-  <circle cx="24" cy="24" r="2.6" fill="#fff" fill-opacity=".85" />
-</svg>
+<img class={`emblem ${cls}`} src={`/img/ranks/${file}.webp`} width={size} height={Math.round(size * 0.75)} alt="" loading={loading} decoding="async" fetchpriority="low" />

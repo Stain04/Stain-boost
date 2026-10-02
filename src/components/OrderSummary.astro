@@ -19,13 +19,13 @@ const priority = formatUSD(quoteOrder({ ...def, priority: true }).priority);
 
     <div class="route">
       <span class="rt-side">
-        <span class="rt-emb">{RB_TIERS.map((t, i) => <span data-rt-emblem-from={i} hidden={i !== def.fromTier}><RankEmblem tier={t} size={34} /></span>)}</span>
+        <span class="rt-emb">{RB_TIERS.map((t, i) => <span data-rt-emblem-from={i} hidden={i !== def.fromTier}><RankEmblem tier={t} size={50} loading="eager" /></span>)}</span>
         <span class="rt-txt"><small data-rt-from-label>Current</small><b data-rt-from>Silver II</b></span>
       </span>
       <span class="rt-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg></span>
       <span class="rt-side rt-to">
         <span class="rt-txt"><small data-rt-to-label>Target</small><b data-rt-to>Gold IV</b></span>
-        <span class="rt-emb">{RB_TIERS.map((t, i) => <span data-rt-emblem-to={i} hidden={i !== def.toTier}><RankEmblem tier={t} size={34} /></span>)}</span>
+        <span class="rt-emb">{RB_TIERS.map((t, i) => <span data-rt-emblem-to={i} hidden={i !== def.toTier}><RankEmblem tier={t} size={50} loading="eager" /></span>)}</span>
       </span>
     </div>
     <p class="sum-meta"><span id="sum-route" data-sum-route hidden>Silver II → Gold IV</span><span data-sum-meta>2 divisions · Solo · ME</span></p>
@@ -169,5 +169,5 @@ const priority = formatUSD(quoteOrder({ ...def, priority: true }).priority);
   .pay-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 8px; font-size: .78rem; color: var(--muted); }
   .pay-pill { padding: 3px 10px; border-radius: 999px; color: var(--text); background: rgba(246, 242, 255, .06); }
   @media (max-width: 1000px) { .summary { position: static; } }
-  @media (max-width: 400px) { .sum-card { padding: 16px; } .route { padding: 10px; } .rt-emb :global(svg) { width: 28px; height: 28px; } .q-opt span { padding: 8px; } }
+  @media (max-width: 400px) { .sum-card { padding: 16px; } .route { padding: 10px; } .rt-emb :global(img) { width: 40px; height: 30px; } .q-opt span { padding: 8px; } }
 </style>

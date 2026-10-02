@@ -66,7 +66,7 @@ const total = formatUSD(rankBoostTotal({ fromTier: 2, fromDiv: 2, toTier: 3, toD
             <caption>Rank boost<span class="cap-sub">Price per division</span></caption>
             <thead><tr><th scope="col">Tier</th><th scope="col">Solo</th><th scope="col">Duo</th></tr></thead>
             <tbody>
-              {divRows.map((r) => <tr><th scope="row"><RankEmblem tier={r.tier} size={24} />{r.label}</th><td>{formatUSD(r.solo)}</td><td class="duo">{formatUSD(r.duo)}</td></tr>)}
+              {divRows.map((r) => <tr><th scope="row"><RankEmblem tier={r.tier} size={34} />{r.label}</th><td>{formatUSD(r.solo)}</td><td class="duo">{formatUSD(r.duo)}</td></tr>)}
             </tbody>
           </table>
         </div>
@@ -75,7 +75,7 @@ const total = formatUSD(rankBoostTotal({ fromTier: 2, fromDiv: 2, toTier: 3, toD
             <caption>Net wins<span class="cap-sub">Price per win · pay for 5, get 6</span></caption>
             <thead><tr><th scope="col">Rank</th><th scope="col">Solo</th><th scope="col">Duo</th></tr></thead>
             <tbody>
-              {Object.entries(WIN_PRICES).map(([name, p]) => <tr><th scope="row"><RankEmblem tier={tierOfWinRank(name)} size={24} />{name.replace('-', '–')}</th><td>{formatUSD(p.solo)}</td><td class="duo">{formatUSD(p.duo)}</td></tr>)}
+              {Object.entries(WIN_PRICES).map(([name, p]) => <tr><th scope="row"><RankEmblem tier={tierOfWinRank(name)} size={34} />{name.replace('-', '–')}</th><td>{formatUSD(p.solo)}</td><td class="duo">{formatUSD(p.duo)}</td></tr>)}
             </tbody>
           </table>
         </div>
