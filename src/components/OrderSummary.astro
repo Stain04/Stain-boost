@@ -1,6 +1,6 @@
 ---
-// Checkout box (right side of /pricing): the order, the total, add-ons, the Riot ID and the
-// order button. Driven by src/scripts/configurator.js.
+// Checkout (step 5 of /pricing): the order, the total, add-ons, the Riot ID and the order
+// button. Driven by src/scripts/configurator.js.
 import StatusChip from './StatusChip.astro';
 import Guarantees from './Guarantees.astro';
 import { quoteOrder, formatUSD, LP_OPTIONS, REFERRAL_RATE, BONUS_WIN_PRICE } from '../data/pricing.js';
@@ -9,11 +9,12 @@ const def = { mode: 'rank', fromTier: 2, fromDiv: 2, toTier: 3, toDiv: 0, type: 
 const total = formatUSD(quoteOrder(def).total);
 const priority = formatUSD(quoteOrder({ ...def, priority: true }).priority);
 ---
-<aside class="summary" data-summary aria-labelledby="sum-route" data-loc="summary">
+<section class="summary wstep" data-summary data-step="5" aria-labelledby="sum-route" data-loc="summary" hidden>
   <div class="card sum-card">
     <p class="eyebrow">Your order</p>
-    <h2 id="sum-route" class="sum-route" data-sum-route>Silver II → Gold IV</h2>
+    <h2 id="sum-route" class="sum-route" data-sum-route tabindex="-1">Silver II → Gold IV</h2>
     <p class="sum-meta" data-sum-meta>2 divisions · Solo · ME</p>
+    <p class="sum-edit"><button type="button" data-goto="2">Change rank</button><button type="button" data-goto="4">Change queue or server</button></p>
 
     <div class="total-row">
       <span class="total num" data-total aria-live="polite">{total}</span>
@@ -64,13 +65,16 @@ const priority = formatUSD(quoteOrder({ ...def, priority: true }).priority);
     </details>
     <div class="status-row"><StatusChip /></div>
   </div>
-</aside>
+</section>
 
 <style>
-  .summary { position: sticky; inset-block-start: calc(var(--nav-h) + 20px); display: grid; grid-template-columns: minmax(0, 1fr); }
+  .summary { display: grid; grid-template-columns: minmax(0, 1fr); width: min(100%, 560px); margin-inline: auto; }
   .sum-card { display: grid; gap: 14px; background: radial-gradient(120% 80% at 100% 0%, rgba(196, 181, 253, .1), transparent 60%), linear-gradient(180deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .018)); box-shadow: inset 0 0 0 1px rgba(196, 181, 253, .22), 0 40px 80px -50px rgba(0, 0, 0, .9); }
-  .sum-route { font-family: var(--font-display); font-weight: 400; font-size: 1.85rem; line-height: 1.1; color: var(--text-strong); margin-block-start: -6px; }
+  .sum-route { font-family: var(--font-display); font-weight: 400; font-size: 1.85rem; line-height: 1.1; color: var(--text-strong); margin-block-start: -6px; outline: none; }
   .sum-meta { color: var(--muted); font-size: .92rem; margin-block-start: -10px; }
+  .sum-edit { display: flex; flex-wrap: wrap; gap: 4px 18px; margin-block-start: -8px; }
+  .sum-edit button { padding: 0; border: 0; background: none; font-size: .86rem; color: var(--lav); text-decoration: underline; text-decoration-color: rgba(196, 181, 253, .4); text-underline-offset: 4px; cursor: pointer; }
+  .sum-edit button:hover { text-decoration-color: var(--lav); }
   .total-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-block: 10px; box-shadow: inset 0 1px 0 rgba(246, 242, 255, .08), inset 0 -1px 0 rgba(246, 242, 255, .08); }
   .total { font-size: clamp(2.8rem, 2vw + 2rem, 3.4rem); font-weight: 400; color: var(--text-strong); line-height: 1; }
   .no-fees { font-size: .78rem; color: var(--muted); text-align: end; line-height: 1.35; }
@@ -103,5 +107,4 @@ const priority = formatUSD(quoteOrder({ ...def, priority: true }).priority);
   .status-row:empty { display: none; }
   .pay { font-size: .84rem; color: var(--muted); }
   .pay strong { color: var(--text); font-weight: 400; }
-  @media (max-width: 1000px) { .summary { position: static; } }
 </style>

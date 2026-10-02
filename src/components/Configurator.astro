@@ -1,106 +1,118 @@
 ---
-// Price calculator (left side of /pricing). Server-rendered with the default order
-// (Silver II → Gold IV, solo, ME); src/scripts/configurator.js makes it live.
-// The checkout box on the right is OrderSummary.astro. All prices come from src/data/pricing.js.
+// Step-by-step order (steps 1–4 of /pricing; step 5, the checkout, is OrderSummary.astro).
+// Server-rendered with the default order (Silver II → Gold IV, solo, ME); src/scripts/configurator.js
+// makes it live and moves between the steps. All prices come from src/data/pricing.js.
 import RankEmblem from './RankEmblem.astro';
-import { WIN_PRICES, RB_TIERS, RB_DIVS, MASTERS, LP_OPTIONS, MAX_WINS, divisionPrice, formatUSD } from '../data/pricing.js';
-import { REGIONS } from '../data/site.js';
+import { WIN_PRICES, RB_TIERS, RB_DIVS, MASTERS, LP_OPTIONS, MAX_WINS, divisionPrice, formatUSD, lowestWinPrice } from '../data/pricing.js';
+import { REGIONS, STATS } from '../data/site.js';
 import { tierOfWinRank } from '../data/ranks.js';
 
 const def = { fromTier: 2, fromDiv: 2, toTier: 3, toDiv: 0 };
 const defLp = LP_OPTIONS[0].value;
 const winRanks = Object.keys(WIN_PRICES);
-const minDiv = divisionPrice(0, 0, 'solo');
 const servers = REGIONS.filter((r) => r.live);
 ---
-<form class="cfg calc card" data-cfg novalidate data-loc="configurator">
-  <div class="tabs" role="radiogroup" aria-label="Type of boost">
-    <label class="tab"><input type="radio" name="mode" value="rank" checked /><span><b>Rank boost</b><small>From {formatUSD(minDiv)} per division</small></span></label>
-    <label class="tab"><input type="radio" name="mode" value="wins" /><span><b>Net wins</b><small>Pay for 5, get 6</small></span></label>
-  </div>
+<form class="cfg" data-cfg novalidate data-loc="configurator">
+  <!-- 1 · WHAT -->
+  <section class="wstep" data-step="1" aria-labelledby="q1">
+    <h2 class="q" id="q1" tabindex="-1">What do you need?</h2>
+    <div class="big-choices" role="radiogroup" aria-labelledby="q1">
+      <label class="big"><input type="radio" name="mode" value="rank" checked /><span>
+        <b>Rank boost</b>
+        <em>From {formatUSD(divisionPrice(0, 0, 'solo'))} per division</em>
+        <small>Pick a target rank. Stain plays until you're there.</small>
+      </span></label>
+      <label class="big"><input type="radio" name="mode" value="wins" /><span>
+        <b>Net wins</b>
+        <em>From {formatUSD(lowestWinPrice())} per win · pay for 5, get 6</em>
+        <small>Pay per win. Good for a small push or fixing low LP gains.</small>
+      </span></label>
+    </div>
+    <p class="step-trust">Played by Stain himself · {STATS.bans} bans in {STATS.ordersCompleted}+ orders · Full refund if not started</p>
+  </section>
 
-  <!-- RANK BOOST: from → to -->
-  <div class="ranks" data-show="rank">
-    <fieldset class="pick">
-      <legend class="pick-title">Current rank</legend>
+  <!-- 2 · NOW -->
+  <section class="wstep" data-step="2" aria-labelledby="q2" hidden>
+    <div data-show="rank">
+      <h2 class="q" id="q2" tabindex="-1">Where are you now?</h2>
       <div class="tiers" role="radiogroup" aria-label="Current tier">
         {RB_TIERS.slice(0, MASTERS).map((t, i) => (
-          <label class="tier"><input type="radio" name="fromTier" value={i} checked={i === def.fromTier} /><span><RankEmblem tier={t} size={30} /><b>{t}</b></span></label>
+          <label class="tier"><input type="radio" name="fromTier" value={i} checked={i === def.fromTier} /><span><RankEmblem tier={t} size={44} /><b>{t}</b></span></label>
         ))}
       </div>
-      <div class="seg divs" role="radiogroup" aria-label="Current division">
+      <p class="sub-q" id="fromDivL">Division</p>
+      <div class="seg divs" role="radiogroup" aria-labelledby="fromDivL">
         {RB_DIVS.map((d, i) => <label><input type="radio" name="fromDiv" value={i} checked={i === def.fromDiv} /><span>{d}</span></label>)}
       </div>
-    </fieldset>
-
-    <span class="to-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6" /></svg></span>
-
-    <fieldset class="pick">
-      <legend class="pick-title">Desired rank</legend>
-      <div class="tiers" role="radiogroup" aria-label="Desired tier">
-        {RB_TIERS.map((t, i) => (
-          <label class="tier"><input type="radio" name="toTier" value={i} checked={i === def.toTier} disabled={i < def.fromTier} /><span><RankEmblem tier={t} size={30} /><b>{t}</b></span></label>
-        ))}
-      </div>
-      <div class="seg divs" role="radiogroup" aria-label="Desired division" data-to-div>
-        {RB_DIVS.map((d, i) => <label><input type="radio" name="toDiv" value={i} checked={i === def.toDiv} /><span>{d}</span></label>)}
-      </div>
-    </fieldset>
-  </div>
-
-  <!-- NET WINS: rank + number of wins -->
-  <div class="winsbox" data-show="wins" hidden>
-    <fieldset class="pick">
-      <legend class="pick-title">Your current rank</legend>
+      <details class="more">
+        <summary>Already have LP in this division?</summary>
+        <div class="more-body">
+          <p class="hint">You only pay for the part of the division that's left.</p>
+          <div class="seg seg-wrap" role="radiogroup" aria-label="LP in your current division">
+            {LP_OPTIONS.map((o) => <label><input type="radio" name="lp" value={o.value} checked={o.value === defLp} /><span>{o.label}<small data-lp-save={o.value}></small></span></label>)}
+          </div>
+        </div>
+      </details>
+    </div>
+    <div data-show="wins" hidden>
+      <h2 class="q" tabindex="-1">What's your rank now?</h2>
       <div class="wranks" role="radiogroup" aria-label="Current rank">
         {winRanks.map((r, i) => (
-          <label class="wrank"><input type="radio" name="winRank" value={i} checked={r === 'Gold'} /><span><RankEmblem tier={tierOfWinRank(r)} size={28} /><b>{r.replace('-', '–')}</b><small data-win-price={r}>{formatUSD(WIN_PRICES[r].solo)}/win</small></span></label>
+          <label class="wrank"><input type="radio" name="winRank" value={i} checked={r === 'Gold'} /><span><RankEmblem tier={tierOfWinRank(r)} size={40} /><b>{r.replace('-', '–')}</b><small data-win-price={r}>{formatUSD(WIN_PRICES[r].solo)}/win</small></span></label>
         ))}
       </div>
-    </fieldset>
-    <fieldset class="pick">
-      <legend class="pick-title">Net wins you pay for</legend>
+    </div>
+  </section>
+
+  <!-- 3 · GOAL -->
+  <section class="wstep" data-step="3" aria-labelledby="q3" hidden>
+    <div data-show="rank">
+      <h2 class="q" id="q3" tabindex="-1">Where do you want to be?</h2>
+      <div class="tiers" role="radiogroup" aria-label="Desired tier">
+        {RB_TIERS.map((t, i) => (
+          <label class="tier"><input type="radio" name="toTier" value={i} checked={i === def.toTier} disabled={i < def.fromTier} /><span><RankEmblem tier={t} size={44} /><b>{t}</b></span></label>
+        ))}
+      </div>
+      <div data-to-div>
+        <p class="sub-q" id="toDivL">Division</p>
+        <div class="seg divs" role="radiogroup" aria-labelledby="toDivL">
+          {RB_DIVS.map((d, i) => <label><input type="radio" name="toDiv" value={i} checked={i === def.toDiv} /><span>{d}</span></label>)}
+        </div>
+      </div>
+    </div>
+    <div data-show="wins" hidden>
+      <h2 class="q" tabindex="-1">How many wins?</h2>
       <div class="wins">
         <button type="button" class="wbtn" data-wins-step="-1" aria-label="One win less">−</button>
-        <label class="visually-hidden" for="wins">Net wins</label>
+        <label class="visually-hidden" for="wins">Net wins you pay for</label>
         <input id="wins" name="wins" type="number" inputmode="numeric" min="1" max={MAX_WINS} value="5" class="wins-input num" />
         <button type="button" class="wbtn" data-wins-step="1" aria-label="One win more">+</button>
-        <div class="wins-get" data-wins-get>You get <b>6 wins</b> <span class="gold">(1 free)</span></div>
       </div>
+      <p class="wins-get" data-wins-get>You get <b>6 wins</b> <span class="gold">(1 free)</span></p>
       <div class="chips" data-wins-chips>
         {[3, 5, 10, 15, 20].map((n) => <button type="button" class="wchip" data-wins={n}>{n}{n >= 5 && <span class="free">+{Math.floor(n / 5)} free</span>}</button>)}
       </div>
-      <p class="hint">Only net wins count (wins minus losses), so Stain plays until every win is in.</p>
-    </fieldset>
-  </div>
+      <p class="hint">Every 5 wins you pay for come with 1 free. Only net wins count (wins minus losses), so Stain plays until every win is in.</p>
+    </div>
+  </section>
 
-  <!-- QUEUE + SERVER -->
-  <div class="opts">
-    <div class="opt">
-      <span class="opt-label" id="queueL">Queue</span>
-      <div class="seg" role="radiogroup" aria-labelledby="queueL">
-        <label><input type="radio" name="type" value="solo" checked /><span>Solo</span></label>
-        <label><input type="radio" name="type" value="duo" /><span>Duo</span></label>
-      </div>
-      <p class="opt-hint" data-queue-hint>Stain plays on your account, in offline mode with a VPN matched to your country.</p>
+  <!-- 4 · HOW -->
+  <section class="wstep" data-step="4" aria-labelledby="q4" hidden>
+    <h2 class="q" id="q4" tabindex="-1">How should Stain play?</h2>
+    <div class="big-choices" role="radiogroup" aria-labelledby="q4">
+      <label class="big"><input type="radio" name="type" value="solo" checked /><span>
+        <b>Solo</b>
+        <small>Stain logs in and plays on your account, in offline mode with a VPN matched to your country.</small>
+      </span></label>
+      <label class="big"><input type="radio" name="type" value="duo" /><span>
+        <b>Duo</b>
+        <small>You play your own account together with Stain. No password shared — costs a bit more.</small>
+      </span></label>
     </div>
-    <div class="opt">
-      <span class="opt-label" id="serverL">Server</span>
-      <div class="seg" role="radiogroup" aria-labelledby="serverL">
-        {servers.map((r) => <label><input type="radio" name="region" value={r.code} checked={r.code === 'me'} /><span>{r.code.toUpperCase()}</span></label>)}
-      </div>
-      <p class="opt-hint">Same price on every server.</p>
+    <p class="sub-q" id="serverL">Server</p>
+    <div class="seg divs" role="radiogroup" aria-labelledby="serverL">
+      {servers.map((r) => <label><input type="radio" name="region" value={r.code} checked={r.code === 'me'} /><span>{r.code.toUpperCase()}</span></label>)}
     </div>
-  </div>
-
-  <!-- rarely needed: LP already earned in the current division -->
-  <details class="more" data-show="rank">
-    <summary>More options</summary>
-    <div class="more-body">
-      <p class="opt-label" id="lpL">LP in your current division <span class="hint-inline">— you only pay for the part left</span></p>
-      <div class="seg seg-wrap" role="radiogroup" aria-labelledby="lpL">
-        {LP_OPTIONS.map((o) => <label><input type="radio" name="lp" value={o.value} checked={o.value === defLp} /><span>{o.label}<small data-lp-save={o.value}></small></span></label>)}
-      </div>
-    </div>
-  </details>
+    <p class="hint">Same price on every server.</p>
+  </section>
 </form>

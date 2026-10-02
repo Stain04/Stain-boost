@@ -1,4 +1,4 @@
-// /pricing — live price calculator, checkout box and post-order panel.
+// /pricing — step-by-step order (4 questions + checkout), live price and post-order panel.
 // Every price comes from quoteOrder() in src/data/pricing.js — the same function the
 // order API uses — and the page sends the total it showed, which the API must match.
 import {
@@ -19,10 +19,6 @@ function init() {
   const WIN_RANKS = Object.keys(WIN_PRICES);
   const SERVERS = ['me', 'euw', 'eune'];
   const PENDING = 'sb_pending_order_v2';
-  const QUEUE_HINT = {
-    solo: 'Stain plays on your account, in offline mode with a VPN matched to your country.',
-    duo: 'You play your own account together with Stain. No password shared.',
-  };
   const summary = $('[data-summary]');
   const totalEl = $('[data-total]', summary);
   const submitBtn = $('[data-submit]', summary);
@@ -129,7 +125,6 @@ function init() {
   function render() {
     const s = read();
     $$('[data-show]', form).forEach((el) => { el.hidden = el.dataset.show !== s.mode; });
-    $('[data-queue-hint]', form).textContent = QUEUE_HINT[s.type] || QUEUE_HINT.solo;
     // add-ons (checkout box)
     const bonusPrice = s.mode === 'rank' ? bonusWinPrice(s.toTier) : null;
     $('[data-bonus-extra]', summary).hidden = bonusPrice === null;
@@ -157,6 +152,9 @@ function init() {
     }
     $$('[data-win-price]', form).forEach((el) => { el.textContent = formatUSD(WIN_PRICES[el.dataset.winPrice][s.type]) + '/win'; });
     $('[data-discord-field]', summary).hidden = !needsDiscord();
+    $('[data-wb-route]', root).textContent = q.route + (q.bonus ? ' + 1 win' : '');
+    $('[data-wb-price]', root).textContent = formatUSD(q.total);
+    $('[data-step-label="3"] .lbl', root).textContent = s.mode === 'wins' ? 'Wins' : 'Goal';
     const price = formatUSD(q.total);
     $('[data-submit-label]', summary).textContent = user ? `Place order · ${price}` : `Order with Discord · ${price}`;
     $('[data-submit-icon]', summary).style.display = user ? 'none' : '';
@@ -278,6 +276,8 @@ function init() {
   }
   constrain();
   render();
+  const fromLink = !resumed ? fromUrl() : {};
+  wizard(resumed ? 5 : Number.isInteger(fromLink.toTier) || Number.isInteger(fromLink.winRank) ? 4 : fromLink.mode === 'wins' ? 2 : 1);
   // referral code: from a pending order, or from a ?ref= link (saved by common.js)
   let storedRef = '';
   try { storedRef = (JSON.parse(localStorage.getItem('sb_ref') || 'null') || {}).code || ''; } catch {}
@@ -286,7 +286,70 @@ function init() {
   if (user) loadAccount();
   if (resumed) {
     showError('✅ Welcome back — your order is ready. Check it and press the button to place it.', true);
-    summary.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  }
+
+  // ── Steps ─────────────────────────────────────────────────────────────────
+  // One question per screen. Picking an answer that settles the step moves on by itself;
+  // the browser's back button walks back through the steps.
+  function wizard(start) {
+    const NAMES = { 1: 'boost', 2: 'now', 3: 'goal', 4: 'play', 5: 'order' };
+    const sections = $$('.wstep[data-step]', root);
+    const head = $('[data-wiz-head]', root), bar = $('[data-wiz-bar]', root), next = $('[data-wiz-next]', root);
+    const navH = () => (document.querySelector('.nav')?.getBoundingClientRect().bottom || 0) + 28;
+    let step = 0, reached = start, timer = 0, pushed = 0; // pushed = our own entries in the browser history
+
+    function go(n, { push = true, scroll = true } = {}) {
+      n = Math.max(1, Math.min(5, n));
+      clearTimeout(timer);
+      if (n === step) return;
+      step = n;
+      reached = Math.max(reached, n);
+      root.dataset.stepNow = n;
+      sections.forEach((el) => {
+        const on = +el.dataset.step === n;
+        el.hidden = !on;
+        if (on && !reduce) el.animate?.([{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'none' }], { duration: 420, easing: 'cubic-bezier(.16,1,.3,1)' });
+      });
+      head.hidden = n !== 1;
+      bar.hidden = n === 1 || n === 5;
+      next.innerHTML = (n === 4 ? 'See my order' : 'Next') + ' <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>';
+      $$('[data-step-label]', root).forEach((b) => {
+        const k = +b.dataset.stepLabel;
+        b.disabled = k > reached;
+        b.classList.toggle('done', k < n);
+        if (k === n) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
+      });
+      if (push) { history.pushState({ sbStep: n }, '', location.pathname + location.search + '#' + NAMES[n]); pushed++; }
+      if (scroll) {
+        const top = root.getBoundingClientRect().top + scrollY - navH();
+        if (Math.abs(scrollY - top) > 4) scrollTo({ top: Math.max(0, top), behavior: reduce ? 'auto' : 'smooth' });
+      }
+      const shown = sections.find((el) => !el.hidden);
+      [...(shown?.querySelectorAll('.q, .sum-route') || [])].find((h) => h.offsetParent !== null)?.focus({ preventScroll: true });
+      track('wizard_step', { step: n, name: NAMES[n], mode: val('mode') });
+    }
+    const later = (n) => { clearTimeout(timer); timer = setTimeout(() => go(n), reduce ? 0 : 280); };
+
+    // a tap on an answer that completes the step moves on — even when it was already selected
+    root.addEventListener('click', (e) => {
+      const input = e.target.closest?.('input[type="radio"]');
+      if (!input || input.disabled) return;
+      const name = input.name;
+      if (step === 1 && name === 'mode') later(2);
+      else if (step === 2 && (name === 'fromDiv' || name === 'winRank')) later(3);
+      else if (step === 3 && (name === 'toDiv' || (name === 'toTier' && +input.value === MASTERS))) later(4);
+    });
+    next.addEventListener('click', () => go(step + 1));
+    // Back = the browser's back while we have steps in its history; otherwise just the previous step
+    $('[data-wiz-back]', root).addEventListener('click', () => {
+      if (pushed > 0) history.back();
+      else { go(step - 1, { push: false }); history.replaceState({ sbStep: step }, '', location.pathname + location.search + '#' + NAMES[step]); }
+    });
+    $$('[data-goto]', root).forEach((b) => b.addEventListener('click', () => go(+b.dataset.goto)));
+    addEventListener('popstate', (e) => { pushed = Math.max(0, pushed - 1); go(e.state?.sbStep || 1, { push: false }); });
+
+    history.replaceState({ sbStep: start }, '', location.pathname + location.search + (start > 1 ? '#' + NAMES[start] : ''));
+    go(start, { push: false, scroll: start > 1 });
   }
 
   // ── Checkout ──────────────────────────────────────────────────────────────
