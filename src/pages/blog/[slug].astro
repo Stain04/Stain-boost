@@ -83,7 +83,7 @@ const article = {
         </nav>
       )}
 
-      <div class="article-content prose">
+      <div class:list={['article-content', 'prose', { native: !legacyCss }]}>
         <Content />
       </div>
 
@@ -154,6 +154,21 @@ const article = {
   .prose :global(strong) { color: var(--text-strong); font-weight: 500; }
   .prose :global(a) { color: var(--lav); }
   .prose :global(img) { border-radius: 16px; }
+  .prose :global(code) { font-family: ui-monospace, Consolas, monospace; font-size: .9em; padding: .1em .45em; border-radius: 6px; background: rgba(246, 242, 255, .07); color: var(--text-strong); }
+  /* building blocks for new posts (posts without their own legacy CSS) */
+  .native :global(.tip-card) { margin-block: 1.8rem; padding: 1.4rem 1.6rem; border-radius: 20px; background: linear-gradient(180deg, rgba(255, 255, 255, .045), rgba(255, 255, 255, .015)); box-shadow: inset 0 0 0 1px rgba(246, 242, 255, .1); }
+  .native :global(.tip-number) { font-size: .68rem; letter-spacing: .22em; text-transform: uppercase; color: var(--lav); margin-block-end: .35rem; }
+  .native :global(.tip-card h3) { margin-block: 0 .5rem; }
+  .native :global(:is(.tip-card, .mistake-card, .callout) p) { margin-block-end: .6rem; }
+  .native :global(:is(.tip-card, .mistake-card, .callout) p:last-child) { margin-block-end: 0; }
+  .native :global(.mistake-card) { margin-block: 1rem; padding: 1rem 1.3rem; border-radius: 16px; background: rgba(252, 165, 165, .04); box-shadow: inset 0 0 0 1px rgba(252, 165, 165, .2); }
+  .native :global(.mistake-card strong) { color: #fecaca; }
+  .native :global(.callout) { margin-block: 1.6rem; padding: 1.2rem 1.4rem; border-radius: 18px; background: rgba(196, 181, 253, .05); box-shadow: inset 0 0 0 1px rgba(196, 181, 253, .18); }
+  .native :global(.cta-box) { margin-block-start: 3rem; padding: clamp(28px, 4vw, 44px); border-radius: var(--r-lg); text-align: center; background: radial-gradient(120% 90% at 50% 0%, rgba(196, 181, 253, .1), transparent 60%), linear-gradient(180deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .018)); box-shadow: inset 0 0 0 1px rgba(196, 181, 253, .22); }
+  .native :global(.cta-box h3) { font-weight: 400; font-size: 2rem; margin-block: 0 .6rem; }
+  .native :global(.cta-box p) { color: var(--muted); margin-block-end: 1.4rem; }
+  .native :global(.cta-box .btn-primary) { display: inline-flex; align-items: center; gap: .55rem; padding: 14px 28px; border-radius: 999px; background: var(--lav); color: var(--lav-ink); text-decoration: none; border: 0; font-family: var(--font-ui); font-size: 1rem; letter-spacing: .02em; box-shadow: 0 16px 34px -18px rgba(0, 0, 0, .75); }
+  .native :global(.cta-box .btn-primary svg) { width: 16px; height: 16px; flex: none; }
   /* the old posts' shared elements, in the current style (doubled class: beats their own CSS) */
   .post-scope.post-scope :global(.article-content h2) { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.9rem, 1vw + 1.5rem, 2.4rem); line-height: 1.12; letter-spacing: -.005em; text-transform: none; background: none; -webkit-text-fill-color: currentColor; color: var(--text-strong); margin-block: 2.6rem .9rem; scroll-margin-top: 100px; }
   .post-scope.post-scope :global(.article-content h3) { font-family: var(--font-display); font-weight: 500; font-size: 1.5rem; letter-spacing: 0; text-transform: none; color: var(--text-strong); }
@@ -168,7 +183,8 @@ const article = {
   .post-scope.post-scope :global(.cta-box) { border: 0; border-radius: var(--r-lg); background: linear-gradient(180deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .018)); box-shadow: inset 0 0 0 1px rgba(196, 181, 253, .2); }
   .post-scope.post-scope :global(.cta-box h3) { font-family: var(--font-display); font-weight: 400; font-size: 2rem; }
   .post-scope.post-scope :global(.cta-box p) { color: var(--muted); }
-  .post-scope.post-scope :global(.btn-primary) { font-family: var(--font-ui); font-weight: 400; font-size: 1rem; letter-spacing: .02em; text-transform: none; padding: 14px 28px; border: 0; border-radius: 999px; background: var(--lav); color: var(--lav-ink); box-shadow: 0 16px 34px -18px rgba(0, 0, 0, .75); }
+  /* button text must beat the article link colour (same specificity as ".article-content a:hover", declared later) */
+  .post-scope.post-scope :global(.article-content a.btn-primary) { font-family: var(--font-ui); font-weight: 400; font-size: 1rem; letter-spacing: .02em; text-transform: none; padding: 14px 28px; border: 0; border-radius: 999px; background: var(--lav); color: var(--lav-ink); box-shadow: 0 16px 34px -18px rgba(0, 0, 0, .75); }
   .post-scope.post-scope :global(.article-divider) { background: rgba(246, 242, 255, .08); }
   .author { display: flex; gap: 18px; align-items: flex-start; margin-block: 44px 18px; }
   .author picture, .byline picture { flex: none; }
