@@ -12,14 +12,13 @@ import { lowestWinPrice, formatUSD, rankBoostTotal, LP_OPTIONS } from '../data/p
 import { getVerifiedReviews } from '../data/reviews.js';
 import { TOP_FAQ } from '../data/faq.js';
 import { organization, website, boostProduct } from '../data/schema.js';
-import { FREE_TRIAL, TRIAL_ENDS_MS } from '../data/promo.js';
+import { FREE_TRIAL } from '../data/promo.js';
 import '../styles/home.css';
 
 const reviews = await getVerifiedReviews();
 const posts = await getCollection('blog', (p) => !p.data.draft);
 const teasers = ['elo-boosting-safe', 'duo-boost-vs-solo-boost', 'master-yi-build-guide'].map((id) => posts.find((p) => p.id === id)).filter(Boolean);
 const fromWin = formatUSD(lowestWinPrice());
-const trialOn = Date.now() < TRIAL_ENDS_MS;
 const heroPrice = formatUSD(rankBoostTotal({ fromTier: 2, fromDiv: 2, toTier: 3, toDiv: 0, type: 'solo', lp: LP_OPTIONS[0].value }));
 const arrow = '<path d="M5 12h14M13 6l6 6-6 6"/>';
 ---
@@ -27,6 +26,7 @@ const arrow = '<path d="M5 12h14M13 6l6 6-6 6"/>';
   title="StainBoost – #1 ELO Boosting on the Middle East Server"
   description={`League of Legends ELO boosting on the Middle East server, played personally by Stain — #1 Master Yi on ME. ${STATS.ordersCompleted}+ orders, 0 bans, full refund if not started. Get an instant price.`}
   path="/"
+  alternates={{ ar: '/ar' }}
   overlay
   schema={[organization(), website(), boostProduct(reviews)]}
 >
@@ -56,10 +56,8 @@ const arrow = '<path d="M5 12h14M13 6l6 6-6 6"/>';
       <p class="lede a2">Every game is played by Stain himself — one Challenger player, never a pool of boosters. Offline mode and a VPN on every order.</p>
       <div class="act a3">
         <a class="btn btn-primary btn-lg" href="#price" data-track="cta_click" data-track-location="hero">See my price <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true" set:html={arrow} /></a>
-        {trialOn && (
-          <a class="btn-link more" href="/free-trial" data-trial data-track="cta_click" data-track-location="hero_trial">Try {FREE_TRIAL.games} games free <small data-trial-countdown data-end={TRIAL_ENDS_MS} data-prefix="· ends in ">· 2 days only</small></a>
-        )}
-        <a class="btn-link more" href="/pricing?mode=wins" data-trial-over={trialOn ? '' : undefined} data-track="cta_click" data-track-location="hero_wins">Net wins from {fromWin}</a>
+        <a class="btn-link more" href="/free-trial" data-trial data-track="cta_click" data-track-location="hero_trial">Try {FREE_TRIAL.games} games free <small data-trial-countdown data-prefix="· ends in ">· limited time</small></a>
+        <a class="btn-link more" href="/pricing?mode=wins" data-trial-over data-track="cta_click" data-track-location="hero_wins">Net wins from {fromWin}</a>
       </div>
       <ul class="notes" aria-label="Track record">
         <li class="note"><small>Orders</small><span>{STATS.ordersCompleted}+ completed</span></li>

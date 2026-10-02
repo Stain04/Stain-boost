@@ -44,7 +44,7 @@ const AUTH_KEY = 'sb_auth_cache_v1';
 function applyAuth(user) {
   document.querySelectorAll('[data-auth-link]').forEach((a) => {
     a.href = user ? '/dashboard' : '/login';
-    a.textContent = user ? 'Dashboard' : 'Sign in';
+    a.textContent = user ? (a.dataset.dash || 'Dashboard') : (a.dataset.signin || 'Sign in');
   });
   document.documentElement.classList.toggle('signed-in', !!user);
   window.__sbUser = user || null;
@@ -97,21 +97,6 @@ document.addEventListener('click', (e) => {
   }
 });
 
-// ── "Stain is online" — real status set by Stain in /admin ──────────────────
-const statusEls = document.querySelectorAll('[data-status]');
-if (statusEls.length) {
-  fetch('/api/status').then((r) => (r.ok ? r.json() : null)).then((s) => {
-    if (!s || !s.known) return; // switch never used: claim nothing
-    window.__sbOnline = !!s.online;
-    statusEls.forEach((n) => {
-      if (!s.online && n.hasAttribute('data-online-only')) return;
-      n.classList.toggle('chip-green', !!s.online);
-      n.querySelector('[data-status-text]').textContent = s.online ? 'Stain is online now' : "Stain is offline · he'll reply when back";
-      n.hidden = false;
-    });
-  }).catch(() => {});
-}
-
 // ── Chat (loaded on first open) ──────────────────────────────────────────────
 const chatBtn = document.querySelector('[data-chat-launch]');
 if (chatBtn) {
@@ -121,20 +106,47 @@ if (chatBtn) {
   });
 }
 
-// ── Free-trial countdown (src/data/promo.js) ────────────────────────────────
-// Every [data-trial-countdown] shows the real time left; at zero the promo hides itself.
+// ── Live status: Stain online + the free trial (both set by Stain in /admin) ──
+// One request per page. The trial state is also remembered, so on the next visit the bar shows
+// before first paint (see the head script in Base.astro) instead of popping in.
+const TRIAL_CACHE = 'sb_trial_v1';
 const trialCounters = document.querySelectorAll('[data-trial-countdown]');
-if (trialCounters.length) {
-  const end = Number(trialCounters[0].dataset.end);
+let trialTimer = 0;
+function startCountdown(end) {
+  clearInterval(trialTimer);
+  if (!trialCounters.length) return;
   const pad = (n) => String(n).padStart(2, '0');
-  let timer = 0;
   const tick = () => {
     const ms = end - Date.now();
-    if (!(ms > 0)) { document.documentElement.classList.add('trial-over'); clearInterval(timer); return; }
-    const d = Math.floor(ms / 864e5), h = Math.floor(ms / 36e5) % 24, m = Math.floor(ms / 6e4) % 60, s = Math.floor(ms / 1e3) % 60;
-    const left = d > 0 ? `${d}d ${pad(h)}h ${pad(m)}m` : `${pad(h)}h ${pad(m)}m ${pad(s)}s`;
+    if (!(ms > 0)) { setTrial(null); return; }
+    const d = Math.floor(ms / 864e5), h = Math.floor(ms / 36e5) % 24, m = Math.floor(ms / 6e4) % 60, sec = Math.floor(ms / 1e3) % 60;
+    const left = d > 0 ? `${d}d ${pad(h)}h ${pad(m)}m` : `${pad(h)}h ${pad(m)}m ${pad(sec)}s`;
     trialCounters.forEach((c) => { c.textContent = (c.dataset.prefix ?? 'Ends in ') + left; });
   };
   tick();
-  timer = setInterval(tick, 1000);
+  trialTimer = setInterval(tick, 1000);
 }
+function setTrial(trial) {
+  const on = !!(trial && trial.active && trial.endsAt > Date.now());
+  document.documentElement.classList.toggle('trial-on', on);
+  try { localStorage.setItem(TRIAL_CACHE, JSON.stringify({ endsAt: on ? trial.endsAt : 0 })); } catch {}
+  if (on) startCountdown(trial.endsAt); else clearInterval(trialTimer);
+  window.__sbTrial = on ? trial : null;
+  document.dispatchEvent(new CustomEvent('sb:trial', { detail: on ? trial : null }));
+}
+try { const t = JSON.parse(localStorage.getItem(TRIAL_CACHE) || 'null'); if (t && t.endsAt > Date.now()) startCountdown(t.endsAt); } catch {}
+
+const statusEls = document.querySelectorAll('[data-status]');
+fetch('/api/status').then((r) => (r.ok ? r.json() : null)).then((st) => {
+  if (!st) return;
+  window.__sbStatus = st;
+  setTrial(st.trial);
+  if (!st.known) return; // the online switch was never used: claim nothing
+  window.__sbOnline = !!st.online;
+  statusEls.forEach((n) => {
+    if (!st.online && n.hasAttribute('data-online-only')) return;
+    n.classList.toggle('chip-green', !!st.online);
+    n.querySelector('[data-status-text]').textContent = st.online ? 'Stain is online now' : "Stain is offline · he'll reply when back";
+    n.hidden = false;
+  });
+}).catch(() => {});

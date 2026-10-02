@@ -1,33 +1,39 @@
 ---
-import { NAV, DISCORD } from '../data/site.js';
-interface Props { active?: string; overlay?: boolean }
+import { DISCORD } from '../data/site.js';
+import { UI } from '../i18n/ui.js';
+interface Props { active?: string; overlay?: boolean; lang?: 'en' | 'ar'; alternates?: { en?: string; ar?: string } }
 // overlay: floats transparent over a full-screen scene (home), turns to glass once you scroll
-const { active = '', overlay = false } = Astro.props;
+const { active = '', overlay = false, lang = 'en', alternates = {} } = Astro.props;
+const t = UI[lang];
+const other = lang === 'ar' ? 'en' : 'ar';
+const otherHref = alternates[other] || UI[other].homeHref;
 ---
 <header class:list={['nav', { overlay }]} data-nav>
   <div class="nav-inner">
     <div class="side">
-      <button class="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu" data-burger>
+      <button class="burger" type="button" aria-label={t.openMenu} aria-expanded="false" aria-controls="mobile-menu" data-burger>
         <span></span><span></span><span></span>
       </button>
       <nav class="links" aria-label="Main">
-        {NAV.map((l) => <a href={l.href} aria-current={active === l.href ? 'page' : undefined}>{l.label}</a>)}
+        {t.nav.map((l) => <a href={l.href} aria-current={active === l.href ? 'page' : undefined}>{l.label}</a>)}
       </nav>
     </div>
-    <a href="/" class="mark" aria-label="StainBoost home">STAINBOOST</a>
+    <a href={t.homeHref} class="mark" lang="en" aria-label="StainBoost home">STAINBOOST</a>
     <div class="side end">
-      <a href="/login" class="auth-link" data-auth-link>Sign in</a>
-      <a href="/pricing" class="nav-cta" data-track="cta_click" data-track-location="nav">Order</a>
+      <a href={otherHref} class="lang-link" lang={other} hreflang={other} aria-label={t.otherLangLabel}>{t.otherLang}</a>
+      <a href="/login" class="auth-link" data-auth-link data-signin={t.signIn} data-dash={t.dashboard}>{t.signIn}</a>
+      <a href="/pricing" class="nav-cta" data-track="cta_click" data-track-location="nav">{t.order}</a>
     </div>
   </div>
   <div class="menu" id="mobile-menu" hidden data-menu>
     <nav aria-label="Mobile">
-      <a href="/">Home</a>
-      {NAV.map((l) => <a href={l.href} aria-current={active === l.href ? 'page' : undefined}>{l.label}</a>)}
-      <a href="/login" data-auth-link>Sign in</a>
+      <a href={t.homeHref}>{t.home}</a>
+      {t.nav.map((l) => <a href={l.href} aria-current={active === l.href ? 'page' : undefined}>{l.label}</a>)}
+      <a href="/login" data-auth-link data-signin={t.signIn} data-dash={t.dashboard}>{t.signIn}</a>
+      <a href={otherHref} lang={other} hreflang={other}>{t.otherLang}</a>
       <a href={DISCORD.invite} target="_blank" rel="noopener">Discord</a>
     </nav>
-    <a href="/pricing" class="btn btn-primary btn-lg btn-block" data-track="cta_click" data-track-location="menu">See my price</a>
+    <a href="/pricing" class="btn btn-primary btn-lg btn-block" data-track="cta_click" data-track-location="menu">{t.seePrice}</a>
   </div>
 </header>
 
@@ -47,6 +53,8 @@ const { active = '', overlay = false } = Astro.props;
   .side.end { justify-content: flex-end; }
   .mark { font-family: var(--font-display); font-weight: 400; font-size: 1.62rem; letter-spacing: .32em; padding-inline-start: .32em; line-height: 1; color: var(--text-strong); text-decoration: none; }
   .links { display: flex; gap: clamp(22px, 2.4vw, 38px); }
+  .lang-link { font-size: .84rem; color: var(--lav); text-decoration: none; }
+  .lang-link:hover { color: var(--lav-hi); }
   .links a, .auth-link { font-size: .84rem; letter-spacing: .1em; color: rgba(246, 242, 255, .78); text-decoration: none; transition: color .3s; }
   .links a:hover, .auth-link:hover, .links a[aria-current='page'] { color: var(--text-strong); }
   .links a[aria-current='page'] { text-decoration: underline; text-decoration-color: var(--lav); text-underline-offset: 8px; }
@@ -66,7 +74,7 @@ const { active = '', overlay = false } = Astro.props;
   .menu a[aria-current='page'] { font-style: italic; color: var(--lav-hi); }
 
   @media (max-width: 900px) {
-    .links, .auth-link { display: none; }
+    .links, .auth-link, .lang-link { display: none; }
     .burger { display: inline-flex; }
     .mark { font-size: 1.32rem; letter-spacing: .24em; padding-inline-start: .24em; }
     .nav-cta { padding: 7px 15px; font-size: .78rem; }

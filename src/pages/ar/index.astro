@@ -1,0 +1,171 @@
+---
+// /ar/ — the Arabic landing page (right-to-left). Order pages are English for now; buttons go there.
+import Base from '../../layouts/Base.astro';
+import RankEmblem from '../../components/RankEmblem.astro';
+import { CLIMBS } from '../../data/climbs.js';
+import { RB_TIERS, MASTERS, divisionPrice, rankBoostTotal, rankPosition, formatUSD, lowestWinPrice } from '../../data/pricing.js';
+import { STATS, DISCORD, ACCOUNTS, PAYMENT_METHODS, SITE } from '../../data/site.js';
+import { TIER_NAMES } from '../../i18n/ui.js';
+import { organization, website } from '../../data/schema.js';
+
+const T = TIER_NAMES.ar;
+const pay = PAYMENT_METHODS.map((m) => m.name).join(' أو ');
+const climbs = CLIMBS.map((c) => ({
+  ...c,
+  name: `${T[RB_TIERS[c.from[0]]]} إلى ${T[RB_TIERS[c.to[0]]]}`,
+  solo: rankBoostTotal({ fromTier: c.from[0], fromDiv: c.from[1], toTier: c.to[0], toDiv: c.to[1], type: 'solo', lp: 0 }),
+}));
+const rows = [];
+RB_TIERS.slice(0, MASTERS).forEach((t, i) => {
+  if (t === 'Diamond') {
+    rows.push({ tier: t, label: `${T[t]} IV–III`, solo: divisionPrice(i, 0, 'solo'), duo: divisionPrice(i, 0, 'duo') });
+    rows.push({ tier: t, label: `${T[t]} II–I`, solo: divisionPrice(i, 2, 'solo'), duo: divisionPrice(i, 2, 'duo') });
+  } else rows.push({ tier: t, label: T[t], solo: divisionPrice(i, 0, 'solo'), duo: divisionPrice(i, 0, 'duo') });
+});
+
+const safety = `البوست مخالف لشروط Riot، لذلك لا توجد خدمة تستطيع أن تعد بعدم وجود أي خطر. Stain يلعب في وضع الأوفلاين حتى لا يراك أصدقاؤك متصلًا، ومع VPN في بلدك، وبدون أي برامج أو بوتات، ولاعب واحد فقط يلمس حسابك. النتيجة حتى الآن: ${STATS.bans} باند في أكثر من ${STATS.ordersCompleted} طلب.`;
+const faq = [
+  ['ما هو البوست في ليج أوف ليجندز؟', 'البوست (ELO boost) يعني أن لاعبًا أعلى منك في الرانك يلعب مبارياتك المصنّفة حتى تصل إلى الرانك الذي تريده. مع StainBoost، كل المباريات يلعبها Stain بنفسه، وليس فريقًا من البوسترز.'],
+  ['هل البوست آمن؟', safety],
+  ['هل يجب أن أشارك كلمة المرور؟', 'في السولو نعم: يدخل Stain إلى حسابك ليلعب، وتُستخدم بيانات الدخول فقط للعب. إذا كنت لا تريد مشاركتها، اختر الديو: تلعب على حسابك مع Stain في المباراة نفسها.'],
+  ['كيف أدفع؟', `بعد الطلب تدفع عبر ${pay}. إذا كنت تفضّل طريقة أخرى، راسل ${DISCORD.handle} على ديسكورد.`],
+  ['هل يمكنني استرداد المال؟', 'نعم، استرداد كامل إذا لم يبدأ البوست. بعد البدء، يتم الاتفاق على استرداد جزئي عادل حسب التقدم عبر ديسكورد.'],
+  ['متى يبدأ البوست؟', 'معظم الطلبات تبدأ خلال ساعات قليلة من تأكيد الدفع، وStain يتواصل معك على ديسكورد لتحديد الوقت.'],
+  ['ما السيرفرات المتاحة؟', 'الشرق الأوسط (ME)، وأوروبا الغربية (EUW)، وأوروبا الشمالية والشرقية (EUNE)، وبالسعر نفسه على الثلاثة.'],
+];
+const schema = [
+  organization(), website(),
+  { '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: 'ar', mainEntity: faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) },
+];
+---
+<Base
+  title="رفع رانك ليج أوف ليجندز | بوست لول على سيرفر الشرق الأوسط – StainBoost"
+  description={`رفع رانك ليج أوف ليجندز على سيرفر الشرق الأوسط و EUW و EUNE. كل مباراة يلعبها Stain بنفسه — تشالنجر والأول في ماستر يي على ME. أكثر من ${STATS.ordersCompleted} طلب، ${STATS.bans} باند، واسترداد كامل إذا لم يبدأ البوست.`}
+  path="/ar"
+  lang="ar"
+  alternates={{ en: '/' }}
+  schema={schema}
+  promo={false}
+>
+  <section class="wrap ar-hero">
+    <p class="eyebrow">بوست ليج أوف ليجندز · ME · EUW · EUNE</p>
+    <h1>رفع رانك ليج أوف ليجندز مع الأول في ماستر يي على سيرفر الشرق الأوسط</h1>
+    <p class="lead">كل مباراة يلعبها Stain بنفسه: لاعب تشالنجر يلعب ليج منذ {STATS.playingSince} وعلى سيرفر الشرق الأوسط منذ افتتاحه في {STATS.meServerSince}. لا فريق بوسترز ولا تبديل لاعبين — لاعب واحد فقط على حسابك.</p>
+    <div class="cta-row">
+      <a class="buy" href="/pricing" data-track="cta_click" data-track-location="ar_hero">احسب سعرك</a>
+      <a class="ghost" href={DISCORD.invite} target="_blank" rel="noopener">تواصل على ديسكورد</a>
+    </div>
+    <p class="small">صفحة الطلب باللغة الإنجليزية حاليًا.</p>
+    <ul class="trust">
+      <li>أكثر من {STATS.ordersCompleted} طلب مكتمل</li>
+      <li>{STATS.bans} باند</li>
+      <li>استرداد كامل إذا لم يبدأ البوست</li>
+      <li>لاعب واحد، بدون فريق بوسترز</li>
+    </ul>
+  </section>
+
+  <section class="wrap ar-sec" id="boosts">
+    <h2>أنواع البوست الأكثر طلبًا</h2>
+    <p class="sub">اختر الصعود الذي تريده لترى السعر والتفاصيل، أو اختر أي رانكين في <a href="/pricing">صفحة الطلب</a>.</p>
+    <div class="grid">
+      {climbs.map((c) => (
+        <a class="climb" href={`/ar/boost/${c.slug}`}>
+          <span class="em"><RankEmblem tier={RB_TIERS[c.from[0]]} size={54} /><span aria-hidden="true">←</span><RankEmblem tier={RB_TIERS[c.to[0]]} size={54} /></span>
+          <b>بوست {c.name}</b>
+          <span class="meta">ابتداءً من <strong class="ltr" lang="en">{formatUSD(c.solo)}</strong></span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="wrap-narrow ar-sec">
+    <h2>الأسعار</h2>
+    <p class="sub">سعر كل ديفيجن حسب الرتبة. الديو (تلعب مع Stain على حسابك) أغلى قليلًا لأنه يحتاج لاعبَين.</p>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>الرتبة</th><th>سولو</th><th>ديو</th></tr></thead>
+        <tbody>
+          {rows.map((r) => <tr><th scope="row"><RankEmblem tier={r.tier} size={34} />{r.label}</th><td><span class="ltr">{formatUSD(r.solo)}</span></td><td><span class="ltr">{formatUSD(r.duo)}</span></td></tr>)}
+        </tbody>
+      </table>
+    </div>
+    <p class="sub">الانتصارات الصافية تبدأ من <span class="ltr" lang="en">{formatUSD(lowestWinPrice())}</span> للفوز الواحد، ومع كل 5 انتصارات تدفعها تحصل على فوز إضافي مجانًا.</p>
+    <a class="buy wide" href="/pricing">احسب السعر الدقيق</a>
+  </section>
+
+  <section class="wrap-narrow ar-sec">
+    <h2>كيف يعمل البوست؟</h2>
+    <ol class="how">
+      <li><b>اختر الرانك وشاهد السعر</b><span>حدّد رانكك الحالي والرانك الذي تريده، والسعر يظهر فورًا بدون رسوم مخفية.</span></li>
+      <li><b>ادفع عبر {pay}</b><span>بعد الطلب تظهر لك تفاصيل الدفع مباشرة، والبوست يبدأ بعد تأكيد الدفع.</span></li>
+      <li><b>تابع كل مباراة</b><span>لوحة التحكم تعرض رانكك الحالي ونقاط LP وكل مباراة لُعبت، مع ملاحظات من Stain.</span></li>
+    </ol>
+
+    <h2>هل البوست آمن؟</h2>
+    <p>{safety}</p>
+
+    <h2>من هو Stain؟</h2>
+    <p>Stain يلعب ليج أوف ليجندز منذ {STATS.playingSince}، ووصل إلى تشالنجر، وهو صاحب المركز الأول في ماستر يي على سيرفر الشرق الأوسط، مع أكثر من 5 ملايين نقطة ماستري على ماستر يي عبر حساباته. يمكنك التحقق من حساباته بنفسك:</p>
+    <ul class="accounts">
+      {ACCOUNTS.map((a) => <li><a href={a.opgg} target="_blank" rel="noopener"><span lang="en">{a.riotId}</span> ({a.server}) ↗</a></li>)}
+    </ul>
+  </section>
+
+  <section class="wrap-narrow ar-sec" id="faq">
+    <h2>الأسئلة الشائعة</h2>
+    <div class="faq">
+      {faq.map(([q, a]) => <details><summary>{q}</summary><p>{a}</p></details>)}
+    </div>
+  </section>
+
+  <section class="wrap ar-final">
+    <h2>جاهز لرفع رانكك؟</h2>
+    <a class="buy" href="/pricing" data-track="cta_click" data-track-location="ar_final">احسب سعرك الآن</a>
+    <p class="small">أو راسل <span lang="en">{DISCORD.handle}</span> على ديسكورد.</p>
+  </section>
+</Base>
+
+<style>
+  .ar-hero { padding-block: clamp(28px, 4vw, 60px) 0; display: grid; gap: 14px; justify-items: start; }
+  .ar-hero h1 { font-family: var(--font-ui); font-size: clamp(2rem, 2.2vw + 1.3rem, 3.2rem); line-height: 1.3; max-width: 22ch; }
+  .ar-hero .lead { max-width: 60ch; }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-block-start: 6px; }
+  .buy { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 0 26px; border-radius: 14px; background: #7353fb; color: #fff; font-family: var(--font-ui); font-weight: 600; font-size: 1.05rem; text-decoration: none; box-shadow: 0 14px 30px -14px rgba(115, 83, 251, .9); transition: background-color .25s; }
+  .buy:hover { background: #7f62ff; }
+  .buy.wide { justify-self: start; }
+  .ghost { display: inline-flex; align-items: center; min-height: 52px; padding: 0 22px; border-radius: 14px; color: var(--text-strong); text-decoration: none; box-shadow: inset 0 0 0 1px rgba(246, 242, 255, .3); }
+  .ghost:hover { box-shadow: inset 0 0 0 1px var(--lav); }
+  .small { font-size: .82rem; color: var(--muted); }
+  .trust { list-style: none; padding: 0; margin: 4px 0 0; display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: .9rem; color: var(--text); }
+  .trust li::before { content: '✓'; color: var(--success); margin-inline-end: 6px; }
+  .ar-sec { padding-block: clamp(40px, 6vw, 72px) 0; display: grid; gap: 12px; }
+  .ar-sec h2, .ar-final h2 { font-family: var(--font-ui); font-size: clamp(1.5rem, 1vw + 1.1rem, 2rem); color: var(--text-strong); margin-block-start: 12px; }
+  .sub { color: var(--muted); }
+  .ar-sec p { line-height: 1.9; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
+  .climb { display: grid; justify-items: center; gap: 6px; padding: 16px 12px; border-radius: 18px; text-align: center; text-decoration: none; background: #110d26; box-shadow: inset 0 0 0 1px rgba(246, 242, 255, .08); transition: box-shadow .25s; }
+  .climb:hover { box-shadow: inset 0 0 0 1.5px #7353fb; }
+  .em { display: flex; align-items: center; gap: 6px; color: var(--lav); }
+  .climb b { color: var(--text-strong); font-size: 1.05rem; }
+  .meta { font-size: .86rem; color: var(--muted); }
+  .meta strong { color: var(--gold); }
+  .tbl { overflow-x: auto; border-radius: 16px; box-shadow: inset 0 0 0 1px rgba(246, 242, 255, .1); }
+  .tbl table { width: 100%; border-collapse: collapse; }
+  .tbl th, .tbl td { padding: 10px 14px; text-align: start; border-top: 1px solid rgba(246, 242, 255, .06); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .tbl thead th { border-top: 0; font-weight: 400; font-size: .8rem; color: var(--muted); }
+  .tbl tbody th { display: flex; align-items: center; gap: 10px; font-weight: 500; color: var(--text-strong); }
+  .how { list-style: none; padding: 0; display: grid; gap: 10px; counter-reset: s; }
+  .how li { counter-increment: s; display: grid; grid-template-columns: auto 1fr; column-gap: 14px; padding: 14px 16px; border-radius: 16px; background: rgba(255, 255, 255, .03); box-shadow: inset 0 0 0 1px rgba(246, 242, 255, .07); }
+  .how li::before { content: counter(s); grid-row: span 2; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: #7353fb; color: #fff; font-weight: 600; }
+  .how b { color: var(--text-strong); }
+  .how span { color: var(--muted); }
+  .accounts { padding-inline-start: 1.2rem; }
+  .faq details { border-top: 1px solid rgba(246, 242, 255, .08); }
+  .faq details:last-child { border-bottom: 1px solid rgba(246, 242, 255, .08); }
+  .faq summary { cursor: pointer; padding: 14px 0; font-weight: 600; color: var(--text-strong); list-style: none; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: '+'; float: inline-end; color: var(--lav); font-size: 1.2rem; line-height: 1; }
+  .faq details[open] summary::after { content: '−'; }
+  .faq p { padding-block-end: 14px; margin: 0; color: var(--text); }
+  .ar-final { padding-block: clamp(48px, 7vw, 80px) 0; display: grid; justify-items: center; gap: 10px; text-align: center; }
+</style>

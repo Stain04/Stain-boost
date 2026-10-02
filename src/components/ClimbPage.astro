@@ -1,0 +1,250 @@
+---
+// One climb page (e.g. "Silver to Gold Boost") in English or Arabic.
+// Prices come from src/data/pricing.js — the same numbers the order page charges.
+import Base from '../layouts/Base.astro';
+import RankEmblem from './RankEmblem.astro';
+import { CLIMBS } from '../data/climbs.js';
+import { RB_TIERS, RB_DIVS, MASTERS, divisionPrice, rankBoostTotal, rankPosition, formatUSD } from '../data/pricing.js';
+import { STATS, SITE, PAYMENT_NAMES, PAYMENT_METHODS } from '../data/site.js';
+import { TIER_NAMES } from '../i18n/ui.js';
+import { breadcrumbs } from '../data/schema.js';
+
+interface Props { climb: (typeof CLIMBS)[number]; lang: 'en' | 'ar' }
+const { climb, lang } = Astro.props;
+const ar = lang === 'ar';
+const T = TIER_NAMES[lang];
+const [ft, fd] = climb.from, [tt, td] = climb.to;
+const tierName = (t: number) => T[RB_TIERS[t]];
+const rank = (t: number, d: number) => (t === MASTERS ? tierName(t) : `${tierName(t)} ${RB_DIVS[d]}`);
+const From = tierName(ft), To = tierName(tt);
+const divs = rankPosition(tt, td) - rankPosition(ft, fd);
+const total = (type: 'solo' | 'duo') => rankBoostTotal({ fromTier: ft, fromDiv: fd, toTier: tt, toDiv: td, type, lp: 0 });
+const solo = formatUSD(total('solo')), duo = formatUSD(total('duo'));
+const short = (n: number) => (Number.isInteger(n) ? `$${n}` : formatUSD(n)); // "$40" reads better in search results
+const soloS = short(total('solo')), duoS = short(total('duo'));
+// prices inside Arabic sentences are wrapped in left-to-right isolates (LRI…PDI) so "$40" stays "$40"
+const P = (s: string) => (ar ? `\u2066${s}\u2069` : s);
+const R = (s: string) => (ar ? `\u2068${s}\u2069` : s); // a rank name like "جولد IV" stays in one piece
+const plain = (s: string) => s.replace(/[\u2066\u2068\u2069]/g, '');
+// price breakdown, one row per tier (Diamond IV–III and II–I are priced separately)
+const rows: { tier: string; label: string; n: number; solo: number; duo: number }[] = [];
+for (let p = rankPosition(ft, fd); p < rankPosition(tt, td); p++) {
+  const t = Math.floor(p / 4), d = p % 4;
+  const key = RB_TIERS[t] === 'Diamond' ? `Diamond${d < 2 ? 'L' : 'H'}` : RB_TIERS[t];
+  const label = RB_TIERS[t] === 'Diamond' ? `${tierName(t)} ${d < 2 ? 'IV–III' : 'II–I'}` : tierName(t);
+  const last = rows[rows.length - 1];
+  if (last && last.label === label) { last.n++; last.solo += divisionPrice(t, d, 'solo'); last.duo += divisionPrice(t, d, 'duo'); }
+  else rows.push({ tier: RB_TIERS[t], label, n: 1, solo: divisionPrice(t, d, 'solo'), duo: divisionPrice(t, d, 'duo') });
+}
+const qs = `from=${ft}-${fd}&to=${tt}-${td}`;
+const orderHref = `/pricing?${qs}`, duoHref = `/pricing?${qs}&queue=duo`;
+const path = `${ar ? '/ar' : ''}/boost/${climb.slug}`;
+const others = CLIMBS.filter((c) => c.slug !== climb.slug);
+const c = climb[lang];
+const payAr = PAYMENT_METHODS.map((m) => m.name).join(' أو ');
+const divWord = (n: number) => (ar ? (n >= 11 ? `${n} ديفيجن` : `${n} ديفيجنات`) : `${n} division${n !== 1 ? 's' : ''}`);
+
+const S = ar ? {
+  title: `بوست ${From} إلى ${To} – رفع رانك ليج أوف ليجندز من ${soloS} | StainBoost`,
+  desc: `بوست ${From} إلى ${To} في ليج أوف ليجندز: ${divWord(divs)} مقابل ${soloS} سولو أو ${duoS} ديو، يلعبه Stain — تشالنجر والأول في ماستر يي على سيرفر الشرق الأوسط. ME و EUW و EUNE. استرداد كامل إذا لم يبدأ البوست.`,
+  crumbsHome: 'الرئيسية', crumbsBoosts: 'أنواع البوست', crumbsBoostsHref: '/ar#boosts',
+  eyebrow: 'رفع رانك ليج أوف ليجندز · ME · EUW · EUNE',
+  h1: `بوست ${From} إلى ${To}`, h1Sub: `${RB_TIERS[ft]} to ${RB_TIERS[tt] === 'Masters' ? 'Master' : RB_TIERS[tt]} boost`,
+  soloLabel: 'سولو', soloSub: 'Stain يلعب على حسابك', duoLabel: 'ديو', duoSub: 'تلعبان معًا، بدون مشاركة كلمة المرور',
+  note: 'الأسعار من 0 LP في الديفيجن الحالي. إذا كان لديك LP، صفحة الطلب تخصمه تلقائيًا.',
+  cta: 'اطلب هذا البوست', ctaDuo: 'اطلبه ديو', orderNote: 'صفحة الطلب باللغة الإنجليزية حاليًا.',
+  whyTitle: `ما الذي يتغير في ${To}؟`,
+  breakdownTitle: 'تفاصيل السعر', thTier: 'الرتبة', thDivs: 'الديفيجنات', thSolo: 'سولو', thDuo: 'ديو', thTotal: 'المجموع',
+  howTitle: 'كيف يعمل البوست؟',
+  how: [
+    ['اختر الرانك وشاهد السعر', 'حدّد رانكك الحالي والرانك الذي تريده، والسعر يظهر فورًا بدون رسوم مخفية.'],
+    [`ادفع عبر ${payAr}`, 'بعد الطلب تظهر لك تفاصيل الدفع مباشرة، والبوست يبدأ بعد تأكيد الدفع.'],
+    ['تابع كل مباراة', 'لوحة التحكم تعرض رانكك الحالي ونقاط LP وكل مباراة لُعبت، مع ملاحظات من Stain.'],
+  ],
+  safetyTitle: 'هل البوست آمن؟',
+  safety: `البوست مخالف لشروط Riot، لذلك لا توجد خدمة تستطيع أن تعد بعدم وجود أي خطر. Stain يلعب في وضع الأوفلاين، مع VPN في بلدك، وبدون أي برامج أو بوتات، ولاعب واحد فقط يلمس حسابك: ${STATS.bans} باند في أكثر من ${STATS.ordersCompleted} طلب.`,
+  tipsTitle: `تريد الصعود من ${From} إلى ${To} بنفسك؟`, guide: 'اقرأ الدليل الكامل (بالإنجليزية)',
+  faqTitle: 'أسئلة شائعة', othersTitle: 'أنواع بوست أخرى', finalTitle: `جاهز للوصول إلى ${To}؟`,
+  faq: [
+    [`كم سعر بوست ${From} إلى ${To}؟`, `من ${R(rank(ft, fd))} إلى ${R(rank(tt, td))} (ابتداءً من 0 LP): ${divWord(divs)} بسعر ${P(solo)} سولو أو ${P(duo)} ديو. إذا كان لديك LP في الديفيجن الحالي يقل السعر، وصفحة الطلب تخصمه تلقائيًا.`],
+    ['كم يستغرق البوست؟', 'يعتمد على نقاط LP التي تكسبها في كل فوز وعدد المباريات المطلوبة. معظم الطلبات تبدأ خلال ساعات قليلة من تأكيد الدفع، وStain يعطيك تقديرًا على ديسكورد قبل البدء.'],
+    ['هل البوست آمن؟', `لا توجد خدمة تستطيع أن تعد بعدم وجود أي خطر، لأن البوست مخالف لشروط Riot. Stain يلعب في وضع الأوفلاين، مع VPN في بلدك، وبدون برامج أو بوتات: ${STATS.bans} باند في أكثر من ${STATS.ordersCompleted} طلب.`],
+    ['هل يمكنني اختيار الديو بدل مشاركة حسابي؟', `نعم. في الديو تلعب على حسابك مع Stain في المباراة نفسها، فلا تشارك كلمة المرور أبدًا. بوست ديو من ${From} إلى ${To} سعره ${P(duo)}.`],
+    ['ما السيرفرات المتاحة؟', 'الشرق الأوسط (ME)، وأوروبا الغربية (EUW)، وأوروبا الشمالية والشرقية (EUNE)، وبالسعر نفسه على الثلاثة.'],
+  ],
+} : {
+  title: `${From} to ${To} Boost – LoL ELO Boost from ${soloS} | StainBoost`,
+  desc: `${From} to ${To} boost in League of Legends: ${divWord(divs)} for ${soloS} solo or ${duoS} duo, played by Stain — Challenger, #1 Master Yi on ME. ME, EUW and EUNE. Full refund if not started.`,
+  crumbsHome: 'Home', crumbsBoosts: 'Boosts', crumbsBoostsHref: '/boost',
+  eyebrow: 'LoL rank boost · ME, EUW & EUNE',
+  h1: `${From} to ${To} Boost`, h1Sub: '',
+  soloLabel: 'Solo', soloSub: 'Stain plays on your account', duoLabel: 'Duo', duoSub: 'You play together, no login shared',
+  note: 'Prices start from 0 LP in your current division. Already have LP? The order page takes it off automatically.',
+  cta: 'Get this boost', ctaDuo: 'Get it as duo', orderNote: '',
+  whyTitle: `What changes at ${To}`,
+  breakdownTitle: 'Price breakdown', thTier: 'Tier', thDivs: 'Divisions', thSolo: 'Solo', thDuo: 'Duo', thTotal: 'Total',
+  howTitle: 'How it works',
+  how: [
+    ['Pick your ranks, see the price', 'Choose where you are and where you want to be. The price shows instantly, with no hidden fees.'],
+    [`Pay with ${PAYMENT_NAMES}`, 'You see the payment details right after ordering, and the boost starts once the payment is confirmed.'],
+    ['Follow every game', 'Your dashboard shows your rank, your LP, every game played and notes from Stain.'],
+  ],
+  safetyTitle: 'Is it safe?',
+  safety: `Boosting is against Riot's terms, so no service can honestly promise zero risk. Stain plays with offline mode on, a VPN matched to your country, no scripts or bots, and he is the only person who ever touches your account: ${STATS.bans} bans in ${STATS.ordersCompleted}+ orders.`,
+  tipsTitle: `Climbing ${From} to ${To} yourself?`, guide: 'Read the full guide',
+  faqTitle: 'Questions', othersTitle: 'Other boosts', finalTitle: `Ready to reach ${To}?`,
+  faq: [
+    [`How much does a ${From} to ${To} boost cost?`, `From ${rank(ft, fd)} (0 LP) to ${rank(tt, td)} it's ${divWord(divs)}: ${solo} solo or ${duo} duo. If you already have LP in your current division, the price drops — the order page takes it off automatically.`],
+    [`How long does a ${From} to ${To} boost take?`, 'It depends on your LP gains and how many games are needed. Most orders start within a few hours of the payment being confirmed, and Stain gives you an estimate on Discord before starting.'],
+    [`Is a ${From} to ${To} boost safe?`, `Boosting is against Riot's terms, so no service can promise zero risk. Stain plays with offline mode, a VPN matched to your country and hand-played games only — ${STATS.bans} bans in ${STATS.ordersCompleted}+ orders.`],
+    ['Can I play duo instead of sharing my account?', `Yes. With duo you play your own account together with Stain, so you never share your login. A ${From} to ${To} duo boost costs ${duo}.`],
+    ['Which servers can I order on?', 'Middle East (ME), EU West (EUW) and EU Nordic & East (EUNE), all at the same price.'],
+  ],
+};
+
+const schema = [
+  {
+    '@context': 'https://schema.org', '@type': 'Product',
+    name: ar ? `بوست ${From} إلى ${To} – ليج أوف ليجندز` : `${From} to ${To} Boost (League of Legends)`,
+    description: S.desc, brand: { '@type': 'Brand', name: SITE.name }, image: SITE.url + '/og-image.jpg', url: SITE.url + path,
+    offers: [
+      { '@type': 'Offer', name: 'Solo', price: total('solo').toFixed(2), priceCurrency: 'USD', availability: 'https://schema.org/InStock', url: SITE.url + orderHref },
+      { '@type': 'Offer', name: 'Duo', price: total('duo').toFixed(2), priceCurrency: 'USD', availability: 'https://schema.org/InStock', url: SITE.url + duoHref },
+    ],
+  },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: S.faq.map(([q, a]) => ({ '@type': 'Question', name: plain(q), acceptedAnswer: { '@type': 'Answer', text: plain(a) } })) },
+  breadcrumbs([{ name: S.crumbsHome, path: ar ? '/ar' : '/' }, { name: S.crumbsBoosts, path: ar ? '/ar' : '/boost' }, { name: S.h1, path }]),
+];
+---
+<Base title={S.title} description={S.desc} path={path} lang={lang} alternates={{ en: `/boost/${climb.slug}`, ar: `/ar/boost/${climb.slug}` }} schema={schema} promo={false}>
+  <section class="wrap climb-top">
+    <nav class="crumbs" aria-label={ar ? 'مسار الصفحة' : 'Breadcrumb'}><a href={ar ? '/ar' : '/'}>{S.crumbsHome}</a> / <a href={S.crumbsBoostsHref}>{S.crumbsBoosts}</a> / <span>{S.h1}</span></nav>
+    <div class="climb-hero">
+      <div class="ch-copy">
+        <p class="eyebrow">{S.eyebrow}</p>
+        <h1>{S.h1}{S.h1Sub && <span class="h1-sub" lang="en">{S.h1Sub}</span>}</h1>
+        <p class="lead">{c.intro}</p>
+      </div>
+      <div class="ch-card">
+        <div class="ch-route">
+          <span class="ch-side"><RankEmblem tier={RB_TIERS[ft]} size={84} loading="eager" /><b>{rank(ft, fd)}</b></span>
+          <span class="ch-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d={ar ? 'M19 12H5M11 6l-6 6 6 6' : 'M5 12h14M13 6l6 6-6 6'} /></svg></span>
+          <span class="ch-side"><RankEmblem tier={RB_TIERS[tt]} size={84} loading="eager" /><b>{rank(tt, td)}</b></span>
+        </div>
+        <p class="ch-divs">{divWord(divs)}</p>
+        <div class="ch-prices">
+          <div><small>{S.soloLabel}</small><b class="num ltr">{solo}</b><span>{S.soloSub}</span></div>
+          <div><small>{S.duoLabel}</small><b class="num ltr">{duo}</b><span>{S.duoSub}</span></div>
+        </div>
+        <a class="buy" href={orderHref} data-track="cta_click" data-track-location={`climb_${climb.slug}`}>{S.cta} · <span class="ltr">{solo}</span></a>
+        <a class="ch-duo" href={duoHref} data-track="cta_click" data-track-location={`climb_${climb.slug}_duo`}>{S.ctaDuo} · <span class="ltr">{duo}</span></a>
+        <p class="ch-note">{S.note}{S.orderNote && <> {S.orderNote}</>}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap-narrow climb-body">
+    <h2>{S.whyTitle}</h2>
+    <p>{c.why}</p>
+
+    <h2>{S.breakdownTitle}</h2>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>{S.thTier}</th><th>{S.thDivs}</th><th>{S.thSolo}</th><th>{S.thDuo}</th></tr></thead>
+        <tbody>
+          {rows.map((r) => <tr><th scope="row"><RankEmblem tier={r.tier} size={34} />{r.label}</th><td>{r.n}</td><td><span class="ltr">{formatUSD(r.solo)}</span></td><td><span class="ltr">{formatUSD(r.duo)}</span></td></tr>)}
+          <tr class="tot"><th scope="row">{S.thTotal}</th><td>{divs}</td><td><span class="ltr">{solo}</span></td><td><span class="ltr">{duo}</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>{S.howTitle}</h2>
+    <ol class="how">{S.how.map(([h, p]) => <li><b>{h}</b><span>{p}</span></li>)}</ol>
+
+    <h2>{S.safetyTitle}</h2>
+    <p>{S.safety}</p>
+
+    <h2>{S.tipsTitle}</h2>
+    <ul class="tips">{c.tips.map((tip) => <li>{tip}</li>)}</ul>
+    <p><a href={`/blog/${climb.guide}`}>{S.guide} →</a></p>
+
+    <h2>{S.faqTitle}</h2>
+    <div class="faq">
+      {S.faq.map(([q, a]) => <details><summary>{q}</summary><p>{a}</p></details>)}
+    </div>
+  </section>
+
+  <section class="wrap climb-more">
+    <h2>{S.othersTitle}</h2>
+    <div class="others">
+      {others.map((o) => (
+        <a href={`${ar ? '/ar' : ''}/boost/${o.slug}`} class="other">
+          <RankEmblem tier={RB_TIERS[o.from[0]]} size={40} /><span>{tierName(o.from[0])} {ar ? '←' : '→'} {tierName(o.to[0])}</span><RankEmblem tier={RB_TIERS[o.to[0]]} size={40} />
+        </a>
+      ))}
+    </div>
+    <div class="final">
+      <h2>{S.finalTitle}</h2>
+      <a class="buy" href={orderHref}>{S.cta} · <span class="ltr">{solo}</span></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .climb-top { padding-block: clamp(20px, 3vw, 40px) 0; }
+  .crumbs { font-size: .84rem; color: var(--muted); margin-block-end: 18px; }
+  .crumbs a { color: var(--muted); }
+  .climb-hero { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: clamp(24px, 4vw, 56px); align-items: center; }
+  .ch-copy { display: grid; gap: 14px; }
+  .ch-copy h1 { font-family: var(--font-ui); font-weight: 600; font-size: clamp(2.2rem, 2.4vw + 1.3rem, 3.4rem); line-height: 1.1; letter-spacing: -.01em; }
+  .h1-sub { display: block; margin-block-start: 6px; font-size: .45em; font-weight: 400; color: var(--muted); }
+  .ch-copy .lead { max-width: 56ch; }
+  .ch-card { display: grid; gap: 14px; padding: 22px; border-radius: 22px; background: #110d26; box-shadow: inset 0 0 0 1px rgba(196, 181, 253, .18), 0 40px 80px -50px rgba(0, 0, 0, .9); }
+  .ch-route { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; }
+  .ch-side { display: grid; justify-items: center; gap: 4px; text-align: center; }
+  .ch-side b { font-family: var(--font-ui); font-weight: 600; color: var(--text-strong); }
+  .ch-arrow { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; color: #fff; background: #7353fb; }
+  .ch-arrow svg { width: 17px; height: 17px; }
+  .ch-divs { text-align: center; font-size: .86rem; color: var(--muted); margin-block-start: -6px; }
+  .ch-prices { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .ch-prices > div { display: grid; gap: 2px; padding: 12px 14px; border-radius: 14px; background: rgba(0, 0, 0, .28); box-shadow: inset 0 0 0 1px rgba(246, 242, 255, .07); }
+  .ch-prices small { font-size: .74rem; color: var(--muted); }
+  .ch-prices b { font-family: var(--font-ui); font-weight: 600; font-size: 1.7rem; color: var(--text-strong); }
+  .ch-prices span { font-size: .76rem; color: var(--muted); line-height: 1.35; }
+  .buy { display: flex; align-items: center; justify-content: center; min-height: 54px; padding: 0 20px; border-radius: 14px; background: #7353fb; color: #fff; font-family: var(--font-ui); font-weight: 600; font-size: 1.05rem; text-decoration: none; box-shadow: 0 14px 30px -14px rgba(115, 83, 251, .9); transition: background-color .25s, transform .25s var(--ease); }
+  .buy:hover { background: #7f62ff; transform: translateY(-1px); }
+  .ch-duo { text-align: center; font-size: .9rem; color: var(--lav); }
+  .ch-note { font-size: .78rem; color: var(--muted); text-align: center; }
+  .climb-body { padding-block: clamp(36px, 5vw, 64px) 0; }
+  .climb-body h2, .climb-more h2 { font-family: var(--font-ui); font-weight: 600; font-size: clamp(1.4rem, .8vw + 1.1rem, 1.8rem); line-height: 1.25; margin-block: 2.2rem .8rem; color: var(--text-strong); letter-spacing: 0; }
+  .climb-body h2:first-child { margin-block-start: 0; }
+  .climb-body p, .climb-body li { color: var(--text); line-height: 1.8; }
+  .tbl { overflow-x: auto; border-radius: 16px; box-shadow: inset 0 0 0 1px rgba(246, 242, 255, .1); }
+  .tbl table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  .tbl th, .tbl td { padding: 10px 14px; text-align: start; border-top: 1px solid rgba(246, 242, 255, .06); white-space: nowrap; }
+  .tbl thead th { border-top: 0; font-weight: 400; font-size: .74rem; color: var(--muted); }
+  .tbl tbody th { display: flex; align-items: center; gap: 10px; font-weight: 500; color: var(--text-strong); }
+  .tbl .tot th, .tbl .tot td { font-weight: 600; color: var(--text-strong); }
+  .how { list-style: none; padding: 0; display: grid; gap: 12px; counter-reset: s; }
+  .how li { counter-increment: s; display: grid; grid-template-columns: auto 1fr; column-gap: 14px; padding: 14px 16px; border-radius: 16px; background: rgba(255, 255, 255, .03); box-shadow: inset 0 0 0 1px rgba(246, 242, 255, .07); }
+  .how li::before { content: counter(s); grid-row: span 2; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: #7353fb; color: #fff; font-weight: 600; font-size: .9rem; }
+  .how b { color: var(--text-strong); font-weight: 600; }
+  .how span { color: var(--muted); font-size: .95rem; }
+  .tips { padding-inline-start: 1.2rem; display: grid; gap: 6px; }
+  .faq { display: grid; }
+  .faq details { border-top: 1px solid rgba(246, 242, 255, .08); }
+  .faq details:last-child { border-bottom: 1px solid rgba(246, 242, 255, .08); }
+  .faq summary { cursor: pointer; padding: 14px 0; font-weight: 500; color: var(--text-strong); list-style: none; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: '+'; float: inline-end; color: var(--lav); font-size: 1.2rem; line-height: 1; }
+  .faq details[open] summary::after { content: '−'; }
+  .faq p { padding-block-end: 14px; margin: 0; }
+  .climb-more { padding-block: clamp(36px, 5vw, 64px) 0; }
+  .others { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
+  .other { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 14px; border-radius: 14px; text-decoration: none; color: var(--text-strong); font-weight: 500; font-size: .92rem; background: rgba(255, 255, 255, .03); box-shadow: inset 0 0 0 1px rgba(246, 242, 255, .08); transition: box-shadow .25s; }
+  .other:hover { box-shadow: inset 0 0 0 1px #7353fb; }
+  .final { display: grid; justify-items: center; gap: 4px; margin-block-start: clamp(36px, 5vw, 56px); text-align: center; }
+  .final .buy { min-width: min(100%, 320px); }
+  @media (max-width: 900px) { .climb-hero { grid-template-columns: minmax(0, 1fr); } }
+  @media (max-width: 480px) { .tbl th, .tbl td { padding: 9px 8px; font-size: .9rem; } .tbl tbody th { gap: 6px; } .tbl tbody th :global(img) { width: 26px; height: 20px; } }
+</style>

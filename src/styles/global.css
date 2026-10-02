@@ -224,9 +224,26 @@ h1 em, h2 em, h3 em, .grad { font-style: italic; font-weight: 300; color: var(--
 .flip-rtl { }
 [dir='rtl'] .flip-rtl { transform: scaleX(-1); }
 
-/* Free trial (src/data/promo.js): [data-trial] shows while it runs, [data-trial-over] once it has ended */
-.trial-over [data-trial] { display: none !important; }
-html:not(.trial-over) [data-trial-over] { display: none !important; }
+/* Free trial (timer set in /admin): [data-trial] shows while it runs, [data-trial-over] when it doesn't.
+   html.trial-on comes from the last known state before first paint, then /api/status confirms it (scripts/common.js). */
+html:not(.trial-on) [data-trial] { display: none !important; }
+html.trial-on [data-trial-over] { display: none !important; }
 
 /* Home: promo bar + nav float together over the full-screen scene */
 .chrome-overlay { position: fixed; inset: 0 0 auto; z-index: 50; }
+
+/* ── Arabic pages (html lang="ar" dir="rtl") ─────────────────────────────────
+   Latin text (prices, the wordmark) keeps the site fonts; Arabic letters fall through to the
+   device's Arabic UI font. Letter-spacing and italics break Arabic script, so both are off. */
+:root:lang(ar) {
+  --font-display: 'Cormorant Garamond', 'Segoe UI', 'Geeza Pro', 'Noto Sans Arabic', 'Noto Naskh Arabic', Tahoma, serif;
+  --font-ui: 'Jost', 'Segoe UI', 'Geeza Pro', 'Noto Sans Arabic', Tahoma, sans-serif;
+  --font-body: 'Jost', 'Segoe UI', 'Geeza Pro', 'Noto Sans Arabic', Tahoma, sans-serif;
+}
+:lang(ar) { letter-spacing: 0 !important; }
+:lang(ar) :is(h1, h2, h3, .display) { font-weight: 600; line-height: 1.3; }
+:lang(ar) :is(em, i, .grad) { font-style: normal; }
+:lang(ar) body { line-height: 1.8; }
+
+/* a price or Latin snippet inside right-to-left text keeps its own order ("$40", not "40$") */
+.ltr { unicode-bidi: isolate; direction: ltr; }

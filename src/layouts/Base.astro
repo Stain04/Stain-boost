@@ -4,7 +4,6 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import ChatLauncher from '../components/ChatLauncher.astro';
 import TrialBar from '../components/TrialBar.astro';
-import { TRIAL_ENDS_MS } from '../data/promo.js';
 import { SITE } from '../data/site.js';
 
 interface Props {
@@ -20,21 +19,26 @@ interface Props {
   chat?: boolean;            // the customer help chat (off on admin)
   promo?: boolean;           // the free-trial bar (off on admin and on the trial page itself)
   overlay?: boolean;         // nav floats over a full-screen scene (home)
+  lang?: 'en' | 'ar';        // page language (Arabic pages are right-to-left)
+  alternates?: { en?: string; ar?: string }; // the same page in the other language (paths)
 }
-const { title, description, path, ogImage = '/og-image.jpg', ogType = 'website', noindex = false, schema = [], active = '', minimal = false, chat = true, promo = true, overlay = false } = Astro.props;
-// Free trial: only built into pages while it runs; after the deadline the head script hides it.
-const trialOn = Date.now() < TRIAL_ENDS_MS;
+const { title, description, path, ogImage = '/og-image.jpg', ogType = 'website', noindex = false, schema = [], active = '', minimal = false, chat = true, promo = true, overlay = false, lang = 'en', alternates = {} } = Astro.props;
 const canonical = SITE.url + (path === '/' ? '/' : path);
 const ogUrl = SITE.url + ogImage;
+// hreflang: every page lists itself and its translation; x-default is the English page
+const alt = { ...alternates, [lang]: path };
+const hreflang = Object.entries(alt).filter(([, p]) => p).map(([l, p]) => ({ l, href: SITE.url + (p === '/' ? '/' : p) }));
 ---
 <!doctype html>
-<html lang="en" dir="ltr">
+<html lang={lang} dir={lang === 'ar' ? 'rtl' : 'ltr'}>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{title}</title>
   <meta name="description" content={description} />
   <link rel="canonical" href={canonical} />
+  {hreflang.length > 1 && hreflang.map((h) => <link rel="alternate" hreflang={h.l} href={h.href} />)}
+  {hreflang.length > 1 && <link rel="alternate" hreflang="x-default" href={(hreflang.find((h) => h.l === 'en') || hreflang[0]).href} />}
   {noindex && <meta name="robots" content="noindex,nofollow" />}
   <meta name="theme-color" content={SITE.themeColor} />
   <link rel="icon" href="/favicon.ico" sizes="32x32" />
@@ -46,6 +50,7 @@ const ogUrl = SITE.url + ogImage;
   <link rel="preload" href="/fonts/cormorant-italic-var-latin.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/fonts/jost-var-latin.woff2" as="font" type="font/woff2" crossorigin />
   <meta property="og:type" content={ogType} />
+  <meta property="og:locale" content={lang === 'ar' ? 'ar_AR' : 'en_US'} />
   <meta property="og:site_name" content="StainBoost" />
   <meta property="og:url" content={canonical} />
   <meta property="og:title" content={title} />
@@ -59,7 +64,8 @@ const ogUrl = SITE.url + ogImage;
   <meta name="twitter:image" content={ogUrl} />
   {schema.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
   <script is:inline>document.documentElement.classList.add('js');</script>
-  <script is:inline define:vars={{ trialEnd: TRIAL_ENDS_MS }}>if (Date.now() >= trialEnd) document.documentElement.classList.add('trial-over');</script>
+  <!-- free trial (timer set in /admin): show it before first paint if it was running last time; /api/status confirms -->
+  <script is:inline>try { var t = JSON.parse(localStorage.getItem('sb_trial_v1') || 'null'); if (t && t.endsAt > Date.now()) document.documentElement.classList.add('trial-on'); } catch (e) {}</script>
   <!-- Google Analytics: queued immediately, gtag.js loaded once the page is idle (keeps it off the critical path) -->
   <script is:inline define:vars={{ gaId: SITE.gaId }}>
     window.dataLayer = window.dataLayer || [];
@@ -85,21 +91,21 @@ const ogUrl = SITE.url + ogImage;
   <div class="backdrop" aria-hidden="true"></div>
   {overlay ? (
     <div class="chrome-overlay">
-      {promo && trialOn && <TrialBar />}
-      <Nav active={active} overlay />
+      {promo && <TrialBar />}
+      <Nav active={active} overlay lang={lang} alternates={alternates} />
     </div>
   ) : (
     <>
-      {promo && trialOn && <TrialBar />}
-      <Nav active={active} />
+      {promo && <TrialBar />}
+      <Nav active={active} lang={lang} alternates={alternates} />
     </>
   )}
   <main id="main">
     <slot />
   </main>
-  <Footer />
+  <Footer lang={lang} />
   <slot name="after" />
-  {chat && <ChatLauncher />}
+  {chat && <ChatLauncher lang={lang} />}
   <script>
     import '../scripts/common.js';
   </script>

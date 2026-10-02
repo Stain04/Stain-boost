@@ -1,6 +1,7 @@
 // /sitemap.xml — generated at build time: public pages + every blog post.
 import { getCollection } from 'astro:content';
 import { SITE } from '../data/site.js';
+import { CLIMBS } from '../data/climbs.js';
 
 const PAGES = [
   { path: '/', priority: '1.0', changefreq: 'weekly' },
@@ -8,6 +9,10 @@ const PAGES = [
   { path: '/reviews', priority: '0.8', changefreq: 'weekly' },
   { path: '/faq', priority: '0.7', changefreq: 'monthly' },
   { path: '/blog', priority: '0.8', changefreq: 'weekly' },
+  { path: '/boost', priority: '0.8', changefreq: 'weekly' },
+  { path: '/ar', priority: '0.9', changefreq: 'weekly' },
+  // one page per popular climb, in English and Arabic
+  ...CLIMBS.flatMap((c) => [{ path: `/boost/${c.slug}`, priority: '0.8', changefreq: 'weekly' }, { path: `/ar/boost/${c.slug}`, priority: '0.7', changefreq: 'weekly' }]),
   { path: '/privacy', priority: '0.3', changefreq: 'yearly' },
   { path: '/terms', priority: '0.3', changefreq: 'yearly' },
 ];

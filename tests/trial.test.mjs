@@ -10,6 +10,7 @@ const { default: order } = await import('../api/order.js');
 const { default: referral } = await import('../api/referral.js');
 const { default: tracking } = await import('../api/order-tracking/[action].js');
 const { default: reviews } = await import('../api/reviews.js');
+const { default: status } = await import('../api/status.js');
 
 // Pin the clock inside the promo window so these tests also pass after it has ended.
 const realNow = Date.now;
@@ -105,6 +106,39 @@ test('a completed trial gets no review link and cannot be reviewed', async () =>
   assert.equal(s.body.reviewable, false);
   const rv = await call(reviews, { cookie: c, body: { token: t, name: 'N', stars: 5, text: 'great' } });
   assert.equal(rv.status, 400);
+});
+
+test('the admin runs the trial past its default date, the site sees it, then ends it', async () => {
+  const later = TRIAL_ENDS_MS + 864e5; // a day after the default end
+  Date.now = () => later;
+  try {
+    const c = await signup('admintimer1');
+    const first = await claim(c);
+    assert.equal(first.status, 410, 'over by default: ' + JSON.stringify(first));
+    assert.equal((await call(status, { body: { trial: { endsAt: later + 2 * 864e5 } } })).status, 401, 'admin only');
+    const set = await call(status, { headers: admin, body: { trial: { endsAt: later + 2 * 864e5 } } });
+    assert.equal(set.status, 200);
+    const pub = (await call(status, { method: 'GET' })).body.trial;
+    assert.deepEqual([pub.active, pub.endsAt, pub.games], [true, later + 2 * 864e5, FREE_TRIAL.games]);
+    assert.equal((await claim(c)).status, 200, 'claims work while the admin timer runs');
+    assert.equal((await call(status, { headers: admin, body: { trial: { endsAt: 0 } } })).status, 200);
+    assert.equal((await call(status, { method: 'GET' })).body.trial.active, false);
+    assert.equal((await claim(await signup('admintimer2'))).status, 410, 'ended from admin');
+    assert.equal((await call(status, { headers: admin, body: { trial: { endsAt: later - 1000 } } })).status, 400, 'no end times in the past');
+  } finally {
+    Date.now = () => DURING;
+  }
+});
+
+test('Stain can be online with no timer', async () => {
+  assert.equal((await call(status, { headers: admin, body: { online: true, forever: true } })).status, 200);
+  const far = Date.now; Date.now = () => DURING + 365 * 864e5;
+  try {
+    const s = (await call(status, { method: 'GET' })).body;
+    assert.deepEqual([s.online, s.forever, s.until], [true, true, null]);
+  } finally { Date.now = far; }
+  assert.equal((await call(status, { headers: admin, body: { online: false } })).status, 200);
+  assert.equal((await call(status, { method: 'GET' })).body.online, false);
 });
 
 test.after(() => { Date.now = realNow; });

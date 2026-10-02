@@ -1,10 +1,9 @@
 ---
-// Time-limited free trial (settings in src/data/promo.js). Temporary page: noindex, not in the sitemap.
+// Time-limited free trial (timer set in /admin, read from /api/status). Temporary page: noindex, not in the sitemap.
 import Base from '../layouts/Base.astro';
-import { FREE_TRIAL, TRIAL_ENDS_MS } from '../data/promo.js';
+import { FREE_TRIAL } from '../data/promo.js';
 import { DISCORD, STATS, REGIONS } from '../data/site.js';
 
-const trialOn = Date.now() < TRIAL_ENDS_MS;
 const g = FREE_TRIAL.games;
 ---
 <Base
@@ -17,10 +16,10 @@ const g = FREE_TRIAL.games;
   <section class="section-tight" data-loc="free_trial">
     <div class="wrap ft">
       <div class="ft-head">
-        <p class="eyebrow">Free trial · 2 days only</p>
+        <p class="eyebrow">Free trial · limited time</p>
         <h1>Your first {g} games <span class="grad">are on Stain.</span></h1>
         <p class="lead">Not sure about boosting yet? Stain plays {g} ranked games — on your account or duo with you — <strong>for free</strong>. No payment, no card. See how it works, then decide.</p>
-        {trialOn && <p class="ft-count" data-trial><span class="ft-clock" aria-hidden="true">⏳</span><span data-trial-countdown data-end={TRIAL_ENDS_MS}>Ends Fri 2 Oct</span><small>Offer ends {FREE_TRIAL.endsLabel}</small></p>}
+        <p class="ft-count" data-trial><span class="ft-clock" aria-hidden="true">⏳</span><span data-trial-countdown>Limited time</span><small>Offer ends <span data-trial-end-label>soon</span></small></p>
       </div>
 
       <div class="ft-copy">
@@ -37,13 +36,12 @@ const g = FREE_TRIAL.games;
             <li>{g} ranked games on your server: ME, EUW or EUNE. It's a trial of the service, so wins aren't guaranteed.</li>
             <li>Same safety as every order: offline mode, a VPN matched to your country, your Flash key. {STATS.bans} bans in {STATS.ordersCompleted}+ orders.</li>
             <li>Nothing to cancel, nothing charged. After the {g} games you order only if you want to.</li>
-            <li>Claims close {FREE_TRIAL.endsLabel}.</li>
+            <li data-trial>Claims close <span data-trial-end-label>soon</span>.</li>
           </ul>
         </div>
       </div>
 
       <div class="ft-side">
-        {trialOn && (
           <form class="card ft-form" data-form data-trial novalidate>
             <p class="ft-form-title">Claim my {g} free games</p>
             <p class="ft-who muted" data-who>You'll sign in with Discord when you press Claim.</p>
@@ -73,11 +71,10 @@ const g = FREE_TRIAL.games;
             <p class="ft-note">No payment · ME, EUW or EUNE · <a href={`/login?return=${encodeURIComponent('/free-trial?resume=1')}`} data-email-login>sign in with email instead</a></p>
             <p class="err" data-err role="alert" hidden></p>
           </form>
-        )}
 
         <div class="card ft-state" data-state hidden aria-live="polite"></div>
 
-        <div class="card ft-state ft-over" data-trial-over={trialOn ? '' : undefined}>
+        <div class="card ft-state ft-over" data-trial-over>
           <p class="t">This free trial has ended</p>
           <p class="muted">Thanks for the interest! You can still see your exact price in seconds — with a full refund if the boost hasn't started.</p>
           <a class="btn btn-primary" href="/pricing" data-track="cta_click" data-track-location="trial_over">Get my price</a>
@@ -90,7 +87,13 @@ const g = FREE_TRIAL.games;
 <script>
   import { track } from '../scripts/analytics.js';
   import { DISCORD } from '../data/site.js';
-  import { FREE_TRIAL, trialActive } from '../data/promo.js';
+  import { FREE_TRIAL } from '../data/promo.js';
+
+  /** The live trial state from /api/status (fetched once by scripts/common.js). */
+  const liveTrial = () => new Promise((resolve) => {
+    if (window.__sbStatus) return resolve(window.__sbStatus.trial || null);
+    document.addEventListener('sb:trial', (e) => resolve(e.detail), { once: true });
+  });
 
   const form = document.querySelector('[data-form]');
   const stateBox = document.querySelector('[data-state]');
@@ -146,7 +149,11 @@ const g = FREE_TRIAL.games;
   }
 
   async function init() {
-    if (!form || !trialActive()) return;
+    if (!form) return;
+    const trial = await liveTrial();
+    if (!trial || !trial.active) return;
+    const label = new Date(trial.endsAt).toLocaleString(undefined, { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
+    document.querySelectorAll('[data-trial-end-label]').forEach((el) => { el.textContent = label; });
     track('trial_view');
     form.querySelector('[data-email-login]').addEventListener('click', () => { save(); track('login_required', { method: 'email', location: 'free_trial' }); });
     const resumed = new URLSearchParams(location.search).has('resume') && restore();
@@ -185,7 +192,7 @@ const g = FREE_TRIAL.games;
         track('generate_lead', { value: 0, currency: 'USD' });
         return show(booked(b.token, d.type));
       }
-      if (r.status === 410) { document.documentElement.classList.add('trial-over'); return; }
+      if (r.status === 410) { document.documentElement.classList.remove('trial-on'); return; }
       if (b.notNew) { track('trial_blocked', { reason: 'not_new' }); return show(alreadyCustomer); }
       if (b.trialUsed && b.token) return show(booked(b.token));
       if (b.trialUsed) track('trial_blocked', { reason: 'used' });

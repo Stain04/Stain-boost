@@ -1,6 +1,11 @@
+---
+import { UI } from '../i18n/ui.js';
+interface Props { lang?: 'en' | 'ar' }
+const { lang = 'en' } = Astro.props;
+---
 <button class="chat-launch" type="button" aria-label="Chat with Stain's assistant" aria-haspopup="dialog" data-chat-launch>
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.6 8.6 0 0 1-3.8-.9L3 21l1.9-5.2A8.4 8.4 0 1 1 21 11.5Z"/></svg>
-  <span class="chat-launch-label">Ask a question</span>
+  <span class="chat-launch-label">{UI[lang].chat}</span>
 </button><style>
   .chat-launch {
     position: fixed; z-index: 60; inset-inline-end: 20px; inset-block-end: calc(20px + env(safe-area-inset-bottom));
